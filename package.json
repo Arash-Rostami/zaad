@@ -1,12 +1,16 @@
 {
-  "name": "atelier-ether",
+  "name": "zaad",
   "version": "1.0.0",
+  "description": "corporate level showroom for digital catalogue",
+  "author": "Arash Rostami",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "clean": "rm -rf .next out"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
