@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #F4F1ED;
+  --bg-secondary: #E8E4DF;
+  --bg-secondary-40: rgba(232, 228, 223, 0.4);
+  --bg-secondary-60: rgba(232, 228, 223, 0.6);
+  --bg-card: #FFFFFF;
+  --bg-card-trans: rgba(255, 255, 255, 0.4);
+  --bg-card-95: rgba(255, 255, 255, 0.95);
+  --text-primary: #1C1C1C;
+  --text-secondary: #5C5954;
+  --text-bronze: #8E7A62;
+  --border-color-5: rgba(28, 28, 28, 0.05);
+  --border-color-10: rgba(28, 28, 28, 0.1);
+  --border-color-15: rgba(28, 28, 28, 0.15);
+  --shadow-color: rgba(0, 0, 0, 0.03);
+}
+
+.mid {
+  --bg-primary: #1F242C; /* Extremely modern Ocean Yacht Slate-Teal */
+  --bg-secondary: #161A20;
+  --bg-secondary-40: rgba(22, 26, 32, 0.46);
+  --bg-secondary-60: rgba(22, 26, 32, 0.66);
+  --bg-card: #282E38;
+  --bg-card-trans: rgba(40, 46, 56, 0.46);
+  --bg-card-95: rgba(40, 46, 56, 0.95);
+  --text-primary: #EBEFF5;
+  --text-secondary: #97A5B8;
+  --text-bronze: #F2D299; /* Exquisite luminous Champagne Gold */
+  --border-color-5: rgba(235, 239, 245, 0.06);
+  --border-color-10: rgba(235, 239, 245, 0.12);
+  --border-color-15: rgba(235, 239, 245, 0.18);
+  --shadow-color: rgba(10, 12, 16, 0.4);
+}
+
+.dark {
+  --bg-primary: #111110;
+  --bg-secondary: #1C1C1B;
+  --bg-secondary-40: rgba(28, 28, 27, 0.42);
+  --bg-secondary-60: rgba(28, 28, 27, 0.62);
+  --bg-card: #161615;
+  --bg-card-trans: rgba(22, 22, 21, 0.42);
+  --bg-card-95: rgba(22, 22, 21, 0.95);
+  --text-primary: #EDECE8;
+  --text-secondary: #9C9588;
+  --text-bronze: #B7A590;
+  --border-color-5: rgba(237, 236, 232, 0.06);
+  --border-color-10: rgba(237, 236, 232, 0.12);
+  --border-color-15: rgba(237, 236, 232, 0.18);
+  --shadow-color: rgba(0, 0, 0, 0.45);
+}
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-sand-50: #fbfaf8;
+  --color-sand-100: var(--bg-primary);
+  --color-sand-200: var(--bg-secondary);
+  --color-sand-300: #d6d0c7;
+  --color-sand-400: #c8c2b9;
+  --color-sand-500: var(--text-secondary);
+  
+  --color-bronze-light: #b09c85;
+  --color-bronze-dark: var(--text-bronze);
+  --color-charcoal: var(--text-primary);
+  --color-stone-neutral: var(--text-secondary);
+}
+
+@layer utilities {
+  .text-glow-subtle {
+    text-shadow: 0 0 12px rgba(142, 122, 98, 0.15);
+  }
+  
+  /* Customized scrollbar for quiet-luxury website */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-secondary);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d6d0c7;
+  }
+}
+
+/* Enable super-smooth color transition globally with custom physical spring decay curve */
+body, 
+section, 
+header, 
+footer, 
+div, 
+span, 
+p, 
+h1, 
+h2, 
+h3, 
+h4, 
+button, 
+input, 
+textarea,
+select,
+a {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-shadow;
+  transition-duration: 1050ms !important;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Custom styles for smooth luxury aesthetic */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-serif-luxury {
+  font-family: var(--font-serif);
+}
+
+.font-mono-technical {
+  font-family: var(--font-mono);
+}
+
+/* Light beam sweep keyframes for high-end cinematic studio contrast */
+@keyframes delicateGlowSweep {
+  0% {
+    transform: translate3d(-20%, -20%, 0) rotate(-35deg);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate3d(25%, 20%, 0) rotate(-35deg);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(-20%, -20%, 0) rotate(-35deg);
+    opacity: 0.15;
+  }
+}
+
+.sunbeam-signature-glare {
+  animation: delicateGlowSweep 28s infinite ease-in-out;
+}
+
+/* Dynamically bind tailwind hex classes to CSS variables for smooth Chiaroscuro transitions */
+.bg-\[\#F4F1ED\] {
+  background-color: var(--bg-primary) !important;
+}
+.bg-\[\#E8E4DF\] {
+  background-color: var(--bg-secondary) !important;
+}
+.bg-\[\#E8E4DF\]\/40 {
+  background-color: var(--bg-secondary-40) !important;
+}
+.bg-\[\#E8E4DF\]\/60 {
+  background-color: var(--bg-secondary-60) !important;
+}
+.bg-white {
+  background-color: var(--bg-card) !important;
+}
+.bg-white\/40 {
+  background-color: var(--bg-card-trans) !important;
+}
+.bg-white\/95 {
+  background-color: var(--bg-card-95) !important;
+}
+
+.text-\[\#1C1C1C\] {
+  color: var(--text-primary) !important;
+}
+.text-\[\#5C5954\] {
+  color: var(--text-secondary) !important;
+}
+.text-\[\#8E7A62\] {
+  color: var(--text-bronze) !important;
+}
+
+.border-\[\#1C1C1C\]\/5 {
+  border-color: var(--border-color-5) !important;
+}
+.border-\[\#1C1C1C\]\/10 {
+  border-color: var(--border-color-10) !important;
+}
+.border-\[\#1C1C1C\]\/15 {
+  border-color: var(--border-color-15) !important;
+}
+.shadow-\[0_20px_50px_rgba\(0\2c 0\2c 0\2c 0\.03\)\] {
+  box-shadow: 0 20px 50px var(--shadow-color) !important;
+}
+
+/* Exempt Chiaroscuro Toggle elements from standard slow transitions to keep interactive input & rotation super-snappy and 100% fluid */
+#chiaroscuro-toggle,
+#chiaroscuro-toggle * {
+  transition: none !important;
+}
+
+/* Farsi Mode Typography Overrides for high luxury editorial look */
+html[lang="fa"],
+html[lang="fa"] body,
+.farsi-mode {
+  font-family: "Vazirmatn", "Inter", sans-serif !important;
+  letter-spacing: normal !important;
+}
+
+html[lang="fa"] .font-serif,
+html[lang="fa"] .font-serif-luxury,
+html[lang="fa"] h1,
+html[lang="fa"] h2,
+html[lang="fa"] h3 {
+  font-family: "Vazirmatn", Georgia, serif !important;
+  font-weight: 500;
+  letter-spacing: 0 !important;
+}
+
+html[lang="fa"] .font-mono,
+html[lang="fa"] .font-mono-technical,
+html[lang="fa"] code {
+  font-family: "JetBrains Mono", "Vazirmatn", monospace !important;
+  letter-spacing: 0 !important;
+}
+
+html[lang="fa"] .tracking-\[0\.3em\],
+html[lang="fa"] .tracking-\[0\.4em\],
+html[lang="fa"] .tracking-widest,
+html[lang="fa"] .tracking-wider {
+  letter-spacing: 0.05em !important;
+}
+
+/* Helper class to easily mirror icons or chevron pointers in RTL mode */
+html[lang="fa"] .rtl-mirror {
+  transform: scaleX(-1);
+}
+
