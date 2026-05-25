@@ -32,7 +32,10 @@ export async function POST(request) {
     const { messages } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
-      return Response.json({ error: "Invalid messages array" }, { status: 400 });
+      return Response.json(
+        { error: "Invalid messages array" },
+        { status: 400 },
+      );
     }
 
     if (!process.env.GEMINI_API_KEY) {
@@ -56,8 +59,10 @@ export async function POST(request) {
   } catch (error) {
     console.error("Gemini Curator error:", error);
     return Response.json(
-      { error: error?.message || "An error occurred with the digital curator." },
-      { status: 500 }
+      {
+        error: error?.message || "An error occurred with the digital curator.",
+      },
+      { status: 500 },
     );
   }
 }
