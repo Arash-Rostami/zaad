@@ -4,10 +4,10 @@ import { GoogleGenAI } from "@google/genai";
 // when GEMINI_API_KEY isn't present in the build environment.
 let _ai;
 const getAI = () =>
-  (_ai ||= new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-    httpOptions: { headers: { "User-Agent": "aistudio-build" } },
-  }));
+    (_ai ||= new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      httpOptions: { headers: { "User-Agent": "aistudio-build" } },
+    }));
 
 const BRAND_HERITAGE_PROMPT = `
 You are the elite digital "Gallery Curator" for Atelier Éther, a globally respected luxury interior architecture house and physical object atelier.
@@ -32,7 +32,10 @@ export async function POST(request) {
     const { messages } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
-      return Response.json({ error: "Invalid messages array" }, { status: 400 });
+      return Response.json(
+          { error: "Invalid messages array" },
+          { status: 400 },
+      );
     }
 
     if (!process.env.GEMINI_API_KEY) {
@@ -56,8 +59,10 @@ export async function POST(request) {
   } catch (error) {
     console.error("Gemini Curator error:", error);
     return Response.json(
-      { error: error?.message || "An error occurred with the digital curator." },
-      { status: 500 }
+        {
+          error: error?.message || "An error occurred with the digital curator.",
+        },
+        { status: 500 },
     );
   }
 }
