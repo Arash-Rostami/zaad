@@ -3,12 +3,14 @@
 import { useState } from "react";
 import MaisonReveal from "./MaisonReveal";
 import { useLanguage } from "../lib/TranslationService";
-const BLUEPRINT_SECTIONS = [{
-  id: "design-system",
-  title: "01. Aesthetic Systems & Identity",
-  category: "Visual Archetype",
-  summary: "Complete design, typography, color, and spacing specifications designed for lasting premium visual authority.",
-  content: `### 1. FULL DESIGN SYSTEM
+const BLUEPRINT_SECTIONS = [
+  {
+    id: "design-system",
+    title: "01. Aesthetic Systems & Identity",
+    category: "Visual Archetype",
+    summary:
+      "Complete design, typography, color, and spacing specifications designed for lasting premium visual authority.",
+    content: `### 1. FULL DESIGN SYSTEM
 Our design system is based on the principle of **Architectural Honesty**. There is no tech-larping, no margin clutter, and no artificial neon glows. It prioritizes pristine alignment, tactile materials representation, and heavy negative space.
 
 ### 2. TYPOGRAPHY SYSTEM
@@ -26,12 +28,13 @@ Our design system is based on the principle of **Architectural Honesty**. There 
 - **Gutter Rule:** 1.5x proportional multipliers.
 - **Section Spacing:** Generous \`py-24\` (96px) and \`py-36\` (144px) to create vertical breathing room. Whitespace is managed as a core visual luxury asset.
 - **Grid Layouts:** Dynamic 12-column asymmetric setups supporting off-axis focal points.`,
-  tags: ["Typography", "Color System", "Margins", "CSS Variables"],
-  farsi: {
-    title: "۰۱. سیستم‌های زیبایی‌شناسی و ساختار هویت",
-    category: "الگوهای هویت بصری",
-    summary: "جزئیات کامل طراحی، تایپوگرافی، پالت رنگ و فواصل معمارانه جهت پایداری غایی ارزش‌های بصری آتلیه.",
-    content: `### ۱. فلسفه کلان سیستم طراحی
+    tags: ["Typography", "Color System", "Margins", "CSS Variables"],
+    farsi: {
+      title: "۰۱. سیستم‌های زیبایی‌شناسی و ساختار هویت",
+      category: "الگوهای هویت بصری",
+      summary:
+        "جزئیات کامل طراحی، تایپوگرافی، پالت رنگ و فواصل معمارانه جهت پایداری غایی ارزش‌های بصری آتلیه.",
+      content: `### ۱. فلسفه کلان سیستم طراحی
 سیستم بصری ما بر پایه اصل **اصالت ساختار معمارانه** بنا شده است. فاقد هرگونه تزئینات و شلوغی‌های اضافه، خطوط نوری مصنوعی یا جزئیات تظاهرآمیز است. تمرکز غایی این گالری بر تقارن‌های مینیمال، انعکاس بافت کدر سنگ‌های طبیعی و جادوی فضاهای وسیع تنفسی است.
 
 ### ۲. استانداردهای تایپوگرافی کارگاه زاد
@@ -47,14 +50,16 @@ Our design system is based on the principle of **Architectural Honesty**. There 
 ### ۴. قوانین فواصل و تعادل
 - **تناسب گالری:** ضریب‌های فواصل هندسی ۱.۵ برابری.
 - **فضای تنفس معمارانه:** ایجاد حاشیه‌های بزرگ و تعمدی در گوشه‌ها جهت القای وقار و دور کردن استرس صفحات تجاری شلوغ.`,
-    tags: ["تایپوگرافی", "پالت رنگ تراورتن", "ابعاد هندسی", "قالب‌بندی کدر"]
-  }
-}, {
-  id: "ux-strategy",
-  title: "02. Core Sitemap & UX Strategy",
-  category: "Information Architecture",
-  summary: "Section-by-section strategic user flows, site schema, sitemap, and component layout hierarchies.",
-  content: `### 5. COMPLETE SITEMAP
+      tags: ["تایپوگرافی", "پالت رنگ تراورتن", "ابعاد هندسی", "قالب‌بندی کدر"],
+    },
+  },
+  {
+    id: "ux-strategy",
+    title: "02. Core Sitemap & UX Strategy",
+    category: "Information Architecture",
+    summary:
+      "Section-by-section strategic user flows, site schema, sitemap, and component layout hierarchies.",
+    content: `### 5. COMPLETE SITEMAP
 The architecture of ZAAD is designed to eliminate cognitive load and visual noise.
 - **Primary Domain Root (Single Multi-Perspective Showroom View)**
   - **I. Hero Entrance Section (First Impression / Monograph Title)**
@@ -72,12 +77,13 @@ Engineered as a cinematic scroll narrative that transitions from abstract core s
 2. **The Manifesto Story:** Slow down the reader's attention with a large-format travertine stone closeup, paired with the atelier history.
 3. **The Object Grid:** Reveal curated products individually rather than mass grids. Allow people to switch from Editorial to Macro View to feel the loop textures of wool or stone craters.
 4. **The Concierge Chat:** Remove traditional static contact forms. Introduce an elite digital curator (Gemini API) that counsels clients on how objects interact with room sunlight.`,
-  tags: ["Sitemap", "User Journey", "UX Hierarchy", "Curatorship"],
-  farsi: {
-    title: "۰۲. نقشه مرکزی فضا و استراتژی تعامل",
-    category: "معماری اطلاعات معمارانه",
-    summary: "سلسله مراتب مسیرهای گام‌به‌گام تعامل بازدیدکنندگان حرفه‌ای، جزئیات ساختار سئو و نقشه‌های کلی تعبیه ابژه‌ها.",
-    content: `### ۵. نقشه ساختاری فضای گالری
+    tags: ["Sitemap", "User Journey", "UX Hierarchy", "Curatorship"],
+    farsi: {
+      title: "۰۲. نقشه مرکزی فضا و استراتژی تعامل",
+      category: "معماری اطلاعات معمارانه",
+      summary:
+        "سلسله مراتب مسیرهای گام‌به‌گام تعامل بازدیدکنندگان حرفه‌ای، جزئیات ساختار سئو و نقشه‌های کلی تعبیه ابژه‌ها.",
+      content: `### ۵. نقشه ساختاری فضای گالری
 شاکله گالری دیجیتال زاد به گونه‌ای مهندسی شده است که ترافیک ذهنی و سر و صدای چشمی را با تدارک مسیر یکپارچه مرتفع کند.
 - **ریشه دپارتمان مرکزی (نمایشگاه تک صفحه چند وجهی)**
   - **گام اول: پیشواز معمارانه (کتیبه و غبار آغازین اثر)**
@@ -92,14 +98,21 @@ Engineered as a cinematic scroll narrative that transitions from abstract core s
 ۲. **تعلیق چشم:** مکث دادن به ضربان بافت تراورتن کات شده تا بازدیدکننده متوجه مانیفست آرام آتلیه گردد.
 ۳. **تمرکز بر تک‌اثر:** حذف آشفتگی فروشگاهی با نشان دادن تک آلبوم‌ها به همراه تغییر فوری زاویه دید به نمای ماکرو لمسی.
 ۴. **تکمیل تدارکات:** فرآیند پاسخگویی دستیار با هوش کارگزاری شده بدون فرم‌های مرسوم خسته‌کننده اداری.`,
-    tags: ["مسیر حرکت خریدار", "سازه اطلاعاتی", "چرخه گاری مجهز", "شالوده مدرن"]
-  }
-}, {
-  id: "interaction",
-  title: "03. Code Architecture & Motion Specs",
-  category: "Technical Frontend",
-  summary: "Animation specifications, mobile adaptations, front-end implementation path, and premium interactions.",
-  content: `### 8. COMPONENT ARCHITECTURE (React + Vite + ESM)
+      tags: [
+        "مسیر حرکت خریدار",
+        "سازه اطلاعاتی",
+        "چرخه گاری مجهز",
+        "شالوده مدرن",
+      ],
+    },
+  },
+  {
+    id: "interaction",
+    title: "03. Code Architecture & Motion Specs",
+    category: "Technical Frontend",
+    summary:
+      "Animation specifications, mobile adaptations, front-end implementation path, and premium interactions.",
+    content: `### 8. COMPONENT ARCHITECTURE (React + Vite + ESM)
 Designed as highly modular, lightweight files to avoid package bloat:
 - \`Header.tsx\`: Transparent navigation with dynamic scrolls.
 - \`Hero.tsx\`: Staggered entrance animations.
@@ -117,12 +130,18 @@ Designed as highly modular, lightweight files to avoid package bloat:
 - **Entrance Ease:** Staggered transitions with luxury cubic-bezier eases (\`ease: [0.16, 1, 0.3, 1]\` - Ultra-fluid entrance).
 - **Duration Tuning:** Main reveals trigger at \`1.2s\` to \`1.8s\` to reinforce premium confidence.
 - **Macro Image Dissolves:** Smooth dissolve crossfades (\`duration: 0.6s\`) when transitioning between editorial product and macro detail coordinates.`,
-  tags: ["Modular Architecture", "Framer Motion", "Viewport", "CSS Transitions"],
-  farsi: {
-    title: "۰۳. مهندسی نرم‌افزار و فیزیک انیمیشن‌ها",
-    category: "توسعه کدهای فرانت‌اند",
-    summary: "مشخصات فنی توسعه ماژولار کامپوننت‌های سبک، متدهای حرکتی، کارکرد لمسی پیشرفته موبایل و لودهای سینک شده.",
-    content: `### ۷. مهندسی کامپوننت‌های فرانت‌اند
+    tags: [
+      "Modular Architecture",
+      "Framer Motion",
+      "Viewport",
+      "CSS Transitions",
+    ],
+    farsi: {
+      title: "۰۳. مهندسی نرم‌افزار و فیزیک انیمیشن‌ها",
+      category: "توسعه کدهای فرانت‌اند",
+      summary:
+        "مشخصات فنی توسعه ماژولار کامپوننت‌های سبک، متدهای حرکتی، کارکرد لمسی پیشرفته موبایل و لودهای سینک شده.",
+      content: `### ۷. مهندسی کامپوننت‌های فرانت‌اند
 اجزای رابط برنامه‌نویسی به صورت کامپوننت‌های مجزای کاملا واکنشی بنا شده است تا سرعت بارگذاری صفحات را حداکثر نگاه دارد:
 - \`Header.tsx\`: سازه ناوبری شناور با محاسبات اسکرول نرم.
 - \`Hero.tsx\`: جلوه‌های تاخیری کتیبه‌های بالا.
@@ -136,14 +155,16 @@ Designed as highly modular, lightweight files to avoid package bloat:
 ### ۹. فیزیک ترنزیشن‌های حرکتی کارگاه
 - **منحنی‌های سرعت:** عبور انحصاری از ترنزیشن‌های کندشونده سیال سینوسی جهت القای وزن ابژه‌ها.
 - **زمان رندرهای عمیق:** لود و محو تدریجی کلاژها همزمان با بارگذاری تصویر ماکرو با متدهای بهینه اسلایدر موازی.`,
-    tags: ["معماری ماژولار", "قالب حرکتی موشن", "کاربرد موبایل لمسی"]
-  }
-}, {
-  id: "production",
-  title: "04. Optimization, SEO & Roadmap",
-  category: "Digital Compliance",
-  summary: "Accessibility, performance assets strategy, SEO schemas, and step-by-step launch roadmap.",
-  content: `### 11. ACCESSIBILITY STRATEGY (WCAG)
+      tags: ["معماری ماژولار", "قالب حرکتی موشن", "کاربرد موبایل لمسی"],
+    },
+  },
+  {
+    id: "production",
+    title: "04. Optimization, SEO & Roadmap",
+    category: "Digital Compliance",
+    summary:
+      "Accessibility, performance assets strategy, SEO schemas, and step-by-step launch roadmap.",
+    content: `### 11. ACCESSIBILITY STRATEGY (WCAG)
 - **Contrast Ratios:** Text pairings exceed strict WCAG AA contrast against Sand-100 panels (Charcoal text matches a high contrast 14.3:1 ratio).
 - **Reduced Motion Support:** All transitions utilize motion media queries (\`@media (prefers-reduced-motion)\`) to gracefully degrade to static displays.
 - **Aria Roles:** Full implementation on interactive inputs, select triggers, and button elements.
@@ -162,12 +183,13 @@ Designed as highly modular, lightweight files to avoid package bloat:
 2. **Environment Setup:** Secure and test the server-side \`GEMINI_API_KEY\` key via the platform settings.
 3. **Staging Review:** Test accessibility compliance across viewports.
 4. **Deploy:** Compile using \`esbuild\` into a single, highly performant \`server.cjs\` executable.`,
-  tags: ["SEO Schema", "Roadmap", "Core Web Vitals", "Optimization"],
-  farsi: {
-    title: "۰۴. انطباق بین‌المللی، بهینه‌سازی و نقشه راه تدارکات",
-    category: "استانداردها و تدارکات استقرار",
-    summary: "دستیابی به کنتراست‌های عالی خوانایی، استراتژی لود فشرده دارایی‌های رسانه‌ای، الگوهای سئو و نقشه راه استقرار نهایی.",
-    content: `### ۱۰. دسترسی آسان خریداران و کنتراست‌ها
+    tags: ["SEO Schema", "Roadmap", "Core Web Vitals", "Optimization"],
+    farsi: {
+      title: "۰۴. انطباق بین‌المللی، بهینه‌سازی و نقشه راه تدارکات",
+      category: "استانداردها و تدارکات استقرار",
+      summary:
+        "دستیابی به کنتراست‌های عالی خوانایی، استراتژی لود فشرده دارایی‌های رسانه‌ای، الگوهای سئو و نقشه راه استقرار نهایی.",
+      content: `### ۱۰. دسترسی آسان خریداران و کنتراست‌ها
 - **نرخ‌های کنتراست:** ترکیب رنگ خاکستری تیره با پس‌زمینه خام گچی دارای نرخ غایت ایمن است تا در تبلت‌ها و در هر نور خورشیدی بدون بازتاب بد خوانده شود.
 - **پشتیبانی از لغو ترنزیشن حرکتی:** کدهای فرانت بر طبق ترجیحات سخت‌افزاری تبلت‌های مهندسین معمار، به طور هوشمند جلوه‌ها را برای ثبات راندمان متوقف می‌کنند.
 
@@ -179,20 +201,35 @@ Designed as highly modular, lightweight files to avoid package bloat:
 ۱. **آراستگی کد کارگاه:** همخوانی قطعی بر روی درگاه ۳۰۰۰ محیط داکرباکس.
 ۲. **حفظ اسرار محرمانه:** راه‌اندازی توکن اختصاصی دستیار دیجیتال در لایه سرور بدون نشر اطلاعات بر روی کلاینت.
 ۳. **استقرار غایی سئو:** تعریف اسکیماهای لوکس تجاری جهت خوانش رده بالا در موتورهای جستجوی لوکس معماری.`,
-    tags: ["اسکیمای سئو فنی", "زمان لود کارگاه", "انطباق لوکس مدرن"]
-  }
-}];
+      tags: ["اسکیمای سئو فنی", "زمان لود کارگاه", "انطباق لوکس مدرن"],
+    },
+  },
+];
 export default function Blueprint() {
-  const {
-    isFarsi
-  } = useLanguage();
+  const { isFarsi } = useLanguage();
   const [selectedSection, setSelectedSection] = useState(BLUEPRINT_SECTIONS[0]);
-  const category = isFarsi && selectedSection.farsi ? selectedSection.farsi.category : selectedSection.category;
-  const title = isFarsi && selectedSection.farsi ? selectedSection.farsi.title : selectedSection.title;
-  const summary = isFarsi && selectedSection.farsi ? selectedSection.farsi.summary : selectedSection.summary;
-  const content = isFarsi && selectedSection.farsi ? selectedSection.farsi.content : selectedSection.content;
-  const tags = isFarsi && selectedSection.farsi ? selectedSection.farsi.tags : selectedSection.tags;
-  return <div className="py-24 md:py-32 bg-[#F4F1ED] min-h-screen text-left rtl:text-right">
+  const category =
+    isFarsi && selectedSection.farsi
+      ? selectedSection.farsi.category
+      : selectedSection.category;
+  const title =
+    isFarsi && selectedSection.farsi
+      ? selectedSection.farsi.title
+      : selectedSection.title;
+  const summary =
+    isFarsi && selectedSection.farsi
+      ? selectedSection.farsi.summary
+      : selectedSection.summary;
+  const content =
+    isFarsi && selectedSection.farsi
+      ? selectedSection.farsi.content
+      : selectedSection.content;
+  const tags =
+    isFarsi && selectedSection.farsi
+      ? selectedSection.farsi.tags
+      : selectedSection.tags;
+  return (
+    <div className="py-24 md:py-32 bg-[#F4F1ED] min-h-screen text-left rtl:text-right">
       <div className="max-w-7xl mx-auto px-6 sm:px-12">
         {/* Intro */}
         <MaisonReveal variant="unveil" threshold={0.02}>
@@ -204,24 +241,37 @@ export default function Blueprint() {
               {isFarsi ? "جزئیات فنی و مانیفست زاد" : "ZAAD Blueprint"}
             </h1>
             <p className="text-sm md:text-base text-[#5C5954] mt-2 font-light max-w-2xl leading-relaxed">
-              {isFarsi ? "ارائه جامع ساختار هندسی، کالیبراسیون‌های بصری، تایپوگرافی، پالت‌های خام و فرآیندهای تجربه کاربری معمار طراحی وب آتلیه زاد." : "The full structural, typographical, UX, and technical architecture requested to launch a world-class luxury web platform built with ultimate engineering discipline."}
+              {isFarsi
+                ? "ارائه جامع ساختار هندسی، کالیبراسیون‌های بصری، تایپوگرافی، پالت‌های خام و فرآیندهای تجربه کاربری معمار طراحی وب آتلیه زاد."
+                : "The full structural, typographical, UX, and technical architecture requested to launch a world-class luxury web platform built with ultimate engineering discipline."}
             </p>
           </div>
         </MaisonReveal>
 
         {/* Dynamic Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
           {/* Menu column */}
-          <MaisonReveal variant="slide-up-royal" delay={0.1} className="lg:col-span-4 space-y-4">
+          <MaisonReveal
+            variant="slide-up-royal"
+            delay={0.1}
+            className="lg:col-span-4 space-y-4"
+          >
             <span className="text-[9px] font-mono tracking-widest text-[#5C5954] block uppercase mb-2">
               {isFarsi ? "مرور پرونده‌های جامع" : "EXPLORE BRIEFING FILES"}
             </span>
-            {BLUEPRINT_SECTIONS.map(sec => {
-            const secCategory = isFarsi && sec.farsi ? sec.farsi.category : sec.category;
-            const secTitle = isFarsi && sec.farsi ? sec.farsi.title : sec.title;
-            const secSummary = isFarsi && sec.farsi ? sec.farsi.summary : sec.summary;
-            return <button key={sec.id} onClick={() => setSelectedSection(sec)} className={`w-full text-left rtl:text-right p-5 border text-xs transition-all duration-300 rounded-xl focus:outline-none flex flex-col cursor-pointer ${selectedSection.id === sec.id ? "bg-white border-[#1C1C1C] shadow-md" : "bg-white/40 border-[#1C1C1C]/10 hover:bg-white"}`}>
+            {BLUEPRINT_SECTIONS.map((sec) => {
+              const secCategory =
+                isFarsi && sec.farsi ? sec.farsi.category : sec.category;
+              const secTitle =
+                isFarsi && sec.farsi ? sec.farsi.title : sec.title;
+              const secSummary =
+                isFarsi && sec.farsi ? sec.farsi.summary : sec.summary;
+              return (
+                <button
+                  key={sec.id}
+                  onClick={() => setSelectedSection(sec)}
+                  className={`w-full text-left rtl:text-right p-5 border text-xs transition-all duration-300 rounded-xl focus:outline-none flex flex-col cursor-pointer ${selectedSection.id === sec.id ? "bg-white border-[#1C1C1C] shadow-md" : "bg-white/40 border-[#1C1C1C]/10 hover:bg-white"}`}
+                >
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[9px] font-mono text-[#8E7A62] font-semibold uppercase tracking-widest">
                       {secCategory}
@@ -233,12 +283,17 @@ export default function Blueprint() {
                   <span className="text-[11px] text-[#5C5954] leading-relaxed font-light font-sans">
                     {secSummary}
                   </span>
-                </button>;
-          })}
+                </button>
+              );
+            })}
           </MaisonReveal>
 
           {/* Doc rendering column */}
-          <MaisonReveal variant="scale-down-unveil" delay={0.25} className="lg:col-span-8 bg-[#E8E4DF]/60 p-8 border border-[#1C1C1C]/10 shadow-sm rounded-2xl">
+          <MaisonReveal
+            variant="scale-down-unveil"
+            delay={0.25}
+            className="lg:col-span-8 bg-[#E8E4DF]/60 p-8 border border-[#1C1C1C]/10 shadow-sm rounded-2xl"
+          >
             <div className="flex items-center justify-between border-b border-[#1C1C1C]/10 pb-4 mb-6 text-xs font-mono">
               <span className="text-[#8E7A62] uppercase tracking-widest font-semibold">
                 {category} / {isFarsi ? "پرونده فنی جاری" : "CHAPTER FILE"}
@@ -256,17 +311,24 @@ export default function Blueprint() {
             {/* Rendered tag list */}
             <div className="border-t border-[#1C1C1C]/10 pt-6 mt-8">
               <span className="text-[9px] font-mono text-[#5C5954] uppercase block mb-3">
-                {isFarsi ? "برچسب‌های سیستم فنی جاری:" : "BLUEPRINT SYSTEM TAGS:"}
+                {isFarsi
+                  ? "برچسب‌های سیستم فنی جاری:"
+                  : "BLUEPRINT SYSTEM TAGS:"}
               </span>
               <div className="flex flex-wrap gap-1.5">
-                {tags.map((tg, idx) => <span key={idx} className="bg-white border border-[#1C1C1C]/10 text-[10px] font-mono px-3 py-1.5 text-[#1C1C1C] uppercase tracking-wider rounded-full">
+                {tags.map((tg, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-white border border-[#1C1C1C]/10 text-[10px] font-mono px-3 py-1.5 text-[#1C1C1C] uppercase tracking-wider rounded-full"
+                  >
                     {tg}
-                  </span>)}
+                  </span>
+                ))}
               </div>
             </div>
           </MaisonReveal>
-
         </div>
       </div>
-    </div>;
+    </div>
+  );
 }
