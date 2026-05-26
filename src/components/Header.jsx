@@ -40,7 +40,7 @@ export default function Header({
 
     return (
         <header
-            className="fixed top-0 left-0 w-full z-50 bg-panel/10 hover:bg-panel/20 backdrop-blur-[6px] border-b border-ink/5 transition-all duration-300">
+            className="fixed top-0 left-0 w-full z-50 bg-panel-glass hover:bg-panel-frost backdrop-blur-[6px] border-b border-ink-faint transition-all duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-12 py-3.5 sm:py-4 flex items-center justify-between relative">
 
                 {/* Left Side: Elegant Trigger Button */}
@@ -124,14 +124,16 @@ export default function Header({
                         transition={{duration: 1.1, ease: [0.76, 0, 0.24, 1]}}
                         className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
                     >
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.4] dark:opacity-[0.25] !mix-blend-overlay">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.15] mix-blend-soft-light">
                             <svg viewBox="0 0 100% 100%" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                                 <filter id="luxuryNoise">
-                                    <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3"
-                                                  stitchTiles="stitch"/>
-                                    <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.3 0"/>
+                                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch" />
+                                    <feColorMatrix type="saturate" values="0" />
+                                    <feComponentTransfer>
+                                        <feFuncA type="linear" slope="0.4" />
+                                    </feComponentTransfer>
                                 </filter>
-                                <rect width="100%" height="100%" filter="url(#luxuryNoise)"/>
+                                <rect width="100%" height="100%" filter="url(#luxuryNoise)" />
                             </svg>
                         </div>
 
