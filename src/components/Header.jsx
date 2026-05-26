@@ -124,7 +124,7 @@ export default function Header({
                         transition={{duration: 1.1, ease: [0.76, 0, 0.24, 1]}}
                         className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
                     >
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.12] dark:opacity-[0.08] mix-blend-overlay">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.4] dark:opacity-[0.25] mix-blend-overlay">
                             <svg viewBox="0 0 100% 100%" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                                 <filter id="luxuryNoise">
                                     <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3"
@@ -167,48 +167,54 @@ export default function Header({
                                         {t("menuSystemDirectories")}
                                       </span>
 
-                                    <button
-                                        onClick={() => {
-                                            setActiveTab("showroom");
-                                            onSelectProduct(null);
-                                            setMenuOpen(false);
-                                            animateScrollToTop(1400);
-                                        }}
-                                        className={`group text-left rtl:text-right p-2.5 border transition-all duration-300 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] ${activeTab === "showroom" && !selectedProduct ? "bg-accent/8 border-accent/40 shadow-sm font-semibold" : "border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40"}`}
-                                    >
-                                        <div className="flex justify-between items-center w-full">
-                                              <span
-                                                  className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
-                                                {t("menuLivingShowroom")}
-                                              </span>
-                                            <ChevronRight
-                                                className="w-3.5 h-3.5 text-accent group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-transform duration-300"/>
-                                        </div>
-                                        <span className="text-[11px] text-muted font-light mt-0.5 leading-none">
-                      {t("menuLivingShowroomSub")}
-                    </span>
-                                    </button>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 h-full pb-1">
+                                        <button
+                                            onClick={() => {
+                                                setActiveTab("showroom");
+                                                onSelectProduct(null);
+                                                setMenuOpen(false);
+                                                animateScrollToTop(1400);
+                                            }}
+                                            className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${activeTab === "showroom" && !selectedProduct ? "bg-[#C5A059]/10 border-[#C5A059]/50 shadow-md font-semibold" : "border-ink/10 hover:border-[#C5A059]/60 bg-panel/20 hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"}`}
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                            <div className="flex justify-end w-full">
+                                                <span className="text-[10px] font-mono tracking-widest text-accent/60 group-hover:text-[#C5A059] transition-colors duration-300 uppercase">SYS.01</span>
+                                            </div>
+                                            <div className="flex flex-col mt-6 relative z-10">
+                                                <span className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
+                                                    {t("menuLivingShowroom")}
+                                                </span>
+                                                <div className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                                    <span className="text-[10px] tracking-[0.2em] text-[#C5A059] uppercase">{t("menuLivingShowroomSub")}</span>
+                                                    <ChevronRight className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
+                                                </div>
+                                            </div>
+                                        </button>
 
-                                    <button
-                                        onClick={() => {
-                                            setActiveTab("pdf");
-                                            onSelectProduct(null);
-                                            setMenuOpen(false);
-                                        }}
-                                        className={`group text-left rtl:text-right p-2.5 border transition-all duration-300 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] ${activeTab === "blueprint" ? "bg-accent/8 border-accent/40 shadow-sm font-semibold" : "border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40"}`}
-                                    >
-                                        <div className="flex justify-between items-center w-full">
-                                              <span
-                                                  className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
-                                                {t("menuAtelierBlueprints")}
-                                              </span>
-                                            <ChevronRight
-                                                className="w-3.5 h-3.5 text-accent group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-transform duration-300"/>
-                                        </div>
-                                        <span className="text-[11px] text-muted font-light mt-0.5 leading-none">
-                      {t("menuAtelierBlueprintsSub")}
-                    </span>
-                                    </button>
+                                        <button
+                                            onClick={() => {
+                                                setActiveTab("pdf");
+                                                onSelectProduct(null);
+                                                setMenuOpen(false);
+                                            }}
+                                            className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${activeTab === "blueprint" ? "bg-[#C5A059]/10 border-[#C5A059]/50 shadow-md font-semibold" : "border-ink/10 hover:border-[#C5A059]/60 bg-panel/20 hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"}`}
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                            <div className="flex justify-end w-full">
+                                                <span className="text-[10px] font-mono tracking-widest text-accent/60 group-hover:text-[#C5A059] transition-colors duration-300 uppercase">SYS.02</span>
+                                            </div>
+                                            <div className="flex flex-col mt-6 relative z-10">
+                                                <span className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
+                                                    {t("menuAtelierBlueprints")}
+                                                </span>
+                                                <div className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                                    <span className="text-[10px] tracking-[0.2em] text-[#C5A059] uppercase">{t("menuAtelierBlueprintsSub")}</span>
+                                                    <ChevronRight className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Column 2: JOURNEY INDEX (Stretches across 2/3 space, items side-by-side) */}
@@ -218,8 +224,8 @@ export default function Header({
                                     {t("menuJourneyIndex")}
                                   </span>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 flex-1">
-                                        {journeyLinks.map((target) => (
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1 pb-1">
+                                        {journeyLinks.map((target, index) => (
                                             <button
                                                 key={target.key}
                                                 onClick={() => {
@@ -230,26 +236,28 @@ export default function Header({
                                                         animateScrollTo(target.key, 1400);
                                                     }, 120);
                                                 }}
-                                                className="group p-4 border border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40 rounded-lg cursor-pointer flex flex-col justify-between transition-all duration-300 text-left rtl:text-right h-full"
+                                                className="group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden border-ink/10 hover:border-[#C5A059]/60 bg-panel/20 hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"
                                             >
-                                                <div className="flex justify-between items-start w-full mb-4">
-                                                    <span className="text-lg font-serif font-semibold text-headline">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                                <div className="flex justify-end w-full">
+                                                    <span className="text-[10px] font-mono tracking-widest text-accent/60 group-hover:text-[#C5A059] transition-colors duration-300 uppercase">CH.{String(index + 1).padStart(2, "0")}</span>
+                                                </div>
+                                                <div className="flex flex-col mt-6 relative z-10">
+                                                    <span className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
                                                       {target.label}
                                                     </span>
-                                                    <ChevronRight
-                                                        className="w-4 h-4 text-accent group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-300"/>
+                                                    <div className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                                        <span className="text-[10px] tracking-[0.2em] text-[#C5A059] uppercase">{target.sub}</span>
+                                                        <ChevronRight className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
+                                                    </div>
                                                 </div>
-                                                <span
-                                                    className="text-[11px] text-accent font-mono uppercase leading-tight">
-                                                  {target.sub}
-                                                </span>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
                                 {/* ELEGANT DIVIDER */}
-                                <div className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent my-1 sm:my-2" />
+                                <div className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent my-1 sm:my-2" />
 
                                 {/* ROW 2: CURATED SPECIMENS (Spans full width, 4 items horizontal) */}
                                 <div className="md:col-span-12 flex flex-col space-y-2">
@@ -270,27 +278,26 @@ export default function Header({
                                                         onSelectProduct(item);
                                                         setMenuOpen(false);
                                                     }}
-                                                    className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${isSculptureActive ? "bg-accent/15 border-accent/50 font-semibold shadow-md" : "border-ink/10 hover:border-accent/30 bg-panel/20 hover:bg-panel/60 shadow-sm hover:shadow-md"}`}
+                                                    className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${isSculptureActive ? "bg-[#C5A059]/10 border-[#C5A059]/50 font-semibold shadow-md" : "border-ink/10 hover:border-[#C5A059]/60 bg-panel/20 hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"}`}
                                                 >
-                                                    {/* Subtle elegant gradient overlay on hover */}
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                                                     <div className="flex justify-end w-full">
                                                         <span
-                                                            className="text-xs font-mono tracking-widest text-accent/80 group-hover:text-accent transition-colors duration-300">
+                                                            className="text-xs font-mono tracking-widest text-accent/80 group-hover:text-[#C5A059] transition-colors duration-300">
                                                           {item.number}
                                                         </span>
                                                     </div>
-                                                    <div className="flex flex-col mt-6">
+                                                    <div className="flex flex-col mt-6 relative z-10">
                                                         <span className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
                                                           {translatedItem?.name || item.name}
                                                         </span>
                                                         <div className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                                             <span
-                                                                className="text-[10px] tracking-[0.2em] text-muted uppercase">
+                                                                className="text-[10px] tracking-[0.2em] text-[#C5A059] uppercase">
                                                               {t("menuView")}
                                                             </span>
-                                                            <ChevronRight className="w-3 h-3 text-accent ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
+                                                            <ChevronRight className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
                                                         </div>
                                                     </div>
                                                 </button>
