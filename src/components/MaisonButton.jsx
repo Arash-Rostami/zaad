@@ -68,11 +68,11 @@ export default function MaisonButton({
   const getVariantStyles = () => {
     switch (variant) {
       case "solid":
-        return "bg-ink text-canvas border border-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-sm";
+        return "bg-ink text-on-indicator border border-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-sm";
       case "outline":
         return "border border-ink/20 text-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 bg-transparent";
       case "pill-dark":
-        return "bg-ink text-canvas border border-ink/10 rounded-full text-[10px] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-sm";
+        return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[10px] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-sm";
       case "pill-light":
         return "border border-ink/20 text-ink rounded-full text-[9.5px] tracking-[0.2em] font-semibold uppercase px-6 py-3 bg-transparent";
       case "ghost":

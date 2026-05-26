@@ -91,6 +91,7 @@ export default function InitialLoader() {
                     <motion.div
                         id="zaad-loader"
                         className="fixed inset-0 z-[9999] bg-surface flex flex-col items-center justify-center pointer-events-none"
+                        dir="ltr"
                         initial="hidden"
                         animate="visible"
                         exit="exit"
