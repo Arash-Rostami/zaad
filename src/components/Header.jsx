@@ -122,7 +122,7 @@ export default function Header({
                         animate={{opacity: 1, height: "auto", clipPath: "inset(0% 0% 0% 0%)"}}
                         exit={{opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)"}}
                         transition={{duration: 1.1, ease: [0.76, 0, 0.24, 1]}}
-                        className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
+                        className="absolute top-full left-0 w-full bg-overlay-panel/90 backdrop-blur-xl border-b border-accent/20 shadow-deep z-40 overflow-hidden"
                     >
                         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.4] dark:opacity-[0.25] mix-blend-overlay">
                             <svg viewBox="0 0 100% 100%" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
