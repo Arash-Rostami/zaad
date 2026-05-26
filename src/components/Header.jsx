@@ -124,8 +124,7 @@ export default function Header({
                         transition={{duration: 1.1, ease: [0.76, 0, 0.24, 1]}}
                         className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
                     >
-                        <div
-                            className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.06] dark:opacity-[0.03] mix-blend-overlay">
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.12] dark:opacity-[0.08] mix-blend-overlay">
                             <svg viewBox="0 0 100% 100%" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                                 <filter id="luxuryNoise">
                                     <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3"
@@ -161,7 +160,7 @@ export default function Header({
                                 transition={{duration: 0.9, delay: 0.2, ease: [0.76, 0, 0.24, 1]}}
                                 className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5"
                             >
-                                {/* Column 1: PRIMARY PORTALS */}
+                                {/* ROW 1: PRIMARY PORTALS (1/3) & JOURNEY INDEX (2/3) */}
                                 <div className="md:col-span-4 flex flex-col space-y-2">
                                       <span
                                           className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
@@ -212,49 +211,54 @@ export default function Header({
                                     </button>
                                 </div>
 
-                                {/* Column 2: JOURNEY INDEX */}
-                                <div className="md:col-span-4 flex flex-col space-y-2">
-                  <span
-                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
-                    {t("menuJourneyIndex")}
-                  </span>
+                                {/* Column 2: JOURNEY INDEX (Stretches across 2/3 space, items side-by-side) */}
+                                <div className="md:col-span-8 flex flex-col space-y-2">
+                                  <span
+                                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
+                                    {t("menuJourneyIndex")}
+                                  </span>
 
-                                    {journeyLinks.map((target) => (
-                                        <button
-                                            key={target.key}
-                                            onClick={() => {
-                                                setActiveTab("showroom");
-                                                onSelectProduct(null);
-                                                setMenuOpen(false);
-                                                setTimeout(() => {
-                                                    animateScrollTo(target.key, 1400);
-                                                }, 120);
-                                            }}
-                                            className="group p-2.5 border border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40 rounded-lg cursor-pointer flex flex-col justify-center transition-all duration-300 text-left rtl:text-right min-h-[58px]"
-                                        >
-                                            <div className="flex justify-between items-center w-full">
-                        <span className="text-md font-serif font-semibold text-headline">
-                          {target.label}
-                        </span>
-                                                <ChevronRight
-                                                    className="w-3.5 h-3.5 text-accent group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300"/>
-                                            </div>
-                                            <span
-                                                className="text-[11px] text-accent font-mono mt-0.5 uppercase leading-tight">
-                        {target.sub}
-                      </span>
-                                        </button>
-                                    ))}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 flex-1">
+                                        {journeyLinks.map((target) => (
+                                            <button
+                                                key={target.key}
+                                                onClick={() => {
+                                                    setActiveTab("showroom");
+                                                    onSelectProduct(null);
+                                                    setMenuOpen(false);
+                                                    setTimeout(() => {
+                                                        animateScrollTo(target.key, 1400);
+                                                    }, 120);
+                                                }}
+                                                className="group p-4 border border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40 rounded-lg cursor-pointer flex flex-col justify-between transition-all duration-300 text-left rtl:text-right h-full"
+                                            >
+                                                <div className="flex justify-between items-start w-full mb-4">
+                                                    <span className="text-lg font-serif font-semibold text-headline">
+                                                      {target.label}
+                                                    </span>
+                                                    <ChevronRight
+                                                        className="w-4 h-4 text-accent group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-300"/>
+                                                </div>
+                                                <span
+                                                    className="text-[11px] text-accent font-mono uppercase leading-tight">
+                                                  {target.sub}
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
 
-                                {/* Column 3: CURATED SPECIMENS */}
-                                <div className="md:col-span-4 flex flex-col space-y-2">
-                  <span
-                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
-                    {t("menuCuratedSpecimens")}
-                  </span>
+                                {/* ELEGANT DIVIDER */}
+                                <div className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent my-1 sm:my-2" />
 
-                                    <div className="flex flex-col space-y-2">
+                                {/* ROW 2: CURATED SPECIMENS (Spans full width, 4 items horizontal) */}
+                                <div className="md:col-span-12 flex flex-col space-y-2">
+                                  <span
+                                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
+                                    {t("menuCuratedSpecimens")}
+                                  </span>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                                         {collection.map((item) => {
                                             const isSculptureActive = selectedProduct?.id === item.id;
                                             const translatedItem = getItemTranslations(item.id);
@@ -266,27 +270,36 @@ export default function Header({
                                                         onSelectProduct(item);
                                                         setMenuOpen(false);
                                                     }}
-                                                    className={`text-left rtl:text-right p-2.5 border transition-all duration-300 rounded-lg cursor-pointer flex items-center justify-between min-h-[58px] ${isSculptureActive ? "bg-accent/10 border-accent/40 font-semibold shadow-sm" : "border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40"}`}
+                                                    className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${isSculptureActive ? "bg-accent/15 border-accent/50 font-semibold shadow-md" : "border-ink/10 hover:border-accent/30 bg-panel/20 hover:bg-panel/60 shadow-sm hover:shadow-md"}`}
                                                 >
-                                                    <div className="flex flex-col">
-                            <span className="text-md font-serif font-semibold text-headline leading-tight-none">
-                              {translatedItem?.name || item.name}
-                            </span>
+                                                    {/* Subtle elegant gradient overlay on hover */}
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                                                    <div className="flex justify-end w-full">
                                                         <span
-                                                            className="text-[11px] font-mono text-accent mt-0.5 leading-none">
-                              {item.number}
-                            </span>
+                                                            className="text-xs font-mono tracking-widest text-accent/80 group-hover:text-accent transition-colors duration-300">
+                                                          {item.number}
+                                                        </span>
                                                     </div>
-                                                    <span
-                                                        className="text-[11px] tracking-widest text-muted uppercase hover:translate-x-0.5 rtl:hover:-translate-x-0.5 transition-transform duration-300">
-                            {t("menuView")}
-                          </span>
+                                                    <div className="flex flex-col mt-6">
+                                                        <span className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
+                                                          {translatedItem?.name || item.name}
+                                                        </span>
+                                                        <div className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                                            <span
+                                                                className="text-[10px] tracking-[0.2em] text-muted uppercase">
+                                                              {t("menuView")}
+                                                            </span>
+                                                            <ChevronRight className="w-3 h-3 text-accent ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
+                                                        </div>
+                                                    </div>
                                                 </button>
                                             );
                                         })}
                                     </div>
                                 </div>
-                            </motion.div>
+
+                                </motion.div>
 
                             {/* Settings footer */}
                             <motion.div
@@ -313,18 +326,13 @@ export default function Header({
                                             className="flex items-center relative rounded-full bg-toggle-track p-0.5 font-mono text-[8px] tracking-widest h-7 w-20">
                                             <button
                                                 onClick={() => setLanguage("en")}
-                                                className={`flex-1 text-center h-full rounded-full transition-all duration-700 relative z-10 uppercase text-[8.5px] font-semibold flex items-center justify-center ${language === "en" ? "text-on-indicator font-bold" : "text-muted hover:text-headline"}`}
+                                                className={`cursor-pointer flex-1 text-center h-full rounded-full transition-colors duration-700 relative z-10 uppercase text-[8.5px] font-semibold flex items-center justify-center ${language === "en" ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted hover:text-headline"}`}
                                             >
                                                 {language === "en" && (
                                                     <motion.div
                                                         layoutId="activeLanguageBlobInNavbar"
                                                         className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                        transition={{
-                                                            type: "spring",
-                                                            stiffness: 200,
-                                                            damping: 25,
-                                                            mass: 0.8
-                                                        }}
+                                                        transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, ease: "easeInOut" }}
                                                     />
                                                 )}
                                                 EN
@@ -332,18 +340,13 @@ export default function Header({
 
                                             <button
                                                 onClick={() => setLanguage("fa")}
-                                                className={`flex-1 text-center h-full rounded-full transition-all duration-700 relative z-10 text-[8.5px] font-semibold flex items-center justify-center ${language === "fa" ? "text-on-indicator font-bold" : "text-muted hover:text-headline"}`}
+                                                className={`cursor-pointer flex-1 text-center h-full rounded-full transition-colors duration-700 relative z-10 text-[8.5px] font-semibold flex items-center justify-center ${language === "fa" ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted hover:text-headline"}`}
                                             >
                                                 {language === "fa" && (
                                                     <motion.div
                                                         layoutId="activeLanguageBlobInNavbar"
                                                         className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                        transition={{
-                                                            type: "spring",
-                                                            stiffness: 200,
-                                                            damping: 25,
-                                                            mass: 0.8
-                                                        }}
+                                                        transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, ease: "easeInOut" }}
                                                     />
                                                 )}
                                                 FA
@@ -367,18 +370,13 @@ export default function Header({
                                                         <button
                                                             key={mode}
                                                             onClick={() => handleThemeChange(mode)}
-                                                            className={`px-2 h-full text-[8.5px] font-semibold font-mono tracking-widest rounded-full transition-all duration-700 relative z-10 flex items-center justify-center ${isActive ? "text-on-indicator font-bold" : "text-muted/70 hover:text-headline"}`}
+                                                            className={`cursor-pointer px-2 h-full text-[8.5px] font-semibold font-mono tracking-widest rounded-full transition-colors duration-700 relative z-10 flex items-center justify-center ${isActive ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted/70 hover:text-headline"}`}
                                                         >
                                                             {isActive && (
                                                                 <motion.div
                                                                     layoutId="activeThemeBlobInNavbar"
                                                                     className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                                    transition={{
-                                                                        type: "spring",
-                                                                        stiffness: 200,
-                                                                        damping: 25,
-                                                                        mass: 0.8
-                                                                    }}
+                                                                    transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, ease: "easeInOut" }}
                                                                 />
                                                             )}
                                                             {label}
