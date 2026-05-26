@@ -91,7 +91,7 @@ export default function Concierge({preselectedItem, onClearPreselected}) {
                                                 required
                                                 value={clientEmail}
                                                 onChange={(e) => setClientEmail(e.target.value)}
-                                                placeholder="client@atelier.com"
+                                                placeholder="client@ZAAD.com"
                                                 className="w-full bg-panel border border-ink/15 px-4 py-3 text-xs focus:border-ink/80 focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-sans"
                                             />
                                         </div>
@@ -170,7 +170,7 @@ export default function Concierge({preselectedItem, onClearPreselected}) {
                                     </h4>
                                     <p className="text-xs text-muted leading-relaxed max-w-sm mx-auto mb-6">
                                         {language === "fa"
-                                            ? `${clientName} عزیز، اطلاعات ثبت سفارش شما با موفقیت در سیستم مرکزی کارگاه فلورانس ثبت گردید. مدیر طراحی ارشد آتلیه به زودی طی ۴ ساعت آینده با شما تماس خواهد گرفت.`
+                                            ? `${clientName} عزیز، اطلاعات ثبت سفارش شما با موفقیت در سیستم مرکزی کارگاه فلورانس ثبت گردید. مدیر طراحی ارشد ZAAD به زودی طی ۴ ساعت آینده با شما تماس خواهد گرفت.`
                                             : `${clientName}, your secure consultation card has been committed to our Florence studio log. A dedicated design director will reach out directly to your coordinate email within 4 hours.`}
                                     </p>
                                     <div
