@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { defaultLanguage, languages } from "@/lib/i18n/config";
 import { en } from "@/lib/i18n/en";
 import { fa } from "@/lib/i18n/fa";
@@ -92,7 +93,18 @@ export function LanguageProvider({ children }) {
         style={{ direction: dir }}
         className={isFarsi ? "font-sans rtl" : "font-sans ltr"}
       >
-        {children}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={language}
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, filter: "blur(4px)" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full h-full min-h-screen"
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </LanguageContext.Provider>
   );
