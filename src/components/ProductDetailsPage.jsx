@@ -115,7 +115,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                                 e.stopPropagation();
                                 goPrevWrapped();
                             }}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-panel/70 backdrop-blur-md border border-ink/5 p-2 rounded-full cursor-pointer hover:bg-panel transition-all z-10"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-panel/70   border border-ink/5 p-2 rounded-full cursor-pointer hover:bg-panel transition-all z-10"
                         >
                             <ChevronLeft className="w-4 h-4 text-ink stroke-[1]"/>
                         </button>
@@ -124,13 +124,13 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                                 e.stopPropagation();
                                 goNextWrapped();
                             }}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-panel/70 backdrop-blur-md border border-ink/5 p-2 rounded-full cursor-pointer hover:bg-panel transition-all z-10"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-panel/70   border border-ink/5 p-2 rounded-full cursor-pointer hover:bg-panel transition-all z-10"
                         >
                             <ChevronRight className="w-4 h-4 text-ink stroke-[1]"/>
                         </button>
 
                         <div
-                            className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 font-mono text-[9px] text-white/95 tracking-widest max-w-[85%] truncate z-10">
+                            className="absolute bottom-4 left-4 bg-black/50   px-3 py-1.5 rounded-lg border border-white/10 font-mono text-[9px] text-white/95 tracking-widest max-w-[85%] truncate z-10">
                             VIEW {activeImageIndex + 1} OF {item.images.length}:{" "}
                             {item.images[activeImageIndex]?.caption || `${item.name} layout`}
                         </div>
@@ -143,7 +143,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                             }}
                         >
                             <div
-                                className="w-8 h-8 flex items-center justify-center bg-panel-frost bg-surface-alt/95 backdrop-blur-md border border-ink/12 rounded-full shadow-lg text-headline">
+                                className="w-8 h-8 flex items-center justify-center bg-panel-frost bg-surface-alt/95   border border-ink/12 rounded-full shadow-lg text-headline">
                                 <Maximize2 className="w-3.5 h-3.5 stroke-[1.8]"/>
                             </div>
                         </div>
@@ -636,7 +636,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                         animate={{opacity: 1}}
                         exit={{opacity: 0}}
                         transition={{duration: 0.75, ease: [0.16, 1, 0.3, 1]}}
-                        className="fixed inset-0 z-[120] flex flex-col items-center justify-center backdrop-blur-3xl p-6 md:p-16 cursor-zoom-out group/lightbox"
+                        className="fixed inset-0 z-[120] flex flex-col items-center justify-center p-6 md:p-16 cursor-zoom-out group/lightbox"
                         style={{backgroundColor: "var(--bg-card-95)"}}
                         onClick={closeLightbox}
                     >
@@ -742,7 +742,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                             onMouseEnter={() => setIsZoomControllerHovered(true)}
                             onMouseLeave={() => setIsZoomControllerHovered(false)}
                             onClick={(e) => e.stopPropagation()}
-                            className="absolute bottom-28 md:bottom-24 left-6 sm:left-10 md:left-12 lg:left-16 z-50 pointer-events-auto flex items-center bg-panel/75 backdrop-blur-md border border-ink/10 rounded-full h-11 p-1.5 shadow-card-lg select-none opacity-0 group-hover/lightbox:opacity-100 focus-within:opacity-100 transition-opacity duration-300"
+                            className="absolute bottom-28 md:bottom-24 left-6 sm:left-10 md:left-12 lg:left-16 z-50 pointer-events-auto flex items-center bg-panel/75   border border-ink/10 rounded-full h-11 p-1.5 shadow-card-lg select-none opacity-0 group-hover/lightbox:opacity-100 focus-within:opacity-100 transition-opacity duration-300"
                             animate={{width: isZoomControllerHovered ? 290 : 44}}
                             transition={{duration: 0.65, ease: [0.16, 1, 0.3, 1]}}
                         >

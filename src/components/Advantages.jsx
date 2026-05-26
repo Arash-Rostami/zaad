@@ -17,9 +17,9 @@ export default function Advantages() {
         >
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
                 <div
-                    className="absolute left-1/4 top-1/10 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-accent/0 via-accent/10 to-accent/0 dark:via-accent/20 blur-[130px] mix-blend-screen transition-opacity duration-1000"/>
+                    className="absolute left-1/4 top-1/10 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-accent/0 via-accent/10 to-accent/0 dark:via-accent/20 mix-blend-screen transition-opacity duration-1000"/>
                 <div
-                    className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] rounded-full bg-accent/5 dark:bg-accent/15 blur-[140px] mix-blend-screen"/>
+                    className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] rounded-full bg-accent/5 dark:bg-accent/15 mix-blend-screen"/>
                 <div
                     className="absolute top-0 left-1/3 w-[240px] h-[220%] bg-gradient-to-r from-transparent via-white/[0.04] dark:via-white/[0.14] to-transparent sunbeam-signature-glare pointer-events-none mix-blend-overlay"
                     style={{animationDuration: "28s"}}
@@ -55,7 +55,7 @@ export default function Advantages() {
                             <div key={card.id}>
                                 <MaisonReveal variant="slide-up-royal" delay={0.1 * idx}>
                                     <div
-                                        className="group h-full relative p-8 md:p-10 bg-[var(--bg-card-trans)] backdrop-blur-md border border-[var(--border-color-10)] hover:border-[var(--text-bronze)]/50 transition-all duration-700 rounded-2xl flex flex-col justify-between overflow-hidden">
+                                        className="group h-full relative p-8 md:p-10 bg-[var(--bg-card-trans)]   border border-[var(--border-color-10)] hover:border-[var(--text-bronze)]/50 transition-all duration-700 rounded-2xl flex flex-col justify-between overflow-hidden">
                                         <div
                                             className="absolute inset-0 bg-gradient-to-br from-transparent to-accent/3 dark:to-accent/3 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"/>
 

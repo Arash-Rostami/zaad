@@ -12,15 +12,15 @@ export default function Story() {
         >
             {/* Absolute backgrounds - delicate circular accent or grid */}
             <div
-                className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tone/30 blur-3xl pointer-events-none"></div>
+                className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tone/30 pointer-events-none"></div>
 
             {/* Majestic Cinematic Sunbeam Glare overlay */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
                 {/* Ambient golden pool backing catching the viewer's gaze from the background */}
                 <div
-                    className="absolute left-1/3 top-1/10 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-accent/0 via-accent/10 to-accent/0 dark:via-accent/20 blur-[130px] mix-blend-screen transition-opacity duration-1000"/>
+                    className="absolute left-1/3 top-1/10 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-accent/0 via-accent/10 to-accent/0 dark:via-accent/20 mix-blend-screen transition-opacity duration-1000"/>
                 <div
-                    className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] rounded-full bg-accent/5 dark:bg-accent/15 blur-[140px] mix-blend-screen"/>
+                    className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] rounded-full bg-accent/5 dark:bg-accent/15 mix-blend-screen"/>
 
                 {/* Primary Tuscan Early Evening Window Slit Beam (diag sweep) */}
                 <div
@@ -41,7 +41,7 @@ export default function Story() {
 
                 {/* Dynamic ambient highlight spot directly behind the editorial typography */}
                 <div
-                    className="absolute left-[50%] top-[40%] -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gradient-to-r from-transparent via-accent/5 to-transparent dark:via-accent/15 blur-[85px] mix-blend-screen pointer-events-none"/>
+                    className="absolute left-[50%] top-[40%] -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gradient-to-r from-transparent via-accent/5 to-transparent dark:via-accent/15 mix-blend-screen pointer-events-none"/>
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10">
@@ -78,7 +78,7 @@ export default function Story() {
                             variant="slide-up-royal"
                             delay={0.3}
                             threshold={0.01}
-                            className="absolute -bottom-6 -right-6 lg:-right-8 bg-panel-frost backdrop-blur-sm border border-ink/10 p-5 hidden md:block shadow-md max-w-[220px] rounded-xl z-20 text-left rtl:text-right"
+                            className="absolute -bottom-6 -right-6 lg:-right-8 bg-panel-frost   border border-ink/10 p-5 hidden md:block shadow-md max-w-[220px] rounded-xl z-20 text-left rtl:text-right"
                         >
               <span className="text-[10px] font-mono text-accent block mb-1">
                 {t("rawOrigin")}
