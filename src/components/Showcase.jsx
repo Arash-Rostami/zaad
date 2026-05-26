@@ -407,7 +407,7 @@ export default function Showcase({onInquireItem, onViewDetails}) {
                                                 </div>
                                                 <div className="space-y-1">
                           <span className="text-[9px] font-mono tracking-widest text-muted block uppercase">
-                            {t("showcaseAtelierWeight")}
+                            {t("showcaseZAADWeight")}
                           </span>
                                                     <span
                                                         className="text-ink font-light text-xs sm:text-sm block leading-relaxed">
