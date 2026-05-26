@@ -204,7 +204,7 @@ export default function Showcase({onInquireItem, onViewDetails}) {
                                         className="absolute left-0 top-0 bottom-0 w-1/5 flex items-center justify-start pl-4 md:pl-6 text-headline transition-all duration-500 opacity-0 group-hover:opacity-100 cursor-pointer z-20 group/prev-btn"
                                     >
                                         <div
-                                            className="flex items-center space-x-2 bg-panel/70 backdrop-blur-md border border-ink/5 py-2 px-3 rounded-full translate-x-1 group-hover/prev-btn:translate-x-0 transition-all duration-300">
+                                            className="flex items-center space-x-2 bg-panel/70   border border-ink/5 py-2 px-3 rounded-full translate-x-1 group-hover/prev-btn:translate-x-0 transition-all duration-300">
                                             <ChevronLeft className="w-3.5 h-3.5 stroke-[1]"/>
                                             <span
                                                 className="font-mono text-[8px] tracking-[0.2em] uppercase text-muted opacity-85 select-none">
@@ -220,7 +220,7 @@ export default function Showcase({onInquireItem, onViewDetails}) {
                                         className="absolute right-0 top-0 bottom-0 w-1/5 flex items-center justify-end pr-4 md:pr-6 text-headline transition-all duration-500 opacity-0 group-hover:opacity-100 cursor-pointer z-20 group/next-btn"
                                     >
                                         <div
-                                            className="flex items-center space-x-2 bg-panel/70 backdrop-blur-md border border-ink/5 py-2 px-3 rounded-full -translate-x-1 group-hover/next-btn:translate-x-0 transition-all duration-300">
+                                            className="flex items-center space-x-2 bg-panel/70   border border-ink/5 py-2 px-3 rounded-full -translate-x-1 group-hover/next-btn:translate-x-0 transition-all duration-300">
                       <span
                           className="font-mono text-[8px] tracking-[0.2em] uppercase text-muted opacity-85 select-none">
                         {t("showcaseNext")}
@@ -242,21 +242,21 @@ export default function Showcase({onInquireItem, onViewDetails}) {
                                 }}
                             >
                                 <div
-                                    className="w-9 h-9 flex items-center justify-center bg-panel-frost backdrop-blur-md border border-ink/12 rounded-full shadow-card-sm text-ink">
+                                    className="w-9 h-9 flex items-center justify-center bg-panel-frost   border border-ink/12 rounded-full shadow-card-sm text-ink">
                                     <Maximize2 className="w-3.5 h-3.5 stroke-[1.5]"/>
                                 </div>
                             </div>
 
                             {/* Museum card overlay */}
                             <div
-                                className="absolute top-6 left-6 bg-panel-frost backdrop-blur-sm border border-ink/10 px-4 py-2 font-mono text-[9px] tracking-widest text-ink rounded-lg z-10 uppercase">
+                                className="absolute top-6 left-6 bg-panel-frost   border border-ink/10 px-4 py-2 font-mono text-[9px] tracking-widest text-ink rounded-lg z-10 uppercase">
                                 {t("showcaseYear")}: {selectedItem.year}
                             </div>
 
                             {/* Dynamic Aspect & Index Badge */}
                             {viewMode === "editorial" && (
                                 <div
-                                    className="absolute bottom-6 right-6 flex items-center space-x-1.5 bg-panel-frost backdrop-blur-sm border border-ink/10 px-3 py-1.5 rounded-full font-mono text-[8px] tracking-wider text-ink z-10 uppercase">
+                                    className="absolute bottom-6 right-6 flex items-center space-x-1.5 bg-panel-frost   border border-ink/10 px-3 py-1.5 rounded-full font-mono text-[8px] tracking-wider text-ink z-10 uppercase">
                   <span>
                     {activeImageIndex + 1} / {selectedItem.images.length}
                   </span>
@@ -279,7 +279,7 @@ export default function Showcase({onInquireItem, onViewDetails}) {
 
                             {/* Sourced Location Indicator */}
                             <div
-                                className="absolute bottom-6 left-6 flex items-center space-x-2 bg-panel-frost backdrop-blur-sm border border-ink/10 px-3 py-1.5 rounded-full font-mono text-[8px] tracking-wider text-ink z-10">
+                                className="absolute bottom-6 left-6 flex items-center space-x-2 bg-panel-frost   border border-ink/10 px-3 py-1.5 rounded-full font-mono text-[8px] tracking-wider text-ink z-10">
                                 <MapPin className="w-2.5 h-2.5 text-accent"/>
                                 <span>{selectedItem.specifications.origin}</span>
                             </div>
@@ -490,7 +490,7 @@ export default function Showcase({onInquireItem, onViewDetails}) {
                         animate={{opacity: 1}}
                         exit={{opacity: 0}}
                         transition={{duration: 0.75, ease: [0.16, 1, 0.3, 1]}}
-                        className="fixed inset-0 z-[120] flex flex-col items-center justify-center backdrop-blur-3xl p-6 md:p-16 cursor-zoom-out group/lightbox"
+                        className="fixed inset-0 z-[120] flex flex-col items-center justify-center p-6 md:p-16 cursor-zoom-out group/lightbox"
                         style={{backgroundColor: "var(--bg-card-95)"}}
                         onClick={closeLightbox}
                     >
@@ -623,7 +623,7 @@ export default function Showcase({onInquireItem, onViewDetails}) {
                             onMouseEnter={() => setIsZoomControllerHovered(true)}
                             onMouseLeave={() => setIsZoomControllerHovered(false)}
                             onClick={(e) => e.stopPropagation()}
-                            className="absolute bottom-28 md:bottom-24 left-6 sm:left-10 md:left-12 lg:left-16 z-50 pointer-events-auto flex items-center bg-panel/75 backdrop-blur-md border border-ink/10 rounded-full h-11 p-1.5 shadow-card-lg select-none opacity-0 group-hover/lightbox:opacity-100 focus-within:opacity-100 transition-opacity duration-300"
+                            className="absolute bottom-28 md:bottom-24 left-6 sm:left-10 md:left-12 lg:left-16 z-50 pointer-events-auto flex items-center bg-panel/75   border border-ink/10 rounded-full h-11 p-1.5 shadow-card-lg select-none opacity-0 group-hover/lightbox:opacity-100 focus-within:opacity-100 transition-opacity duration-300"
                             animate={{width: isZoomControllerHovered ? 290 : 44}}
                             transition={{duration: 0.65, ease: [0.16, 1, 0.3, 1]}}
                         >

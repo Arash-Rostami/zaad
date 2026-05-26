@@ -159,7 +159,7 @@ export default function Concierge({preselectedItem, onClearPreselected}) {
                                 <motion.div
                                     initial={{opacity: 0, scale: 0.98}}
                                     animate={{opacity: 1, scale: 1}}
-                                    className="bg-panel-frost backdrop-blur-sm p-8 border border-ink/10 text-center rounded-2xl shadow-xl font-sans"
+                                    className="bg-panel-frost   p-8 border border-ink/10 text-center rounded-2xl shadow-xl font-sans"
                                 >
                                     <div
                                         className="w-12 h-12 rounded-full border border-ink/10 flex items-center justify-center mx-auto mb-6 bg-surface">

@@ -149,7 +149,7 @@ export default function Hero({onScrollToCollection}) {
                         />
                         {/* Museum-like object card watermark in corner */}
                         <div
-                            className="absolute bottom-6 left-[inherit] right-6 rtl:right-[inherit] rtl:left-6 bg-panel/90 backdrop-blur-sm p-4 border border-ink/10 max-w-[200px] shadow-sm text-left rtl:text-right">
+                            className="absolute bottom-6 left-[inherit] right-6 rtl:right-[inherit] rtl:left-6 bg-panel/90   p-4 border border-ink/10 max-w-[200px] shadow-sm text-left rtl:text-right">
               <span className="text-[9px] font-mono tracking-widest text-accent block mb-1 uppercase">
                 {t("heroExhibition")}
               </span>
