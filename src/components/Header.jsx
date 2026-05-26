@@ -163,10 +163,10 @@ export default function Header({
                             >
                                 {/* Column 1: PRIMARY PORTALS */}
                                 <div className="md:col-span-4 flex flex-col space-y-2">
-                  <span
-                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
-                    {t("menuSystemDirectories")}
-                  </span>
+                                      <span
+                                          className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
+                                        {t("menuSystemDirectories")}
+                                      </span>
 
                                     <button
                                         onClick={() => {
@@ -178,10 +178,10 @@ export default function Header({
                                         className={`group text-left rtl:text-right p-2.5 border transition-all duration-300 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] ${activeTab === "showroom" && !selectedProduct ? "bg-accent/8 border-accent/40 shadow-sm font-semibold" : "border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40"}`}
                                     >
                                         <div className="flex justify-between items-center w-full">
-                      <span
-                          className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
-                        {t("menuLivingShowroom")}
-                      </span>
+                                              <span
+                                                  className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
+                                                {t("menuLivingShowroom")}
+                                              </span>
                                             <ChevronRight
                                                 className="w-3.5 h-3.5 text-accent group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-transform duration-300"/>
                                         </div>
@@ -192,17 +192,17 @@ export default function Header({
 
                                     <button
                                         onClick={() => {
-                                            setActiveTab("blueprint");
+                                            setActiveTab("pdf");
                                             onSelectProduct(null);
                                             setMenuOpen(false);
                                         }}
                                         className={`group text-left rtl:text-right p-2.5 border transition-all duration-300 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] ${activeTab === "blueprint" ? "bg-accent/8 border-accent/40 shadow-sm font-semibold" : "border-ink/5 hover:border-accent/20 bg-panel/10 hover:bg-panel/40"}`}
                                     >
                                         <div className="flex justify-between items-center w-full">
-                      <span
-                          className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
-                        {t("menuAtelierBlueprints")}
-                      </span>
+                                              <span
+                                                  className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
+                                                {t("menuAtelierBlueprints")}
+                                              </span>
                                             <ChevronRight
                                                 className="w-3.5 h-3.5 text-accent group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-transform duration-300"/>
                                         </div>

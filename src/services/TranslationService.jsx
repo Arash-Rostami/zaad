@@ -1,9 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { defaultLanguage, languages } from "../lib/i18n/config";
-import { en } from "../lib/i18n/en";
-import { fa } from "../lib/i18n/fa";
+import { defaultLanguage, languages } from "@/lib/i18n/config";
+import { en } from "@/lib/i18n/en";
+import { fa } from "@/lib/i18n/fa";
 
 // Translation map for dynamic loading (ready for [lang] routing)
 const translationMap = Object.fromEntries(
