@@ -1,241 +1,346 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;700&display=swap');
 @import "../../node_modules/tailwindcss";
 
+/* ============================================================
+   DESIGN SYSTEM — COLOR TOKENS
+   Three resolved palettes: light (default), mid, dark.
+   All adaptive tokens reference these variables so a single
+   class (e.g. "text-ink") renders correctly in every theme.
+   ============================================================ */
+
 :root {
-  --bg-primary: #F4F1ED;
-  --bg-secondary: #E8E4DF;
-  --bg-secondary-40: rgba(232, 228, 223, 0.4);
-  --bg-secondary-60: rgba(232, 228, 223, 0.6);
-  --bg-card: #FFFFFF;
-  --bg-card-trans: rgba(255, 255, 255, 0.4);
-  --bg-card-95: rgba(255, 255, 255, 0.95);
-  --text-primary: #1C1C1C;
-  --text-secondary: #5C5954;
-  --text-bronze: #8E7A62;
-  --border-color-5: rgba(28, 28, 28, 0.05);
-  --border-color-10: rgba(28, 28, 28, 0.1);
-  --border-color-15: rgba(28, 28, 28, 0.15);
-  --shadow-color: rgba(0, 0, 0, 0.03);
+    /* — Surfaces — */
+    --bg-primary: #F4F1ED;
+    --bg-secondary: #E8E4DF;
+    --bg-secondary-40: rgba(232, 228, 223, 0.40);
+    --bg-secondary-60: rgba(232, 228, 223, 0.60);
+    --bg-card: #FFFFFF;
+    --bg-card-trans: rgba(255, 255, 255, 0.40);
+    --bg-card-95: rgba(255, 255, 255, 0.95);
+
+    /* — Typography — */
+    --text-primary: #1C1C1C;
+    --text-secondary: #5C5954;
+    --text-dim: #9C9588;
+    --text-headline: #1C1C1C;
+    --text-bronze: #8E7A62;
+
+    /* — Borders — */
+    --border-color-5: rgba(28, 28, 28, 0.05);
+    --border-color-10: rgba(28, 28, 28, 0.10);
+    --border-color-15: rgba(28, 28, 28, 0.15);
+
+    /* — Elevation / Shadow — */
+    --shadow-color: rgba(0, 0, 0, 0.03);
+
+    /* — Interactive controls — */
+    --bg-indicator: #1C1C1C;
+    --text-on-indicator: #FFFFFF;
+    --bg-toggle-track: rgba(28, 28, 28, 0.10);
+    --bg-overlay-panel: #F5F6F8;
+    --bg-control-bar: rgba(255, 255, 255, 0.20);
+    --border-control: rgba(142, 122, 98, 0.25);
 }
 
+/* Ocean Yacht Slate — mid theme */
 .mid {
-  --bg-primary: #1F242C; /* Extremely modern Ocean Yacht Slate-Teal */
-  --bg-secondary: #161A20;
-  --bg-secondary-40: rgba(22, 26, 32, 0.46);
-  --bg-secondary-60: rgba(22, 26, 32, 0.66);
-  --bg-card: #282E38;
-  --bg-card-trans: rgba(40, 46, 56, 0.46);
-  --bg-card-95: rgba(40, 46, 56, 0.95);
-  --text-primary: #EBEFF5;
-  --text-secondary: #97A5B8;
-  --text-bronze: #F2D299; /* Exquisite luminous Champagne Gold */
-  --border-color-5: rgba(235, 239, 245, 0.06);
-  --border-color-10: rgba(235, 239, 245, 0.12);
-  --border-color-15: rgba(235, 239, 245, 0.18);
-  --shadow-color: rgba(10, 12, 16, 0.4);
+    --bg-primary: #1F242C;
+    --bg-secondary: #161A20;
+    --bg-secondary-40: rgba(22, 26, 32, 0.46);
+    --bg-secondary-60: rgba(22, 26, 32, 0.66);
+    --bg-card: #282E38;
+    --bg-card-trans: rgba(40, 46, 56, 0.46);
+    --bg-card-95: rgba(40, 46, 56, 0.95);
+
+    --text-primary: #EBEFF5;
+    --text-secondary: #97A5B8;
+    --text-dim: #97A5B8;
+    --text-headline: #EBEFF5;
+    --text-bronze: #F2D299;
+
+    --border-color-5: rgba(235, 239, 245, 0.06);
+    --border-color-10: rgba(235, 239, 245, 0.12);
+    --border-color-15: rgba(235, 239, 245, 0.18);
+
+    --shadow-color: rgba(10, 12, 16, 0.40);
+
+    --bg-indicator: #F2D299;
+    --text-on-indicator: #1F242C;
+    --bg-toggle-track: rgba(0, 0, 0, 0.40);
+    --bg-overlay-panel: rgba(14, 17, 22, 0.80);
+    --bg-control-bar: rgba(0, 0, 0, 0.40);
+    --border-control: rgba(255, 255, 255, 0.15);
 }
 
+/* Architectural Carbon — dark theme */
 .dark {
-  --bg-primary: #111110;
-  --bg-secondary: #1C1C1B;
-  --bg-secondary-40: rgba(28, 28, 27, 0.42);
-  --bg-secondary-60: rgba(28, 28, 27, 0.62);
-  --bg-card: #161615;
-  --bg-card-trans: rgba(22, 22, 21, 0.42);
-  --bg-card-95: rgba(22, 22, 21, 0.95);
-  --text-primary: #EDECE8;
-  --text-secondary: #9C9588;
-  --text-bronze: #B7A590;
-  --border-color-5: rgba(237, 236, 232, 0.06);
-  --border-color-10: rgba(237, 236, 232, 0.12);
-  --border-color-15: rgba(237, 236, 232, 0.18);
-  --shadow-color: rgba(0, 0, 0, 0.45);
+    --bg-primary: #111110;
+    --bg-secondary: #1C1C1B;
+    --bg-secondary-40: rgba(28, 28, 27, 0.42);
+    --bg-secondary-60: rgba(28, 28, 27, 0.62);
+    --bg-card: #161615;
+    --bg-card-trans: rgba(22, 22, 21, 0.42);
+    --bg-card-95: rgba(22, 22, 21, 0.95);
+
+    --text-primary: #EDECE8;
+    --text-secondary: #9C9588;
+    --text-dim: #9C9588;
+    --text-headline: #FFFFFF;
+    --text-bronze: #CBB9A7;
+
+    --border-color-5: rgba(237, 236, 232, 0.06);
+    --border-color-10: rgba(237, 236, 232, 0.12);
+    --border-color-15: rgba(237, 236, 232, 0.18);
+
+    --shadow-color: rgba(0, 0, 0, 0.45);
+
+    --bg-indicator: #EDECE8;
+    --text-on-indicator: #111110;
+    --bg-toggle-track: rgba(255, 255, 255, 0.10);
+    --bg-overlay-panel: rgba(9, 10, 9, 0.80);
+    --bg-control-bar: rgba(0, 0, 0, 0.40);
+    --border-control: rgba(255, 255, 255, 0.15);
 }
 
+/* ============================================================
+   DESIGN SYSTEM — TAILWIND THEME REGISTRATION
+   Registers all semantic tokens as Tailwind color utilities.
+   Use: bg-ink, text-accent, border-ink/10, from-accent/20…
+   Static tokens (foundation, canvas) never change per theme.
+   ============================================================ */
 @theme {
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+    --font-serif: "Playfair Display", Georgia, serif;
+    --font-sans: "Inter", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
 
-  --color-sand-50: #fbfaf8;
-  --color-sand-100: var(--bg-primary);
-  --color-sand-200: var(--bg-secondary);
-  --color-sand-300: #d6d0c7;
-  --color-sand-400: #c8c2b9;
-  --color-sand-500: var(--text-secondary);
+    /* Adaptive surfaces */
+    --color-surface: var(--bg-primary);
+    --color-surface-alt: var(--bg-secondary);
+    --color-panel: var(--bg-card);
 
-  --color-bronze-light: #b09c85;
-  --color-bronze-dark: var(--text-bronze);
-  --color-charcoal: var(--text-primary);
-  --color-stone-neutral: var(--text-secondary);
+    /* Adaptive ink */
+    --color-ink: var(--text-primary);
+    --color-muted: var(--text-secondary);
+    --color-dim: var(--text-dim);
+    --color-headline: var(--text-headline);
+
+    /* Adaptive accent */
+    --color-accent: var(--text-bronze);
+
+    /* Static — never change with theme */
+    --color-foundation: #1C1C1C;   /* permanent dark base (footer) */
+    --color-canvas: #F4F1ED;   /* permanent cream (text on foundation) */
+    --color-tone: #D6D0C7;   /* warm separator / mid-tone */
+    --color-selection: #EAE7DC;   /* browser selection highlight */
 }
 
+/* ============================================================
+   DESIGN SYSTEM — UTILITY CLASSES
+   Pre-computed composites for cases where Tailwind's opacity
+   modifier cannot traverse a CSS variable chain reliably, plus
+   named shadows, placeholder styles, and control surfaces.
+   ============================================================ */
 @layer utilities {
-  .text-glow-subtle {
-    text-shadow: 0 0 12px rgba(142, 122, 98, 0.15);
-  }
 
-  /* Customized scrollbar for quiet-luxury website */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--bg-secondary);
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #d6d0c7;
-  }
+    /* Pre-computed surface opacity variants */
+    .bg-surface-overlay {
+        background-color: var(--bg-secondary-40);
+    }
+
+    .bg-surface-frosted {
+        background-color: var(--bg-secondary-60);
+    }
+
+    .bg-panel-glass {
+        background-color: var(--bg-card-trans);
+    }
+
+    .bg-panel-frost {
+        background-color: var(--bg-card-95);
+    }
+
+    /* Interactive control surfaces (theme-adaptive via CSS vars) */
+    .bg-indicator {
+        background-color: var(--bg-indicator);
+    }
+
+    .text-on-indicator {
+        color: var(--text-on-indicator);
+    }
+
+    .bg-toggle-track {
+        background-color: var(--bg-toggle-track);
+    }
+
+    .bg-overlay-panel {
+        background-color: var(--bg-overlay-panel);
+    }
+
+    .bg-control-bar {
+        background-color: var(--bg-control-bar);
+    }
+
+    .border-control {
+        border-color: var(--border-control);
+    }
+
+    /* Pre-computed border opacity tokens (most reliable cross-browser) */
+    .border-ink-faint {
+        border-color: var(--border-color-5);
+    }
+
+    .border-ink-subtle {
+        border-color: var(--border-color-10);
+    }
+
+    .border-ink-mild {
+        border-color: var(--border-color-15);
+    }
+
+    /* Named shadow scale */
+    .shadow-ambient {
+        box-shadow: 0 20px 50px var(--shadow-color);
+    }
+
+    .shadow-deep {
+        box-shadow: 0 50px 110px rgba(0, 0, 0, 0.18);
+    }
+
+    .shadow-canvas-low {
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.06);
+    }
+
+    .shadow-canvas-mid {
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+    }
+
+    .shadow-canvas-lift {
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+    }
+
+    .shadow-card-sm {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    .shadow-card-md {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .shadow-card-lg {
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Placeholder text styling */
+    .placeholder-dim::placeholder {
+        color: var(--text-dim);
+    }
+
+    .placeholder-dim-faint::placeholder {
+        color: color-mix(in srgb, var(--text-dim) 60%, transparent);
+    }
+
+    /* Editorial glow accent */
+    .text-glow-subtle {
+        text-shadow: 0 0 12px rgba(142, 122, 98, 0.15);
+    }
+
+    /* Scrollbar — quiet luxury */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--bg-secondary);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-tone);
+    }
 }
 
-/* Enable super-smooth color transition globally with custom physical spring decay curve */
-body,
-section,
-header,
-footer,
-div,
-span,
-p,
-h1,
-h2,
-h3,
-h4,
-button,
-input,
-textarea,
-select,
-a {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-shadow;
-  transition-duration: 1050ms !important;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+/* ============================================================
+   GLOBAL TRANSITION — smooth Chiaroscuro theme switching
+   ============================================================ */
+body, section, header, footer, div, span, p,
+h1, h2, h3, h4, button, input, textarea, select, a {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-shadow;
+    transition-duration: 1050ms !important;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Custom styles for smooth luxury aesthetic */
 body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-sans);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.font-serif-luxury {
-  font-family: var(--font-serif);
+/* Exempt the theme toggle from slow transitions — must stay snappy */
+#chiaroscuro-toggle,
+#chiaroscuro-toggle * {
+    transition: none !important;
 }
 
-.font-mono-technical {
-  font-family: var(--font-mono);
-}
-
-/* Light beam sweep keyframes for high-end cinematic studio contrast */
+/* ============================================================
+   KEYFRAMES — editorial cinematic light effects
+   ============================================================ */
 @keyframes delicateGlowSweep {
-  0% {
-    transform: translate3d(-20%, -20%, 0) rotate(-35deg);
-    opacity: 0.15;
-  }
-  50% {
-    transform: translate3d(25%, 20%, 0) rotate(-35deg);
-    opacity: 0.45;
-  }
-  100% {
-    transform: translate3d(-20%, -20%, 0) rotate(-35deg);
-    opacity: 0.15;
-  }
+    0% {
+        transform: translate3d(-20%, -20%, 0) rotate(-35deg);
+        opacity: 0.15;
+    }
+    50% {
+        transform: translate3d(25%, 20%, 0) rotate(-35deg);
+        opacity: 0.45;
+    }
+    100% {
+        transform: translate3d(-20%, -20%, 0) rotate(-35deg);
+        opacity: 0.15;
+    }
 }
 
 .sunbeam-signature-glare {
-  animation: delicateGlowSweep 28s infinite ease-in-out;
+    animation: delicateGlowSweep 28s infinite ease-in-out;
 }
 
-/* Dynamically bind tailwind hex classes to CSS variables for smooth Chiaroscuro transitions */
-.bg-\[\#F4F1ED\] {
-  background-color: var(--bg-primary) !important;
-}
-.bg-\[\#E8E4DF\] {
-  background-color: var(--bg-secondary) !important;
-}
-.bg-\[\#E8E4DF\]\/40 {
-  background-color: var(--bg-secondary-40) !important;
-}
-.bg-\[\#E8E4DF\]\/60 {
-  background-color: var(--bg-secondary-60) !important;
-}
-.bg-white {
-  background-color: var(--bg-card) !important;
-}
-.bg-white\/40 {
-  background-color: var(--bg-card-trans) !important;
-}
-.bg-white\/95 {
-  background-color: var(--bg-card-95) !important;
-}
-
-.text-\[\#1C1C1C\] {
-  color: var(--text-primary) !important;
-}
-.text-\[\#5C5954\] {
-  color: var(--text-secondary) !important;
-}
-.text-\[\#8E7A62\] {
-  color: var(--text-bronze) !important;
-}
-
-.border-\[\#1C1C1C\]\/5 {
-  border-color: var(--border-color-5) !important;
-}
-.border-\[\#1C1C1C\]\/10 {
-  border-color: var(--border-color-10) !important;
-}
-.border-\[\#1C1C1C\]\/15 {
-  border-color: var(--border-color-15) !important;
-}
-.shadow-\[0_20px_50px_rgba\(0\2c 0\2c 0\2c 0\.03\)\] {
-  box-shadow: 0 20px 50px var(--shadow-color) !important;
-}
-
-/* Exempt Chiaroscuro Toggle elements from standard slow transitions to keep interactive input & rotation super-snappy and 100% fluid */
-#chiaroscuro-toggle,
-#chiaroscuro-toggle * {
-  transition: none !important;
-}
-
-/* Farsi Mode Typography Overrides for high luxury editorial look */
+/* ============================================================
+   TYPOGRAPHY — Farsi / RTL overrides
+   ============================================================ */
 html[lang="fa"],
 html[lang="fa"] body,
 .farsi-mode {
-  font-family: "Vazirmatn", "Inter", sans-serif !important;
-  letter-spacing: normal !important;
+    font-family: "Vazirmatn", "Inter", sans-serif !important;
+    letter-spacing: normal !important;
 }
 
 html[lang="fa"] .font-serif,
-html[lang="fa"] .font-serif-luxury,
 html[lang="fa"] h1,
 html[lang="fa"] h2,
 html[lang="fa"] h3 {
-  font-family: "Vazirmatn", Georgia, serif !important;
-  font-weight: 500;
-  letter-spacing: 0 !important;
+    font-family: "Vazirmatn", Georgia, serif !important;
+    font-weight: 500;
+    letter-spacing: 0 !important;
 }
 
 html[lang="fa"] .font-mono,
-html[lang="fa"] .font-mono-technical,
 html[lang="fa"] code {
-  font-family: "JetBrains Mono", "Vazirmatn", monospace !important;
-  letter-spacing: 0 !important;
+    font-family: "JetBrains Mono", "Vazirmatn", monospace !important;
+    letter-spacing: 0 !important;
 }
 
 html[lang="fa"] .tracking-\[0\.3em\],
 html[lang="fa"] .tracking-\[0\.4em\],
 html[lang="fa"] .tracking-widest,
 html[lang="fa"] .tracking-wider {
-  letter-spacing: 0.05em !important;
+    letter-spacing: 0.05em !important;
 }
 
-/* Helper class to easily mirror icons or chevron pointers in RTL mode */
 html[lang="fa"] .rtl-mirror {
-  transform: scaleX(-1);
+    transform: scaleX(-1);
 }
-
