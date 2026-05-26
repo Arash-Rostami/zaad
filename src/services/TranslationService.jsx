@@ -1,16 +1,17 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { defaultLanguage, languages } from "@/lib/i18n/config";
 import { en } from "@/lib/i18n/en";
 import { fa } from "@/lib/i18n/fa";
 
 // Translation map for dynamic loading (ready for [lang] routing)
 const translationMap = Object.fromEntries(
-  languages.map((lang) => [
-    lang.code,
-    () => import(`../lib/i18n/${lang.code}`).then((module) => module[lang.code]),
-  ])
+    languages.map((lang) => [
+      lang.code,
+      () => import(`../lib/i18n/${lang.code}`).then((module) => module[lang.code]),
+    ])
 );
 
 export const useTranslation = async (locale) => {
@@ -68,33 +69,44 @@ export function LanguageProvider({ children }) {
 
   // Resolve a flat string key with fallback to default language
   const t = (key) =>
-    translations[key] ?? registry[defaultLanguage][key] ?? key;
+      translations[key] ?? registry[defaultLanguage][key] ?? key;
 
   // Resolve a structured data key (arrays, objects) with fallback
   const data = (key) =>
-    translations[key] ?? registry[defaultLanguage][key] ?? null;
+      translations[key] ?? registry[defaultLanguage][key] ?? null;
 
   // Resolve product item translations by id
   const getItemTranslations = (id) => {
     const cleanId = id.toLowerCase();
     return (
-      translations.items?.[cleanId] ??
-      registry[defaultLanguage].items?.[cleanId] ??
-      null
+        translations.items?.[cleanId] ??
+        registry[defaultLanguage].items?.[cleanId] ??
+        null
     );
   };
 
   return (
-    <LanguageContext.Provider
-      value={{ language, setLanguage, t, data, getItemTranslations, dir, isFarsi }}
-    >
-      <div
-        style={{ direction: dir }}
-        className={isFarsi ? "font-sans rtl" : "font-sans ltr"}
+      <LanguageContext.Provider
+          value={{ language, setLanguage, t, data, getItemTranslations, dir, isFarsi }}
       >
-        {children}
-      </div>
-    </LanguageContext.Provider>
+        <div
+            style={{ direction: dir }}
+            className={isFarsi ? "font-sans rtl" : "font-sans ltr"}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+                key={language}
+                initial={{ opacity: 0, filter: "blur(4px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(4px)" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full h-full min-h-screen"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </LanguageContext.Provider>
   );
 }
 
