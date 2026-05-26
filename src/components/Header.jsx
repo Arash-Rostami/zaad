@@ -124,16 +124,17 @@ export default function Header({
                         transition={{duration: 1.1, ease: [0.76, 0, 0.24, 1]}}
                         className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
                     >
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.15] mix-blend-soft-light">
-                            <svg viewBox="0 0 100% 100%" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                                <filter id="luxuryNoise">
-                                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch" />
-                                    <feColorMatrix type="saturate" values="0" />
-                                    <feComponentTransfer>
-                                        <feFuncA type="linear" slope="0.4" />
-                                    </feComponentTransfer>
+                        <div
+                            className="absolute inset-0 overflow-hidden pointer-events-none"
+                            style={{opacity: "var(--noise-opacity)", mixBlendMode: "var(--noise-blend)"}}
+                        >
+                            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                <filter id="headerNoise" x="0" y="0" width="100%" height="100%">
+                                    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4"
+                                                  stitchTiles="stitch"/>
+                                    <feColorMatrix type="saturate" values="0"/>
                                 </filter>
-                                <rect width="100%" height="100%" filter="url(#luxuryNoise)" />
+                                <rect width="100%" height="100%" filter="url(#headerNoise)"/>
                             </svg>
                         </div>
 
@@ -176,9 +177,10 @@ export default function Header({
                                             setMenuOpen(false);
                                             animateScrollToTop(1400);
                                         }}
-                                        className={`group relative text-left rtl:text-right p-2.5 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] overflow-hidden ${activeTab === "showroom" && !selectedProduct ? "bg-[#C5A059]/10 border-[#C5A059]/50 shadow-sm font-semibold" : "border-ink/5 hover:border-[#C5A059]/60 bg-panel/10 hover:bg-[#C5A059]/5"}`}
+                                        className={`group relative text-left rtl:text-right p-2.5 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] overflow-hidden ${activeTab === "showroom" && !selectedProduct ? "bg-surface-alt border-[#C5A059]/50 shadow-sm font-semibold" : "border-ink/5 hover:border-[#C5A059]/60 bg-panel"}`}
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                        <div
+                                            className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
                                         <div className="flex justify-between items-center w-full relative z-10">
                                               <span
                                                   className="text-md font-serif text-headline font-semibold group-hover:-translate-y-0.5 transition-transform duration-300">
@@ -187,7 +189,8 @@ export default function Header({
                                             <ChevronRight
                                                 className="w-3.5 h-3.5 text-accent group-hover:text-[#C5A059] group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-all duration-300"/>
                                         </div>
-                                        <span className="text-[11px] text-muted font-light mt-0.5 leading-none relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
+                                        <span
+                                            className="text-[11px] text-muted font-light mt-0.5 leading-none relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
                       {t("menuLivingShowroomSub")}
                     </span>
                                     </button>
@@ -198,9 +201,10 @@ export default function Header({
                                             onSelectProduct(null);
                                             setMenuOpen(false);
                                         }}
-                                        className={`group relative text-left rtl:text-right p-2.5 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] overflow-hidden ${activeTab === "blueprint" ? "bg-[#C5A059]/10 border-[#C5A059]/50 shadow-sm font-semibold" : "border-ink/5 hover:border-[#C5A059]/60 bg-panel/10 hover:bg-[#C5A059]/5"}`}
+                                        className={`group relative text-left rtl:text-right p-2.5 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] overflow-hidden ${activeTab === "blueprint" ? "bg-surface-alt border-[#C5A059]/50 shadow-sm font-semibold" : "border-ink/5 hover:border-[#C5A059]/60 bg-panel"}`}
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                        <div
+                                            className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
                                         <div className="flex justify-between items-center w-full relative z-10">
                                               <span
                                                   className="text-md font-serif text-headline font-semibold group-hover:-translate-y-0.5 transition-transform duration-300">
@@ -209,7 +213,8 @@ export default function Header({
                                             <ChevronRight
                                                 className="w-3.5 h-3.5 text-accent group-hover:text-[#C5A059] group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-all duration-300"/>
                                         </div>
-                                        <span className="text-[11px] text-muted font-light mt-0.5 leading-none relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
+                                        <span
+                                            className="text-[11px] text-muted font-light mt-0.5 leading-none relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
                                             {t("menuZAADBlueprintsSub")}
                                         </span>
                                     </button>
@@ -234,11 +239,14 @@ export default function Header({
                                                         animateScrollTo(target.key, 1400);
                                                     }, 120);
                                                 }}
-                                                className="group relative p-4 border border-ink/5 hover:border-[#C5A059]/60 bg-panel/10 hover:bg-[#C5A059]/5 rounded-lg cursor-pointer flex flex-col justify-between transition-all duration-500 text-left rtl:text-right h-full overflow-hidden"
+                                                className="group relative p-4 border border-ink/5 hover:border-[#C5A059]/60 bg-panel rounded-lg cursor-pointer flex flex-col justify-between transition-all duration-500 text-left rtl:text-right h-full overflow-hidden"
                                             >
-                                                <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                                                <div className="flex justify-between items-start w-full mb-4 relative z-10">
-                                                    <span className="text-lg font-serif font-semibold text-headline group-hover:-translate-y-0.5 transition-transform duration-300">
+                                                <div
+                                                    className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
+                                                <div
+                                                    className="flex justify-between items-start w-full mb-4 relative z-10">
+                                                    <span
+                                                        className="text-lg font-serif font-semibold text-headline group-hover:-translate-y-0.5 transition-transform duration-300">
                                                       {target.label}
                                                     </span>
                                                     <ChevronRight
@@ -254,7 +262,8 @@ export default function Header({
                                 </div>
 
                                 {/* ELEGANT DIVIDER */}
-                                <div className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent my-1 sm:my-2" />
+                                <div
+                                    className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent my-1 sm:my-2"/>
 
                                 {/* ROW 2: CURATED SPECIMENS (Spans full width, 4 items horizontal) */}
                                 <div className="md:col-span-12 flex flex-col space-y-2">
@@ -275,10 +284,11 @@ export default function Header({
                                                         onSelectProduct(item);
                                                         setMenuOpen(false);
                                                     }}
-                                                    className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${isSculptureActive ? "bg-[#C5A059]/10 border-[#C5A059]/50 font-semibold shadow-md" : "border-ink/10 hover:border-[#C5A059]/60 bg-panel/20 hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"}`}
+                                                    className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${isSculptureActive ? "bg-surface-alt border-[#C5A059]/50 font-semibold shadow-md" : "border-ink/10 hover:border-[#C5A059]/60 bg-panel hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"}`}
                                                 >
                                                     {/* Subtle elegant gradient overlay on hover */}
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                                    <div
+                                                        className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
 
                                                     <div className="flex justify-end w-full relative z-10">
                                                         <span
@@ -287,15 +297,18 @@ export default function Header({
                                                         </span>
                                                     </div>
                                                     <div className="flex flex-col mt-6 relative z-10">
-                                                        <span className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
+                                                        <span
+                                                            className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
                                                           {translatedItem?.name || item.name}
                                                         </span>
-                                                        <div className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                                        <div
+                                                            className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                                             <span
                                                                 className="text-[10px] tracking-[0.2em] text-[#C5A059] uppercase">
                                                               {t("menuView")}
                                                             </span>
-                                                            <ChevronRight className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
+                                                            <ChevronRight
+                                                                className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180"/>
                                                         </div>
                                                     </div>
                                                 </button>
@@ -337,7 +350,13 @@ export default function Header({
                                                     <motion.div
                                                         layoutId="activeLanguageBlobInNavbar"
                                                         className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                        transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, ease: "easeInOut" }}
+                                                        transition={{
+                                                            type: "spring",
+                                                            stiffness: 300,
+                                                            damping: 25,
+                                                            mass: 0.5,
+                                                            ease: "easeInOut"
+                                                        }}
                                                     />
                                                 )}
                                                 EN
@@ -351,7 +370,13 @@ export default function Header({
                                                     <motion.div
                                                         layoutId="activeLanguageBlobInNavbar"
                                                         className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                        transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, ease: "easeInOut" }}
+                                                        transition={{
+                                                            type: "spring",
+                                                            stiffness: 300,
+                                                            damping: 25,
+                                                            mass: 0.5,
+                                                            ease: "easeInOut"
+                                                        }}
                                                     />
                                                 )}
                                                 FA
@@ -362,7 +387,8 @@ export default function Header({
 
                                         {/* Theme selector */}
                                         <div className="flex items-center space-x-1.5 rtl:space-x-reverse pr-0.5">
-                                            <span className="text-[7.5px] font-mono tracking-wider text-muted uppercase">
+                                            <span
+                                                className="text-[7.5px] font-mono tracking-wider text-muted uppercase">
                                                 {t("menuThemeLabel")}
                                             </span>
                                             <div
@@ -381,7 +407,13 @@ export default function Header({
                                                                 <motion.div
                                                                     layoutId="activeThemeBlobInNavbar"
                                                                     className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                                    transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5, ease: "easeInOut" }}
+                                                                    transition={{
+                                                                        type: "spring",
+                                                                        stiffness: 300,
+                                                                        damping: 25,
+                                                                        mass: 0.5,
+                                                                        ease: "easeInOut"
+                                                                    }}
                                                                 />
                                                             )}
                                                             {label}

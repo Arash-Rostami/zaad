@@ -40,6 +40,9 @@
     --bg-overlay-panel: #F5F6F8;
     --bg-control-bar: rgba(255, 255, 255, 0.20);
     --border-control: rgba(142, 122, 98, 0.25);
+
+    --noise-blend: multiply;
+    --noise-opacity: 0.40;
 }
 
 /* Ocean Yacht Slate — mid theme */
@@ -49,8 +52,8 @@
     --bg-secondary-40: rgba(22, 26, 32, 0.46);
     --bg-secondary-60: rgba(22, 26, 32, 0.66);
     --bg-card: #282E38;
-    --bg-card-trans: rgba(40, 46, 56, 0.46);
-    --bg-card-95: rgba(40, 46, 56, 0.95);
+    --bg-card-trans: rgba(40, 46, 56, 0.82);
+    --bg-card-95: rgba(38, 44, 54, 0.97);
 
     --text-primary: #EBEFF5;
     --text-secondary: #97A5B8;
@@ -67,9 +70,12 @@
     --bg-indicator: #F2D299;
     --text-on-indicator: #1F242C;
     --bg-toggle-track: rgba(0, 0, 0, 0.40);
-    --bg-overlay-panel: rgba(14, 17, 22, 0.80);
+    --bg-overlay-panel: #0C0F15;
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
+
+    --noise-blend: screen;
+    --noise-opacity: 0.22;
 }
 
 /* Architectural Carbon — dark theme */
@@ -79,8 +85,8 @@
     --bg-secondary-40: rgba(28, 28, 27, 0.42);
     --bg-secondary-60: rgba(28, 28, 27, 0.62);
     --bg-card: #161615;
-    --bg-card-trans: rgba(22, 22, 21, 0.42);
-    --bg-card-95: rgba(22, 22, 21, 0.95);
+    --bg-card-trans: rgba(36, 36, 34, 0.86);
+    --bg-card-95: rgba(30, 30, 29, 0.97);
 
     --text-primary: #EDECE8;
     --text-secondary: #9C9588;
@@ -97,9 +103,12 @@
     --bg-indicator: #EDECE8;
     --text-on-indicator: #111110;
     --bg-toggle-track: rgba(255, 255, 255, 0.10);
-    --bg-overlay-panel: rgba(9, 10, 9, 0.80);
+    --bg-overlay-panel: #0A0A0A;
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
+
+    --noise-blend: screen;
+    --noise-opacity: 0.18;
 }
 
 /* ============================================================
@@ -315,7 +324,7 @@ body {
 html[lang="fa"],
 html[lang="fa"] body,
 .farsi-mode {
-    font-family: "Vazirmatn", "Inter", sans-serif !important;
+    font-family: "Inter", "Vazirmatn", sans-serif !important;
     letter-spacing: normal !important;
 }
 
@@ -323,7 +332,7 @@ html[lang="fa"] .font-serif,
 html[lang="fa"] h1,
 html[lang="fa"] h2,
 html[lang="fa"] h3 {
-    font-family: "Vazirmatn", Georgia, serif !important;
+    font-family: "Playfair Display", "Vazirmatn", Georgia, serif !important;
     font-weight: 500;
     letter-spacing: 0 !important;
 }

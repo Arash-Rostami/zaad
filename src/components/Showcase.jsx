@@ -411,6 +411,19 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                         style={{ backgroundColor: "var(--bg-card-95)" }}
                         onClick={closeLightbox}
                     >
+                        <div
+                            className="absolute inset-0 overflow-hidden pointer-events-none"
+                            style={{ opacity: "var(--noise-opacity)", mixBlendMode: "var(--noise-blend)" }}
+                        >
+                            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                <filter id="lightboxNoise" x="0" y="0" width="100%" height="100%">
+                                    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
+                                    <feColorMatrix type="saturate" values="0" />
+                                </filter>
+                                <rect width="100%" height="100%" filter="url(#lightboxNoise)" />
+                            </svg>
+                        </div>
+
                         <div className="absolute top-6 left-6 md:left-12 flex items-center space-x-4 pointer-events-none select-none">
                             <span className="font-mono text-[9px] tracking-[0.3em] font-semibold text-accent uppercase">
                                 {selectedItem.number} ARCHIVE
@@ -519,7 +532,6 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                             <motion.button
                                 onClick={(e) => { e.stopPropagation(); cycleZoom(); }}
                                 className="w-8 h-8 rounded-full border border-ink/10 relative overflow-hidden flex items-center justify-center cursor-pointer shrink-0 z-10 bg-transparent"
-                                title="Cycle zoom level"
                                 animate={{
                                     rotate: (Math.abs(lightboxScale - 1.0) < 0.1 ? 0 : Math.abs(lightboxScale - 1.8) < 0.2 ? 120 : 240) + (isZoomControllerHovered ? 180 : 0),
                                 }}
@@ -547,7 +559,6 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                                         <button
                                             onClick={(e) => { e.stopPropagation(); goPrevWrapped(); }}
                                             className="text-ink/60 hover:text-headline p-1 transition-colors cursor-pointer"
-                                            title="Previous Image"
                                         >
                                             <ChevronLeft className="w-4 h-4 stroke-[1.5]" />
                                         </button>
@@ -574,7 +585,6 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                                         <button
                                             onClick={(e) => { e.stopPropagation(); goNextWrapped(); }}
                                             className="text-ink/60 hover:text-headline p-1 transition-colors cursor-pointer"
-                                            title="Next Image"
                                         >
                                             <ChevronRight className="w-4 h-4 stroke-[1.5]" />
                                         </button>
