@@ -1,6 +1,6 @@
-# Atelier Éther — Next.js
+# ZAAD — Next.js
 
-A digital showroom for Atelier Éther's curated collection of sculptural objects and bespoke architectural interiors.
+A digital showroom for ZAAD's curated collection of sculptural objects and bespoke architectural interiors.
 
 Migrated from Vite + Express + TS to **Next.js 15 (App Router) + JavaScript**.
 

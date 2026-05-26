@@ -82,7 +82,7 @@ export default function Advantages() {
                                         <div
                                             className="mt-8 pt-4 border-t border-[var(--border-color-10)] flex items-center justify-between">
                       <span className="text-[9px] font-mono tracking-widest text-[var(--text-bronze)]/50 uppercase">
-                        {t("atelierCertified")}
+                        {t("ZAADCertified")}
                       </span>
                                             <span
                                                 className="w-1.5 h-1.5 rounded-full bg-[var(--text-bronze)] scale-75 opacity-30 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500"/>

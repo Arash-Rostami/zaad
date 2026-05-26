@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import { LanguageProvider } from "@/services/TranslationService";
+import InitialLoader from "@/components/InitialLoader";
 
 export const metadata = {
   title: "ZAAD | Powered by Dorsa",
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-surface text-ink selection:bg-surface-alt selection:text-ink overflow-x-hidden antialiased">
+        <InitialLoader />
         <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>

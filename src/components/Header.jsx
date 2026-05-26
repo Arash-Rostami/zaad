@@ -201,13 +201,13 @@ export default function Header({
                                         <div className="flex justify-between items-center w-full">
                                               <span
                                                   className="text-md font-serif text-headline font-semibold group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform duration-300">
-                                                {t("menuAtelierBlueprints")}
+                                                {t("menuZAADBlueprints")}
                                               </span>
                                             <ChevronRight
                                                 className="w-3.5 h-3.5 text-accent group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-transform duration-300"/>
                                         </div>
                                         <span className="text-[11px] text-muted font-light mt-0.5 leading-none">
-                      {t("menuAtelierBlueprintsSub")}
+                      {t("menuZAADBlueprintsSub")}
                     </span>
                                     </button>
                                 </div>
@@ -298,11 +298,11 @@ export default function Header({
                             >
                                 <div
                                     className="flex items-center space-x-3.5 rtl:space-x-reverse font-mono text-[8.5px] tracking-widest text-accent/80 uppercase">
-                                    <span>© 2026 ZAAD ATELIER</span>
+                                    <span>© 2026 ZAAD</span>
                                     <span className="opacity-30">•</span>
                                     <span>{t("menuDigitalEdition")}</span>
                                     <span className="opacity-30">•</span>
-                                    <span>{t("menuAtelierIndex")}</span>
+                                    <span>{t("menuZAADIndex")}</span>
                                 </div>
 
                                 <div className="flex items-center space-x-4">

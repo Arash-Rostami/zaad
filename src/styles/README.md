@@ -15,7 +15,7 @@ ZAAD is the digital showroom for an ultra-premium decoration and interior design
 The guiding creative brief was authored to produce work at the standard of:
 
 - High fashion maisons (Hermès, Loro Piana)
-- Architectural ateliers (Tadao Ando, Studio KO)
+- Architectural studios (Tadao Ando, Studio KO)
 - Premium furniture houses (Poltrona Frau, Carl Hansen)
 - Luxury interior galleries (Axel Vervoordt, Vincent Van Duysen)
 - International editorial publications (Wallpaper*, Apartamento)
