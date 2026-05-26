@@ -97,7 +97,7 @@
     --bg-indicator: #EDECE8;
     --text-on-indicator: #111110;
     --bg-toggle-track: rgba(255, 255, 255, 0.10);
-    --bg-overlay-panel: rgba(9, 10, 9, 0.80);
+    --bg-overlay-panel: rgba(9, 10, 9, 0.95);
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
 }
