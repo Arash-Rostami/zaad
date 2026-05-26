@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { animateScrollTo } from "../services/ScrollService";
+import { animateScrollTo } from "@/services/ScrollService";
 
 export default function useShowroomNav() {
   const [activeTab, setActiveTabRaw] = useState("showroom");
@@ -7,6 +7,11 @@ export default function useShowroomNav() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const setActiveTab = (tab) => {
+    if (tab === "pdf") {
+      window.open("/pdf/index.html", "_blank", "noopener,noreferrer");
+      return;
+    }
+
     setActiveTabRaw(tab);
     if (selectedProduct) setSelectedProduct(null);
   };

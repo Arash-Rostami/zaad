@@ -25,45 +25,31 @@ export default function App() {
         handleScrollToSection,
         handleInquireItem,
     } = useShowroomNav();
+
     return (
         <div className="in-h-screen flex flex-col justify-between selection:bg-selection selection:text-ink">
-            {/* Global Header */}
             <Header
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 selectedProduct={selectedProduct}
-                onSelectProduct={(product) => setSelectedProduct(product)}
+                onSelectProduct={setSelectedProduct}
                 onScrollToSection={handleScrollToSection}
             />
 
-            {/* Main Body */}
             <main className="flex-1">
                 <AnimatePresence mode="wait">
                     {selectedProduct ? (
                         <motion.div
                             key="product-details"
-                            initial={{
-                                opacity: 0,
-                                y: 20,
-                            }}
-                            animate={{
-                                opacity: 1,
-                                y: 0,
-                            }}
-                            exit={{
-                                opacity: 0,
-                                y: -20,
-                            }}
-                            transition={{
-                                duration: 0.6,
-                                ease: [0.16, 1, 0.3, 1],
-                            }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                         >
                             <ProductDetailsPage
                                 item={selectedProduct}
                                 onBack={() => {
                                     setSelectedProduct(null);
-                                    // Scroll back to collection seamlessly
                                     setTimeout(() => {
                                         animateScrollTo("collection", 500);
                                     }, 100);
@@ -71,69 +57,41 @@ export default function App() {
                                 onInquire={handleInquireItem}
                             />
                         </motion.div>
-                    ) : activeTab === "showroom" ? (
+                    ) : activeTab === "blueprint" ? (
+                        <motion.div
+                            key="blueprint"
+                            initial={{ opacity: 0, scale: 0.99 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.99 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <Blueprint />
+                        </motion.div>
+                    ) : (
                         <motion.div
                             key="showroom"
-                            initial={{
-                                opacity: 0,
-                            }}
-                            animate={{
-                                opacity: 1,
-                            }}
-                            exit={{
-                                opacity: 0,
-                            }}
-                            transition={{
-                                duration: 0.6,
-                            }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.6 }}
                         >
-                            <Hero
-                                onScrollToCollection={() => handleScrollToSection("collection")}
-                            />
-
-                            <Story/>
-
+                            <Hero onScrollToCollection={() => handleScrollToSection("collection")} />
+                            <Story />
                             <Showcase
                                 onInquireItem={handleInquireItem}
-                                onViewDetails={(item) => setSelectedProduct(item)}
+                                onViewDetails={setSelectedProduct}
                             />
-
-                            <Advantages/>
-
-                            <Materials/>
-
+                            <Advantages />
+                            <Materials />
                             <Concierge
                                 preselectedItem={preselectedItem}
                                 onClearPreselected={() => setPreselectedItem(null)}
                             />
                         </motion.div>
-                    ) : (
-                        <motion.div
-                            key="blueprint"
-                            initial={{
-                                opacity: 0,
-                                scale: 0.99,
-                            }}
-                            animate={{
-                                opacity: 1,
-                                scale: 1,
-                            }}
-                            exit={{
-                                opacity: 0,
-                                scale: 0.99,
-                            }}
-                            transition={{
-                                duration: 0.5,
-                                ease: [0.16, 1, 0.3, 1],
-                            }}
-                        >
-                            <Blueprint/>
-                        </motion.div>
                     )}
                 </AnimatePresence>
             </main>
 
-            {/* Global Footer */}
             <Footer
                 onScrollToSection={handleScrollToSection}
                 setActiveTab={setActiveTab}
