@@ -15,7 +15,7 @@ ZAAD is the digital showroom for an ultra-premium decoration and interior design
 The guiding creative brief was authored to produce work at the standard of:
 
 - High fashion maisons (Hermès, Loro Piana)
-- Architectural ateliers (Tadao Ando, Studio KO)
+- Architectural studios (Tadao Ando, Studio KO)
 - Premium furniture houses (Poltrona Frau, Carl Hansen)
 - Luxury interior galleries (Axel Vervoordt, Vincent Van Duysen)
 - International editorial publications (Wallpaper*, Apartamento)
@@ -435,10 +435,10 @@ The `.sunbeam-signature-glare` class applies a slow diagonal light sweep across 
 
 ```jsx
 <div
-  className="sunbeam-signature-glare absolute top-0 left-1/4 w-[240px] h-[220%]
+    className="sunbeam-signature-glare absolute top-0 left-1/4 w-[240px] h-[220%]
     bg-gradient-to-r from-transparent via-white/[0.05] to-transparent
     mix-blend-overlay pointer-events-none"
-  style={{ animationDuration: "26s", animationDelay: "-8s" }}
+    style={{ animationDuration: "26s", animationDelay: "-8s" }}
 />
 ```
 
@@ -569,7 +569,7 @@ If a new UI control requires its own themed background, add to all three theme b
 .mid   { --bg-new-control: rgba(0, 0, 0, 0.30); }
 
 @layer utilities {
-  .bg-new-control { background-color: var(--bg-new-control); }
+    .bg-new-control { background-color: var(--bg-new-control); }
 }
 ```
 

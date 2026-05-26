@@ -75,7 +75,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                 <div
                     className="flex items-center space-x-2 rtl:space-x-reverse text-[10px] font-mono tracking-widest uppercase">
           <span className="text-muted opacity-60">
-            {t("productAtelierArchive")}
+            {t("productZAADArchive")}
           </span>
                     <span className="text-accent font-semibold">{item.number}</span>
                     <span className="text-muted opacity-60">/</span>
@@ -184,7 +184,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                         </h1>
                         <p className="text-xs font-mono tracking-[0.15em] text-muted uppercase mb-6 pb-4 border-b border-ink/10">
                             {t("productCurator")}: {item.designer} •{" "}
-                            {t("productAtelier")} {item.year}{" "}
+                            {t("productZAAD")} {item.year}{" "}
                             {t("productRelease")}
                         </p>
 
@@ -205,7 +205,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                             </div>
                             <div className="space-y-1">
                 <span className="font-mono text-[9px] tracking-wider text-muted block uppercase">
-                  {t("productAtelierWeight")}
+                  {t("productZAADWeight")}
                 </span>
                                 <span className="font-light text-ink flex items-center gap-1.5 justify-start">
                   <Scale className="w-3.5 h-3.5 text-accent shrink-0"/>
@@ -412,7 +412,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                                             {item.tallUnits.parts && (
                                                 <div className="space-y-2 mb-6 text-[11px]">
                                                     <span
-                                                        className="text-[8.5px] font-mono tracking-widest text-muted uppercase block mb-1">ATELIER TOWER ROW SCHEDULING</span>
+                                                        className="text-[8.5px] font-mono tracking-widest text-muted uppercase block mb-1">ZAAD TOWER ROW SCHEDULING</span>
                                                     <div className="grid grid-cols-1 gap-1.5 font-mono">
                                                         {item.tallUnits.parts.map((tower, tIdx) => (
                                                             <div key={tIdx}
@@ -506,7 +506,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                                 {item.appliancesDetail && (
                                     <div className="space-y-4">
                                         <span
-                                            className="text-[9px] font-mono tracking-[0.2em] text-accent uppercase block">GAGGENAU ATELIER CATALOG INTEGRATION SPECIFICS</span>
+                                            className="text-[9px] font-mono tracking-[0.2em] text-accent uppercase block">GAGGENAU ZAAD CATALOG INTEGRATION SPECIFICS</span>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                             {item.appliancesDetail.map((app, idx) => (
                                                 <div key={idx}
@@ -566,7 +566,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                                     <h4 className="font-serif text-2xl font-light text-headline leading-snug mb-4">Architectural
                                         Honesty and Spatial Silence</h4>
                                     <p className="text-xs sm:text-sm text-muted leading-relaxed font-light mb-6">
-                                        Each ZAAD Atelier object represents a rigorous response of quiet luxury against
+                                        Each ZAAD object represents a rigorous response of quiet luxury against
                                         dynamic trends. Organized symmetrically across heavy, grounded natural
                                         travertine/rapolano stone cores and durable eucalyptus veneers, the design
                                         relies strictly on authentic physical materials to establish spiritual calm
@@ -613,7 +613,7 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                     Establish an Archetype of Permanent Symmetry inside Your Home
                 </h3>
                 <p className="text-xs sm:text-sm text-muted max-w-xl font-light mb-8 leading-relaxed">
-                    Through ZAAD Atelier concierge services, each bespoke order is supervised from stone selection at
+                    Through ZAAD concierge services, each bespoke order is supervised from stone selection at
                     the quarry to local installation by master technicians.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -851,11 +851,10 @@ export default function ProductDetailsPage({item, onBack, onInquire}) {
                             </div>
                             <div
                                 className="flex items-center space-x-6 w-full md:w-auto justify-between md:justify-end">
-                <span
-                    className="text-accent font-mono text-[9px] tracking-[0.2em] uppercase flex items-center gap-1.5 font-medium select-none">
-                  <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"/>
-                  MUSEUM SPECIMEN COMMISSION
-                </span>
+                                <span className="text-accent font-mono text-[9px] tracking-[0.2em] uppercase flex items-center gap-1.5 font-medium select-none">
+                                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"/>
+                                    MUSEUM SPECIMEN COMMISSION
+                                </span>
                                 <MaisonButton
                                     variant="outline"
                                     onClick={() => {

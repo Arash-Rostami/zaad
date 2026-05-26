@@ -77,7 +77,7 @@ export default function Footer({onScrollToSection, setActiveTab}) {
                             </li>
                             <li>
                 <span className="text-canvas/40 block select-none">
-                  {t("footerMilanAtelier")}
+                  {t("footerMilanZAAD")}
                 </span>
                             </li>
                             <li>

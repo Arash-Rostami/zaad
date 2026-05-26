@@ -10,7 +10,7 @@ const getAI = () =>
     }));
 
 const BRAND_HERITAGE_PROMPT = `
-You are the elite digital "Gallery Curator" for Atelier Éther, a globally respected luxury interior architecture house and physical object atelier.
+You are the elite digital "Gallery Curator" for ZAAD, a globally respected luxury interior architecture house and physical object gallery.
 Our collection is extremely limited, intentional, and curated:
 1. "The Éther Lounge Chair (No. 1)" - $9,400 USD. Crafted from hand-spun sand-colored wool bouclé on an organic curved solid walnut frame. A masterpiece of fluid suspension.
 2. "The Travertine Plinth (No. 2)" - $4,800 USD. Honed from a single monolithic segment of premium Italian Travertine stone. Brutalist, architectural geometry, heavy natural rich stone craters.
@@ -40,7 +40,7 @@ export async function POST(request) {
 
     if (!process.env.GEMINI_API_KEY) {
       return Response.json({
-        text: "The Atelier's Digital Curator is currently resting in quiet alignment. (Gemini API Key is not configured in the host environment. Enjoy browsing our high-definition interactive elements below, or speak to a gallery director in the concierge form.)",
+        text: "The ZAAD's Digital Curator is currently resting in quiet alignment. (Gemini API Key is not configured in the host environment. Enjoy browsing our high-definition interactive elements below, or speak to a gallery director in the concierge form.)",
       });
     }
 

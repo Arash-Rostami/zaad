@@ -13,8 +13,8 @@ export const en = {
   menuSystemDirectories: "SYSTEM DIRECTORIES",
   menuLivingShowroom: "01 / Living Showroom",
   menuLivingShowroomSub: "Monolithic installations & specimen explorer",
-  menuAtelierBlueprints: "02 / Atelier Blueprints",
-  menuAtelierBlueprintsSub: "Visual alignment & technical guidelines",
+  menuZAADBlueprints: "02 / ZAAD Blueprints",
+  menuZAADBlueprintsSub: "Visual alignment & technical guidelines",
   menuJourneyIndex: "JOURNEY INDEX",
   menuOriginsPhilosophy: "Origins & Philosophy",
   menuChapter1: "CHAPTER I / MANIFESTO",
@@ -25,7 +25,7 @@ export const en = {
   menuCuratedSpecimens: "CURATED SPECIMENS",
   menuView: "VIEW",
   menuDigitalEdition: "DIGITAL EDITION v4.0",
-  menuAtelierIndex: "ATELIER SPECIMEN INDEX N°02",
+  menuZAADIndex: "ZAAD SPECIMEN INDEX N°02",
   menuThemeLabel: "LUME",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────
@@ -34,7 +34,7 @@ export const en = {
   heroTitle_italic: "ultimate level",
   heroTitle_2: "of sophistication.",
   heroDesc:
-      "The digital showroom of ZAAD. We design physical, numbered objects crafted in Tuscan quarries and Milanese ateliers, designed to outlive trends.",
+      "The digital showroom of ZAAD. We design physical, numbered objects crafted in Tuscan quarries and Milanese ZAADs, designed to outlive trends.",
   exploreCollection: "Explore Collection ↓",
   ourPhilosophy: "Our Philosophy",
   monograph: "Maison Monograph 2026",
@@ -78,7 +78,7 @@ export const en = {
   designerLabel: "Architectural Designer",
   materialsLabel: "Primary Minerals & Timber",
   yearLabel: "Year of Genesis",
-  provenanceLabel: "Atelier Provenance",
+  provenanceLabel: "ZAAD Provenance",
   specTitle: "Specimen Characteristics",
   weightLabel: "Weight Metric",
   leadTimeLabel: "Lead Time Estimation",
@@ -107,7 +107,7 @@ export const en = {
   showcaseShowStats: "SHOW STATS OVERVIEW",
   showcaseScopeDimensions: "Scope / Dimensions",
   showcaseFinishDetails: "Finish Details",
-  showcaseAtelierWeight: "Atelier Net Weight",
+  showcaseZAADWeight: "ZAAD Net Weight",
   showcaseCuratedDelivery: "Est. Curated Delivery",
   showcasePrimaryMaterials: "Primary Composition Materials",
   showcaseCatalogueText:
@@ -123,7 +123,7 @@ export const en = {
   advantagesTitle: "Our Competitive Advantages",
   advantagesSub:
       "The flawless intersection of precision design, engineering milestones, and custom curated European hardware.",
-  atelierCertified: "ATELIER CERTIFIED",
+  ZAADCertified: "ZAAD CERTIFIED",
   advantageCards: [
     {
       id: "materials",
@@ -214,7 +214,7 @@ export const en = {
       philosophicalNote:
           "The envelope must breathe. Spun exclusively in Biella's alpine mills, this raw wool is hand-handled to keep vegetable fragments in place, providing an honest tactile landscape.",
       history:
-          "Initially selected by high-fashion Parisian ateliers in the 1950s. We have widened the loops to maximize microscopic shadows on the chair's surface.",
+          "Initially selected by high-fashion Parisian ZAADs in the 1950s. We have widened the loops to maximize microscopic shadows on the chair's surface.",
       density: "1.24 kg/m² (Luxurious fiber weight)",
       imageUrl:
           "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1200&q=90",
@@ -247,7 +247,7 @@ export const en = {
   consultationCategory: "Consultation Category",
   privateArchiveAcquisition: "Private Archive Acquisition",
   residentialConsultation: "Residential Consultation ($25k fee)",
-  florenceViewing: "Florence Atelier Private Viewing",
+  florenceViewing: "Florence ZAAD Private Viewing",
   customMaterialSpec: "Custom Material Composition Spec",
   archivalSpecs: "Archival Architect Specs & Space Detail",
   spacePlaceholder:
@@ -339,7 +339,7 @@ Engineered as a cinematic scroll narrative that transitions from abstract core s
 
 ### 7. SECTION-BY-SECTION UX STRATEGY
 1. **Hero Intake:** Establish prestige instantly via a stunning high-resolution architectural header. Use brief aspirational copy (\`Quietude is the highest form of resolution\`).
-2. **The Manifesto Story:** Slow down the reader's attention with a large-format travertine stone closeup, paired with the atelier history.
+2. **The Manifesto Story:** Slow down the reader's attention with a large-format travertine stone closeup, paired with the ZAAD history.
 3. **The Object Grid:** Reveal curated products individually rather than mass grids. Allow people to switch from Editorial to Macro View to feel the loop textures of wool or stone craters.
 4. **The Concierge Chat:** Remove traditional static contact forms. Introduce an elite digital curator (Gemini API) that counsels clients on how objects interact with room sunlight.`,
       tags: ["Sitemap", "User Journey", "UX Hierarchy", "Curatorship"],
@@ -391,7 +391,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
 - **Structured Data:** Implements JSON-LD LocalBusiness and Product schemas for high-end search engine crawling.
 
 ### 14. PRODUCTION-READY ROADMAP
-1. **Atelier Verification:** Finalize core layout builds on Port 3000.
+1. **ZAAD Verification:** Finalize core layout builds on Port 3000.
 2. **Environment Setup:** Secure and test the server-side \`GEMINI_API_KEY\` key via the platform settings.
 3. **Staging Review:** Test accessibility compliance across viewports.
 4. **Deploy:** Compile using \`esbuild\` into a single, highly performant \`server.cjs\` executable.`,
@@ -412,23 +412,23 @@ Designed as highly modular, lightweight files to avoid package bloat:
   closeDossier: "Close Specification Dossier",
   tactileLens: "TACTILE LENS (3.0X)",
   productReturnShowroom: "RETURN TO COLLAGE SHOWROOM",
-  productAtelierArchive: "ATELIER ARCHIVE",
+  productZAADArchive: "ZAAD ARCHIVE",
   productDirectory: "DIRECTORY",
   productArchitecturalRecord: "ARCHITECTURAL RECORD",
   productCurator: "Curator",
-  productAtelier: "Atelier",
+  productZAAD: "ZAAD",
   productRelease: "Release",
   productOrigin: "Provenance / Origin",
-  productAtelierWeight: "Atelier Net Weight",
+  productZAADWeight: "ZAAD Net Weight",
   productFinish: "Aesthetic Casing Finish",
   productLeadTime: "Lead Time Range",
   productInitiateInquiry: "INITIATE PRIVATE CONCIERGE INQUIRY",
   productReturnGrid: "RETURN TO GRID",
 
   // ─── FOOTER ────────────────────────────────────────────────────────────────
-  footerTitle: "ZAAD Atelier",
+  footerTitle: "ZAAD",
   footerDesc:
-      "An independent architectural atelier designing silent monolithic cabinetry, sculpted stone tables, and mineral-honest spatial assets.",
+      "An independent architectural ZAAD designing silent monolithic cabinetry, sculpted stone tables, and mineral-honest spatial assets.",
   newsletterTitle: "Maison Circular",
   newsletterDesc:
       "Subscribe to receive private catalogues, quarry extraction reports, and blueprint release notifications.",
@@ -442,7 +442,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
   footerConcierge: "Acquisition Concierge",
   footerBlueprintTitle: "STUDIO BLUEPRINT",
   footerBlueprintLink: "Design Blueprint Archive",
-  footerMilanAtelier: "Milan Atelier — Lombardy",
+  footerMilanZAAD: "Milan ZAAD — Lombardy",
   footerRapolanoStone: "Rapolano Stone — Tuscany",
   footerCopyright: "© 1989 — 2026 ZAAD S.P.A. ALL PRIVACY COMMITTED.",
   footerCraft: "CRAFTED WITH ARCHITECTURAL SOVEREIGNTY",
@@ -464,7 +464,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
       number: "N°01",
       name: "GÁVV",
       year: "2026",
-      designer: "ZAAD Atelier",
+      designer: "ZAAD",
       price: "$114,000+",
       dimensions:
           "Island: Part A (3.0m L), Part B (2.0m L). Tall Units Area: 5.4m W x 2.98m H",
@@ -488,7 +488,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
         ],
       },
       provenance:
-          "Designed in ZAAD Milan Atelier; Stone milled and hand-carved in Rapolano Terme, Tuscany. Signed by the master stonecutter and cabinetmaker.",
+          "Designed in ZAAD Milan ZAAD; Stone milled and hand-carved in Rapolano Terme, Tuscany. Signed by the master stonecutter and cabinetmaker.",
       imageUrl:
           "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
       macroUrl:
@@ -516,7 +516,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
       specifications: {
         weight: "approx. 1250 kg (project scale)",
         leadTime: "16 to 20 weeks (curated build)",
-        origin: "Atelier Milan & Tuscany, Italy",
+        origin: "ZAAD Milan & Tuscany, Italy",
         finish:
             "Natural wax burnished stone, Eucalyptus veneer with tactile leather cylinder handles",
       },
@@ -666,7 +666,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
       number: "N°02",
       name: "ZIVV",
       year: "2026",
-      designer: "ZAAD Atelier",
+      designer: "ZAAD",
       price: "$132,000+",
       dimensions:
           "Seamless Island: 1.9m L x 1.2m W. Tall Units Wall: 4.8m W x 2.4m H",
@@ -689,7 +689,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
         ],
       },
       provenance:
-          "Designed and prototyped in Milanese Atelier; Travertine stone extracted from Rapolano stone quarries, Tuscany. Cabinet engineering completed in Lombardy, Italy.",
+          "Designed and prototyped in Milanese ZAAD; Travertine stone extracted from Rapolano stone quarries, Tuscany. Cabinet engineering completed in Lombardy, Italy.",
       imageUrl:
           "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=90",
       macroUrl:
@@ -717,7 +717,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
       specifications: {
         weight: "approx. 1100 kg (total weight)",
         leadTime: "14 to 16 weeks",
-        origin: "Atelier Milan & Tuscan Stone Studio, Italy",
+        origin: "ZAAD Milan & Tuscan Stone Studio, Italy",
         finish:
             "Acid-free honed raw Travertine Classico, natural wood cladding, and lacquer RAL 1013",
       },
@@ -862,7 +862,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
         ],
       },
       provenance:
-          "Designed by ZAAD Milan Atelier. Woodworking completed in Florence; Onyx carving completed in Carrara, Italy. Stamped with the collective's seal.",
+          "Designed by ZAAD Milan ZAAD. Woodworking completed in Florence; Onyx carving completed in Carrara, Italy. Stamped with the collective's seal.",
       imageUrl:
           "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=90",
       macroUrl:
@@ -945,7 +945,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
       number: "N°04",
       name: "VARR",
       year: "2026",
-      designer: "ZAAD Atelier",
+      designer: "ZAAD",
       price: "$145,000+",
       dimensions:
           "Floating Island: 2.8m L x 1.2m W. Tall Units Wall: 4.8m W x 2.85m H",
@@ -969,7 +969,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
         ],
       },
       provenance:
-          "Designed in ZAAD Milan Atelier; volcanic basalt quarried and hand-milled near Mount Etna, Sicily. Steel components forged in Turin, Italy.",
+          "Designed in ZAAD Milan ZAAD; volcanic basalt quarried and hand-milled near Mount Etna, Sicily. Steel components forged in Turin, Italy.",
       imageUrl:
           "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=90",
       macroUrl:
