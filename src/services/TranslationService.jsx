@@ -6,12 +6,10 @@ import {defaultLanguage, languages} from "@/lib/i18n/config";
 import {en} from "@/lib/i18n/en";
 import {fa} from "@/lib/i18n/fa";
 
-const translationMap = Object.fromEntries(
-    languages.map((lang) => [
-        lang.code,
-        () => import(`../lib/i18n/${lang.code}`).then((module) => module[lang.code]),
-    ])
-);
+const translationMap = {
+    en: () => import("../lib/i18n/en").then(m => m.en),
+    fa: () => import("../lib/i18n/fa").then(m => m.fa)
+};
 
 export const useTranslation = async (locale) => {
     const loader = translationMap[locale] || translationMap[defaultLanguage];

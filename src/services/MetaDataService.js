@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { getServerLanguage } from "@/lib/i18n/server";
 
 const BRAND    = "ZAAD";
 const SITE_URL = "https://zaad.com";
@@ -22,9 +22,7 @@ const OG_LOCALE   = { en: "en_US", fa: "fa_IR" };
 const hreflangFor = (url) => ({ "x-default": url, en: url, fa: url });
 
 async function getLang() {
-    const store  = await cookies();
-    const stored = store.get("zaad_preferred_language")?.value;
-    return stored === "fa" || stored === "en" ? stored : "en";
+    return await getServerLanguage();
 }
 
 function buildMeta({ rawTitle, description, image, canonical, lang }) {
