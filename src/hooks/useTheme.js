@@ -1,26 +1,28 @@
 import { useState, useEffect } from "react";
 
 export default function useTheme() {
-  const [themeMode, setThemeMode] = useState("light");
+  const [theme, setThemeState] = useState("light");
 
   useEffect(() => {
+    // PH1 FIX: Initializing theme based on localStorage inside useEffect to avoid SSR hydration mismatch
     const cached = localStorage.getItem("zaad-theme");
-    const initialMode = cached || "light";
-    setThemeMode(initialMode);
-    applyThemeClass(initialMode);
+    if (cached) {
+      setThemeState(cached);
+    }
   }, []);
 
-  const applyThemeClass = (mode) => {
+  useEffect(() => {
     const root = document.documentElement;
     root.classList.remove("light", "mid", "dark");
-    root.classList.add(mode);
-  };
+    if (theme !== "light") {
+        root.classList.add(theme);
+    }
+  }, [theme]);
 
-  const handleThemeChange = (mode) => {
-    setThemeMode(mode);
-    applyThemeClass(mode);
+  const setTheme = (mode) => {
+    setThemeState(mode);
     localStorage.setItem("zaad-theme", mode);
   };
 
-  return { themeMode, handleThemeChange };
+  return { theme, setTheme };
 }

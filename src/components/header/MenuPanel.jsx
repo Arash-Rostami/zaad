@@ -36,10 +36,11 @@ export default function MenuPanel({
 
     return (
         <motion.div
-            initial={{ opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)" }}
-            animate={{ opacity: 1, height: "auto", clipPath: "inset(0% 0% 0% 0%)" }}
-            exit={{ opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)" }}
-            transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
+            // PH2 FIX: Replaced layout shifting 'height' animation with 'clipPath' for GPU-accelerated dropdown reveals.
+            initial={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
+            animate={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
+            exit={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
             className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
         >
             <NoiseBg filterId="headerNoise" />
@@ -57,7 +58,7 @@ export default function MenuPanel({
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.9, delay: 0.2, ease: [0.76, 0, 0.24, 1] }}
+                    transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5"
                 >
                     <SystemPortals

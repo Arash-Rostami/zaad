@@ -1,128 +1,65 @@
 "use client";
 
 import React from "react";
-import { motion } from "motion/react";
+import MaisonReveal from "./MaisonReveal";
 import { ArrowDown } from "lucide-react";
-import MaisonButton from "./MaisonButton";
 import { useLanguage } from "@/services/TranslationService";
 
 function Hero({ onScrollToCollection }) {
-    const { t } = useLanguage();
-    return (
-        <section className="relative min-h-screen pt-32 pb-16 px-6 sm:px-12 flex flex-col justify-between overflow-hidden bg-surface">
-            <div className="absolute inset-x-0 top-0 h-full pointer-events-none grid grid-cols-4 max-w-7xl mx-auto px-6 sm:px-12">
-                <div className="border-l border-ink/10 h-full w-[1px]"></div>
-                <div className="border-l border-ink/10 h-full w-[1px]"></div>
-                <div className="border-l border-ink/10 h-full w-[1px]"></div>
-                <div className="border-l border-ink/10 h-full w-[1px] border-r"></div>
+  const { t } = useLanguage();
+
+  return (
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-surface">
+      <MaisonReveal variant="lens-focus" className="absolute inset-0 w-full h-full">
+        <img
+          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2560&auto=format&fit=crop"
+          alt="ZAAD Architecture Interior"
+          className="object-cover w-full h-full opacity-[0.85] dark:opacity-70 mix-blend-multiply dark:mix-blend-screen"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-surface/80 via-transparent to-surface/80" />
+      </MaisonReveal>
+
+      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center mt-24">
+        <MaisonReveal variant="unveil" delay={0.2}>
+          <span className="text-[10px] sm:text-xs font-mono tracking-[0.4em] text-accent uppercase mb-6 sm:mb-8 block font-semibold">
+            {t("heroSubtitle")}
+          </span>
+        </MaisonReveal>
+
+        <MaisonReveal variant="unveil" delay={0.4}>
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-serif text-ink tracking-tight leading-[1.05] mb-8 font-light text-glow-subtle mix-blend-normal">
+            {t("heroTitleLine1")}
+            <br />
+            <span className="italic text-muted">{t("heroTitleLine2")}</span>
+          </h1>
+        </MaisonReveal>
+
+        <MaisonReveal variant="unveil" delay={0.6}>
+          <p className="text-sm sm:text-base md:text-lg text-ink font-light max-w-xl mx-auto leading-relaxed mb-16 tracking-wide mix-blend-normal">
+            {t("heroDescription")}
+          </p>
+        </MaisonReveal>
+
+        <MaisonReveal variant="slide-up-royal" delay={0.8}>
+          <button
+            onClick={onScrollToCollection}
+            className="group flex flex-col items-center text-muted hover:text-ink transition-colors duration-700"
+            aria-label={t("scrollDown")}
+          >
+            <span className="text-[9px] font-mono tracking-widest uppercase mb-4 opacity-60 group-hover:opacity-100 transition-opacity duration-700">
+              {t("scrollDown")}
+            </span>
+            <div className="w-[1px] h-12 bg-ink/20 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full bg-ink origin-top animate-scroll-line" />
             </div>
-            <div></div>
-            <div className="relative max-w-7xl mx-auto w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-8">
-                <div className="lg:col-span-7 flex flex-col items-start text-left rtl:text-right z-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="mb-4"
-                    >
-                        <span className="text-[10px] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-2">
-                            {t("bespokeObjects")}
-                        </span>
-                    </motion.div>
-
-                    <motion.h1
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                        className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-serif tracking-tight leading-[1.12] text-ink font-light"
-                    >
-                        {t("heroTitle_1")} <br />
-                        <span className="italic font-normal font-serif-luxury text-accent">
-                            {t("heroTitle_italic")}
-                        </span>{" "}
-                        <br />
-                        {t("heroTitle_2")}
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-                        className="mt-8 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg leading-relaxed"
-                    >
-                        {t("heroDesc")}
-                    </motion.p>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-                        className="mt-12 flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 rtl:space-x-reverse w-full sm:w-auto"
-                    >
-                        <MaisonButton variant="solid" onClick={onScrollToCollection}>
-                            {t("exploreCollection")}
-                        </MaisonButton>
-                        <MaisonButton
-                            variant="outline"
-                            onClick={() => {
-                                const element = document.getElementById("story");
-                                if (element) {
-                                    element.scrollIntoView({ behavior: "smooth" });
-                                }
-                            }}
-                        >
-                            {t("ourPhilosophy")}
-                        </MaisonButton>
-                    </motion.div>
-                </div>
-
-                <div className="lg:col-span-5 relative mt-12 lg:mt-0 z-10 w-full pl-0 lg:pl-6">
-                    <motion.div
-                        initial={{ scale: 1.05, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative aspect-[3/4] w-full max-w-[450px] mx-auto overflow-hidden bg-surface-alt shadow-canvas-low border border-ink/10"
-                    >
-                        <img
-                            src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=90"
-                            alt="ZAAD Architectural Lounge Space"
-                            className="object-cover w-full h-full transition-transform duration-[3s] hover:scale-105"
-                            referrerPolicy="no-referrer"
-                        />
-                        <div className="absolute bottom-6 left-[inherit] right-6 rtl:right-[inherit] rtl:left-6 bg-panel/90 p-4 border border-ink/10 max-w-[200px] shadow-sm text-left rtl:text-right">
-                            <span className="text-[9px] font-mono tracking-widest text-accent block mb-1 uppercase">
-                                {t("heroExhibition")}
-                            </span>
-                            <p className="text-[11px] font-medium tracking-wider text-ink uppercase font-sans">
-                                {t("heroTravertineBase")}
-                            </p>
-                        </div>
-                    </motion.div>
-                </div>
-            </div>
-            <div className="max-w-7xl mx-auto w-full z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-end border-t border-ink/10 pt-8 mt-16 text-muted">
-                <div className="md:col-span-4 flex items-center space-x-4">
-                    <button
-                        onClick={onScrollToCollection}
-                        className="flex items-center space-x-3 text-[11px] font-mono uppercase tracking-[0.2em] hover:text-ink transition-colors group"
-                    >
-                        <span className="p-2 border border-ink/10 rounded-full group-hover:bg-ink/5 transition-all">
-                            <ArrowDown className="w-3.5 h-3.5" />
-                        </span>
-                        <span>{t("monograph")}</span>
-                    </button>
-                </div>
-
-                <div className="md:col-span-4 text-left md:text-center text-[11px] font-light leading-relaxed max-w-xs mx-auto">
-                    "{t("heroQuote")}"
-                </div>
-
-                <div className="md:col-span-4 text-left md:text-right rtl:text-left text-[11px] font-mono tracking-widest">
-                    {t("estFlorence")}
-                </div>
-            </div>
-        </section>
-    );
+            <ArrowDown className="w-3 h-3 mt-2 opacity-40 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-700" />
+          </button>
+        </MaisonReveal>
+      </div>
+    </section>
+  );
 }
 
 export default React.memo(Hero);
