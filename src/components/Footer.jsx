@@ -1,15 +1,14 @@
 "use client";
 
+import React from 'react';
 import {useLanguage} from "@/services/TranslationService";
 
-export default function Footer({onScrollToSection, setActiveTab}) {
+function Footer({onScrollToSection, setActiveTab}) {
     const {t} = useLanguage();
     return (
-        <footer
-            className="bg-foundation text-canvas pt-16 pb-12 px-6 sm:px-12 border-t border-foundation text-left rtl:text-right">
+        <footer className="bg-foundation text-canvas pt-16 pb-12 px-6 sm:px-12 border-t border-foundation text-left rtl:text-right">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 border-b border-canvas/10 pb-12 mb-12">
-                    {/* Brand Col */}
                     <div className="md:col-span-6">
                         <h3 className="text-xl md:text-3xl font-serif tracking-[0.35em] uppercase font-semibold text-canvas mb-4">
                             ZAAD
@@ -19,7 +18,6 @@ export default function Footer({onScrollToSection, setActiveTab}) {
                         </p>
                     </div>
 
-                    {/* Nav Directory */}
                     <div className="md:col-span-3">
                         <h4 className="text-[10px] font-mono tracking-widest text-canvas/40 uppercase mb-4">
                             {t("footerShowroomDir")}
@@ -61,7 +59,6 @@ export default function Footer({onScrollToSection, setActiveTab}) {
                         </ul>
                     </div>
 
-                    {/* Blueprints and specs */}
                     <div className="md:col-span-3">
                         <h4 className="text-[10px] font-mono tracking-widest text-canvas/40 uppercase mb-4">
                             {t("footerBlueprintTitle")}
@@ -76,22 +73,20 @@ export default function Footer({onScrollToSection, setActiveTab}) {
                                 </button>
                             </li>
                             <li>
-                <span className="text-canvas/40 block select-none">
-                  {t("footerMilanZAAD")}
-                </span>
+                                <span className="text-canvas/40 block select-none">
+                                    {t("footerMilanZAAD")}
+                                </span>
                             </li>
                             <li>
-                <span className="text-canvas/40 block select-none">
-                  {t("footerRapolanoStone")}
-                </span>
+                                <span className="text-canvas/40 block select-none">
+                                    {t("footerRapolanoStone")}
+                                </span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                {/* Footer Bottom copyright indicators */}
-                <div
-                    className="flex flex-col sm:flex-row items-center justify-between text-[10px] font-mono text-canvas/40 tracking-widest uppercase">
+                <div className="flex flex-col sm:flex-row items-center justify-between text-[10px] font-mono text-canvas/40 tracking-widest uppercase">
                     <div className="text-center sm:text-left rtl:sm:text-right">
                         {t("footerCopyright")}
                     </div>
@@ -103,3 +98,5 @@ export default function Footer({onScrollToSection, setActiveTab}) {
         </footer>
     );
 }
+
+export default React.memo(Footer);

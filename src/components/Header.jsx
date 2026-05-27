@@ -1,49 +1,28 @@
 "use client";
 
-import {useState} from "react";
-import {AnimatePresence, motion} from "motion/react";
-import {ChevronRight} from "lucide-react";
-import {animateScrollTo, animateScrollToTop} from "@/services/ScrollService";
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { animateScrollTo, animateScrollToTop } from "@/services/ScrollService";
 import MaisonButton from "./MaisonButton";
-import {useLanguage} from "@/services/TranslationService";
+import { useLanguage } from "@/services/TranslationService";
 import useTheme from "../hooks/useTheme";
+import MenuPanel from "./header/MenuPanel";
 
 export default function Header({
-                                   activeTab,
-                                   setActiveTab,
-                                   selectedProduct,
-                                   onSelectProduct,
-                                   onScrollToSection,
-                               }) {
+    activeTab,
+    setActiveTab,
+    selectedProduct,
+    onSelectProduct,
+    onScrollToSection,
+}) {
     const [menuOpen, setMenuOpen] = useState(false);
-    const {language, setLanguage, t, data, getItemTranslations} = useLanguage();
-    const {themeMode, handleThemeChange} = useTheme();
+    const { language, setLanguage, t, data, getItemTranslations } = useLanguage();
+    const { themeMode, handleThemeChange } = useTheme();
     const collection = data("collection") || [];
 
-    const journeyLinks = [
-        {
-            key: "story",
-            label: t("menuOriginsPhilosophy"),
-            sub: t("menuChapter1"),
-        },
-        {
-            key: "collection",
-            label: t("menuCuratedSeries"),
-            sub: t("menuChapter2"),
-        },
-        {
-            key: "concierge",
-            label: t("menuAcquisitionsCabinet"),
-            sub: t("menuChapter3"),
-        },
-    ];
-
     return (
-        <header
-            className="fixed top-0 left-0 w-full z-50 bg-panel-glass hover:bg-panel-frost backdrop-blur-[6px] border-b border-ink-faint transition-all duration-300">
+        <header className="fixed top-0 left-0 w-full z-50 bg-panel-glass hover:bg-panel-frost backdrop-blur-[6px] border-b border-ink-faint transition-all duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-12 py-3.5 sm:py-4 flex items-center justify-between relative">
-
-                {/* Left Side: Elegant Trigger Button */}
                 <div className="flex items-center">
                     <MaisonButton
                         onClick={() => setMenuOpen(!menuOpen)}
@@ -55,10 +34,10 @@ export default function Header({
                                 {menuOpen ? (
                                     <motion.span
                                         key="close"
-                                        initial={{y: 20, opacity: 0}}
-                                        animate={{y: 0, opacity: 1}}
-                                        exit={{y: -20, opacity: 0}}
-                                        transition={{duration: 0.6, ease: [0.76, 0, 0.24, 1]}}
+                                        initial={{ y: 20, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: -20, opacity: 0 }}
+                                        transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
                                         className="absolute"
                                     >
                                         {t("menuClose")}
@@ -66,10 +45,10 @@ export default function Header({
                                 ) : (
                                     <motion.span
                                         key="browse"
-                                        initial={{y: -20, opacity: 0}}
-                                        animate={{y: 0, opacity: 1}}
-                                        exit={{y: 20, opacity: 0}}
-                                        transition={{duration: 0.6, ease: [0.76, 0, 0.24, 1]}}
+                                        initial={{ y: -20, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        exit={{ y: 20, opacity: 0 }}
+                                        transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
                                         className="absolute"
                                     >
                                         {t("menuBrowse")}
@@ -80,7 +59,6 @@ export default function Header({
                     </MaisonButton>
                 </div>
 
-                {/* Center Logo */}
                 <div className="absolute left-1/2 -translate-x-1/2 z-10 flex items-center justify-center">
                     <button
                         onClick={() => {
@@ -95,16 +73,13 @@ export default function Header({
                     </button>
                 </div>
 
-                {/* Right Side: Inquiry button */}
                 <div className="flex items-center space-x-2 rtl:space-x-reverse">
                     <MaisonButton
                         onClick={() => {
                             setActiveTab("showroom");
                             onSelectProduct(null);
                             setMenuOpen(false);
-                            setTimeout(() => {
-                                animateScrollTo("concierge", 1500);
-                            }, 120);
+                            setTimeout(() => animateScrollTo("concierge", 1500), 120);
                         }}
                         variant="outline"
                         className="!px-3 sm:!px-5 h-8 sm:h-10 !rounded-full !text-[8.5px] sm:!text-[10px] !tracking-[0.15em] sm:!tracking-[0.2em] flex items-center justify-center font-sans"
@@ -114,319 +89,22 @@ export default function Header({
                 </div>
             </div>
 
-            {/* Slide-out menu panel */}
             <AnimatePresence>
                 {menuOpen && (
-                    <motion.div
-                        initial={{opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)"}}
-                        animate={{opacity: 1, height: "auto", clipPath: "inset(0% 0% 0% 0%)"}}
-                        exit={{opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)"}}
-                        transition={{duration: 1.1, ease: [0.76, 0, 0.24, 1]}}
-                        className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
-                    >
-                        <div
-                            className="absolute inset-0 overflow-hidden pointer-events-none"
-                            style={{opacity: "var(--noise-opacity)", mixBlendMode: "var(--noise-blend)"}}
-                        >
-                            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                                <filter id="headerNoise" x="0" y="0" width="100%" height="100%">
-                                    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4"
-                                                  stitchTiles="stitch"/>
-                                    <feColorMatrix type="saturate" values="0"/>
-                                </filter>
-                                <rect width="100%" height="100%" filter="url(#headerNoise)"/>
-                            </svg>
-                        </div>
-
-                        <div
-                            className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 dark:opacity-10">
-                            <svg
-                                className="w-full h-full stroke-accent/10"
-                                viewBox="0 0 1440 320"
-                                xmlns="http://www.w3.org/2000/svg"
-                                preserveAspectRatio="none"
-                            >
-                                <path fill="none" strokeWidth="0.5"
-                                      d="M0,160 Q360,50 720,160 T1440,160 M0,200 Q360,90 720,200 T1440,200 M0,240 Q360,130 720,240 T1440,240"/>
-                            </svg>
-                        </div>
-
-                        <div
-                            className="w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent absolute top-0 left-0"/>
-
-                        <div
-                            className="max-w-7xl mx-auto px-6 sm:px-12 py-5 sm:py-6 flex flex-col justify-between relative z-10 max-h-[85vh] overflow-y-auto">
-                            <motion.div
-                                initial={{opacity: 0, y: 30}}
-                                animate={{opacity: 1, y: 0}}
-                                exit={{opacity: 0, y: -20}}
-                                transition={{duration: 0.9, delay: 0.2, ease: [0.76, 0, 0.24, 1]}}
-                                className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5"
-                            >
-                                {/* ROW 1: PRIMARY PORTALS (1/3) & JOURNEY INDEX (2/3) */}
-                                <div className="md:col-span-4 flex flex-col space-y-2">
-                                      <span
-                                          className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
-                                        {t("menuSystemDirectories")}
-                                      </span>
-
-                                    <button
-                                        onClick={() => {
-                                            setActiveTab("showroom");
-                                            onSelectProduct(null);
-                                            setMenuOpen(false);
-                                            animateScrollToTop(1400);
-                                        }}
-                                        className={`group relative text-left rtl:text-right p-2.5 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] overflow-hidden ${activeTab === "showroom" && !selectedProduct ? "bg-surface-alt border-[#C5A059]/50 shadow-sm font-semibold" : "border-ink/5 hover:border-[#C5A059]/60 bg-panel"}`}
-                                    >
-                                        <div
-                                            className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
-                                        <div className="flex justify-between items-center w-full relative z-10">
-                                              <span
-                                                  className="text-md font-serif text-headline font-semibold group-hover:-translate-y-0.5 transition-transform duration-300">
-                                                {t("menuLivingShowroom")}
-                                              </span>
-                                            <ChevronRight
-                                                className="w-3.5 h-3.5 text-accent group-hover:text-[#C5A059] group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-all duration-300"/>
-                                        </div>
-                                        <span
-                                            className="text-[11px] text-muted font-light mt-0.5 leading-none relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
-                      {t("menuLivingShowroomSub")}
-                    </span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => {
-                                            setActiveTab("pdf");
-                                            onSelectProduct(null);
-                                            setMenuOpen(false);
-                                        }}
-                                        className={`group relative text-left rtl:text-right p-2.5 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-center min-h-[58px] overflow-hidden ${activeTab === "blueprint" ? "bg-surface-alt border-[#C5A059]/50 shadow-sm font-semibold" : "border-ink/5 hover:border-[#C5A059]/60 bg-panel"}`}
-                                    >
-                                        <div
-                                            className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
-                                        <div className="flex justify-between items-center w-full relative z-10">
-                                              <span
-                                                  className="text-md font-serif text-headline font-semibold group-hover:-translate-y-0.5 transition-transform duration-300">
-                                                {t("menuZAADBlueprints")}
-                                              </span>
-                                            <ChevronRight
-                                                className="w-3.5 h-3.5 text-accent group-hover:text-[#C5A059] group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180 transition-all duration-300"/>
-                                        </div>
-                                        <span
-                                            className="text-[11px] text-muted font-light mt-0.5 leading-none relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
-                                            {t("menuZAADBlueprintsSub")}
-                                        </span>
-                                    </button>
-                                </div>
-
-                                {/* Column 2: JOURNEY INDEX (Stretches across 2/3 space, items side-by-side) */}
-                                <div className="md:col-span-8 flex flex-col space-y-2">
-                                  <span
-                                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
-                                    {t("menuJourneyIndex")}
-                                  </span>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 flex-1">
-                                        {journeyLinks.map((target) => (
-                                            <button
-                                                key={target.key}
-                                                onClick={() => {
-                                                    setActiveTab("showroom");
-                                                    onSelectProduct(null);
-                                                    setMenuOpen(false);
-                                                    setTimeout(() => {
-                                                        animateScrollTo(target.key, 1400);
-                                                    }, 120);
-                                                }}
-                                                className="group relative p-4 border border-ink/5 hover:border-[#C5A059]/60 bg-panel rounded-lg cursor-pointer flex flex-col justify-between transition-all duration-500 text-left rtl:text-right h-full overflow-hidden"
-                                            >
-                                                <div
-                                                    className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
-                                                <div
-                                                    className="flex justify-between items-start w-full mb-4 relative z-10">
-                                                    <span
-                                                        className="text-lg font-serif font-semibold text-headline group-hover:-translate-y-0.5 transition-transform duration-300">
-                                                      {target.label}
-                                                    </span>
-                                                    <ChevronRight
-                                                        className="w-4 h-4 text-accent group-hover:text-[#C5A059] group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-all duration-300"/>
-                                                </div>
-                                                <span
-                                                    className="text-[11px] text-accent font-mono uppercase leading-tight relative z-10 group-hover:text-[#C5A059] transition-colors duration-300">
-                                                  {target.sub}
-                                                </span>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* ELEGANT DIVIDER */}
-                                <div
-                                    className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent my-1 sm:my-2"/>
-
-                                {/* ROW 2: CURATED SPECIMENS (Spans full width, 4 items horizontal) */}
-                                <div className="md:col-span-12 flex flex-col space-y-2">
-                                  <span
-                                      className="text-[10px] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">
-                                    {t("menuCuratedSpecimens")}
-                                  </span>
-
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                                        {collection.map((item) => {
-                                            const isSculptureActive = selectedProduct?.id === item.id;
-                                            const translatedItem = getItemTranslations(item.id);
-                                            return (
-                                                <button
-                                                    key={item.id}
-                                                    onClick={() => {
-                                                        setActiveTab("showroom");
-                                                        onSelectProduct(item);
-                                                        setMenuOpen(false);
-                                                    }}
-                                                    className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${isSculptureActive ? "bg-surface-alt border-[#C5A059]/50 font-semibold shadow-md" : "border-ink/10 hover:border-[#C5A059]/60 bg-panel hover:bg-[#C5A059]/5 shadow-sm hover:shadow-md"}`}
-                                                >
-                                                    {/* Subtle elegant gradient overlay on hover */}
-                                                    <div
-                                                        className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/0 via-transparent to-[#C5A059]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"/>
-
-                                                    <div className="flex justify-end w-full relative z-10">
-                                                        <span
-                                                            className="text-xs font-mono tracking-widest text-accent/80 group-hover:text-[#C5A059] transition-colors duration-300">
-                                                          {item.number}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex flex-col mt-6 relative z-10">
-                                                        <span
-                                                            className="text-lg font-serif font-semibold text-headline leading-tight group-hover:-translate-y-0.5 transition-transform duration-300">
-                                                          {translatedItem?.name || item.name}
-                                                        </span>
-                                                        <div
-                                                            className="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                                                            <span
-                                                                className="text-[10px] tracking-[0.2em] text-[#C5A059] uppercase">
-                                                              {t("menuView")}
-                                                            </span>
-                                                            <ChevronRight
-                                                                className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180"/>
-                                                        </div>
-                                                    </div>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                            </motion.div>
-
-                            {/* Settings footer */}
-                            <motion.div
-                                initial={{opacity: 0}}
-                                animate={{opacity: 1}}
-                                exit={{opacity: 0}}
-                                transition={{duration: 0.8, delay: 0.4, ease: [0.76, 0, 0.24, 1]}}
-                                className="md:col-span-12 border-t border-ink/10 mt-5 pt-5 flex flex-col md:flex-row items-center justify-between gap-4"
-                            >
-                                <div
-                                    className="flex items-center space-x-3.5 rtl:space-x-reverse font-mono text-[8.5px] tracking-widest text-accent/80 uppercase">
-                                    <span>© 2026 ZAAD</span>
-                                    <span className="opacity-30">•</span>
-                                    <span>{t("menuDigitalEdition")}</span>
-                                    <span className="opacity-30">•</span>
-                                    <span>{t("menuZAADIndex")}</span>
-                                </div>
-
-                                <div className="flex items-center space-x-4">
-                                    <div
-                                        className="flex flex-wrap items-center gap-4 bg-control-bar border border-control px-4 py-2 rounded-full shadow-canvas-mid hover:shadow-canvas-lift transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]">
-                                        {/* Language toggler */}
-                                        <div
-                                            className="flex items-center relative rounded-full bg-toggle-track p-0.5 font-mono text-[8px] tracking-widest h-7 w-20">
-                                            <button
-                                                onClick={() => setLanguage("en")}
-                                                className={`cursor-pointer flex-1 text-center h-full rounded-full transition-colors duration-700 relative z-10 uppercase text-[8.5px] font-semibold flex items-center justify-center ${language === "en" ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted hover:text-headline"}`}
-                                            >
-                                                {language === "en" && (
-                                                    <motion.div
-                                                        layoutId="activeLanguageBlobInNavbar"
-                                                        className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                        transition={{
-                                                            type: "spring",
-                                                            stiffness: 300,
-                                                            damping: 25,
-                                                            mass: 0.5,
-                                                            ease: "easeInOut"
-                                                        }}
-                                                    />
-                                                )}
-                                                EN
-                                            </button>
-
-                                            <button
-                                                onClick={() => setLanguage("fa")}
-                                                className={`cursor-pointer flex-1 text-center h-full rounded-full transition-colors duration-700 relative z-10 text-[8.5px] font-semibold flex items-center justify-center ${language === "fa" ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted hover:text-headline"}`}
-                                            >
-                                                {language === "fa" && (
-                                                    <motion.div
-                                                        layoutId="activeLanguageBlobInNavbar"
-                                                        className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                        transition={{
-                                                            type: "spring",
-                                                            stiffness: 300,
-                                                            damping: 25,
-                                                            mass: 0.5,
-                                                            ease: "easeInOut"
-                                                        }}
-                                                    />
-                                                )}
-                                                FA
-                                            </button>
-                                        </div>
-
-                                        <span className="h-3 w-[1px] bg-ink/10"/>
-
-                                        {/* Theme selector */}
-                                        <div className="flex items-center space-x-1.5 rtl:space-x-reverse pr-0.5">
-                                            <span
-                                                className="text-[7.5px] font-mono tracking-wider text-muted uppercase">
-                                                {t("menuThemeLabel")}
-                                            </span>
-                                            <div
-                                                className="flex items-center relative rounded-full bg-toggle-track p-0.5 h-7">
-                                                {["light", "mid", "dark"].map((mode) => {
-                                                    const isActive = themeMode === mode;
-                                                    const label =
-                                                        mode === "light" ? "LMN" : mode === "mid" ? "ARA" : "UMB";
-                                                    return (
-                                                        <button
-                                                            key={mode}
-                                                            onClick={() => handleThemeChange(mode)}
-                                                            className={`cursor-pointer px-2 h-full text-[8.5px] font-semibold font-mono tracking-widest rounded-full transition-colors duration-700 relative z-10 flex items-center justify-center ${isActive ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted/70 hover:text-headline"}`}
-                                                        >
-                                                            {isActive && (
-                                                                <motion.div
-                                                                    layoutId="activeThemeBlobInNavbar"
-                                                                    className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                                                    transition={{
-                                                                        type: "spring",
-                                                                        stiffness: 300,
-                                                                        damping: 25,
-                                                                        mass: 0.5,
-                                                                        ease: "easeInOut"
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            {label}
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    </motion.div>
+                    <MenuPanel
+                        t={t}
+                        language={language}
+                        setLanguage={setLanguage}
+                        activeTab={activeTab}
+                        selectedProduct={selectedProduct}
+                        collection={collection}
+                        getItemTranslations={getItemTranslations}
+                        themeMode={themeMode}
+                        handleThemeChange={handleThemeChange}
+                        onClose={() => setMenuOpen(false)}
+                        setActiveTab={setActiveTab}
+                        onSelectProduct={onSelectProduct}
+                    />
                 )}
             </AnimatePresence>
         </header>
