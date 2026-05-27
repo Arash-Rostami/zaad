@@ -7,6 +7,7 @@ export default function useConcierge({ language, getItemTranslations, preselecte
   const [desiredConsultation, setDesiredConsultation] = useState("acquisition");
   const [additionalNote, setAdditionalNote] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [sessionRef, setSessionRef] = useState(null);
 
   const [chatMessages, setChatMessages] = useState([]);
   const [userQuery, setUserQuery] = useState("");
@@ -99,6 +100,7 @@ export default function useConcierge({ language, getItemTranslations, preselecte
   const handleInquirySubmit = (e) => {
     e.preventDefault();
     if (!clientName || !clientEmail) return;
+    setSessionRef(Math.floor(Math.random() * 90000) + 10000);
     setFormSubmitted(true);
   };
 
@@ -124,6 +126,7 @@ export default function useConcierge({ language, getItemTranslations, preselecte
     desiredConsultation, setDesiredConsultation,
     additionalNote, setAdditionalNote,
     formSubmitted,
+    sessionRef,
     chatMessages,
     userQuery, setUserQuery,
     chatLoading,

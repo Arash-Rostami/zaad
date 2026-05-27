@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 const SpecimenGrid = memo(function SpecimenGrid({ collection, selectedProduct, getItemTranslations, t, onSelect }) {
@@ -12,9 +13,10 @@ const SpecimenGrid = memo(function SpecimenGrid({ collection, selectedProduct, g
                     const isActive = selectedProduct?.id === item.id;
                     const translatedItem = getItemTranslations(item.id);
                     return (
-                        <button
+                        <Link
                             key={item.id}
-                            onClick={() => onSelect(item)}
+                            href={`/collection/${item.id}`}
+                            onClick={(e) => { onSelect(item); }}
                             className={`group relative text-left rtl:text-right p-4 border transition-all duration-500 rounded-lg cursor-pointer flex flex-col justify-between min-h-[140px] overflow-hidden ${
                                 isActive
                                     ? "bg-surface-alt border-[#C5A059]/50 font-semibold shadow-md"
@@ -38,7 +40,7 @@ const SpecimenGrid = memo(function SpecimenGrid({ collection, selectedProduct, g
                                     <ChevronRight className="w-3 h-3 text-[#C5A059] ml-1 rtl:mr-1 rtl:ml-0 rtl:rotate-180" />
                                 </div>
                             </div>
-                        </button>
+                        </Link>
                     );
                 })}
             </div>
