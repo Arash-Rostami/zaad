@@ -91,7 +91,7 @@ export class MetadataService {
                 name: BRAND, url: SITE_URL, inLanguage: ["en", "fa"],
                 potentialAction: {
                     "@type":       "SearchAction",
-                    target:        { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/collections?q={search_term_string}` },
+                    target:        { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/collection?q={search_term_string}` },
                     "query-input": "required name=search_term_string",
                 },
             }],
@@ -100,7 +100,7 @@ export class MetadataService {
 
     static async forCollection(item) {
         const lang       = await getLang();
-        const canonical  =  `${SITE_URL}/collections/${item.slug ?? item.id}`;
+        const canonical  =  `${SITE_URL}/collection/${item.slug ?? item.id}`;
 
         return {
             meta: buildMeta({
@@ -116,7 +116,7 @@ export class MetadataService {
                     "@type":    "BreadcrumbList",
                     itemListElement: [
                         { "@type": "ListItem", position: 1, name: "Home",        item: SITE_URL },
-                        { "@type": "ListItem", position: 2, name: "Collections", item: `${SITE_URL}/collections` },
+                        { "@type": "ListItem", position: 2, name: "Collection", item: `${SITE_URL}/collection` },
                         { "@type": "ListItem", position: 3, name: item.name,     item: canonical },
                     ],
                 },

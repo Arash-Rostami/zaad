@@ -1,4 +1,4 @@
-import { MetadataService } from "@/services/MetadataService";
+import { MetadataService } from "@/services/MetaDataService";
 import JsonLd from "@/components/JsonLd";
 import AppShell from "@/components/AppShell";
 

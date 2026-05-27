@@ -2,7 +2,7 @@ import {cookies} from "next/headers";
 import "../styles/globals.css";
 import {LanguageProvider} from "@/services/TranslationService";
 import InitialLoader from "@/components/InitialLoader";
-import {MetadataService} from "@/services/MetadataService";
+import {MetadataService} from "@/services/MetaDataService";
 import JsonLd from "@/components/JsonLd";
 
 
