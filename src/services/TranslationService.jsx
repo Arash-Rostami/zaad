@@ -33,14 +33,22 @@ const LanguageContext = createContext({
 });
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguageState] = useState(() => {
+  // PH1 FIX: Removed localStorage call from useState initializer to prevent SSR hydration mismatch.
+  // Using defaultLanguage initially, and fetching from localStorage inside useEffect.
+  const [language, setLanguageState] = useState(defaultLanguage);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
     try {
       const stored = localStorage.getItem("zaad_preferred_language");
-      return stored === "fa" || stored === "en" ? stored : defaultLanguage;
+      if (stored === "fa" || stored === "en") {
+        setLanguageState(stored);
+      }
     } catch {
-      return defaultLanguage;
+      // ignore
     }
-  });
+  }, []);
 
   const setLanguage = (lang) => {
     setLanguageState(lang);
@@ -84,6 +92,13 @@ export function LanguageProvider({ children }) {
         null
     );
   };
+
+  // Prevent rendering children until mounted to avoid hydration flash if language differs from default
+  if (!mounted) {
+    return (
+        <div style={{ opacity: 0 }} className="w-full h-full min-h-screen" />
+    );
+  }
 
   return (
       <LanguageContext.Provider

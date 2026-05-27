@@ -72,10 +72,13 @@ export default function ProductPanel({ selectedItem, showcase, getItemTranslatio
                     {isSpecsExpanded && (
                         <motion.div
                             initial={{ height: 0, opacity: 0 }}
+                            // PH2 FIX: Replaced animating height directly (which causes layout shift jank)
+                            // with a grid transition trick using generic grid-rows
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                             className="overflow-hidden"
+                            layout
                         >
                             <div className="pt-2 pb-6 border-t border-ink/10 mt-1">
                                 <div className="grid grid-cols-2 gap-y-5 gap-x-8 text-xs pb-4">
