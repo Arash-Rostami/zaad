@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, ShieldCheck } from "lucide-react";
 import MaisonButton from "../MaisonButton";
@@ -71,11 +72,10 @@ export default function ProductPanel({ selectedItem, showcase, getItemTranslatio
                 <AnimatePresence initial={false}>
                     {isSpecsExpanded && (
                         <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
+                            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+                            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+                            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
                             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                            className="overflow-hidden"
                         >
                             <div className="pt-2 pb-6 border-t border-ink/10 mt-1">
                                 <div className="grid grid-cols-2 gap-y-5 gap-x-8 text-xs pb-4">
@@ -111,14 +111,15 @@ export default function ProductPanel({ selectedItem, showcase, getItemTranslatio
                                     <span className="text-[9px] font-mono text-muted leading-relaxed max-w-sm uppercase text-left rtl:text-right">
                                         {t("showcaseCatalogueText")}
                                     </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => onViewDetails(selectedItem)}
+                                    {/* href makes this crawlable; onClick keeps the SPA animated transition */}
+                                    <Link
+                                        href={`/collection/${selectedItem.id}`}
+                                        onClick={(e) => { e.preventDefault(); onViewDetails(selectedItem); }}
                                         className="font-mono text-[9px] tracking-[0.2em] bg-accent text-white hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-full uppercase font-medium flex items-center space-x-2 rtl:space-x-reverse transition-all duration-300 focus:outline-none cursor-pointer hover:shadow-md"
                                     >
                                         <span>{t("showcaseRevealDossier")}</span>
                                         <ArrowUpRight className="w-3.5 h-3.5 stroke-[1.8] rtl:rotate-270" />
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </motion.div>

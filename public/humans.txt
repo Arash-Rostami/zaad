@@ -1,0 +1,8 @@
+/* TEAM */
+Developer: Arash Rostami
+Site: https://time-gr.com/cv/
+Location: Iran
+
+/* SITE */
+Last update: 2026
+Standards: NEXTJS, TW$

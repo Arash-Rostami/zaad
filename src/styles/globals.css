@@ -324,22 +324,24 @@ body {
 html[lang="fa"],
 html[lang="fa"] body,
 .farsi-mode {
-    font-family: "Inter", "Vazirmatn", sans-serif !important;
+    font-family: "Vazirmatn", sans-serif !important;
     letter-spacing: normal !important;
 }
 
-html[lang="fa"] .font-serif,
+/* Heading tags only — never .font-serif so brand/logo spans are untouched */
 html[lang="fa"] h1,
 html[lang="fa"] h2,
 html[lang="fa"] h3 {
-    font-family: "Playfair Display", "Vazirmatn", Georgia, serif !important;
-    font-weight: 500;
+    font-family: "Amiri", Georgia, serif !important;
+    font-weight: 400;
     letter-spacing: 0 !important;
+    line-height: 1.55 !important;
 }
 
 html[lang="fa"] .font-mono,
 html[lang="fa"] code {
-    font-family: "JetBrains Mono", "Vazirmatn", monospace !important;
+    font-family: "Vazirmatn", monospace !important;
+    font-weight: 300;
     letter-spacing: 0 !important;
 }
 

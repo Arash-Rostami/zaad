@@ -36,9 +36,9 @@ export default function MenuPanel({
 
     return (
         <motion.div
-            initial={{ opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)" }}
-            animate={{ opacity: 1, height: "auto", clipPath: "inset(0% 0% 0% 0%)" }}
-            exit={{ opacity: 0, height: 0, clipPath: "inset(0% 0% 100% 0%)" }}
+            initial={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
+            animate={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
+            exit={{ opacity: 0, clipPath: "inset(0% 0% 100% 0%)" }}
             transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
             className="absolute top-full left-0 w-full bg-overlay-panel border-b border-accent/20 shadow-deep z-40 overflow-hidden"
         >

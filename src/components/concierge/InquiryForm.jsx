@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Calendar, Check, Clock } from "lucide-react";
@@ -12,6 +14,7 @@ export default function InquiryForm({ concierge, t, language }) {
         desiredConsultation, setDesiredConsultation,
         additionalNote, setAdditionalNote,
         formSubmitted, setFormSubmitted,
+        sessionRef,
         handleInquirySubmit,
     } = concierge;
 
@@ -135,7 +138,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                 : `${clientName}, your secure consultation card has been committed to our Florence studio log. A dedicated design director will reach out directly to your coordinate email within 4 hours.`}
                         </p>
                         <div className="border-t border-ink/10 pt-4 font-mono text-[9px] text-accent tracking-widest uppercase">
-                            {t("sessionRef")}: SEC-COM-{Math.floor(Math.random() * 90000) + 10000}
+                            {t("sessionRef")}: SEC-COM-{sessionRef}
                         </div>
                         <MaisonButton
                             variant="ghost"
