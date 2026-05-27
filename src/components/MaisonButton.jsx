@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import {
   ArrowUpRight,
@@ -13,7 +13,7 @@ import {
   Send,
 } from "lucide-react";
 
-function getRelevantIcon(label) {
+const getRelevantIcon = (label) => {
   const norm = label.toLowerCase();
   if (norm.includes("browse")) return Compass;
   if (norm.includes("close")) return X;
@@ -25,17 +25,39 @@ function getRelevantIcon(label) {
   if (norm.includes("inquiry") || norm.includes("inquire")) return Sparkles;
   if (norm.includes("another") || norm.includes("reset") || norm.includes("refresh")) return RefreshCw;
   return ArrowUpRight;
-}
+};
 
-export default function MaisonButton({
-  children,
-  onClick,
-  variant = "solid",
-  className = "",
-  type = "button",
-  disabled = false,
-  hideIcon = false,
-}) {
+const getVariantStyles = (variant) => {
+  switch (variant) {
+    case "solid":
+      return "bg-ink text-on-indicator border border-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-sm";
+    case "outline":
+      return "border border-ink/20 text-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 bg-transparent";
+    case "pill-dark":
+      return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[10px] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-sm";
+    case "pill-light":
+      return "border border-ink/20 text-ink rounded-full text-[9.5px] tracking-[0.2em] font-semibold uppercase px-6 py-3 bg-transparent";
+    case "ghost":
+      return "text-muted hover:text-ink text-[10px] tracking-widest font-mono uppercase bg-transparent py-1";
+    case "tab":
+      return "text-[11px] font-mono tracking-widest uppercase pb-1 bg-transparent transition-colors";
+    case "material-choice":
+      return "border border-ink/10 rounded-xl p-6 bg-panel-glass hover:bg-panel text-left transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]";
+    case "text":
+    default:
+      return "text-xs font-semibold tracking-[0.2em] text-ink uppercase hover:opacity-80 transition-opacity";
+  }
+};
+
+function MaisonButton({
+                        children,
+                        onClick,
+                        variant = "solid",
+                        className = "",
+                        type = "button",
+                        disabled = false,
+                        hideIcon = false,
+                      }) {
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [reflectionPos, setReflectionPos] = useState({ x: 50, y: 50 });
@@ -46,7 +68,7 @@ export default function MaisonButton({
   const smoothX = useSpring(driftX, springConfig);
   const smoothY = useSpring(driftY, springConfig);
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     if (!containerRef.current || disabled) return;
     const rect = containerRef.current.getBoundingClientRect();
     const { clientX, clientY } = e;
@@ -60,34 +82,17 @@ export default function MaisonButton({
       x: ((clientX - rect.left) / rect.width) * 100,
       y: ((clientY - rect.top) / rect.height) * 100,
     });
-  };
+  }, [disabled, driftX, driftY]);
 
-  const handleMouseLeave = () => { setIsHovered(false); driftX.set(0); driftY.set(0); };
-  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+    driftX.set(0);
+    driftY.set(0);
+  }, [driftX, driftY]);
 
-  const getVariantStyles = () => {
-    switch (variant) {
-      case "solid":
-        return "bg-ink text-on-indicator border border-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-sm";
-      case "outline":
-        return "border border-ink/20 text-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 bg-transparent";
-      case "pill-dark":
-        return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[10px] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-sm";
-      case "pill-light":
-        return "border border-ink/20 text-ink rounded-full text-[9.5px] tracking-[0.2em] font-semibold uppercase px-6 py-3 bg-transparent";
-      case "ghost":
-        return "text-muted hover:text-ink text-[10px] tracking-widest font-mono uppercase bg-transparent py-1";
-      case "tab":
-        return "text-[11px] font-mono tracking-widest uppercase pb-1 bg-transparent transition-colors";
-      case "material-choice":
-        return "border border-ink/10 rounded-xl p-6 bg-panel-glass hover:bg-panel text-left transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]";
-      case "text":
-      default:
-        return "text-xs font-semibold tracking-[0.2em] text-ink uppercase hover:opacity-80 transition-opacity";
-    }
-  };
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
 
-  const buttonStyleClass = `relative select-none outline-none focus:outline-none overflow-hidden transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 cursor-pointer ${getVariantStyles()} ${className}`;
+  const buttonStyleClass = `relative select-none outline-none focus:outline-none overflow-hidden transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 cursor-pointer ${getVariantStyles(variant)} ${className}`;
 
   const renderContent = () => {
     if (variant === "material-choice") return children;
@@ -97,21 +102,21 @@ export default function MaisonButton({
       const label = children;
       const IconComponent = getRelevantIcon(label);
       return (
-        <span className="relative block overflow-hidden h-6 leading-6">
+          <span className="relative block overflow-hidden h-6 leading-6">
           <span
-            className="block transition-transform duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-            style={{ transform: isHovered ? "translateY(-50%)" : "translateY(0%)" }}
+              className="block transition-transform duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+              style={{ transform: isHovered ? "translateY(-50%)" : "translateY(0%)" }}
           >
             <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap px-1">
               <span className="font-semibold tracking-inherit">{label}</span>
               {!hideIcon && (
-                <IconComponent className="w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0" style={{ opacity: 0.65 }} />
+                  <IconComponent className="w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0" style={{ opacity: 0.65 }} />
               )}
             </span>
             <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap text-accent px-1">
               <span className="font-semibold tracking-inherit">{label}</span>
               {!hideIcon && (
-                <IconComponent className="w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0" />
+                  <IconComponent className="w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0" />
               )}
             </span>
           </span>
@@ -120,35 +125,37 @@ export default function MaisonButton({
     }
 
     return (
-      <div className="flex items-center justify-center space-x-2 relative z-10 whitespace-nowrap">
-        {children}
-      </div>
+        <div className="flex items-center justify-center space-x-2 relative z-10 whitespace-nowrap">
+          {children}
+        </div>
     );
   };
 
   return (
-    <motion.button
-      ref={containerRef}
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ x: smoothX, y: smoothY }}
-      whileTap={disabled ? undefined : { scale: 0.985 }}
-      className={buttonStyleClass}
-    >
-      {isHovered && !disabled && (
-        <span
-          className="absolute inset-0 pointer-events-none block opacity-35 transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(circle 120px at ${reflectionPos.x}% ${reflectionPos.y}%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%)`,
-            mixBlendMode: "overlay",
-          }}
-        />
-      )}
-      {renderContent()}
-    </motion.button>
+      <motion.button
+          ref={containerRef}
+          type={type}
+          disabled={disabled}
+          onClick={onClick}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{ x: smoothX, y: smoothY }}
+          whileTap={disabled ? undefined : { scale: 0.985 }}
+          className={buttonStyleClass}
+      >
+        {isHovered && !disabled && (
+            <span
+                className="absolute inset-0 pointer-events-none block opacity-35 transition-opacity duration-500"
+                style={{
+                  background: `radial-gradient(circle 120px at ${reflectionPos.x}% ${reflectionPos.y}%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%)`,
+                  mixBlendMode: "overlay",
+                }}
+            />
+        )}
+        {renderContent()}
+      </motion.button>
   );
 }
+
+export default React.memo(MaisonButton);
