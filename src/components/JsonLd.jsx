@@ -3,9 +3,14 @@ export default function JsonLd({ schemas = [] }) {
     if (!safe.length) return null;
 
     return (
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(safe) }}
-        />
+        <>
+            {safe.map((schema, index) => (
+                <script
+                    key={index}
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                />
+            ))}
+        </>
     );
 }
