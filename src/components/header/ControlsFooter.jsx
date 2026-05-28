@@ -14,7 +14,7 @@ const ControlsFooter = memo(function ControlsFooter({ t, language, setLanguage, 
                 <span>© 2026 ZAAD</span>
                 <span className="opacity-30">•</span>
                 <span>{t("menuDigitalEdition")}</span>
-                <span className="opacity-30">•</span>
+                <span className="opacity-30">•</span>a
                 <span>{t("menuZAADIndex")}</span>
             </div>
 

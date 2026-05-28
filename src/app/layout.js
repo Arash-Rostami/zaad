@@ -1,8 +1,8 @@
-import {cookies} from "next/headers";
+import { getServerLanguage } from "@/lib/i18n/server";
 import "../styles/globals.css";
 import {LanguageProvider} from "@/services/TranslationService";
 import InitialLoader from "@/components/InitialLoader";
-import {MetadataService} from "@/services/MetadataService";
+import {MetadataService} from "@/services/MetaDataService";
 import JsonLd from "@/components/JsonLd";
 
 
@@ -17,9 +17,7 @@ export const viewport = {
 };
 
 export default async function RootLayout({children}) {
-    const cookieStore = await cookies();
-    const stored = cookieStore.get("zaad_preferred_language")?.value;
-    const initialLanguage = stored === "fa" || stored === "en" ? stored : "en";
+    const initialLanguage = await getServerLanguage();
 
     return (
         <html

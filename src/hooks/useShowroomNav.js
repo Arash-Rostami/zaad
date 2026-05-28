@@ -8,7 +8,7 @@ export default function useShowroomNav() {
 
   const setActiveTab = (tab) => {
     if (tab === "pdf") {
-      window.open("/pdf/index.html", "_blank", "noopener,noreferrer");
+      window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
       return;
     }
 

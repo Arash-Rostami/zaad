@@ -23,7 +23,7 @@ export default function useConcierge({ language, getItemTranslations, preselecte
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);
-  }, [language]);
+  }, [language, t]);
 
   useEffect(() => {
     if (!preselectedItem) return;
@@ -31,17 +31,17 @@ export default function useConcierge({ language, getItemTranslations, preselecte
     const name = getItemTranslations(preselectedItem.id)?.name || preselectedItem.name;
     const number = preselectedItem.number;
     setAdditionalNote(
-      language === "fa"
-        ? `من مایل به تملک اثر ${name} (${number}) برای فضای خود هستم. لطفا موجودی مادی فعلی و زمان تحویل آن را بفرمایید.`
-        : `I am looking to acquire the ${preselectedItem.name} (${preselectedItem.number}) for my space. Please provide current physical availability and white-glove shipping timeline.`
+        language === "fa"
+            ? `من مایل به تملک اثر ${name} (${number}) برای فضای خود هستم. لطفا موجودی مادی فعلی و زمان تحویل آن را بفرمایید.`
+            : `I am looking to acquire the ${preselectedItem.name} (${preselectedItem.number}) for my space. Please provide current physical availability and white-glove shipping timeline.`
     );
     const inquiryMessage = {
       id: `user-query-${Date.now()}`,
       role: "user",
       content:
-        language === "fa"
-          ? `من به تملک اثر ${name} علاقه‌مندم. ممکن است درباره سنگ تشکیل‌دهنده و چیدمان بهینه آن بگویید؟`
-          : `I am interested in acquiring the ${preselectedItem.name}. Can you tell me more about its materials and how to style it in a room?`,
+          language === "fa"
+              ? `من به تملک اثر ${name} علاقه‌مندم. ممکن است درباره سنگ تشکیل‌دهنده و چیدمان بهینه آن بگویید؟`
+              : `I am interested in acquiring the ${preselectedItem.name}. Can you tell me more about its materials and how to style it in a room?`,
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
     setChatMessages((prev) => {
