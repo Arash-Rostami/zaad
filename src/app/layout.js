@@ -27,6 +27,20 @@ export default async function RootLayout({children}) {
             dir={initialLanguage === "fa" ? "rtl" : "ltr"}
             suppressHydrationWarning
         >
+        <head>
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        if (typeof window !== 'undefined' && window.sessionStorage.getItem('zaad_initial_loaded')) {
+                            document.documentElement.classList.add('skip-loader');
+                        }
+                    `
+                }}
+            />
+            <style dangerouslySetInnerHTML={{ __html: `
+                html.skip-loader #zaad-loader { display: none !important; }
+            `}} />
+        </head>
         <body
             className="bg-surface text-ink selection:bg-surface-alt selection:text-ink overflow-x-hidden antialiased"
         >

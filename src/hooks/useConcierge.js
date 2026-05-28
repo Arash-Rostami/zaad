@@ -23,7 +23,7 @@ export default function useConcierge({ language, getItemTranslations, preselecte
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);
-  }, [language]);
+  }, [language, t]);
 
   useEffect(() => {
     if (!preselectedItem) return;

@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 
 export default function useTheme() {
   const [themeMode, setThemeMode] = useState("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const cached = localStorage.getItem("zaad-theme");
     const initialMode = cached || "light";
     setThemeMode(initialMode);
@@ -22,5 +24,5 @@ export default function useTheme() {
     localStorage.setItem("zaad-theme", mode);
   };
 
-  return { themeMode, handleThemeChange };
+  return { themeMode, handleThemeChange, mounted };
 }

@@ -100,6 +100,7 @@ export default function MenuPanel({
                     setLanguage={setLanguage}
                     themeMode={themeMode}
                     handleThemeChange={handleThemeChange}
+                    mounted={mounted}
                 />
             </div>
         </motion.div>

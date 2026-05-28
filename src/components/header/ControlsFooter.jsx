@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { motion } from "motion/react";
 
-const ControlsFooter = memo(function ControlsFooter({ t, language, setLanguage, themeMode, handleThemeChange }) {
+const ControlsFooter = memo(function ControlsFooter({ t, language, setLanguage, themeMode, handleThemeChange, mounted }) {
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -42,31 +42,37 @@ const ControlsFooter = memo(function ControlsFooter({ t, language, setLanguage, 
                     <span className="h-3 w-[1px] bg-ink/10" />
 
                     <div className="flex items-center space-x-1.5 rtl:space-x-reverse pr-0.5">
-                        <span className="text-[7.5px] font-mono tracking-wider text-muted uppercase">
-                            {t("menuThemeLabel")}
-                        </span>
-                        <div className="flex items-center relative rounded-full bg-toggle-track p-0.5 h-7">
-                            {[
-                                { mode: "light", label: "LMN" },
-                                { mode: "mid", label: "ARA" },
-                                { mode: "dark", label: "UMB" },
-                            ].map(({ mode, label }) => (
-                                <button
-                                    key={mode}
-                                    onClick={() => handleThemeChange(mode)}
-                                    className={`cursor-pointer px-2 h-full text-[8.5px] font-semibold font-mono tracking-widest rounded-full transition-colors duration-700 relative z-10 flex items-center justify-center ${themeMode === mode ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted/70 hover:text-headline"}`}
-                                >
-                                    {themeMode === mode && (
-                                        <motion.div
-                                            layoutId="activeThemeBlobInNavbar"
-                                            className="absolute inset-0 bg-indicator rounded-full z-[-1]"
-                                            transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5 }}
-                                        />
-                                    )}
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
+                        {mounted ? (
+                            <>
+                                <span className="text-[7.5px] font-mono tracking-wider text-muted uppercase">
+                                    {t("menuThemeLabel")}
+                                </span>
+                                <div className="flex items-center relative rounded-full bg-toggle-track p-0.5 h-7">
+                                    {[
+                                        { mode: "light", label: "LMN" },
+                                        { mode: "mid", label: "ARA" },
+                                        { mode: "dark", label: "UMB" },
+                                    ].map(({ mode, label }) => (
+                                        <button
+                                            key={mode}
+                                            onClick={() => handleThemeChange(mode)}
+                                            className={`cursor-pointer px-2 h-full text-[8.5px] font-semibold font-mono tracking-widest rounded-full transition-colors duration-700 relative z-10 flex items-center justify-center ${themeMode === mode ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted/70 hover:text-headline"}`}
+                                        >
+                                            {themeMode === mode && (
+                                                <motion.div
+                                                    layoutId="activeThemeBlobInNavbar"
+                                                    className="absolute inset-0 bg-indicator rounded-full z-[-1]"
+                                                    transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5 }}
+                                                />
+                                            )}
+                                            {label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </>
+                        ) : (
+                            <div className="w-24 h-7" />
+                        )}
                     </div>
                 </div>
             </div>

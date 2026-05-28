@@ -59,11 +59,6 @@ function InitialLoader() {
 
     useEffect(() => {
         const hasLoaded = sessionStorage.getItem("zaad_initial_loaded");
-        //
-        // if (hasLoaded) {
-        //     setIsLoading(false);
-        //     return;
-        // }
 
         sessionStorage.setItem("zaad_initial_loaded", "true");
 
@@ -75,55 +70,41 @@ function InitialLoader() {
     }, []);
 
     return (
-        <>
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `
-                        if (typeof window !== 'undefined' && window.sessionStorage.getItem('zaad_initial_loaded')) {
-                            document.documentElement.classList.add('skip-loader');
-                        }
-                    `
-                }}
-            />
-            <AnimatePresence>
-                {isLoading && (
-                    <motion.div
-                        id="zaad-loader"
-                        className="fixed inset-0 z-[9999] bg-surface flex flex-col items-center justify-center pointer-events-none"
-                        dir="ltr"
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        variants={CONTAINER_VARIANTS}
-                    >
-                        {/*<style dangerouslySetInnerHTML={{ __html: `*/}
-                        {/*    html.skip-loader #zaad-loader { display: none !important; }*/}
-                        {/*`}} />*/}
-                        <div className="relative flex flex-col items-start justify-center px-2 sm:px-4">
-                            <div className="flex space-x-1 sm:space-x-2 md:space-x-3 overflow-hidden">
-                                {BRAND_NAME.map((letter, index) => (
-                                    <motion.span
-                                        key={index}
-                                        variants={LETTER_VARIANTS}
-                                        className={`text-ink font-serif font-medium text-5xl sm:text-6xl md:text-8xl lg:text-9xl inline-block leading-none ${
-                                            index === BRAND_NAME.length - 1
-                                                ? "tracking-normal"
-                                                : "tracking-[0.2em] sm:tracking-[0.25em] md:tracking-[0.3em]"
-                                        }`}
-                                    >
-                                        {letter}
-                                    </motion.span>
-                                ))}
-                            </div>
-                            <motion.div
-                                variants={LINE_VARIANTS}
-                                className="h-[2.5px] bg-accent mt-8 sm:mt-10 md:mt-12"
-                            />
+        <AnimatePresence>
+            {isLoading && (
+                <motion.div
+                    id="zaad-loader"
+                    className="fixed inset-0 z-[9999] bg-surface flex flex-col items-center justify-center pointer-events-none"
+                    dir="ltr"
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={CONTAINER_VARIANTS}
+                >
+                    <div className="relative flex flex-col items-start justify-center px-2 sm:px-4">
+                        <div className="flex space-x-1 sm:space-x-2 md:space-x-3 overflow-hidden">
+                            {BRAND_NAME.map((letter, index) => (
+                                <motion.span
+                                    key={index}
+                                    variants={LETTER_VARIANTS}
+                                    className={`text-ink font-serif font-medium text-5xl sm:text-6xl md:text-8xl lg:text-9xl inline-block leading-none ${
+                                        index === BRAND_NAME.length - 1
+                                            ? "tracking-normal"
+                                            : "tracking-[0.2em] sm:tracking-[0.25em] md:tracking-[0.3em]"
+                                    }`}
+                                >
+                                    {letter}
+                                </motion.span>
+                            ))}
                         </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
+                        <motion.div
+                            variants={LINE_VARIANTS}
+                            className="h-[2.5px] bg-accent mt-8 sm:mt-10 md:mt-12"
+                        />
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
 
