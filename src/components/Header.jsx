@@ -17,7 +17,7 @@ export default function Header({
 }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const { language, setLanguage, t, data, getItemTranslations } = useLanguage();
-    const { themeMode, handleThemeChange, mounted } = useTheme();
+    const { themeMode, handleThemeChange } = useTheme();
     const collection = data("collection") || [];
 
     return (
@@ -101,7 +101,6 @@ export default function Header({
                         getItemTranslations={getItemTranslations}
                         themeMode={themeMode}
                         handleThemeChange={handleThemeChange}
-                        mounted={mounted}
                         onClose={() => setMenuOpen(false)}
                         setActiveTab={setActiveTab}
                         onSelectProduct={onSelectProduct}

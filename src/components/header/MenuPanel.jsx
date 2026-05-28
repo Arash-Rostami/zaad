@@ -17,7 +17,6 @@ export default function MenuPanel({
     getItemTranslations,
     themeMode,
     handleThemeChange,
-    mounted,
     onClose,
     setActiveTab,
     onSelectProduct,
@@ -101,7 +100,6 @@ export default function MenuPanel({
                     setLanguage={setLanguage}
                     themeMode={themeMode}
                     handleThemeChange={handleThemeChange}
-                    mounted={mounted}
                 />
             </div>
         </motion.div>
