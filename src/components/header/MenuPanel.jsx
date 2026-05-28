@@ -17,6 +17,7 @@ export default function MenuPanel({
     getItemTranslations,
     themeMode,
     handleThemeChange,
+    mounted,
     onClose,
     setActiveTab,
     onSelectProduct,
