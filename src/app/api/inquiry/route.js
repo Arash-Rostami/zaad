@@ -99,6 +99,7 @@ export async function POST(request) {
         appointmentWindow: clean.appointmentWindow || null,
         language: payload.language === "fa" ? "fa" : "en",
         submittedAt: new Date().toISOString(),
+        viewed: false,
     };
 
     try {

@@ -164,7 +164,9 @@ the app's `[0.16, 1, 0.3, 1]` ease — intentionally unhurried, matching the bra
 snappy" pacing (see `src/styles/README.md`). Currently wired onto the language toggle, theme
 toggle, and `AudioToggle` in `header/ControlsFooter.jsx` and `house/HouseChrome.jsx`'s
 `HouseControls` — not yet rolled out app-wide; extend deliberately, one control cluster at a time,
-rather than blanket-wrapping every button.
+rather than blanket-wrapping every button. `HouseControls` is `export`ed (added 2026-09-04) so
+`ledger/LedgerHeader.jsx` can reuse it directly — a plain named import, not a barrel — rather than
+duplicating the language/theme/font-scale/audio cluster a second time.
 
 **Touch contract.** On coarse pointers the tooltip is tap-driven, not hover-driven: the wrapper
 toggles visibility on `pointerdown` (`pointerType === "touch"` only), and while visible a
@@ -777,19 +779,55 @@ Client shell whose two modes are decided entirely by what the server page
 gate (`useActionState` + the page's inline server action, `InquiryForm`'s field/label/error
 styling, `MaisonButton` submit, plus the `HouseChrome` back-link idiom — a `Link href="/"`
 with `ArrowLeft` and `t("ledgerReturnHome")`); unlocked with entries → boxed entry cards; unlocked with
-zero entries → `shared/StatusScreen` (reuse, not a copy). The shell mounts the full showroom
-chrome — `Header` (`activeTab="showroom"`, router-based `setActiveTab`/`onScrollToSection`/
-`onSelectProduct` handlers), `Footer`, `ScrollButton`, `useLenisScroll` — mirroring the
-sanctioned `collection/[slug]/ProductPageClient.jsx` precedent (CLAUDE.md's "do not reuse
-showroom chrome" prohibition applies to the House routes, not this one), so the page reads
-as the same site, not a separate admin surface. Entries paginate at `PAGE_SIZE = 10`
-(newest first — the server pre-sorts), with mono prev/next controls and `countFor` page
-numbers; `safePage` clamps when a delete empties the last page, and every page change or
-delete resets `openIndex`. The reveal stagger uses the page-local `stagger` offset, not
-the global index — later pages would otherwise all sit at the 0.8s delay cap and lose the
-cascade. Deletion is a two-step inline confirm inside the open entry
+zero entries → `shared/StatusScreen` (reuse, not a copy). **Header is `ledger/LedgerHeader.jsx`,
+not the showroom `Header`** (changed 2026-09-04, superseding the earlier "mounts the full
+showroom chrome" design): a minimal bar modeled visually on `house/HouseChrome.jsx` — back-to-
+showroom link (`t("ledgerReturnHome")`), centered "ZAAD" wordmark, a static `t("ledgerEyebrow")`
+label in the House current-page-label style (no `layoutId`, nothing to animate between), and
+the same `HouseControls` cluster House pages use (now `export`ed from `HouseChrome.jsx` for this
+reuse). This deliberately drops the showroom `Header`'s nav tabs/collection controls/mobile menu
+and the global `activeLanguageBlobInNavbar`/`activeThemeBlobInNavbar` layoutId groups from this
+route — a direct instruction, not a rediscovery of the House-routes prohibition (that CLAUDE.md
+rule still targets the House routes specifically). The showroom `Footer` stays mounted unchanged
+(`onScrollToSection`/`setActiveTab` still routed through `router.push`), alongside `ScrollButton`
+and `useLenisScroll`, so the page still reads as the same site below the fold.
+
+Entries paginate at `PAGE_SIZE = 10` (newest first — the server pre-sorts) over
+**`filteredInquiries`**, not the raw `inquiries` prop — a `useMemo` applying the active
+all/unviewed/viewed tab filter and then the search query (matched case-insensitively against
+name/email/phone/`sessionRef`/consultation label). The open row is tracked by **`openKey`**
+(a stable `${sessionRef}-${submittedAt}` identity), not a positional index — auto-mark-as-viewed
+(below) can flip a record's `viewed` flag while it's open, which drops it out of the current
+filter (e.g. it disappears from the "Unviewed" tab) and shifts every later row's position; a
+positional `openIndex` would then land on the wrong record after that `router.refresh()`. Only
+`goToPage` and a tab/search change (via a `useEffect` on `[activeFilter, query]`) reset
+`openKey` outright — auto-mark and manual-toggle mutations leave it alone, since identity, not
+position, is what's being tracked. `safePage` clamps when a delete (or a filter change) empties
+the last page. The reveal stagger uses the page-local `stagger` offset, not the global index —
+later pages would otherwise all sit at the 0.8s delay cap and lose the cascade.
+
+**Viewed/unviewed (added 2026-09-04):** every inquiry record carries a `viewed` boolean
+(defaulted `false` on write — see `/api/inquiry` in `src/app/README.md`). The three filter tabs
+("All"/"Unviewed"/"Viewed", `filterTabs` array with live counts) sit on a local-only Motion
+`layoutId="activeLedgerFilterLine"` tab-underline — modeled on
+`productdetailspage/SpecsTabs.jsx`'s `activeCurationTabLine` pattern but a distinct id, since it
+mounts only on this route and must not collide with the four global groups. `LedgerEntry` gets
+an `onSetViewed(sessionRef, submittedAt, viewed)` callback (the page's `setViewedAction` server
+action wrapped in the same shared `useTransition` the delete flow uses — `isMutating`/
+`startMutationTransition`, then `router.refresh()`), used two ways: a manual per-entry
+"Mark Viewed"/"Mark Unviewed" toggle (`Eye`/`EyeOff`) next to Delete in the open detail footer,
+and an automatic mark-as-viewed the first time an entry is expanded (checked in `handleToggle`
+as `!open && !inquiry.viewed`, so it never fires again once viewed, and only on the transition
+into "open", not on close). Unviewed rows carry a small `aria-hidden` accent dot before the
+`SEC-COM-{sessionRef}` code; the header block above the tabs shows a live unviewed count next to
+the total entry count. `onSetViewed` (like `onToggle`/`onDelete`) is a stable callback from the
+parent's `useCallback`, so toggling one entry's viewed state doesn't re-render unrelated rows —
+only the entry whose own `inquiry` prop actually changed re-renders, preserving the existing
+per-entry memoization contract.
+
+Deletion is a two-step inline confirm inside the open entry
 (first click arms for 4s — ref-stored timer, cleaned up on unmount — second click fires
-the `deleteAction` server action through `useTransition`, then `router.refresh()`es so
+the `deleteAction` server action through the shared `useTransition`, then `router.refresh()`es so
 the entry vanishes from the list without a manual reload); the open card carries a subtle
 `border-accent/30`. Entry refs render as
 `SEC-COM-{sessionRef}` (the same code format `InquiryForm`'s success state shows the
@@ -800,9 +838,7 @@ only `ledger*` chrome strings, no new data vocabulary. The unfold is the
 `showcase/ProductPanel.jsx` accordion clip-path idiom (0.8s `[0.16,1,0.3,1]` animate /
 0.6s `[0.7,0,0.84,0]` exit) — inside the interactive 300–800ms range, deliberately not
 that accordion's 1.1s documented exception. `Intl` stamp formatters are module-cached per
-locale (`stampFor`), and `LedgerEntry` is `memo` with stable `onToggle(index)`/`onDelete`
-callbacks so an open/close re-renders only the affected entry. No `layoutId` anywhere —
-the four global groups stay untouched. User-entered visitor data (names, notes) renders in
+locale (`stampFor`). User-entered visitor data (names, notes) renders in
 the inherited body sans — never `.font-serif`/`.font-farsi` pairings, which are for
 translated brand content — matching `CuratorChat`'s treatment of user-generated content;
 notes go through `wrapLatinRuns`.

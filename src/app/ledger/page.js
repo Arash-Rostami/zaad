@@ -93,6 +93,28 @@ async function deleteAction(sessionRef, submittedAt) {
     }
 }
 
+async function setViewedAction(sessionRef, submittedAt, viewed) {
+    "use server";
+    if (sessionRef == null || submittedAt == null) return;
+    if (!(await isUnlocked())) return;
+
+    try {
+        await mutateInquiries((records) => {
+            let changed = false;
+            const next = records.map((record) => {
+                if (record?.sessionRef === sessionRef && record?.submittedAt === submittedAt && Boolean(record.viewed) !== viewed) {
+                    changed = true;
+                    return { ...record, viewed };
+                }
+                return record;
+            });
+            return changed ? next : null;
+        });
+    } catch {
+        return;
+    }
+}
+
 async function loadInquiries() {
     const records = await readInquiries();
     if (records.length < 2) return records;
@@ -115,6 +137,7 @@ export default async function Page() {
             unlockAction={unlockAction}
             lockAction={lockAction}
             deleteAction={deleteAction}
+            setViewedAction={setViewedAction}
         />
     );
 }

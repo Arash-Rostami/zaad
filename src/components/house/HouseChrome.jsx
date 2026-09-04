@@ -33,7 +33,7 @@ const THEME_TOOLTIP_KEYS = {
   dark: "tooltipThemeDark",
 };
 
-function HouseControls() {
+export function HouseControls() {
   const { t, language, setLanguage } = useLanguage();
   const { themeMode, handleThemeChange } = useTheme();
   const { isMuted, toggleMute } = useAmbientAudio();

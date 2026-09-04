@@ -1,11 +1,11 @@
 "use client";
 
-import React, { memo, useCallback, useEffect, useActionState, useRef, useState, useTransition } from "react";
+import React, { memo, useCallback, useEffect, useActionState, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { AlertCircle, ArrowLeft, ChevronDown, KeyRound, LogOut, Trash2 } from "lucide-react";
-import Header from "@/components/Header";
+import { AlertCircle, ArrowLeft, ChevronDown, Eye, EyeOff, KeyRound, LogOut, Search, Trash2 } from "lucide-react";
+import LedgerHeader from "./LedgerHeader";
 import Footer from "@/components/Footer";
 import ScrollButton from "@/components/shared/ScrollButton";
 import useLenisScroll from "@/hooks/useLenisScroll";
@@ -28,6 +28,12 @@ const DETAIL_EXIT = Object.freeze({
     opacity: 0,
     clipPath: "inset(0 0 100% 0)",
     transition: Object.freeze({ duration: 0.6, ease: EASE_EXIT }),
+});
+
+const TAB_LINE_TRANSITION = Object.freeze({
+    type: "spring",
+    stiffness: 350,
+    damping: 30,
 });
 
 const CONSULTATION_KEYS = {
@@ -150,16 +156,60 @@ const DetailRow = memo(function DetailRow({ label, children }) {
     );
 });
 
-const LedgerEntry = memo(function LedgerEntry({ inquiry, index, open, stagger, onToggle, onDelete, deleting, t, isFarsi, language }) {
+const LedgerFilterTab = memo(function LedgerFilterTab({ tab, isActive, onSelect, t, language }) {
+    const handleClick = useCallback(() => onSelect(tab.id), [onSelect, tab.id]);
+
+    return (
+        <button
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            onClick={handleClick}
+            className="group relative pb-3 sm:pb-4 flex items-center gap-2 transition-colors duration-300 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shrink-0"
+        >
+            <span
+                className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.15em] uppercase transition-colors ${
+                    isActive ? "text-ink font-semibold" : "text-muted/60 group-hover:text-ink"
+                }`}
+            >
+                {t(tab.labelKey)}
+            </span>
+            <span
+                dir="ltr"
+                className={`font-latin font-mono text-[10px] tracking-widest transition-colors ${
+                    isActive ? "text-accent" : "text-muted/40"
+                }`}
+            >
+                {countFor(tab.count, language)}
+            </span>
+            {isActive && (
+                <motion.div
+                    layoutId="activeLedgerFilterLine"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent"
+                    transition={TAB_LINE_TRANSITION}
+                />
+            )}
+        </button>
+    );
+});
+
+const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger, onToggle, onDelete, onSetViewed, pending, t, isFarsi, language }) {
     const [confirming, setConfirming] = useState(false);
     const confirmTimer = useRef(null);
 
     useEffect(() => () => clearTimeout(confirmTimer.current), []);
 
-    const handleToggle = useCallback(() => onToggle(index), [index, onToggle]);
+    const handleToggle = useCallback(() => {
+        if (!open && !inquiry.viewed) onSetViewed(inquiry.sessionRef, inquiry.submittedAt, true);
+        onToggle(entryKey);
+    }, [entryKey, onToggle, open, onSetViewed, inquiry]);
+
+    const handleToggleViewed = useCallback(() => {
+        onSetViewed(inquiry.sessionRef, inquiry.submittedAt, !inquiry.viewed);
+    }, [onSetViewed, inquiry]);
 
     const handleDelete = useCallback(() => {
-        if (deleting) return;
+        if (pending) return;
         if (!confirming) {
             setConfirming(true);
             clearTimeout(confirmTimer.current);
@@ -169,7 +219,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, index, open, stagger, o
         clearTimeout(confirmTimer.current);
         setConfirming(false);
         onDelete(inquiry.sessionRef, inquiry.submittedAt);
-    }, [confirming, deleting, onDelete, inquiry.sessionRef, inquiry.submittedAt]);
+    }, [confirming, pending, onDelete, inquiry.sessionRef, inquiry.submittedAt]);
 
     const stamp = stampFor(inquiry.submittedAt, language);
     const consultationKey = CONSULTATION_KEYS[inquiry.desiredConsultation];
@@ -197,7 +247,10 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, index, open, stagger, o
                     className="w-full text-left rtl:text-right px-5 sm:px-7 py-5 flex items-center gap-4 cursor-pointer outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                     <div className="min-w-0 flex-1">
-                        <div className="flex items-baseline gap-x-3 gap-y-1 flex-wrap">
+                        <div className="flex items-center gap-x-3 gap-y-1 flex-wrap">
+                            {!inquiry.viewed && (
+                                <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                            )}
                             <span dir="ltr" className="font-latin font-mono text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest text-accent shrink-0">
                                 SEC-COM-{inquiry.sessionRef}
                             </span>
@@ -258,14 +311,25 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, index, open, stagger, o
                                         </p>
                                     </div>
                                 )}
-                                <div className="flex justify-end pt-4">
+                                <div className="flex items-center justify-between gap-4 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={handleToggleViewed}
+                                        disabled={pending}
+                                        className={`flex items-center gap-1.5 font-mono uppercase tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 text-muted/70 hover:text-accent ${
+                                            pending ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
+                                        }`}
+                                    >
+                                        {inquiry.viewed ? <EyeOff className="w-3.5 h-3.5 shrink-0" /> : <Eye className="w-3.5 h-3.5 shrink-0" />}
+                                        {inquiry.viewed ? t("ledgerMarkUnviewed") : t("ledgerMarkViewed")}
+                                    </button>
                                     <button
                                         type="button"
                                         onClick={handleDelete}
-                                        disabled={deleting}
+                                        disabled={pending}
                                         className={`flex items-center gap-1.5 font-mono uppercase tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
                                             confirming ? "text-danger" : "text-muted/70 hover:text-danger"
-                                        } ${deleting ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
+                                        } ${pending ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
                                     >
                                         <Trash2 className="w-3.5 h-3.5 shrink-0" />
                                         {confirming ? t("ledgerDeleteConfirm") : t("ledgerDelete")}
@@ -280,15 +344,17 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, index, open, stagger, o
     );
 });
 
-function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction }) {
+function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, setViewedAction }) {
     const { t, language, isFarsi } = useLanguage();
     const router = useRouter();
-    const [openIndex, setOpenIndex] = useState(null);
+    const [openKey, setOpenKey] = useState(null);
     const [pageIndex, setPageIndex] = useState(0);
-    const [isDeleting, startDeleteTransition] = useTransition();
+    const [activeFilter, setActiveFilter] = useState("all");
+    const [query, setQuery] = useState("");
+    const [isMutating, startMutationTransition] = useTransition();
 
-    const toggleEntry = useCallback((index) => {
-        setOpenIndex((current) => (current === index ? null : index));
+    const toggleEntry = useCallback((entryKey) => {
+        setOpenKey((current) => (current === entryKey ? null : entryKey));
     }, []);
 
     const handleLock = useCallback(() => {
@@ -297,8 +363,8 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction })
 
     const handleDelete = useCallback(
         (sessionRef, submittedAt) => {
-            setOpenIndex(null);
-            startDeleteTransition(async () => {
+            setOpenKey(null);
+            startMutationTransition(async () => {
                 await deleteAction(sessionRef, submittedAt);
                 router.refresh();
             });
@@ -306,9 +372,19 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction })
         [deleteAction, router],
     );
 
+    const handleSetViewed = useCallback(
+        (sessionRef, submittedAt, viewed) => {
+            startMutationTransition(async () => {
+                await setViewedAction(sessionRef, submittedAt, viewed);
+                router.refresh();
+            });
+        },
+        [setViewedAction, router],
+    );
+
     const goToPage = useCallback((next) => {
         setPageIndex(next);
-        setOpenIndex(null);
+        setOpenKey(null);
     }, []);
 
     useLenisScroll();
@@ -321,14 +397,46 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction })
         router.push("/");
     };
     const onScrollToSection = (sectionId) => router.push(`/#${sectionId}`);
-    const onSelectProduct = (product) => router.push(product ? `/collection/${product.id}` : "/");
 
-    const pageCount = Math.max(1, Math.ceil(inquiries.length / PAGE_SIZE));
+    const unviewedCount = useMemo(() => inquiries.filter((inquiry) => !inquiry.viewed).length, [inquiries]);
+    const viewedCount = inquiries.length - unviewedCount;
+
+    const filteredInquiries = useMemo(() => {
+        let list = inquiries;
+        if (activeFilter !== "all") {
+            const wantViewed = activeFilter === "viewed";
+            list = list.filter((inquiry) => Boolean(inquiry.viewed) === wantViewed);
+        }
+        const needle = query.trim().toLowerCase();
+        if (needle) {
+            list = list.filter((inquiry) => {
+                const consultationKey = CONSULTATION_KEYS[inquiry.desiredConsultation];
+                const consultationLabel = consultationKey ? t(consultationKey) : inquiry.desiredConsultation || "";
+                return [inquiry.clientName, inquiry.clientEmail, inquiry.clientPhone, String(inquiry.sessionRef ?? ""), consultationLabel].some(
+                    (field) => field && field.toLowerCase().includes(needle),
+                );
+            });
+        }
+        return list;
+    }, [inquiries, activeFilter, query, t]);
+
+    useEffect(() => {
+        setPageIndex(0);
+        setOpenKey(null);
+    }, [activeFilter, query]);
+
+    const pageCount = Math.max(1, Math.ceil(filteredInquiries.length / PAGE_SIZE));
     const safePage = Math.min(pageIndex, pageCount - 1);
     const pageStart = safePage * PAGE_SIZE;
-    const pageEntries = inquiries.slice(pageStart, pageStart + PAGE_SIZE);
+    const pageEntries = filteredInquiries.slice(pageStart, pageStart + PAGE_SIZE);
 
     const countLabel = countFor(inquiries.length, language);
+
+    const filterTabs = [
+        { id: "all", labelKey: "ledgerTabAll", count: inquiries.length },
+        { id: "unviewed", labelKey: "ledgerTabUnviewed", count: unviewedCount },
+        { id: "viewed", labelKey: "ledgerTabViewed", count: viewedCount },
+    ];
 
     const body = !unlocked ? (
         <LedgerGate unlockAction={unlockAction} t={t} />
@@ -343,7 +451,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction })
     ) : (
         <div className="min-h-screen bg-surface text-ink px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+4rem)] pb-24">
             <div className="max-w-3xl mx-auto">
-                <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="mb-12 md:mb-16">
+                <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="mb-10">
                     <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-5">
                         {t("ledgerEyebrow")}
                     </span>
@@ -360,24 +468,77 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction })
                             {countLabel}
                         </span>{" "}
                         {t("ledgerEntryCount")}
+                        {unviewedCount > 0 && (
+                            <>
+                                {" "}
+                                ·{" "}
+                                <span dir="ltr" className="font-latin text-accent">
+                                    {countFor(unviewedCount, language)}
+                                </span>{" "}
+                                {t("ledgerUnviewedCount")}
+                            </>
+                        )}
                     </p>
                 </MaisonReveal>
 
-                {pageEntries.map((inquiry, offset) => (
-                    <LedgerEntry
-                        key={`${inquiry.sessionRef ?? "x"}-${inquiry.submittedAt ?? offset}`}
-                        inquiry={inquiry}
-                        index={pageStart + offset}
-                        stagger={offset}
-                        open={openIndex === pageStart + offset}
-                        onToggle={toggleEntry}
-                        onDelete={handleDelete}
-                        deleting={isDeleting}
-                        t={t}
-                        isFarsi={isFarsi}
-                        language={language}
-                    />
-                ))}
+                <MaisonReveal
+                    variant="unveil"
+                    delay={0.15}
+                    threshold={0.01}
+                    className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5"
+                >
+                    <div
+                        role="tablist"
+                        aria-orientation="horizontal"
+                        className="flex items-center gap-6 border-b border-ink/10 sm:border-0 overflow-x-auto scrollbar-none"
+                    >
+                        {filterTabs.map((tab) => (
+                            <LedgerFilterTab
+                                key={tab.id}
+                                tab={tab}
+                                isActive={activeFilter === tab.id}
+                                onSelect={setActiveFilter}
+                                t={t}
+                                language={language}
+                            />
+                        ))}
+                    </div>
+                    <div className="relative sm:w-64 shrink-0">
+                        <Search className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted/60 pointer-events-none" />
+                        <input
+                            type="text"
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            placeholder={t("ledgerSearchPlaceholder")}
+                            aria-label={t("ledgerSearchLabel")}
+                            className="w-full bg-panel border border-ink/15 focus:border-ink focus:outline-none pl-9 rtl:pl-4 rtl:pr-9 pr-4 py-2 text-sm font-light rounded-full placeholder-dim-faint transition-colors"
+                        />
+                    </div>
+                </MaisonReveal>
+
+                {pageEntries.length === 0 ? (
+                    <p className="text-sm text-muted font-light text-center py-16">{t("ledgerNoResults")}</p>
+                ) : (
+                    pageEntries.map((inquiry, offset) => {
+                        const entryKey = `${inquiry.sessionRef ?? "x"}-${inquiry.submittedAt ?? offset}`;
+                        return (
+                            <LedgerEntry
+                                key={entryKey}
+                                inquiry={inquiry}
+                                entryKey={entryKey}
+                                stagger={offset}
+                                open={openKey === entryKey}
+                                onToggle={toggleEntry}
+                                onDelete={handleDelete}
+                                onSetViewed={handleSetViewed}
+                                pending={isMutating}
+                                t={t}
+                                isFarsi={isFarsi}
+                                language={language}
+                            />
+                        );
+                    })
+                )}
 
                 {pageCount > 1 && (
                     <div className="mt-14 flex items-center justify-center gap-8">
@@ -415,13 +576,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction })
 
     return (
         <div className="min-h-screen flex flex-col justify-between selection:bg-selection selection:text-ink">
-            <Header
-                activeTab="showroom"
-                setActiveTab={setActiveTab}
-                selectedProduct={null}
-                onSelectProduct={onSelectProduct}
-                onScrollToSection={onScrollToSection}
-            />
+            <LedgerHeader />
             <main className="flex-1">{body}</main>
             <Footer onScrollToSection={onScrollToSection} setActiveTab={setActiveTab} />
             <ScrollButton />

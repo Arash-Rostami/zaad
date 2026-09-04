@@ -156,7 +156,8 @@ itself only validates the request, assembles the system prompt, and shapes the r
   a request that bypasses the browser UI).
 - **Persistence:** on success, appends a record (`sessionRef` — a `crypto.randomInt`
   5-digit number, not `Math.random()` — the validated/trimmed fields, `language`,
-  `submittedAt`) to `data/inquiries.json` (repo-root `data/`, a sibling of `public/`, not
+  `submittedAt`, `viewed: false` — the ledger's read/unread flag, flipped only by
+  `/ledger`'s `setViewedAction`, never by the visitor) to `data/inquiries.json` (repo-root `data/`, a sibling of `public/`, not
   nested under `src/` — gitignored, holds real customer PII: name/email/phone). Writes
   go through the **shared serialized store** `src/lib/inquiriesStore.js`
   (`mutateInquiries(transform)`): a module-level promise chain serializes every
@@ -201,6 +202,14 @@ a CMS-style panel: one gated editorial page in the app's own design language, ba
   `src/lib/inquiriesStore.js` queue (`mutateInquiries`), the same serialized atomic path
   `/api/inquiry` appends through — a return of `null` from the transform skips the write
   (no match, nothing changed).
+- **Viewed/unviewed (added 2026-09-04):** `setViewedAction(sessionRef, submittedAt, viewed)`
+  — same shape as `deleteAction` (re-gated via `isUnlocked()`, matched by the
+  `sessionRef`+`submittedAt` pair, written through the same `mutateInquiries` queue,
+  `null` transform result when nothing changed) — flips one record's `viewed` flag. The
+  client shell (`components/ledger/Ledger.jsx`) calls it both from a manual per-entry
+  toggle and automatically the first time an entry is expanded; see
+  `src/components/README.md`'s `ledger/Ledger.jsx` section for the three-tab
+  (all/unviewed/viewed) filtering built on top of it.
 - **SEO:** `metadata.robots` `index/follow: false` + `robots.js` disallow; no sitemap entry.
 - **Known limitation:** the gate has no rate limiting (brute force is slowed only by
   single-flight form submissions). Acceptable for a single-admin key; revisit if the key
