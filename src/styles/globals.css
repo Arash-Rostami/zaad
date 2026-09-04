@@ -1,15 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;700&display=swap');
+@font-face { font-family: "Dorsa"; font-weight: 300; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Light.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 400; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Regular.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 700; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Bold.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 800; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-ExtraBold.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Heavy.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Black.otf") format("opentype"); }
+
+html.skip-loader #zaad-loader {
+    display: none !important;
+}
+
 @import "../../node_modules/tailwindcss";
 
-/* ============================================================
-   DESIGN SYSTEM — COLOR TOKENS
-   Three resolved palettes: light (default), mid, dark.
-   All adaptive tokens reference these variables so a single
-   class (e.g. "text-ink") renders correctly in every theme.
-   ============================================================ */
+@custom-variant dark (&:where(.dark, .dark *, .mid, .mid *));
 
 :root {
-    /* — Surfaces — */
+    --zaad-section-y: 3.5rem;
+    --zaad-section-y-break: 5rem;
+}
+
+@media (min-width: 48rem) {
+    :root {
+        --zaad-section-y: 5rem;
+        --zaad-section-y-break: 8rem;
+    }
+}
+
+@utility section-y {
+    padding-top: var(--zaad-section-y);
+    padding-bottom: var(--zaad-section-y);
+}
+
+@utility section-y-break {
+    padding-top: var(--zaad-section-y-break);
+    padding-bottom: var(--zaad-section-y-break);
+}
+
+:root {
+    --zaad-user-scale: 1;
+    --zaad-font-scale: var(--zaad-user-scale);
+    --text-xs: calc(0.75rem * var(--zaad-font-scale));
+    --text-sm: calc(0.875rem * var(--zaad-font-scale));
+    --text-base: calc(1rem * var(--zaad-font-scale));
+    --text-lg: calc(1.125rem * var(--zaad-font-scale));
+    --text-xl: calc(1.25rem * var(--zaad-font-scale));
+    --text-2xl: calc(1.5rem * var(--zaad-font-scale));
+    --text-3xl: calc(1.875rem * var(--zaad-font-scale));
+    --text-4xl: calc(2.25rem * var(--zaad-font-scale));
+    --text-5xl: calc(3rem * var(--zaad-font-scale));
+    --text-6xl: calc(3.75rem * var(--zaad-font-scale));
+    --text-7xl: calc(4.5rem * var(--zaad-font-scale));
+    --text-8xl: calc(6rem * var(--zaad-font-scale));
+    --text-9xl: calc(8rem * var(--zaad-font-scale));
+}
+
+html[lang="fa"],
+.farsi-mode {
+    --zaad-font-scale: calc(var(--zaad-user-scale) * 1.05);
+    --leading-tight: 1.19;
+    --leading-snug: 1.31;
+    --leading-normal: 1.43;
+    --leading-relaxed: 1.54;
+    --leading-loose: 1.9;
+    --text-xs--line-height: 1.27;
+    --text-sm--line-height: 1.36;
+    --text-base--line-height: 1.43;
+    --text-lg--line-height: 1.48;
+    --text-xl--line-height: 1.33;
+    --text-2xl--line-height: 1.27;
+    --text-3xl--line-height: 1.14;
+    --text-4xl--line-height: 1.06;
+    --text-5xl--line-height: 0.95;
+    --text-6xl--line-height: 0.95;
+    --text-7xl--line-height: 0.95;
+    --text-8xl--line-height: 0.95;
+    --text-9xl--line-height: 0.95;
+    line-height: 1.43;
+}
+
+:root {
     --bg-primary: #F4F1ED;
     --bg-secondary: #E8E4DF;
     --bg-secondary-40: rgba(232, 228, 223, 0.40);
@@ -18,22 +86,22 @@
     --bg-card-trans: rgba(255, 255, 255, 0.40);
     --bg-card-95: rgba(255, 255, 255, 0.95);
 
-    /* — Typography — */
     --text-primary: #1C1C1C;
     --text-secondary: #5C5954;
     --text-dim: #9C9588;
     --text-headline: #1C1C1C;
     --text-bronze: #8E7A62;
+    --text-danger: #A6483A;
 
-    /* — Borders — */
     --border-color-5: rgba(28, 28, 28, 0.05);
     --border-color-10: rgba(28, 28, 28, 0.10);
     --border-color-15: rgba(28, 28, 28, 0.15);
 
-    /* — Elevation / Shadow — */
+    --bg-foundation: #1C1C1C;
+    --text-canvas: #F4F1ED;
+
     --shadow-color: rgba(0, 0, 0, 0.03);
 
-    /* — Interactive controls — */
     --bg-indicator: #1C1C1C;
     --text-on-indicator: #FFFFFF;
     --bg-toggle-track: rgba(28, 28, 28, 0.10);
@@ -43,9 +111,13 @@
 
     --noise-blend: multiply;
     --noise-opacity: 0.40;
+
+    --gold-specular: radial-gradient(circle closest-side, rgba(242, 210, 153, 0.38) 0%, rgba(242, 210, 153, 0.18) 32%, rgba(242, 210, 153, 0.05) 60%, transparent 100%);
+    --couture-ease: cubic-bezier(0.19, 1, 0.22, 1);
+    --silk-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --dramatic-ease: cubic-bezier(0.85, 0, 0.15, 1);
 }
 
-/* Ocean Yacht Slate — mid theme */
 .mid {
     --bg-primary: #1F242C;
     --bg-secondary: #161A20;
@@ -60,10 +132,14 @@
     --text-dim: #97A5B8;
     --text-headline: #EBEFF5;
     --text-bronze: #F2D299;
+    --text-danger: #E8927C;
 
     --border-color-5: rgba(235, 239, 245, 0.06);
     --border-color-10: rgba(235, 239, 245, 0.12);
     --border-color-15: rgba(235, 239, 245, 0.18);
+
+    --bg-foundation: #0C0F15;
+    --text-canvas: #EBEFF5;
 
     --shadow-color: rgba(10, 12, 16, 0.40);
 
@@ -74,11 +150,14 @@
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
 
+    --color-selection: rgba(242, 210, 153, 0.30);
+
     --noise-blend: screen;
     --noise-opacity: 0.22;
+
+    --gold-specular: radial-gradient(circle closest-side, rgba(242, 210, 153, 0.30) 0%, rgba(242, 210, 153, 0.14) 34%, rgba(242, 210, 153, 0.03) 65%, transparent 100%);
 }
 
-/* Architectural Carbon — dark theme */
 .dark {
     --bg-primary: #111110;
     --bg-secondary: #1C1C1B;
@@ -93,10 +172,14 @@
     --text-dim: #9C9588;
     --text-headline: #FFFFFF;
     --text-bronze: #CBB9A7;
+    --text-danger: #D48B78;
 
     --border-color-5: rgba(237, 236, 232, 0.06);
     --border-color-10: rgba(237, 236, 232, 0.12);
     --border-color-15: rgba(237, 236, 232, 0.18);
+
+    --bg-foundation: #1C1C1C;
+    --text-canvas: #F4F1ED;
 
     --shadow-color: rgba(0, 0, 0, 0.45);
 
@@ -107,51 +190,39 @@
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
 
+    --color-selection: rgba(203, 185, 167, 0.32);
+
     --noise-blend: screen;
     --noise-opacity: 0.18;
+
+    --gold-specular: radial-gradient(circle closest-side, rgba(203, 185, 167, 0.32) 0%, rgba(203, 185, 167, 0.15) 34%, rgba(203, 185, 167, 0.04) 65%, transparent 100%);
 }
 
-/* ============================================================
-   DESIGN SYSTEM — TAILWIND THEME REGISTRATION
-   Registers all semantic tokens as Tailwind color utilities.
-   Use: bg-ink, text-accent, border-ink/10, from-accent/20…
-   Static tokens (foundation, canvas) never change per theme.
-   ============================================================ */
 @theme {
-    --font-serif: "Playfair Display", Georgia, serif;
-    --font-sans: "Inter", sans-serif;
-    --font-mono: "JetBrains Mono", monospace;
+    --font-serif: var(--font-playfair), Georgia, serif;
+    --font-serif-luxury: var(--font-playfair-italic), Georgia, serif;
+    --font-sans: var(--font-inter), sans-serif;
+    --font-mono: var(--font-jetbrains), monospace;
 
-    /* Adaptive surfaces */
     --color-surface: var(--bg-primary);
     --color-surface-alt: var(--bg-secondary);
     --color-panel: var(--bg-card);
 
-    /* Adaptive ink */
     --color-ink: var(--text-primary);
     --color-muted: var(--text-secondary);
     --color-dim: var(--text-dim);
     --color-headline: var(--text-headline);
 
-    /* Adaptive accent */
     --color-accent: var(--text-bronze);
+    --color-danger: var(--text-danger);
 
-    /* Static — never change with theme */
-    --color-foundation: #1C1C1C;   /* permanent dark base (footer) */
-    --color-canvas: #F4F1ED;   /* permanent cream (text on foundation) */
-    --color-tone: #D6D0C7;   /* warm separator / mid-tone */
-    --color-selection: #EAE7DC;   /* browser selection highlight */
+    --color-foundation: var(--bg-foundation);
+    --color-canvas: var(--text-canvas);
+    --color-tone: #D6D0C7;
+    --color-selection: #EAE7DC;
 }
 
-/* ============================================================
-   DESIGN SYSTEM — UTILITY CLASSES
-   Pre-computed composites for cases where Tailwind's opacity
-   modifier cannot traverse a CSS variable chain reliably, plus
-   named shadows, placeholder styles, and control surfaces.
-   ============================================================ */
 @layer utilities {
-
-    /* Pre-computed surface opacity variants */
     .bg-surface-overlay {
         background-color: var(--bg-secondary-40);
     }
@@ -168,7 +239,6 @@
         background-color: var(--bg-card-95);
     }
 
-    /* Interactive control surfaces (theme-adaptive via CSS vars) */
     .bg-indicator {
         background-color: var(--bg-indicator);
     }
@@ -193,7 +263,6 @@
         border-color: var(--border-control);
     }
 
-    /* Pre-computed border opacity tokens (most reliable cross-browser) */
     .border-ink-faint {
         border-color: var(--border-color-5);
     }
@@ -206,17 +275,12 @@
         border-color: var(--border-color-15);
     }
 
-    /* Named shadow scale */
     .shadow-ambient {
         box-shadow: 0 20px 50px var(--shadow-color);
     }
 
     .shadow-deep {
         box-shadow: 0 50px 110px rgba(0, 0, 0, 0.18);
-    }
-
-    .shadow-canvas-low {
-        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.06);
     }
 
     .shadow-canvas-mid {
@@ -239,7 +303,18 @@
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
     }
 
-    /* Placeholder text styling */
+    .shadow-couture-glow {
+        box-shadow: 0 25px 60px -15px color-mix(in srgb, var(--text-bronze) 28%, transparent), 0 0 35px 2px color-mix(in srgb, var(--text-bronze) 14%, transparent);
+    }
+
+    .shadow-faux-blur {
+        box-shadow:
+                0 0 0 1px var(--border-color-10),
+                0 8px 24px -4px color-mix(in srgb, var(--text-bronze) 12%, transparent),
+                0 24px 60px -8px color-mix(in srgb, var(--text-bronze) 18%, transparent),
+                0 45px 95px -12px color-mix(in srgb, var(--text-bronze) 10%, transparent);
+    }
+
     .placeholder-dim::placeholder {
         color: var(--text-dim);
     }
@@ -248,12 +323,301 @@
         color: color-mix(in srgb, var(--text-dim) 60%, transparent);
     }
 
-    /* Editorial glow accent */
     .text-glow-subtle {
         text-shadow: 0 0 12px rgba(142, 122, 98, 0.15);
     }
 
-    /* Scrollbar — quiet luxury */
+    .text-glow-opulent {
+        text-shadow: 0 0 24px color-mix(in srgb, var(--text-bronze) 60%, transparent), 0 0 48px color-mix(in srgb, var(--text-bronze) 30%, transparent);
+    }
+
+    .animate-haute-float {
+        animation: hauteCoutureFloat 9s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    .animate-haute-float-delayed {
+        animation: hauteCoutureFloat 11s ease-in-out 2.5s infinite;
+        will-change: transform;
+    }
+
+    .animate-silk-reveal {
+        animation: silkUnfurl 1.7s var(--couture-ease) forwards;
+        will-change: transform, opacity, clip-path;
+    }
+
+    .animate-text-curtain {
+        animation: textCurtainLift 1.35s var(--couture-ease) forwards;
+        will-change: transform, opacity, clip-path;
+    }
+
+    .animate-golden-sheen {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .animate-golden-sheen::after {
+        content: '';
+        position: absolute;
+        inset: -150%;
+        background: linear-gradient(
+                115deg,
+                transparent 35%,
+                color-mix(in srgb, var(--text-bronze) 8%, rgba(255, 255, 255, 0.15)) 48%,
+                color-mix(in srgb, var(--text-bronze) 30%, rgba(255, 255, 255, 0.4)) 50%,
+                color-mix(in srgb, var(--text-bronze) 8%, rgba(255, 255, 255, 0.15)) 52%,
+                transparent 65%
+        );
+        transform: translate3d(-100%, -100%, 0) rotate(25deg);
+        animation: liquidGoldSweep 8s var(--couture-ease) infinite;
+        pointer-events: none;
+    }
+
+    .animate-atelier-aura {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .animate-atelier-aura::before {
+        content: '';
+        position: absolute;
+        inset: -25%;
+        background: radial-gradient(
+                ellipse at center,
+                color-mix(in srgb, var(--text-bronze) 30%, transparent) 0%,
+                color-mix(in srgb, var(--text-bronze) 14%, transparent) 38%,
+                color-mix(in srgb, var(--text-bronze) 4%, transparent) 64%,
+                transparent 80%
+        );
+        border-radius: inherit;
+        z-index: -1;
+        animation: atelierRadiance 8.5s ease-in-out infinite alternate;
+        pointer-events: none;
+        will-change: transform, opacity;
+    }
+
+    .lux-shimmer-text {
+        background: linear-gradient(
+                120deg,
+                var(--text-primary) 0%,
+                var(--text-primary) 35%,
+                var(--text-bronze) 50%,
+                var(--text-primary) 65%,
+                var(--text-primary) 100%
+        );
+        background-size: 250% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textSheenFlow 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    .lux-magnetic-card {
+        position: relative;
+        isolation: isolate;
+        transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+        transform-origin: center bottom;
+        transition:
+                transform 800ms var(--couture-ease),
+                box-shadow 800ms var(--couture-ease),
+                border-color 800ms var(--couture-ease);
+        will-change: transform, box-shadow;
+    }
+
+    .lux-magnetic-card::after {
+        content: '';
+        position: absolute;
+        inset: -20px;
+        background: radial-gradient(
+                circle closest-side,
+                color-mix(in srgb, var(--text-bronze) 26%, transparent) 0%,
+                color-mix(in srgb, var(--text-bronze) 8%, transparent) 50%,
+                transparent 100%
+        );
+        border-radius: inherit;
+        opacity: 0;
+        transform: scale3d(0.88, 0.88, 1);
+        transition:
+                opacity 800ms var(--couture-ease),
+                transform 800ms var(--couture-ease);
+        pointer-events: none;
+        z-index: -1;
+        will-change: transform, opacity;
+    }
+
+    .lux-magnetic-card:hover {
+        transform: translate3d(0, -12px, 0) scale3d(1.02, 1.02, 1);
+        border-color: color-mix(in srgb, var(--text-bronze) 45%, transparent);
+        box-shadow:
+                0 1px 2px color-mix(in srgb, var(--text-bronze) 15%, transparent),
+                0 15px 35px -5px color-mix(in srgb, var(--text-bronze) 20%, transparent),
+                0 40px 80px -15px rgba(0, 0, 0, 0.28);
+    }
+
+    .lux-magnetic-card:hover::after {
+        opacity: 1;
+        transform: scale3d(1.06, 1.06, 1);
+    }
+
+    .lux-image-portrait {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .lux-image-portrait img {
+        transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
+        transition: transform 1200ms var(--couture-ease);
+        will-change: transform;
+    }
+
+    .lux-image-portrait:hover img {
+        transform: scale3d(1.065, 1.065, 1) translate3d(0, -3px, 0);
+    }
+
+    .lux-image-portrait::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+                to top,
+                rgba(17, 17, 16, 0.55) 0%,
+                rgba(17, 17, 16, 0.15) 35%,
+                transparent 65%
+        );
+        opacity: 0.6;
+        transition: opacity 900ms var(--silk-ease);
+        pointer-events: none;
+    }
+
+    .lux-image-portrait:hover::after {
+        opacity: 0.25;
+    }
+
+    .lux-button-atelier {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        transform: translate3d(0, 0, 0);
+        transition:
+                transform 650ms var(--couture-ease),
+                letter-spacing 650ms var(--couture-ease),
+                box-shadow 650ms var(--couture-ease),
+                border-color 650ms var(--couture-ease),
+                color 650ms var(--couture-ease);
+        will-change: transform, letter-spacing;
+    }
+
+    .lux-button-atelier::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+                135deg,
+                color-mix(in srgb, var(--text-bronze) 28%, transparent),
+                color-mix(in srgb, var(--text-bronze) 6%, transparent)
+        );
+        opacity: 0;
+        transform: scale3d(0.85, 0.85, 1);
+        transition:
+                opacity 650ms var(--couture-ease),
+                transform 650ms var(--couture-ease);
+        z-index: -1;
+    }
+
+    .lux-button-atelier:hover {
+        transform: translate3d(0, -3px, 0);
+        letter-spacing: 0.24em;
+        border-color: var(--text-bronze);
+        box-shadow:
+                0 12px 30px -6px color-mix(in srgb, var(--text-bronze) 38%, transparent),
+                0 0 20px 1px color-mix(in srgb, var(--text-bronze) 18%, transparent);
+    }
+
+    .lux-button-atelier:active {
+        transform: translate3d(0, -1px, 0) scale3d(0.985, 0.985, 1);
+        transition-duration: 200ms;
+    }
+
+    .lux-button-atelier:hover::before {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+
+    .lux-border-trace {
+        position: relative;
+        border-color: transparent !important;
+    }
+
+    .lux-border-trace::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: conic-gradient(from var(--border-angle, 0deg), transparent 55%, color-mix(in srgb, var(--text-bronze) 25%, transparent) 75%, var(--text-bronze) 88%, transparent 100%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        animation: borderTraceRotate 7.5s linear infinite;
+        pointer-events: none;
+    }
+
+    .lux-ambient-spotlight {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .lux-ambient-spotlight::before {
+        content: '';
+        position: absolute;
+        inset: -35%;
+        background: var(--gold-specular);
+        opacity: 0;
+        transform: scale3d(0.85, 0.85, 1);
+        transition:
+                opacity 950ms var(--couture-ease),
+                transform 950ms var(--couture-ease);
+        pointer-events: none;
+        z-index: -1;
+        will-change: transform, opacity;
+    }
+
+    .lux-ambient-spotlight:hover::before {
+        opacity: 1;
+        transform: scale3d(1.08, 1.08, 1);
+    }
+
+    .lux-reveal-curtain {
+        clip-path: inset(0 0 0 0 round 0);
+        transform: translate3d(0, 0, 0);
+        transition:
+                clip-path 1100ms var(--couture-ease),
+                transform 1100ms var(--couture-ease);
+    }
+
+    .lux-vignette {
+        position: relative;
+    }
+
+    .lux-vignette::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+                ellipse at center,
+                transparent 55%,
+                rgba(0, 0, 0, 0.16) 100%
+        );
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .lux-ken-burns {
+        animation: kenBurnsDrift 26s var(--couture-ease) infinite alternate;
+        will-change: transform;
+    }
+
     ::-webkit-scrollbar {
         width: 6px;
     }
@@ -270,35 +634,129 @@
     ::-webkit-scrollbar-thumb:hover {
         background: var(--color-tone);
     }
+
+    .scrollbar-none {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+
+    [data-touch-slop] {
+        position: relative;
+    }
+
+    [data-touch-slop]::before {
+        content: "";
+        position: absolute;
+        inset: -8px;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+        [data-touch-boost] {
+            min-height: 44px;
+            min-width: 44px;
+        }
+    }
 }
 
-/* ============================================================
-   GLOBAL TRANSITION — smooth Chiaroscuro theme switching
-   ============================================================ */
-body, section, header, footer, div, span, p,
-h1, h2, h3, h4, button, input, textarea, select, a {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-shadow;
-    transition-duration: 1050ms !important;
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+@property --border-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
 }
 
-body {
-    font-family: var(--font-sans);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+@keyframes borderTraceRotate {
+    0% {
+        --border-angle: 0deg;
+    }
+    100% {
+        --border-angle: 360deg;
+    }
 }
 
-/* Exempt the theme toggle from slow transitions — must stay snappy */
-#chiaroscuro-toggle,
-#chiaroscuro-toggle * {
-    transition: none !important;
+@keyframes hauteCoutureFloat {
+    0%, 100% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    33% {
+        transform: translate3d(0, -14px, 0) rotate(0.4deg);
+    }
+    66% {
+        transform: translate3d(0, -6px, 0) rotate(-0.3deg);
+    }
 }
 
-/* ============================================================
-   KEYFRAMES — editorial cinematic light effects
-   ============================================================ */
+@keyframes liquidGoldSweep {
+    0% {
+        transform: translate3d(-120%, -120%, 0) rotate(25deg);
+    }
+    35%, 100% {
+        transform: translate3d(140%, 140%, 0) rotate(25deg);
+    }
+}
+
+@keyframes textSheenFlow {
+    0% {
+        background-position: 150% center;
+    }
+    50%, 100% {
+        background-position: -50% center;
+    }
+}
+
+@keyframes silkUnfurl {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 36px, 0) scale3d(0.965, 0.965, 1);
+        clip-path: inset(14% 0 14% 0 round 6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+        clip-path: inset(0 0 0 0 round 0px);
+    }
+}
+
+@keyframes textCurtainLift {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0) skewY(2.5deg);
+        clip-path: inset(0 0 100% 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) skewY(0deg);
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes atelierRadiance {
+    0% {
+        opacity: 0.35;
+        transform: scale3d(0.92, 0.92, 1) rotate(0deg);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale3d(1.12, 1.08, 1) rotate(3deg);
+    }
+    100% {
+        opacity: 0.35;
+        transform: scale3d(0.92, 0.92, 1) rotate(0deg);
+    }
+}
+
+@keyframes kenBurnsDrift {
+    0% {
+        transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
+    }
+    100% {
+        transform: scale3d(1.045, 1.045, 1) translate3d(0.9%, -0.7%, 0);
+    }
+}
+
 @keyframes delicateGlowSweep {
     0% {
         transform: translate3d(-20%, -20%, 0) rotate(-35deg);
@@ -318,31 +776,124 @@ body {
     animation: delicateGlowSweep 28s infinite ease-in-out;
 }
 
-/* ============================================================
-   TYPOGRAPHY — Farsi / RTL overrides
-   ============================================================ */
+@keyframes shimmer {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (pointer: fine) {
+    html.custom-cursor-active,
+    html.custom-cursor-active * {
+        cursor: none !important;
+    }
+}
+
+/* Lenis smooth scrolling (inertial wheel) — base contract styles */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+    pointer-events: none;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+    overflow: clip;
+}
+
+body, section, header, footer, div, span, p,
+h1, h2, h3, h4, button, input, textarea, select, a {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, text-shadow;
+    transition-duration: 1050ms !important;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+    background-color: var(--color-selection);
+    color: var(--text-primary);
+}
+
+input,
+textarea {
+    caret-color: var(--text-bronze);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+}
+
+p {
+    text-wrap: pretty;
+}
+
 html[lang="fa"],
 html[lang="fa"] body,
 .farsi-mode {
-    font-family: "Vazirmatn", sans-serif !important;
+    font-family: "Dorsa", "Tahoma", sans-serif !important;
     letter-spacing: normal !important;
+    word-spacing: 0.15em;
 }
 
-/* Heading tags only — never .font-serif so brand/logo spans are untouched */
 html[lang="fa"] h1,
 html[lang="fa"] h2,
-html[lang="fa"] h3 {
-    font-family: "Amiri", Georgia, serif !important;
+html[lang="fa"] h3,
+html[lang="fa"] h4,
+html[lang="fa"] h5,
+html[lang="fa"] h6 {
+    font-family: "Dorsa", "Tahoma", sans-serif !important;
     font-weight: 400;
     letter-spacing: 0 !important;
-    line-height: 1.55 !important;
+    line-height: 1.48 !important;
 }
 
 html[lang="fa"] .font-mono,
 html[lang="fa"] code {
-    font-family: "Vazirmatn", monospace !important;
+    font-family: "Dorsa", "Tahoma", monospace !important;
     font-weight: 300;
     letter-spacing: 0 !important;
+}
+
+html[lang="fa"] .font-sans {
+    font-family: "Dorsa", "Tahoma", sans-serif !important;
+}
+
+html[lang="fa"] .font-farsi {
+    font-family: "Dorsa", "Tahoma", sans-serif !important;
+}
+
+html[lang="fa"] .font-serif-luxury {
+    font-family: "Dorsa", "Tahoma", sans-serif !important;
+}
+
+html[lang="fa"] .font-latin {
+    font-family: var(--font-jetbrains), var(--font-inter), monospace !important;
+    letter-spacing: inherit !important;
 }
 
 html[lang="fa"] .tracking-\[0\.3em\],
@@ -354,4 +905,39 @@ html[lang="fa"] .tracking-wider {
 
 html[lang="fa"] .rtl-mirror {
     transform: scaleX(-1);
+}
+
+html[lang="fa"] .italic {
+    font-style: normal !important;
+    font-weight: 900 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ── Radius language (sitewide) ─────────────────────────────────────────────
+   One near-sharp radius — 6px — across every route (showroom, House,
+   product). Controls and badges carry explicit rounded-md classes; this
+   block is the safety net: the whole radius scale, MaisonButton pills,
+   and the concierge section's leftover rounded-fulls (#concierge).
+   True circles keep rounded-full: ambient glows, status dots, the
+   "Z"/"&" medallions, the custom cursor. Unlayered on purpose — it must
+   beat Tailwind's @layer utilities. Documented in styles/README.md. */
+.rounded,
+.rounded-sm,
+.rounded-md,
+.rounded-lg,
+.rounded-xl,
+.rounded-2xl,
+.maison-button,
+#concierge .rounded-full {
+    border-radius: 6px;
 }

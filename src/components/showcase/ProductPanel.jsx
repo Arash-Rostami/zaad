@@ -1,47 +1,152 @@
-import React from "react";
+import React, {memo, useCallback, useMemo} from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, ShieldCheck } from "lucide-react";
+import {AnimatePresence, motion} from "motion/react";
+import {ArrowUpRight, ShieldCheck, Sparkles} from "lucide-react";
 import MaisonButton from "../MaisonButton";
 import MaisonReveal from "../MaisonReveal";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
+import wrapBrandNames from "@/lib/wrapBrandNames";
 
-export default function ProductPanel({ selectedItem, showcase, getItemTranslations, t, onInquireItem, onViewDetails }) {
-    const { isSpecsExpanded, toggleSpecs } = showcase;
-    const itemTrans = getItemTranslations(selectedItem.id);
+const EASE_IN_OUT = Object.freeze([0.16, 1, 0.3, 1]);
+const EASE_EXIT = Object.freeze([0.7, 0, 0.84, 0]);
+
+const ROTATE_0 = Object.freeze({rotate: 0});
+const ROTATE_90 = Object.freeze({rotate: 90});
+
+const ICON_TRANSITION = Object.freeze({
+    duration: 0.7,
+    ease: EASE_IN_OUT,
+});
+
+const SPECS_INITIAL = Object.freeze({
+    opacity: 0,
+    clipPath: "inset(0 0 100% 0)",
+});
+
+const SPECS_ANIMATE = Object.freeze({
+    opacity: 1,
+    clipPath: "inset(0 0 0% 0)",
+    transition: Object.freeze({duration: 1.1, ease: EASE_IN_OUT}),
+});
+
+const SPECS_EXIT = Object.freeze({
+    opacity: 0,
+    clipPath: "inset(0 0 100% 0)",
+    transition: Object.freeze({duration: 0.9, ease: EASE_EXIT}),
+});
+
+const EMPTY_ARRAY = Object.freeze([]);
+
+function ProductPanel({
+                          selectedItem,
+                          showcase,
+                          t,
+                          isFarsi,
+                          onInquireItem,
+                          onViewDetails,
+                      }) {
+    const {isSpecsExpanded = false, toggleSpecs} = showcase ?? {};
+
+    const name = selectedItem?.name;
+    const designer = selectedItem?.designer;
+    const description = selectedItem?.description;
+    const story = selectedItem?.story;
+    const dimensions = selectedItem?.dimensions;
+    const finish = selectedItem?.specifications?.finish;
+    const weight = selectedItem?.specifications?.weight;
+    const leadTime = selectedItem?.specifications?.leadTime;
+
+    const wrappedName = useMemo(() => wrapBrandNames(name ?? ""), [name]);
+    const wrappedDesigner = useMemo(() => wrapBrandNames(designer ?? ""), [designer]);
+    const wrappedDescription = useMemo(
+        () => wrapLatinRuns(description ?? "", isFarsi),
+        [description, isFarsi]
+    );
+    const wrappedStory = useMemo(
+        () => wrapLatinRuns(story ?? "", isFarsi),
+        [story, isFarsi]
+    );
+
+    const specs = useMemo(() => {
+        if (!selectedItem) return EMPTY_ARRAY;
+        return [
+            {
+                label: t("showcaseScopeDimensions"),
+                value: wrapLatinRuns(dimensions ?? "", isFarsi),
+            },
+            {
+                label: t("showcaseFinishDetails"),
+                value: wrapLatinRuns(finish ?? "", isFarsi),
+            },
+            {
+                label: t("showcaseZAADWeight"),
+                value: wrapLatinRuns(weight ?? "", isFarsi),
+            },
+            {
+                label: t("showcaseCuratedDelivery"),
+                value: wrapLatinRuns(leadTime ?? "", isFarsi),
+            },
+        ];
+    }, [t, dimensions, finish, weight, leadTime, isFarsi, selectedItem]);
+
+    const handleViewDetails = useCallback(
+        (e) => {
+            e.preventDefault();
+            onViewDetails?.(selectedItem);
+        },
+        [onViewDetails, selectedItem]
+    );
+
+    const handleInquire = useCallback(() => {
+        onInquireItem?.(selectedItem);
+    }, [onInquireItem, selectedItem]);
+
+    if (!selectedItem) return null;
+
+    const materials = Array.isArray(selectedItem.materials)
+        ? selectedItem.materials
+        : EMPTY_ARRAY;
+
+    const toggleLabel = isSpecsExpanded
+        ? t("showcaseCollapse")
+        : t("showcaseShowStats");
 
     return (
         <MaisonReveal
             variant="slide-up-royal"
-            delay={0.3}
+            delay={0.6}
             className="lg:col-span-6 flex flex-col w-full text-left rtl:text-right"
         >
             <div className="flex items-center justify-between mb-4 border-b border-ink/10 pb-4">
-                <span className="text-xs font-mono text-accent font-semibold tracking-widest">
-                    {selectedItem.number} / {t("showcaseArchiveCollection")}
+                <span className="text-xs text-accent font-semibold tracking-widest">
+                    {t("showcaseArchiveCollection")}
+
+                    <sup className="font-serif mx-2">{selectedItem.number}</sup>
                 </span>
-                <span className="text-xs font-mono text-accent tracking-wider uppercase flex items-center gap-1.5 font-medium">
-                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+                <span
+                    className="text-xs font-mono text-accent tracking-wider uppercase flex items-center gap-1.5 font-medium">
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"/>
                     {t("showcaseBespokeCommission")}
                 </span>
             </div>
 
-            <h3 className="text-3xl md:text-5xl font-serif font-light tracking-tight text-ink mb-2 leading-tight">
-                {itemTrans?.name || selectedItem.name}
+            <h3 className="text-3xl md:text-5xl font-serif font-light tracking-tight text-ink mb-2 leading-tight text-glow-subtle">
+                {wrappedName}
             </h3>
             <p className="text-xs font-mono tracking-widest text-muted uppercase mb-6">
-                {t("showcaseDesigner")}: {selectedItem.designer}
+                {t("showcaseDesigner")}: {wrappedDesigner}
             </p>
 
-            <p className="text-sm sm:text-base text-ink font-light leading-relaxed mb-6">
-                {itemTrans?.description || selectedItem.description}
+            <p className="text-sm sm:text-base text-ink font-light leading-relaxed mb-6 rtl:text-justify">
+                {wrappedDescription}
             </p>
 
             <div className="bg-surface-frosted p-6 border border-ink/10 mb-8 rounded-xl">
-                <h4 className="text-[10px] font-mono tracking-widest uppercase text-accent mb-2">
+                <h4 className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase text-accent mb-2">
                     {t("showcaseMaterialMonograph")}
                 </h4>
-                <p className="text-xs sm:text-sm text-muted font-light leading-relaxed">
-                    {itemTrans?.story || selectedItem.story}
+                <p className="text-xs sm:text-sm text-muted font-light leading-relaxed rtl:text-justify">
+                    {wrappedStory}
                 </p>
             </div>
 
@@ -52,53 +157,56 @@ export default function ProductPanel({ selectedItem, showcase, getItemTranslatio
                     className="w-full py-5 flex items-center justify-between group cursor-pointer focus:outline-none"
                 >
                     <div className="flex items-center space-x-3 text-left rtl:text-right">
-                        <span className="text-[10px] sm:text-xs font-mono tracking-[0.2em] text-accent font-semibold uppercase">
+                        <span
+                            className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.2em] text-accent font-semibold uppercase">
                             {t("showcaseStudioLookbook")}
                         </span>
-                        <span className="text-[9px] font-mono text-muted opacity-65 group-hover:opacity-100 transition-opacity">
-                            ({isSpecsExpanded ? t("showcaseCollapse") : t("showcaseShowStats")})
+                        <span
+                            className="text-[length:calc(9px*var(--zaad-font-scale))] font-mono text-muted opacity-65 group-hover:opacity-100 transition-opacity">
+                            ({toggleLabel})
                         </span>
                     </div>
                     <div className="relative w-4 h-4 flex items-center justify-center">
                         <motion.div
                             className="absolute w-3 h-[1px] bg-ink"
-                            animate={{ rotate: isSpecsExpanded ? 0 : 90 }}
-                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                            animate={isSpecsExpanded ? ROTATE_0 : ROTATE_90}
+                            transition={ICON_TRANSITION}
                         />
-                        <div className="absolute w-3 h-[1px] bg-ink" />
+                        <div className="absolute w-3 h-[1px] bg-ink"/>
                     </div>
                 </button>
 
                 <AnimatePresence initial={false}>
                     {isSpecsExpanded && (
                         <motion.div
-                            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-                            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
-                            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-                            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                            initial={SPECS_INITIAL}
+                            animate={SPECS_ANIMATE}
+                            exit={SPECS_EXIT}
                         >
                             <div className="pt-2 pb-6 border-t border-ink/10 mt-1">
                                 <div className="grid grid-cols-2 gap-y-5 gap-x-8 text-xs pb-4">
-                                    {[
-                                        { label: t("showcaseScopeDimensions"), value: itemTrans?.dimensions || selectedItem.dimensions },
-                                        { label: t("showcaseFinishDetails"), value: itemTrans?.finish || selectedItem.specifications.finish },
-                                        { label: t("showcaseZAADWeight"), value: selectedItem.specifications.weight },
-                                        { label: t("showcaseCuratedDelivery"), value: itemTrans?.leadTime || selectedItem.specifications.leadTime },
-                                    ].map(({ label, value }) => (
+                                    {specs.map(({label, value}) => (
                                         <div key={label} className="space-y-1">
-                                            <span className="text-[9px] font-mono tracking-widest text-muted block uppercase">{label}</span>
-                                            <span className="text-ink font-light text-xs sm:text-sm block leading-relaxed">{value}</span>
+                                            <span
+                                                className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-muted block uppercase">
+                                                {label}
+                                            </span>
+                                            <span
+                                                className="text-ink font-light text-xs sm:text-sm block leading-relaxed">
+                                                {value}
+                                            </span>
                                         </div>
                                     ))}
                                     <div className="col-span-2 pt-2">
-                                        <span className="text-[9px] font-mono tracking-widest text-muted block uppercase mb-2">
+                                        <span
+                                            className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-muted block uppercase mb-2">
                                             {t("showcasePrimaryMaterials")}
                                         </span>
                                         <div className="flex flex-wrap gap-1.5">
-                                            {(itemTrans?.materials || selectedItem.materials).map((mat, i) => (
+                                            {materials.map((mat, i) => (
                                                 <span
-                                                    key={i}
-                                                    className="text-[9px] bg-panel-glass dark:bg-panel/5 border border-ink/10 px-3 py-1 text-ink uppercase font-mono tracking-wide rounded-full"
+                                                    key={mat || i}
+                                                    className="text-[length:calc(9px*var(--zaad-font-scale))] bg-panel-glass dark:bg-panel/5 border border-ink/10 px-3 py-1 text-ink uppercase font-mono tracking-wide rounded-md"
                                                 >
                                                     {mat}
                                                 </span>
@@ -107,18 +215,19 @@ export default function ProductPanel({ selectedItem, showcase, getItemTranslatio
                                     </div>
                                 </div>
 
-                                <div className="mt-6 pt-4 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <span className="text-[9px] font-mono text-muted leading-relaxed max-w-sm uppercase text-left rtl:text-right">
+                                <div
+                                    className="mt-6 pt-4 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <span
+                                        className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted leading-relaxed max-w-sm uppercase text-left rtl:text-right">
                                         {t("showcaseCatalogueText")}
                                     </span>
-                                    {/* href makes this crawlable; onClick keeps the SPA animated transition */}
                                     <Link
                                         href={`/collection/${selectedItem.id}`}
-                                        onClick={(e) => { e.preventDefault(); onViewDetails(selectedItem); }}
-                                        className="font-mono text-[9px] tracking-[0.2em] bg-accent text-white hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-full uppercase font-medium flex items-center space-x-2 rtl:space-x-reverse transition-all duration-300 focus:outline-none cursor-pointer hover:shadow-md"
+                                        onClick={handleViewDetails}
+                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-[0.2em] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 focus:outline-none cursor-pointer hover:shadow-md"
                                     >
                                         <span>{t("showcaseRevealDossier")}</span>
-                                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[1.8] rtl:rotate-270" />
+                                        <ArrowUpRight className="w-3.5 h-3.5 stroke-[1.8] rtl:-scale-x-100"/>
                                     </Link>
                                 </div>
                             </div>
@@ -127,16 +236,20 @@ export default function ProductPanel({ selectedItem, showcase, getItemTranslatio
                 </AnimatePresence>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <MaisonButton variant="solid" onClick={() => onInquireItem(selectedItem)} className="w-full">
+            <div
+                className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <MaisonButton variant="solid" onClick={handleInquire} icon={Sparkles} className="w-full">
                     {t("showcasePrivateInquiry")}
                 </MaisonButton>
             </div>
 
-            <div className="flex items-center space-x-2 mt-4 text-muted/70 text-[10px] font-mono tracking-wider justify-center sm:justify-start">
-                <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+            <div
+                className="flex items-center space-x-2 mt-4 text-muted/70 text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-wider justify-center sm:justify-start">
+                <ShieldCheck className="w-3.5 h-3.5 text-accent"/>
                 <span>{t("showcaseAirfreight")}</span>
             </div>
         </MaisonReveal>
     );
 }
+
+export default memo(ProductPanel);

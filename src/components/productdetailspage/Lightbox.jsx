@@ -1,23 +1,61 @@
-import React from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import SharedLightbox from "../shared/Lightbox";
 
-export default function Lightbox({ item, lightbox, onInquire }) {
+function Lightbox({ item, lightbox, onInquire, isRtl, t }) {
     const {
-        isEnlarged, closeLightbox,
+        isEnlarged,
+        closeLightbox,
         activeImageIndex,
-        isLightboxLoading, markImageLoaded,
-        lightboxScale, setLightboxScale, cycleZoom, lightboxPan,
-        handleLightboxMouseMove, handleLightboxTouchMove,
-        isZoomControllerHovered, setIsZoomControllerHovered,
-        goNextWrapped, goPrevWrapped,
-    } = lightbox;
+        isLightboxLoading,
+        markImageLoaded,
+        lightboxScale,
+        setLightboxScale,
+        cycleZoom,
+        lightboxPan,
+        handleLightboxMouseMove,
+        handleLightboxTouchMove,
+        isZoomControllerHovered,
+        setIsZoomControllerHovered,
+        goNextWrapped,
+        goPrevWrapped,
+    } = lightbox ?? {};
+
+    const handleCta = useCallback(() => {
+        closeLightbox?.();
+        onInquire?.(item);
+    }, [closeLightbox, onInquire, item]);
+
+    const counterLabel = useMemo(() => {
+        if (!item?.images) return "";
+        return `${activeImageIndex + 1} ${t("lightboxCounterOf")} ${item.images.length}`;
+    }, [activeImageIndex, item?.images, t]);
+
+    const footerPerspective = useMemo(() => {
+        return t("lightboxEnlargedPerspective");
+    }, [t]);
+
+    const footerSubtitle = useMemo(() => {
+        return (
+            item?.images?.[activeImageIndex]?.caption ||
+            t("lightboxPerspectiveViewFallback")
+        );
+    }, [item?.images, activeImageIndex, t]);
+
+    const footerBadge = useMemo(() => {
+        return t("lightboxMuseumSpecimenCommission");
+    }, [t]);
+
+    if (!item || !lightbox) return null;
+
+    const activeImage = item.images?.[activeImageIndex];
+    const showPanHint = lightboxScale > 1;
 
     return (
         <SharedLightbox
             isEnlarged={isEnlarged}
             closeLightbox={closeLightbox}
             imageKey={activeImageIndex}
-            imageSrc={item.images[activeImageIndex]?.url}
+            imageSrc={activeImage?.url}
             imageAlt={item.name}
             isLightboxLoading={isLightboxLoading}
             markImageLoaded={markImageLoaded}
@@ -33,13 +71,18 @@ export default function Lightbox({ item, lightbox, onInquire }) {
             onNext={goNextWrapped}
             archiveNumber={item.number}
             itemName={item.name}
-            counterLabel={`${activeImageIndex + 1} OF ${item.images.length}`}
+            counterLabel={counterLabel}
             footerTitle={item.name}
-            footerPerspective="ENLARGED PERSPECTIVE"
-            footerSubtitle={item.images[activeImageIndex]?.caption || "Perspective View"}
-            footerBadge="MUSEUM SPECIMEN COMMISSION"
-            onCta={() => { closeLightbox(); onInquire(item); }}
-            showPanHint={lightboxScale > 1}
+            footerPerspective={footerPerspective}
+            footerSubtitle={footerSubtitle}
+            footerBadge={footerBadge}
+            onCta={handleCta}
+            noiseOverlay
+            showPanHint={showPanHint}
+            isRtl={isRtl}
+            t={t}
         />
     );
 }
+
+export default memo(Lightbox);

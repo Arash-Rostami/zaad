@@ -1,8 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import MaisonReveal from "./MaisonReveal";
 import {useLanguage} from "@/services/TranslationService";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
+const SILK_ENTER = [0.19, 1, 0.22, 1];
+const SILK_EXIT = [0.7, 0, 0.84, 0];
+const SLIDE_MS = 7000;
 
 const BACKGROUND_ELEMENTS = (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
@@ -23,112 +36,241 @@ const BACKGROUND_ELEMENTS = (
     </div>
 );
 
-function Story() {
-    const {t} = useLanguage();
+function Story({ utensilImages = [] }) {
+    const {t, language} = useLanguage();
+    const isFarsi = language === "fa";
+    const reduceMotion = useReducedMotion();
+    const gridRef = useRef(null);
+    const imageColRef = useRef(null);
+    const textColRef = useRef(null);
+    const [utensilIndex, setUtensilIndex] = useState(0);
+    const slideCount = utensilImages.length;
+    const slide = utensilImages[utensilIndex];
+    const slideFits = slide && slide.width > 0 && slide.height > 0;
+
+    const numberFormatter = useMemo(
+        () => new Intl.NumberFormat(isFarsi ? "fa-IR" : "en-GB", {minimumIntegerDigits: 2}),
+        [isFarsi]
+    );
+
+    const frameLabels = useMemo(() => {
+        const totalStr = numberFormatter.format(slideCount);
+        const template = t("storyFrameLabel");
+        return Array.from({length: slideCount}, (_, i) =>
+            template.replace("{index}", numberFormatter.format(i + 1)).replace("{total}", totalStr)
+        );
+    }, [numberFormatter, slideCount, t]);
+
+    const currentFrameNumber = useMemo(
+        () => numberFormatter.format(utensilIndex + 1),
+        [numberFormatter, utensilIndex]
+    );
+    const totalFrameNumber = useMemo(() => numberFormatter.format(slideCount), [numberFormatter, slideCount]);
+
+    const storyFixturesText = useMemo(() => wrapLatinRuns(t("storyFixturesText"), isFarsi), [t, isFarsi]);
+    const storyP1 = useMemo(() => wrapLatinRuns(t("storyP1"), isFarsi), [t, isFarsi]);
+
+    useEffect(() => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const mm = gsap.matchMedia();
+
+        mm.add("(min-width: 1024px)", () => {
+            const trigger = ScrollTrigger.create({
+                trigger: gridRef.current,
+                pin: imageColRef.current,
+                start: "top top+=88",
+                end: () => {
+                    const delta = textColRef.current.offsetHeight - imageColRef.current.offsetHeight;
+                    return "+=" + Math.max(delta, 0);
+                },
+                pinSpacing: false,
+                invalidateOnRefresh: true,
+            });
+
+            return () => trigger.kill();
+        });
+
+        return () => mm.revert();
+    }, [language]);
+
     return (
         <section
             id="story"
-            className="relative py-24 md:py-36 bg-surface-overlay px-6 sm:px-12 border-y border-ink/10 overflow-hidden"
+            className="relative section-y-break bg-surface-overlay px-6 sm:px-12 border-y border-ink/10 overflow-hidden"
         >
             <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tone/30 pointer-events-none"></div>
 
             {BACKGROUND_ELEMENTS}
 
             <div className="max-w-7xl mx-auto relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-18 items-center">
-                    <div className="lg:col-span-5 relative">
-                        <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
+                <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-18 items-center">
+                    <div ref={imageColRef} className="lg:col-span-5 lg:col-start-1 relative">
+                        <MaisonReveal variant="scale-down-unveil" delay={0.3} threshold={0.01}>
                             <div
-                                className="relative aspect-[3/4] w-full max-w-[420px] mx-auto overflow-hidden bg-surface border border-ink/10 shadow-lg">
-                                <img
-                                    src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=90"
-                                    alt="Travertine Mineral Slabs close-up"
-                                    className="object-cover w-full h-full hover:scale-105 duration-1000"
-                                    referrerPolicy="no-referrer"
-                                />
-                                <div
-                                    className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                                <div className="absolute bottom-6 left-6 right-6 text-white text-left rtl:text-right">
-                                    <p className="font-serif italic text-lg leading-relaxed font-light">
-                                        "{t("storyTactile")}"
-                                    </p>
-                                    <span
-                                        className="text-[9px] font-mono tracking-widest uppercase block mt-3 text-tone">
-                                        {t("storyEmilio")}
-                                    </span>
-                                </div>
+                                className="relative aspect-[3/4] w-full max-w-[420px] mx-auto overflow-hidden bg-transparent">
+                                {slideCount > 1 && (
+                                    <Image
+                                        src={utensilImages[(utensilIndex + 1) % slideCount].src}
+                                        alt=""
+                                        aria-hidden="true"
+                                        fill
+                                        sizes="(min-width: 1024px) 420px, 90vw"
+                                        className="absolute inset-0 opacity-0 pointer-events-none"
+                                    />
+                                )}
+                                {slideCount > 0 && (
+                                    <AnimatePresence mode="sync" initial={false}>
+                                        <motion.div
+                                            key={utensilIndex}
+                                            initial={{ opacity: 0, scale: 0.94, clipPath: "inset(30% 12% 30% 12% round 18px)" }}
+                                            animate={{
+                                                opacity: 1,
+                                                scale: 1,
+                                                clipPath: "inset(0% 0% 0% 0% round 6px)",
+                                                transition: {
+                                                    duration: 1.9,
+                                                    delay: 0.25,
+                                                    ease: SILK_ENTER,
+                                                    opacity: { duration: 1.3, delay: 0.25 },
+                                                },
+                                            }}
+                                            exit={{ opacity: 0, transition: { duration: 1.6, ease: SILK_EXIT } }}
+                                            className="absolute inset-0 flex items-center justify-center"
+                                        >
+                                            <motion.div
+                                                animate={reduceMotion ? { scale: 1, y: "0%" } : { scale: 1.035, y: "-1%" }}
+                                                transition={{ duration: SLIDE_MS / 1000, ease: "linear" }}
+                                                className={slideFits ? "relative overflow-hidden rounded-md" : "absolute inset-0"}
+                                                style={
+                                                    slideFits
+                                                        ? {
+                                                              aspectRatio: `${slide.width} / ${slide.height}`,
+                                                              ...(slide.width / slide.height >= 3 / 4
+                                                                  ? { width: "100%" }
+                                                                  : { height: "100%" }),
+                                                          }
+                                                        : undefined
+                                                }
+                                            >
+                                                <Image
+                                                    src={slide?.src}
+                                                    alt={t("storyUtensilAlt")}
+                                                    fill
+                                                    sizes="(min-width: 1024px) 420px, 90vw"
+                                                    className="object-contain"
+                                                    priority={utensilIndex === 0}
+                                                />
+                                            </motion.div>
+                                        </motion.div>
+                                    </AnimatePresence>
+                                )}
+
+
+                                {slideCount > 1 && (
+                                    <MaisonReveal variant="unveil" delay={0.7} threshold={0.01} className="absolute bottom-5 start-5 z-20 flex items-center gap-1">
+                                        {utensilImages.map((_, i) => (
+                                                <span className="relative block w-6 h-px bg-ink/20 overflow-hidden rounded-full"
+                                                      key={i}
+                                                >
+                                                    {i === utensilIndex && (
+                                                        reduceMotion ? (
+                                                            <span className="absolute inset-0 bg-accent"/>
+                                                        ) : (
+                                                            <motion.span
+                                                                key={utensilIndex}
+                                                                initial={{ scaleX: 0 }}
+                                                                animate={{ scaleX: 1 }}
+                                                                transition={{ duration: SLIDE_MS / 1000, ease: "linear" }}
+                                                                onAnimationComplete={() => setUtensilIndex((idx) => (idx + 1) % slideCount)}
+                                                                style={{ transformOrigin: isFarsi ? "100% 50%" : "0% 50%" }}
+                                                                className="absolute inset-0 bg-accent"
+                                                            />
+                                                        )
+                                                    )}
+                                                </span>
+                                        ))}
+                                    </MaisonReveal>
+                                )}
                             </div>
                         </MaisonReveal>
 
                         <MaisonReveal
                             variant="slide-up-royal"
-                            delay={0.3}
+                            delay={1.3}
                             threshold={0.01}
-                            className="absolute -bottom-6 -right-6 lg:-right-8 bg-panel-frost border border-ink/10 p-5 hidden md:block shadow-md max-w-[220px] rounded-xl z-20 text-left rtl:text-right"
+                            className="absolute bottom-4 end-4 bg-panel-frost border border-ink/10 p-4 sm:p-5 shadow-card-md max-w-[160px] sm:max-w-[220px] rounded-xl z-20 text-left rtl:text-right"
                         >
-                            <span className="text-[10px] font-mono text-accent block mb-1">
-                                {t("rawOrigin")}
+                            <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-accent block mb-1">
+                                {t("storyFixturesLabel")}
                             </span>
-                            <p className="text-[12px] text-ink font-serif leading-relaxed font-medium">
-                                {t("quarryLocation")}
+                            <p className="text-[length:calc(12px*var(--zaad-font-scale))] text-ink font-serif font-farsi leading-relaxed font-medium">
+                                {storyFixturesText}
                             </p>
                         </MaisonReveal>
                     </div>
 
-                    <MaisonReveal
-                        variant="unveil"
-                        delay={0.2}
-                        threshold={0.01}
-                        className="lg:col-span-7 flex flex-col justify-center text-left rtl:text-right"
-                    >
-                        <span
-                            className="text-[11px] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
-                            {t("storyOurStory")}
-                        </span>
-                        <h2 className="text-3xl md:text-5xl font-serif font-light tracking-tight leading-[1.15] text-[var(--text-primary)]">
-                            {t("storyTitle")}
-                        </h2>
+                    <div className="lg:col-span-7 lg:col-start-6 flex flex-col justify-center text-left rtl:text-right">
+                        <div ref={textColRef}>
+                            <MaisonReveal variant="lines" delay={0.1} threshold={0.01}>
+                                <h2 className="text-3xl md:text-5xl font-serif font-light tracking-tight leading-[1.15] text-[var(--text-primary)] text-glow-subtle">
+                                    {t("storyTitle")}
+                                </h2>
+                            </MaisonReveal>
 
-                        <p className="text-md md:text-xl font-serif font-light text-[var(--text-bronze)] mt-6 italic leading-relaxed">
-                            "{t("storyQuote2")}"
-                        </p>
+                            <MaisonReveal variant="unveil" delay={0.5} threshold={0.01}>
+                                <p className="text-lg md:text-xl font-serif font-farsi font-light text-[var(--text-bronze)] mt-6 italic leading-relaxed">
+                                    "{t("storyQuote2")}"
+                                </p>
+                            </MaisonReveal>
 
-                        <div className="h-[1px] w-12 bg-[var(--border-color-15)] my-8"></div>
+                            <MaisonReveal variant="unveil" delay={0.65} threshold={0.01}>
+                                <div className="h-[1px] w-12 bg-[var(--border-color-15)] my-8"></div>
+                            </MaisonReveal>
 
-                        <div
-                            className="space-y-6 text-[var(--text-secondary)] text-sm md:text-base leading-relaxed font-light">
-                            <p>{t("storyP1")}</p>
-                            <p>{t("storyP2")}</p>
+                            <MaisonReveal variant="unveil" delay={0.75} threshold={0.01}>
+                                <div
+                                    className="space-y-6 text-[var(--text-secondary)] text-sm md:text-base leading-relaxed font-light rtl:text-justify">
+                                    <p>{storyP1}</p>
+                                    <p>{t("storyP2")}</p>
+                                </div>
+                            </MaisonReveal>
+
+                            <div
+                                className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-10 border-t border-[var(--border-color-15)] mt-10">
+                                <MaisonReveal variant="unveil" delay={0.9} threshold={0.01}>
+                                    <div>
+                                        <span className="font-serif font-farsi italic text-2xl text-[var(--text-primary)] font-light">
+                                            {t("storySpecialistsCount")}
+                                        </span>
+                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
+                                            {t("storySpecialistsLabel")}
+                                        </p>
+                                    </div>
+                                </MaisonReveal>
+                                <MaisonReveal variant="unveil" delay={1.05} threshold={0.01}>
+                                    <div>
+                                        <span className="font-serif font-farsi italic text-2xl text-[var(--text-primary)] font-light">
+                                            {t("storyOriginValue")}
+                                        </span>
+                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
+                                            {t("storyOriginLabel")}
+                                        </p>
+                                    </div>
+                                </MaisonReveal>
+                                <MaisonReveal variant="unveil" delay={1.2} threshold={0.01}>
+                                    <div>
+                                        <span className="font-serif font-farsi italic text-2xl text-[var(--text-primary)] font-light">
+                                            {t("collectionsCount")}
+                                        </span>
+                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
+                                            {t("collectionsLabel")}
+                                        </p>
+                                    </div>
+                                </MaisonReveal>
+                            </div>
                         </div>
-
-                        <div
-                            className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-10 border-t border-[var(--border-color-15)] mt-10">
-                            <div>
-                                <span className="font-serif italic text-2xl text-[var(--text-primary)] font-light">
-                                    {t("assemblyDays")}
-                                </span>
-                                <p className="text-[10px] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
-                                    {t("weeksAssembly")}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="font-serif italic text-2xl text-[var(--text-primary)] font-light">
-                                    100%
-                                </span>
-                                <p className="text-[10px] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
-                                    {t("sourcedItaly")}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="font-serif italic text-2xl text-[var(--text-primary)] font-light">
-                                    {t("curatedCount")}
-                                </span>
-                                <p className="text-[10px] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
-                                    {t("curatedLabel")}
-                                </p>
-                            </div>
-                        </div>
-                    </MaisonReveal>
+                    </div>
                 </div>
             </div>
         </section>

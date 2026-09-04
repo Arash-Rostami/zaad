@@ -7,23 +7,27 @@ const COPY = {
     en: {
         homeTitle:     "Luxury Sculptural Objects & Architectural Design",
         homeDesc:      "Elite showroom for curated luxury sculptural objects, kitchen décor & architectural interiors. Explore ZAAD.",
-        showcaseTitle: "Digital Catalogue — ZAAD Luxury Collection",
-        showcaseDesc:  "Browse ZAAD's full luxury catalogue — sculptural objects & architectural kitchen design. View online.",
+        aboutTitle:    "About ZAAD",
+        aboutDesc:    "A design-and-build atelier bringing considered quality and elegance to the scale of the home — kitchens, wardrobes, and interior spaces.",
+        storyTitle:   "Story & Brand Value",
+        storyDesc:    "The perspective that shaped ZAAD, and the values — precision, restraint, function — that hold every space to it.",
+        sustainabilityTitle: "Sustainability & Responsibility",
+        sustainabilityDesc:  "How ZAAD treats the materials it shapes, and the people and places behind them — considered resource use and craft stewardship together.",
     },
     fa: {
         homeTitle:     "اشیاء مجسمه‌وار لاکچری و طراحی معماری",
         homeDesc:      "ویترین دیجیتال زاد — مجموعه منحصر به فرد اشیاء لاکچری، دکور آشپزخانه و طراحی داخلی معماری.",
-        showcaseTitle: "کاتالوگ دیجیتال — کالکشن لاکچری زاد",
-        showcaseDesc:  "کاتالوگ کامل زاد — اشیاء مجسمه‌وار و طراحی معماری. مشاهده آنلاین.",
+        aboutTitle:    "درباره زاد",
+        aboutDesc:    "آتلیه‌ای در حوزه طراحی و ساخت فضاهای داخلی لوکس — آشپزخانه، کمد و فضاهای داخلی، در مقیاس خانه.",
+        storyTitle:   "داستان و ارزش‌های برند",
+        storyDesc:    "نگاهی که زاد را شکل داد، و ارزش‌هایی — دقت، پرهیز از نمایش، عملکرد — که هر فضا را به آن پایبند نگه می‌دارند.",
+        sustainabilityTitle: "پایداری و مسئولیت",
+        sustainabilityDesc:  "چگونگی رفتار زاد با موادی که شکل می‌دهد، و انسان‌ها و مکان‌های پشت آن — مصرف سنجیده منابع و سرپرستی صنعت در کنار هم.",
     },
 };
 
 const OG_LOCALE   = { en: "en_US", fa: "fa_IR" };
 const hreflangFor = (url) => ({ "x-default": url, en: url, fa: url });
-
-async function getLang() {
-    return await getServerLanguage();
-}
 
 function buildMeta({ rawTitle, description, image, canonical, lang }) {
     const copy     = COPY[lang] ?? COPY.en;
@@ -47,6 +51,38 @@ function buildMeta({ rawTitle, description, image, canonical, lang }) {
             site: "@zaad_x_placeholder", // TODO
             ...(image && { images: [image] }),
         },
+    };
+}
+
+function breadcrumbSchema(name, canonical) {
+    return {
+        "@context": "https://schema.org",
+        "@type":    "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+            { "@type": "ListItem", position: 2, name, item: canonical },
+        ],
+    };
+}
+
+function aboutPageSchema(name, canonical, lang) {
+    return {
+        "@context": "https://schema.org",
+        "@type":    "AboutPage",
+        name, url: canonical, inLanguage: lang,
+        isPartOf: { "@type": "WebSite", name: BRAND, url: SITE_URL },
+    };
+}
+
+async function simplePage(path, titleKey, descKey, extraSchema) {
+    const lang      = await getServerLanguage();
+    const copy      = COPY[lang] ?? COPY.en;
+    const canonical = `${SITE_URL}${path}`;
+    const title     = copy[titleKey];
+
+    return {
+        meta: buildMeta({ rawTitle: title, description: copy[descKey], image: "/og/home.jpg", canonical, lang }),
+        schemas: [breadcrumbSchema(title, canonical), extraSchema(title, canonical, lang)],
     };
 }
 
@@ -78,7 +114,7 @@ export class MetadataService {
     // ─── Pages ───────────────────────────────────────────────────
 
     static async forHome() {
-        const lang = await getLang();
+        const lang = await getServerLanguage();
         const copy = COPY[lang] ?? COPY.en;
 
         return {
@@ -97,8 +133,8 @@ export class MetadataService {
     }
 
     static async forCollection(item) {
-        const lang       = await getLang();
-        const canonical  =  `${SITE_URL}/collection/${item.slug ?? item.id}`;
+        const lang      = await getServerLanguage();
+        const canonical = `${SITE_URL}/collection/${item.slug ?? item.id}`;
 
         return {
             meta: buildMeta({
@@ -109,15 +145,7 @@ export class MetadataService {
                 lang,
             }),
             schemas: [
-                {
-                    "@context": "https://schema.org",
-                    "@type":    "BreadcrumbList",
-                    itemListElement: [
-                        { "@type": "ListItem", position: 1, name: "Home",        item: SITE_URL },
-                        { "@type": "ListItem", position: 2, name: "Collection", item: `${SITE_URL}/collection` },
-                        { "@type": "ListItem", position: 3, name: item.name,     item: canonical },
-                    ],
-                },
+                breadcrumbSchema(item.name, canonical),
                 {
                     "@context":  "https://schema.org",
                     "@type":     "Product",
@@ -131,27 +159,22 @@ export class MetadataService {
         };
     }
 
-    static async forShowcase() {
-        const lang      = await getLang();
-        const copy      = COPY[lang] ?? COPY.en;
-        const canonical = `${SITE_URL}/showcase`;
-
-        return {
-            meta: buildMeta({ rawTitle: copy.showcaseTitle, description: copy.showcaseDesc, image: "/og/showcase.jpg", canonical, lang }),
-            schemas: [{
-                "@context":  "https://schema.org",
-                "@type":     "WebPage",
-                name:        "ZAAD Digital Catalogue",
-                description: "Browse ZAAD's luxury catalogue of sculptural objects & architectural design.",
-                url:         canonical,
-                breadcrumb: {
-                    "@type": "BreadcrumbList",
-                    itemListElement: [
-                        { "@type": "ListItem", position: 1, name: "Home",     item: SITE_URL },
-                        { "@type": "ListItem", position: 2, name: "Showcase", item: canonical },
-                    ],
-                },
-            }],
-        };
+    static forAbout() {
+        return simplePage("/about", "aboutTitle", "aboutDesc", aboutPageSchema);
     }
+
+    static forStory() {
+        return simplePage("/story", "storyTitle", "storyDesc", aboutPageSchema);
+    }
+
+    static forSustainability() {
+        return simplePage("/sustainability", "sustainabilityTitle", "sustainabilityDesc", (name, canonical, lang) => ({
+            "@context":  "https://schema.org",
+            "@type":     "WebPage",
+            name, url: canonical, inLanguage: lang,
+            isPartOf:    { "@type": "WebSite", name: BRAND, url: SITE_URL },
+            about:       "Environmental stewardship and corporate social responsibility of the ZAAD atelier",
+        }));
+    }
+
 }

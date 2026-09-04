@@ -4,8 +4,11 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductDetailsPage from "@/components/ProductDetailsPage";
+import ScrollButton from "@/components/shared/ScrollButton";
+import useLenisScroll from "@/hooks/useLenisScroll";
 
 export default function ProductPageClient({ item }) {
+    useLenisScroll();
     const router = useRouter();
 
     const setActiveTab = (tab) => {
@@ -26,7 +29,7 @@ export default function ProductPageClient({ item }) {
                 activeTab="showroom"
                 setActiveTab={setActiveTab}
                 selectedProduct={item}
-                onSelectProduct={(product) => router.push(`/collection/${product.id}`)}
+                onSelectProduct={(product) => router.push(product ? `/collection/${product.id}` : "/")}
                 onScrollToSection={onScrollToSection}
             />
 
@@ -42,6 +45,8 @@ export default function ProductPageClient({ item }) {
                 onScrollToSection={onScrollToSection}
                 setActiveTab={setActiveTab}
             />
+
+            <ScrollButton />
         </div>
     );
 }

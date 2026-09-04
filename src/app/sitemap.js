@@ -2,49 +2,29 @@ import { en } from "@/lib/i18n/en";
 
 const SITE_URL = "https://zaad.com";
 
+function entry(path, changeFrequency, priority) {
+    const url = `${SITE_URL}${path}`;
+    return {
+        url,
+        lastModified: new Date(),
+        changeFrequency,
+        priority,
+        alternates: { languages: { en: url, fa: url } },
+    };
+}
+
 export default function sitemap() {
     const routes = [
-        {
-            url: SITE_URL,
-            lastModified: new Date(),
-            changeFrequency: "weekly",
-            priority: 1,
-            alternates: {
-                languages: {
-                    en: `${SITE_URL}`,
-                    fa: `${SITE_URL}`,
-                },
-            },
-        },
-        {
-            url: `${SITE_URL}/showcase`,
-            lastModified: new Date(),
-            changeFrequency: "weekly",
-            priority: 0.8,
-            alternates: {
-                languages: {
-                    en: `${SITE_URL}/showcase`,
-                    fa: `${SITE_URL}/showcase`,
-                },
-            },
-        },
+        entry("", "weekly", 1),
+        entry("/about", "monthly", 0.7),
+        entry("/story", "monthly", 0.7),
+        entry("/sustainability", "monthly", 0.7),
+        entry("/showcase/index.html", "weekly", 0.8),
     ];
 
-    const collectionRoutes = en.collection.map((item) => {
-        const url = `${SITE_URL}/collection/${item.id}`;
-        return {
-            url,
-            lastModified: new Date(),
-            changeFrequency: "monthly",
-            priority: 0.9,
-            alternates: {
-                languages: {
-                    en: url,
-                    fa: url,
-                },
-            },
-        };
-    });
+    const collectionRoutes = en.collection.map((item) =>
+        entry(`/collection/${item.id}`, "monthly", 0.9)
+    );
 
     return [...routes, ...collectionRoutes];
 }

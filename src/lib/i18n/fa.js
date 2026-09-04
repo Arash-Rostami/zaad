@@ -1,6 +1,6 @@
 export const fa = {
   // ─── HEADER / NAVIGATION ───────────────────────────────────────────────────
-  showroom: "نمایشگاه",
+  showroom: "مجموعه",
   blueprints: "نقشه‌های سیستم",
   manifesto: "مانیفست و درباره ما",
   conciergeTitle: "استعلام و خدمات اختصاصی",
@@ -8,70 +8,143 @@ export const fa = {
   darkMode: "کیاروسکورو: تیره",
   selectLanguage: "Farsi / فارسی",
   menuClose: "بستن",
-  menuBrowse: "مرور",
+  menuBrowse: "منو",
   menuInquiry: "استعلام",
   menuSystemDirectories: "دایرکتوری‌های سیستم",
-  menuLivingShowroom: "۰۱ / نمایشگاه زنده",
-  menuLivingShowroomSub: "چیدمان‌های یکپارچه و کاوشگر نمونه‌ها",
-  menuZAADBlueprints: "۰۲ / نقشه‌های ZAAD",
-  menuZAADBlueprintsSub: "هم‌ترازی بصری و دستورالعمل‌های فنی",
+  menuHouseOfZAADPortalSub: "ورود به مجموعه دیجیتال",
+  menuZAADCatalogue: "۰۲ / کلکسیون منتخب",
+  menuZAADCatalogueSub: "مرور کامل مجموعه‌ها",
   menuJourneyIndex: "فهرست سفر",
-  menuOriginsPhilosophy: "خاستگاه و فلسفه",
-  menuChapter1: "فصل اول / مانیفست",
-  menuCuratedSeries: "مجموعه‌های منتخب",
-  menuChapter2: "فصل دوم / تک‌نگاری‌ها",
-  menuAcquisitionsCabinet: "کابینت اکتساب",
-  menuChapter3: "فصل سوم / خدمات اختصاصی",
-  menuCuratedSpecimens: "نمونه‌های منتخب",
+  menuOriginsPhilosophy: "میراث و نگاه ما",
+  menuChapter1: "درباره هویت و فلسفه طراحی زاد",
+  menuStoryBrandValue: "اصالت و هنر ساخت",
+  menuChapter2: "روایت، نگاه و ارزش‌های زاد",
+  menuSustainabilityResponsibility: "تعهد به پایداری",
+  menuChapter3: "کیفیت ماندگار و مسئولیت زیست‌محیطی",
+  menuCuratedSpecimens: "کلکسیون منتخب",
   menuView: "مشاهده",
-  menuDigitalEdition: "نسخه دیجیتال v4.0",
-  menuZAADIndex: "فهرست نمونه‌های ZAAD N°02",
-  menuThemeLabel: "LUME",
+  editionVersion: "نسخه ۱.۰",
+  audioPlayLabel: "پخش صدای محیط",
+  audioMuteLabel: "قطع صدای محیط",
+  menuZAADIndex: "فهرست نمونه‌های ZAAD C°02",
+  menuThemeLabel: "نور",
+  themeLabelLight: "روشن",
+  themeLabelMid: "میانه",
+  themeLabelDark: "تیره",
+  tooltipLangEn: "تغییر به انگلیسی",
+  tooltipLangFa: "تغییر به فارسی",
+  tooltipThemeLight: "فضای روشن",
+  tooltipThemeMid: "فضای میانه",
+  tooltipThemeDark: "فضای تیره",
+  menuHouseOfZAAD: "خانۀ زاد",
+  menuAboutUs: "درباره ما",
+  aboutEyebrow: "آتلیه",
+  aboutTitle: "آتلیه‌ی معماری داخلی",
+  aboutIntro:
+      "زاد برندی در حوزه‌ی طراحی و ساخت فضاهای داخلی لوکس است؛ برندی که با تکیه بر تخصص در طراحی آشپزخانه، کمد و فضاهای داخلی، نگاه درسا به کیفیت و ظرافت را وارد مقیاس خانه می‌کند. پشت هر پروژه در زاد، کارخانه‌ای مجهز با ۹۰۰۰ متر مربع فضای تولید، ۱۵۰ نیروی متخصص، تیمی ۸ نفره از طراحان و معماران داخلی، و شبکه‌ای از شرکای تخصصی قرار دارد که ایده را از طراحی تا ساخت و اجرا همراهی می‌کنند.",
+  aboutBackToShowroom: "بازگشت به کلکسیون",
+  callStudio: "تماس با آتلیه",
+  callStudioSub: "مرکز فلورانس — دوشنبه تا جمعه، ۰۹–۱۸ به وقت اروپای مرکزی",
+  studioPhone: "+۳۹ ۰۰۰ ۰۰۰۰ ۰۰۰",
+  studioPhoneTel: "+3905500000000",
+
+  // ── فصل‌های خانۀ زاد: هیرو + آمار + پیوندها ──────────────────────────────
+  sustainabilityHeroEyebrow: "سرپرستی ماده",
+  sustainabilityHeroTitle: "کیفیت، شکلی از پایداری است",
+  sustainabilityHeroIntro:
+      "پایداری از آتلیه آغاز می‌شود، نه از خط تولید — از انتخاب مواد، تناسبات سنجیده و رویه‌ای در برابر اتلاف که تا آخرین جزئیات اجرا ادامه می‌یابد.",
+  csrHeroEyebrow: "مسئولیت‌های اجتماعی",
+  csrHeroTitle: "بازگرداندن صنعت، کرامت و سرپرستی",
+  csrHeroIntro:
+      "چگونگی بازپس‌دهی خانۀ زاد به دست‌ها و مناظری که سنگش را شکل می‌دهند — مسئولیتی خام که نسل به نسل، نه فصلی، به دوش کشیده می‌شود.",
+  storyHeroEyebrow: "خاستگاه",
+  storyHeroTitle: "رویش در سرزمین درسا",
+  storyHeroIntro:
+      "نگاهی که زیبایی را در اصالت، ظرافت و کیفیت زیستن می‌بیند — از جهان محصول به فضایی که یک زندگی را در خود جای می‌دهد.",
+  brandValueHeroEyebrow: "ارزش‌های برند",
+  brandValueHeroTitle: "زیبایی، همراه با عملکرد",
+  brandValueHeroIntro:
+      "لوکس بودن یعنی اغراق یا نمایش نیست؛ دقت، پرهیز از افراط و هماهنگی میان فرم و کاربرد است که ارزش خود را در طول زمان حفظ می‌کند.",
+  aboutStats: [
+    { value: "۹۰۰۰ متر²", label: "فضای تولید" },
+    { value: "۱۵۰", label: "نیروی متخصص" },
+    { value: "۸", label: "طراح و معمار" },
+  ],
+  sustainabilityStats: [
+    { value: "۰٪", label: "زبالۀ معدن" },
+    { value: "۹۲٪", label: "سنگ زیر ۲۰۰ کیلومتر" },
+    { value: "۱۰۰٪", label: "اشیای قابل صیقل" },
+  ],
+  csrStats: [
+    { value: "۴", label: "هفتۀ ساخت چهارروزه" },
+    { value: "۱۰۰٪", label: "هم‌ورزان حقوق‌بگیر" },
+    { value: "۱:۱", label: "بازگشت بلوک به حوضه" },
+  ],
+  crossLinkHeading: "ادامه در خانۀ زاد",
+  crossLinkAbout: "آتلیه، تیم و رویه‌ای که هر پروژه زاد را شکل می‌دهد.",
+  crossLinkStoryValue: "نگاه و ارزش‌هایی که پشت هر فضای زاد قرار دارند.",
+  crossLinkSustainabilityResponsibility: "چگونگی رفتار زاد با مواد و انسان‌های پشت آن‌ها.",
+  crossLinkReadMore: "خواندن فصل",
+  aboutHeroAlt: "آتلیه طراحی زاد — معماری داخلی سنجیده",
+  storyValueHeroEyebrow: "روایت و ارزش‌ها",
+  storyValueHeroTitle: "داستان ما و ارزش‌های برند",
+  storyValueHeroIntro:
+      "زاد برندی در حوزه‌ی طراحی و ساخت فضاهای داخلی لوکس است؛ برندی که با تکیه بر تخصص در طراحی آشپزخانه، کمد و فضاهای داخلی، نگاه درسا به کیفیت و ظرافت را وارد مقیاس خانه می‌کند. پشت هر پروژه در زاد، کارخانه‌ای مجهز با ۹۰۰۰ متر مربع فضای تولید، ۱۵۰ نیروی متخصص، تیمی ۸ نفره از طراحان و معماران داخلی، و شبکه‌ای از شرکای تخصصی قرار دارد که ایده را از طراحی تا ساخت و اجرا همراهی می‌کنند.",
+  storyValueHeroAlt: "معماری داخلی زاد — روایت و ارزش در یک قاب",
+  storyHeroAlt: "معماری داخلی زاد — فضای زندگی آرام و سنجیده",
+  brandValueHeroAlt: "جزئیات داخلی زاد — تناسب، نور و متریال در هماهنگی",
+  sustainabilityResponsibilityHeroEyebrow: "سرپرستی ماده و جامعه",
+  sustainabilityResponsibilityHeroTitle: "پایداری و مسئولیت ما",
+  sustainabilityResponsibilityHeroIntro:
+      "زاد برندی در حوزه‌ی طراحی و ساخت فضاهای داخلی لوکس است؛ برندی که با تکیه بر تخصص در طراحی آشپزخانه، کمد و فضاهای داخلی، نگاه درسا به کیفیت و ظرافت را وارد مقیاس خانه می‌کند. پشت هر پروژه در زاد، کارخانه‌ای مجهز با ۹۰۰۰ متر مربع فضای تولید، ۱۵۰ نیروی متخصص، تیمی ۸ نفره از طراحان و معماران داخلی، و شبکه‌ای از شرکای تخصصی قرار دارد که ایده را از طراحی تا ساخت و اجرا همراهی می‌کنند.",
+  sustainabilityResponsibilityHeroAlt: "آتلیه زاد — مواد و دست‌هایی که آن‌ها را شکل می‌دهند",
+  sustainabilityHeroAlt: "استودیوی تولید زاد — انتخاب سنجیده مواد و صنعتگری",
+  csrHeroAlt: "آتلیۀ زاد — دست‌ها و رفاهی که در پسِ کار است",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────
-  bespokeObjects: "اشیاء مجسمه‌وار سفارشی",
-  heroTitle_1: "سادگی،",
-  heroTitle_italic: "غایی‌ترین سطح",
-  heroTitle_2: "پیچیدگی است.",
-  heroDesc:
-      "نمایشگاه دیجیتال ZAAD. ما اشیاء فیزیکی و شماره‌گذاری‌شده‌ای را طراحی می‌کنیم که در معادن توسکانی و ZAAD‌های میلان ساخته شده‌اند؛ طراحی شده برای فراتر رفتن از مد و زمان.",
-  exploreCollection: "کاوش در مجموعه ↓",
-  ourPhilosophy: "فلسفه ما",
-  monograph: "تک‌نگاری Maison 2026",
-  heroQuote:
-      "فاصله‌گذاری یک شیء به اندازه خودِ متریال حیاتی است. ما پوچی فیزیکی را تعریف می‌کنیم.",
-  estFlorence: "تاسیس ۱۹۸۹ — فلورانس",
-  heroExhibition: "نمایشگاه ۰۱",
-  heroTravertineBase: "پایه تراورتن راپولانو",
+  bespokeObjects: "آتلیه‌ی معماری داخلی زاد",
+  heroTitle_1: "زیبایی در",
+  heroTitle_italic: "اصـالت، ظرافت",
+  heroTitle_2: "و کیفیـت.",
+  heroDesc: "مجموعه دیجیتال زاد. رویشی در سرزمین درسا که با مجموعه‌های متمایز جسارت طراحی مدرن را با ریشه‌های اصیل معماری پیوند می‌زند. ما فضاهای داخلی لوکسی خلق می‌کنیم که با پرهیز از نمایش، کیفیت ماندگار و سرپرستی مسئولانه‌ی ماده را به مقیاس خانه می‌آورند.",
+  exploreCollection: "کاوش در مجموعه‌ها ↓",
+  ourPhilosophy: "میراث و نگاه ما",
+  monograph: "کلکسیون منتخب",
+  heroQuote: "لوکس بودن اغراق یا نمایش نیست؛ دقت، پرهیز از افراط و هماهنگی میان فرم و کاربرد است که ارزش خود را در طول زمان حفظ می‌کند.",
+  estFlorence: "رویش در سرزمین درسا",
+  heroExhibition: "چهار مجموعه‌ی متمایز",
+  heroTravertineBase: "دقت، ظرافت و هماهنگی",
+  heroPauseVideo: "توقف فیلم",
+  heroPlayVideo: "پخش فیلم",
 
   // ─── STORY / MANIFESTO ─────────────────────────────────────────────────────
   manifestoBadge: "مانیفست",
   storyQuote: "چیدمان یک فضا، یعنی مراقبت از سکوتِ درون آن.",
-  storyEmilio: "— امیلیو کاوالکانتی، سرپرست برش",
-  storyTactile: "حافظه لمسی سنگ تراورتن، برای همیشه بر روی پوست انسان باقی می‌ماند.",
-  rawOrigin: "خاستگاه خالص",
-  quarryLocation: "معدن راپولانو کلاسیکو، بخش IV (توسکانی)",
+  storyFixturesLabel: "در قلب",
+  storyFixturesText: " کلکسیونهای GÁVV، ZIVV، RÁKH و VARR.",
+  storyUtensilAlt: "تجهیزات دقیق آشپزخانه مجموعه زاد",
+  storyFrameLabel: "نمایش قاب {index} از {total}",
   storyEndText:
       "ما به جای تحمیل اشیاء به چیدمان‌های دیجیتال پرهیاهو، با هر اثر به عنوان موجودیِ یک موزه منتخب برخورد می‌کنیم. وقتی یکی از آثار ما را در اقامتگاه معماری خود قرار می‌دهید، در حال تثبیت یک نقطه مرجع آرام هستید که تا قرن‌ها باقی خواهد ماند.",
-  weeksAssembly: "هفته‌های ساخت",
-  assemblyDays: "۱۴",
-  sourcedItaly: "تهیه شده در ایتالیا",
-  curatedCount: "۳",
-  curatedLabel: "اشیاء منتخب",
-  storyOurStory: "داستان ما",
+  storySpecialistsCount: "۱۵۰",
+  storySpecialistsLabel: "متخصص ماهر",
+  storyOriginLabel: "ساخت ایران",
+  storyOriginValue: "۱۰۰٪",
+  collectionsCount: "۴",
+  collectionsLabel: "مجموعه",
   storyTitle: "دقت، ظرافت و هماهنگی یکپارچه",
   storyQuote2:
       "هر مجموعه برای در آغوش گرفتن، سازماندهی و تعریف فضا ساخته شده است تا تعادلی شاعرانه به زندگی ببخشد.",
   storyP1:
-      "ZAAD از دریچه دقت و ظرافت به جهان می‌نگرد؛ جایی که زیبایی به فرم محدود نمی‌شود، بلکه در هماهنگی میان کارایی، جزئیات و دقت جریان می‌یابد. با بهره‌گیری از Dorsa، چهار مجموعه آشپزخانه متمایز ما — GÁVV، ZIVV، RÁKH و VAAR — جسارت طراحی مدرن را با ریشه‌های اصیل و خطوط معماری ترکیب می‌کنند.",
+      "ZAAD از دریچه دقت و ظرافت به جهان می‌نگرد؛ جایی که زیبایی به فرم محدود نمی‌شود، بلکه در هماهنگی میان کارایی، جزئیات و دقت جریان می‌یابد. با بهره‌گیری از Dorsa، چهار مجموعه آشپزخانه متمایز ما — GÁVV، ZIVV، RÁKH و VARR — جسارت طراحی مدرن را با ریشه‌های اصیل و خطوط معماری ترکیب می‌کنند.",
   storyP2:
       "هر مجموعه برای در آغوش گرفتن، سازماندهی و تعریف فضا ساخته شده است تا ساختاری استوار و تعادلی شاعرانه به زندگی روزمره ببخشد.",
 
   // ─── SHOWCASE / COLLECTION ─────────────────────────────────────────────────
-  showcaseBadge: "مجموعه",
-  showcaseTitle: "نمایشگاه منتخب",
-  editorialView: "نمای تحریریه",
-  macroView: "جزئیات کلان",
+  showcaseBadge: "کلاژ",
+  showcaseTitle: "کلکسیون منتخب",
+  editorialView: "نمای اصلی",
+  macroView: "نمای ماکرو",
   viewDetails: "مشاهده پرونده مشخصات ↗",
   inquireBtn: "استعلام خرید",
   dimensionsLabel: "ابعاد",
@@ -97,6 +170,7 @@ export const fa = {
   showcaseNext: "بعدی",
   showcaseYear: "سال",
   showcaseLandscape: "نمای افقی",
+  showcaseTactileLens: "لنز لمسی (۳.۰ برابر)",
   showcasePortrait: "نمای عمودی",
   showcaseArchiveCollection: "مجموعه آرشیو",
   showcaseBespokeCommission: "سفارش اختصاصی",
@@ -115,7 +189,6 @@ export const fa = {
   showcaseRevealDossier: "نمایش پرونده سفارشی",
   showcasePrivateInquiry: "شروع استعلام خصوصی",
   showcaseAirfreight: "ارسال هوایی بیمه‌شده رایگان با خدمات نصب ویژه در سطح جهانی.",
-  showcaseDiscoverPerspectives: "کشف دیدگاه‌های اشیاء",
 
 
   // ─── ADVANTAGES ────────────────────────────────────────────────────────────
@@ -157,7 +230,7 @@ export const fa = {
   materialArchaeology: "باستان‌شناسی متریال",
   materialStudy: "مطالعه‌ای در رئالیسم فیزیکی",
   hexaSample: "نمونه هگزا →",
-  macroPreview: "پیش‌نمایش کلان",
+  macroPreview: "پیش‌نمایش ماکرو",
   materialAnalysisPrefix: "",
   materialAnalysisSuffix: "تحلیل",
   geographicalOrigin: "خاستگاه جغرافیایی:",
@@ -235,37 +308,68 @@ export const fa = {
   formSuccess:
       "ارتباط برقرار شد. نماینده ما ظرف ۴۸ ساعت با مشخصات فنی با شما تماس خواهد گرفت.",
   formSubmit: "شروع فرآیند اکتساب",
+  formErrorNameRequired: "لطفاً نام خود را وارد کنید.",
+  formErrorNameTooLong: "نام باید کمتر از ۱۰۰ کاراکتر باشد.",
+  formErrorEmailInvalid: "لطفاً یک ایمیل معتبر وارد کنید.",
+  formErrorPhoneRequired: "لطفاً شماره تلفن خود را وارد کنید.",
+  formErrorPhoneInvalid: "لطفاً یک شماره تلفن معتبر وارد کنید.",
+  formErrorConsultationInvalid: "لطفاً یک دسته مشاوره انتخاب کنید.",
+  formErrorAppointmentWindowRequired: "لطفاً یک زمان ترجیحی انتخاب کنید.",
+  formErrorNoteTooLong: "یادداشت باید کمتر از ۲۰۰۰ کاراکتر باشد.",
+  formErrorGeneric: "خطایی رخ داد. لطفاً دوباره تلاش کنید یا مستقیماً با ما تماس بگیرید.",
   acquisitionsServices: "خرید و خدمات",
   privateCommissions: "سفارشات خصوصی",
   privateCommissionsSub:
-      "هر قطعه به صورت جداگانه و با سفارش ساخته می‌شود. یک خرید را آغاز کنید، یک بازدید خصوصی از استودیو در فلورانس برنامه‌ریزی کنید یا درخواست مشاوره طراحی معماری دهید.",
-  acquisitionCard: "کارت خرید و رزرو",
+      "هر قطعه به صورت جداگانه و با سفارش ساخته می‌شود. یک خرید را آغاز کنید، یک بازدید خصوصی از استودیو برنامه‌ریزی کنید یا درخواست مشاوره طراحی معماری دهید.",
+  acquisitionCard: "خرید و مشاوره",
   bespokeClientName: "نام مشتری سفارشی *",
-  clientNamePlaceholder: "مثال: النا ونس",
-  secureContactEmail: "ایمیل تماس امن *",
-  directTelephone: "تلفن مستقیم (اختیاری)",
+  clientNamePlaceholder: "مثال: الیاسی",
+  secureContactEmail: "ایمیل تماس امن (اختیاری)",
+  directTelephone: "تلفن مستقیم *",
   consultationCategory: "دسته‌بندی مشاوره",
-  privateArchiveAcquisition: "خرید از آرشیو خصوصی",
-  residentialConsultation: "مشاوره مسکونی (هزینه ۲۵ هزار دلار)",
-  florenceViewing: "بازدید خصوصی ZAAD فلورانس",
+  privateArchiveAcquisition: "خرید و سفارش از کلکسیون",
+  residentialConsultation: "دریافت مشاوره پیرامون کلکسیون",
+  florenceViewing: "بازدید و دریافت مشاوره حضوری از ZAAD",
   customMaterialSpec: "مشخصات ترکیب متریال سفارشی",
   archivalSpecs: "مشخصات آرشیوی معمار و جزئیات فضا",
   spacePlaceholder:
       "الگوهای نور، پرداخت‌های خام، جهت‌گیری‌های فضایی یا درخواست‌های خاص شماره‌گذاری اشیاء را شرح دهید.",
   submitInquiry: "ثبت استعلام امن",
   studioReplyStandard: "استاندارد پاسخ استودیو: بیمه‌شده ظرف ۴ تا ۶ ساعت کاری.",
-  committedToArchive: "متعهد به آرشیو",
+  committedToArchive: "درخواست شما ثبت شد",
+  committedConfirmationBody:
+    "{clientName} عزیز، اطلاعات ثبت سفارش شما با موفقیت در سیستم مرکزی زاد ثبت گردید. مدیر طراحی ارشد ZAAD به زودی طی ۴ ساعت آینده با شما تماس خواهد گرفت.",
   sessionRef: "مرجع جلسه",
   inquireAnotherObject: "استعلام برای شیء دیگر",
+  ledgerEyebrow: "مدیریت فرم پرسش",
+  ledgerTitle: "فرم پرسش",
+  ledgerGateIntro:
+      "این اتاق برای ادمین سایت رزرو شده است. کلید خود را ارائه کنید.",
+  ledgerKeyLabel: "کلید دسترسی",
+  ledgerEnter: "ورود به فرم پرسش",
+  ledgerOpening: "در حال باز شدن...",
+  ledgerInvalidKey: "این کلید این در را باز نمی‌کند.",
+  ledgerEmptyTitle: "فهرست خالی است",
+  ledgerEmptyDesc:
+      "هنوز هیچ استعلامی از طریق فرم پرسش ثبت نشده است.",
+  ledgerEntryCount: "ثبت‌شده",
+  ledgerLogout: "بستن فرم پرسش",
+  ledgerDelete: "حذف ثبت",
+  ledgerDeleteConfirm: "تأیید حذف",
+  ledgerPrev: "قبلی",
+  ledgerNext: "بعدی",
+  ledgerReturnHome: "بازگشت به خانه زاد",
   zaadDigitalCurator: "کیوریتور دیجیتال ZAAD",
+  curatorModelBadge: "دستیار هوش مصنوعی",
+  chatDownload: "دانلود گفتگو",
   chatClient: "مشتری",
-  chatCurator: "کیوریتور",
+  chatCurator: "دستیار",
   analyzingParams: "در حال تحلیل پارامترهای ترکیب...",
   chatPlaceholder: "در مورد ترکیب‌های تراورتن، فاصله‌گذاری اتاق یا متریال‌ها بپرسید...",
   curatorWelcome:
-      "به مشاوره خصوصی ZAAD خوش آمدید. من کیوریتور دیجیتال شما هستم. اگر در حال طراحی یا تکمیل یک فضای معماری هستید، ویژگی‌ها، نورپردازی و چیدمان آن را توصیف کنید تا من ترکیب‌های متریال خاص یا اشیاء موجود در خزانه خود را به شما پیشنهاد دهم.",
+      "به مشاوره با کیوریتور ZAAD خوش آمدید. اگر در حال طراحی یا تکمیل یک فضای معماری هستید، ویژگی‌ها، نورپردازی و چیدمان آن را توصیف کنید تا من ترکیب‌های متریال خاص یا اشیاء موجود در خزانه خود را به شما پیشنهاد دهم.",
   curatorError:
-      "انتقال کیوریتور دیجیتال به طور موقت قطع شده است. لطفاً کارت استعلام خصوصی ما را پر کنید تا مستقیماً با تیم فلورانس ما هماهنگ شوید.",
+      "انتقال دستیار هوش مصنوعی به طور موقت قطع شده است. لطفاً کارت استعلام خصوصی ما را پر کنید تا مستقیماً با تیم ما هماهنگ شوید.",
 
   // ─── AI ASSISTANT ──────────────────────────────────────────────────────────
   assistantBadge: "دستیار هوش مصنوعی",
@@ -326,10 +430,10 @@ export const fa = {
           "جریان‌های کاربری استراتژیک بخش به بخش، طرح‌واره سایت، نقشه سایت و سلسله مراتب چیدمان اجزا.",
       content: `### ۵. نقشه سایت کامل
 معماری ZAAD برای حذف بار شناختی و نویز بصری طراحی شده است.
-- **ریشه دامنه اصلی (نمای نمایشگاه تک‌نگاه چند‌منظوره)**
+- **ریشه دامنه اصلی (نمای مجموعه تک‌نگاه چند‌منظوره)**
   - **I. بخش ورودی هیرو (برداشت اول / عنوان تک‌نگاری)**
   - **II. بخش داستان برند (مانیفست / خاستگاه مهارت)**
-  - **III. نمایشگاه مجموعه‌های منتخب (آثار شماره‌گذاری شده - N°01, N°02, N°03)**
+  - **III. مجموعه کلکسیون‌های منتخب (آثار شماره‌گذاری شده - C°01, C°02, C°03)**
   - **IV. کاوشگر تحلیل متریال (شبکه لمسی تعاملی)**
   - **V. پنل پذیرش خدمات (فرم استعلام مشتری + کیوریتور هوش مصنوعی زنده)**
 - **بخش متا-دایرکتوری (سیستم نقشه طراحی استودیوی تعاملی)**
@@ -407,13 +511,33 @@ export const fa = {
   applianceList: "مشخصات لوازم خانگی",
   zoomHint: "[ برای حرکت روی جزئیات بافت، لمس‌کشیدن یا هاور کنید ]",
   resolvingSpecimen: "در حال حل جزئیات نمونه...",
+  lightboxArchiveLabel: "آرشیو",
+  lightboxInquireLabel: "استعلام خرید",
+  fontScaleDecreaseLabel: "کاهش اندازه متن",
+  fontScaleIncreaseLabel: "افزایش اندازه متن",
+  scrollToTopLabel: "رفتن به بالا",
+  scrollToBottomLabel: "رفتن به پایین",
+  lightboxCounterOf: "از",
+  lightboxEnlargedPerspective: "نمای بزرگ‌شده",
+  lightboxPerspectiveViewFallback: "نمای پرسپکتیو",
+  lightboxMuseumSpecimenCommission: "سفارش نمونه موزه",
+  lightboxAcquisitionCommission: "سفارش خرید",
+  lightboxEditorialPerspective: "نمای اصلی",
+  lightboxMacroPerspective: "نمای ماکرو",
   inquireThis: "استعلام در مورد این سیستم منتخب",
   closeDossier: "بستن پرونده مشخصات",
   tactileLens: "لنز لمسی (3.0X)",
-  productReturnShowroom: "بازگشت به نمایشگاه کلاژ",
+  productReturnShowroom: "بازگشت به مجموعه کلکسیون",
   productZAADArchive: "آرشیو ZAAD",
   productDirectory: "دایرکتوری",
   productArchitecturalRecord: "سوابق معماری",
+  productSpin360Label: "نمای ۳۶۰ درجه",
+  productStudioArchiveIndex: "فهرست آرشیو موزه",
+  productStudioViewLabel: "نما",
+  productStudioLayoutFallback: "چیدمان",
+  showcaseImageAlt: "{name} (نمای تصویر {index})",
+  showcaseMacroAlt: "{name} (نمای ماکرو)",
+  productStudioThumbnailAlt: "تصویر بندانگشتی پرسپکتیو {index}",
   productCurator: "کیوریتور",
   productZAAD: "ZAAD",
   productRelease: "انتشار",
@@ -424,6 +548,68 @@ export const fa = {
   productInitiateInquiry: "شروع استعلام خدمات اختصاصی",
   productReturnGrid: "بازگشت به شبکه",
 
+  // ─── PRODUCT DETAIL TABS / CTA (SpecsTabs, AcquisitionCTA, Tab*) ────────────
+  tabArchitectureLabel: "آناتومی یکپارچه",
+  tabAppliancesLabel: "یکپارچگی Gaggenau",
+  tabHeritageLabel: "یکپارچگی ترکیبی",
+  acquisitionPrivileges: "امتیازات اکتساب",
+  acquisitionHeading: "الگویی از تقارن پایدار در خانه خود ایجاد کنید",
+  acquisitionDesc:
+      "از طریق خدمات اختصاصی ZAAD، هر سفارش سفارشی از انتخاب سنگ در معدن تا نصب محلی توسط تکنسین‌های استاد نظارت می‌شود.",
+  chassisTypology: "گونه‌شناسی شاسی",
+  hardwareCore: "هسته سخت‌افزار",
+  integratedGlassware: "شیشه‌ای یکپارچه",
+  smartAccLed: "لوازم هوشمند و LED",
+  gaggenauIntegrationSpecifics: "جزئیات یکپارچگی کاتالوگ Gaggenau و ZAAD",
+  integrationRating: "رتبه یکپارچگی",
+  gaggenauRating: "Gaggenau 200/400",
+  kessebohmerStructures: "ساختارهای لوازم توکار Kesseböhmer",
+  coreIslandGeometries: "هندسه‌های هسته جزیره",
+  biMonolithCore: "هسته مرکزی مدولار دویکپارچه",
+  constructorManualSheets: "برگه‌های دستورالعمل سازنده",
+  tallCoreArchitectures: "معماری‌های هسته بلند",
+  symmetricHousingWall: "دیوار مسکونی متقارن با بازده بالا",
+  zaadTowerRowScheduling: "زمان‌بندی ردیف برج ZAAD",
+  ergonomicsPlanA: "طرح ارگونومی (A-مجاور)",
+  ergonomicsPlanB: "طرح ارگونومی (B-مجاور)",
+  housingStructuralComponents: "اجزای ساختاری مسکونی",
+  craftIntegritySeal: "مهر یکپارچگی هنری",
+  architecturalHonesty: "صداقت معماری و سکوت فضایی",
+  heritageIntro:
+      "هر شیء ZAAD پاسخی دقیق به لوکسِ آرام در برابر مدهای پویا است. به صورت متقارن در سراسر هسته‌های سنگی تراورتن/راپولانو طبیعی سنگین و استوار و روکش‌های اکالیپتوس بادوام سازماندهی شده، و طراحی صرفاً بر مواد فیزیکی اصیل تکیه می‌کند تا آرامش معنوی را در چشم‌انداز داخلی برقرار سازد.",
+  rawStoneCuration: "کیوریتوری سنگ خام",
+  rawStoneCurationDesc:
+      "در داخل معادن توسکانی نزدیک کارارا مستقیماً آسیاب، شکل‌دهی و تکمیل می‌شود. تمام بلوک‌های آهک، تراورتن و اونیکس با استفاده از موم‌های طبیعی بدون اسید با دست صیقل داده می‌شوند تا صداقت بافت تاریخی حفظ شود.",
+  eucalyptusVeneers: "روکش‌های اکالیپتوس و چرم زین",
+  eucalyptusVeneersDesc:
+      "چوب‌های قلب اکالیپتوس طبیعی با ضخامت ۲۲ میلی‌متر روی هسته‌های ساختاری مقاوم در برابر آب روی‌سازی شده‌اند. همراه با سیلندرهای سخت‌افزاری آهنی و برنزی پتینه‌شده جامد که در چرم‌های زین ایتالیایی اصل پیچیده شده‌اند.",
+  certificateOfProvenance: "گواهی صادرشده خاستگاه، امضا شده توسط طراح استاد",
+
+  // ─── LOOKBOOK POETRY (LookbookPoetry) ──────────────────────────────────────
+  lookbookMonographEyebrow: "مونوگرافی متریال و روایت میراث",
+  lookbookHeritageHeading: "میراث {name}",
+  lookbookProvenanceLabel: "سند خاستگاه:",
+
+  // ─── APPOINTMENT (InquiryForm — Audience & Cadence) ─────────────────────────
+  appointmentAudienceLabel: "زمان آزاد برای",
+  appointmentCadenceLabel: "بازه زمانی",
+  appointmentModeCall: "تماس خصوصی",
+  appointmentModeAudience: "حضور در آتلیه",
+  appointmentWindowArrangement: "با هماهنگی",
+  appointmentSlotMorning1Name: "صبح",
+  appointmentSlotMorning1Time: "۰۸:۰۰ – ۱۰:۰۰",
+  appointmentSlotMorning2Name: "ظهر",
+  appointmentSlotMorning2Time: "۱۰:۰۰ – ۱۲:۰۰",
+  appointmentSlotMiddayName: "نیمروز",
+  appointmentSlotMiddayTime: "۱۲:۰۰ – ۱۴:۰۰",
+  appointmentSlotEvening1Name: "عصر",
+  appointmentSlotEvening1Time: "۱۴:۰۰ – ۱۸:۰۰",
+  appointmentSlotEvening2Name: "شب",
+  appointmentSlotEvening2Time: "۱۸:۰۰ – ۲۱:۰۰",
+  appointmentHintAudience: "تنها با هماهنگی قبلی",
+  appointmentHintCall: "زاد با خط مستقیم شما تماس خواهد گرفت",
+  appointmentRequestedAudience: "حضور در زاد درخواست گردید — {window}.",
+  appointmentRequestedCall: "تماس خصوصی درخواست گردید — {window}.",
 
   // ─── FOOTER ────────────────────────────────────────────────────────────────
   footerTitle: "ZAAD",
@@ -436,16 +622,35 @@ export const fa = {
   newsletterBtn: "ثبت‌نام",
   rightsReserved:
       "تمامی حقوق محفوظ است. طراحی شده برای لوکسِ آرام. ساخته شده در فلورانس و میلان.",
-  footerShowroomDir: "دایرکتوری نمایشگاه",
+  footerShowroomDir: "دایرکتوری مجموعه",
   footerPhilosophy: "فلسفه ما",
   footerCollection: "مجموعه",
   footerConcierge: "خدمات خرید اختصاصی",
+  footerHouseDir: "خانۀ زاد",
+  footerAboutUs: "درباره ما",
+  footerStoryBrandValue: "داستان ما و ارزش‌های برند",
+  footerSustainabilityResponsibility: "پایداری و مسئولیت ما",
   footerBlueprintTitle: "نقشه استودیو",
   footerBlueprintLink: "آرشیو نقشه طراحی",
   footerMilanZAAD: "ZAAD میلان — لمباردی",
   footerRapolanoStone: "سنگ راپولانو — توسکانی",
-  footerCopyright: "© ۱۹۸۹ — ۲۰۲۶ ZAAD S.P.A. تمامی حریم خصوصی محفوظ است.",
-  footerCraft: "ساخته شده با حاکمیت معماری",
+  footerCopyright: "© {year} - تمامی حقوق محفوظ است.",
+  footerCraft: "طراحی و توسعه یافته توسط Persol Business Solution",
+  atelierClockCity: "فلورانس",
+  atelierClockOpen: "آتلیه پذیراست",
+  atelierClockClosed: "آتلیه بسته است",
+
+  // ─── STATUS SCREENS (not-found / error) ────────────────────────────────────
+  notFoundEyebrow: "۴۰۴",
+  notFoundTitle: "این فضا وجود ندارد",
+  notFoundDesc:
+      "صفحه‌ای که به دنبال آن هستید جابه‌جا شده یا هرگز وجود نداشته است؛ بازمی‌گردیم به مجموعه.",
+  notFoundCta: "بازگشت به مجموعه",
+  errorEyebrow: "وقفه",
+  errorTitle: "خطایی رخ داد",
+  errorDesc:
+      "خطایی غیرمنتظره این صفحه را قطع کرد. لطفاً دوباره تلاش کنید یا به مجموعه بازگردید.",
+  errorRetry: "تلاش دوباره",
 
   // ─── BRAND STORY ───────────────────────────────────────────────────────────
   brandStory: {
@@ -457,17 +662,101 @@ export const fa = {
         "ما به کاتالوگ‌های انبوه اعتقادی نداریم. ما معتقدیم یک فضای زندگی خانگی تنها به نقاط کانونی معماری باشکوه نیاز دارد تا به طنین معنوی ابدی دست یابد: جزیره‌ای که به عنوان گهواره اجتماعی عمل می‌کند، دیوار کابینت بلندی که سازماندهی را ساختار می‌دهد و سنگ‌های نفیسی که با نور طبیعی بازی می‌کنند. این تثلیث مقدس ماست.",
   },
 
+  // ─── ABOUT / CSR / SUSTAINABILITY ──────────────────────────────────────────
+  aboutSections: [
+    {
+      id: "about",
+      category: "خانۀ زاد",
+      title: "درباره زاد",
+      summary:
+          "برندی در حوزه طراحی و ساخت فضاهای داخلی لوکس، با کارخانه‌ای ۹۰۰۰ متر مربعی و تیمی ۱۵۰ نفره که کیفیت و ظرافت را به مقیاس خانه می‌آورد.",
+      content: `### یک. آتلیه
+زاد برندی در حوزه‌ی طراحی و ساخت فضاهای داخلی لوکس است؛ برندی که با تکیه بر تخصص در طراحی آشپزخانه، کمد و فضاهای داخلی، نگاه درسا به کیفیت و ظرافت را وارد مقیاس خانه می‌کند. پشت هر پروژه در زاد، کارخانه‌ای مجهز با ۹۰۰۰ متر مربع فضای تولید، ۱۵۰ نیروی متخصص، تیمی ۸ نفره از طراحان و معماران داخلی، و شبکه‌ای از شرکای تخصصی قرار دارد که ایده را از طراحی تا ساخت و اجرا همراهی می‌کنند.
+
+### دو. رویه
+در زاد هر پروژه از شناخت شیوه‌ی زندگی، نیازها و سلیقه‌ی صاحب خانه آغاز می‌شود. تیم طراحی و معماری زاد تلاش می‌کند فضاهایی خلق کند که تنها زیبا نباشند، بلکه درست کار کنند؛ فضاهایی با تناسبات دقیق، جزئیات سنجیده، مواد اولیه باکیفیت و راهکارهایی که زندگی روزمره را منظم‌تر، آرام‌تر و دل‌پذیرتر می‌کنند.
+
+### سه. همکاری
+زاد در کنار طراحی و ساخت، با تکیه بر مشارکت‌های تخصصی، همکاری با برندهای منتخب و بهره‌گیری از مبلمان درسا خانه، امکان دسترسی به مجموعه‌ای از اکسسوری‌ها، یراق‌آلات مبلمان و جزئیات لوکس را فراهم می‌کند؛ عناصری که کیفیت نهایی فضا را کامل می‌کنند و به هر پروژه هویتی شخصی‌تر و ماندگارتر می‌بخشند.`,
+      tags: ["طراحی داخلی", "۱۵۰ متخصص", "طراحی و ساخت"],
+    },
+    {
+      id: "story",
+      category: "داستان برند",
+      title: "داستان زاد",
+      summary:
+          "زاد در سرزمین درسا از نگاهی شکل گرفته که زیبایی را در اصالت، ظرافت و کیفیت زیستن می‌بیند.",
+      content: `### یک. یک نگاه
+زاد در سرزمین درسا از نگاهی شکل گرفته که زیبایی را در اصالت، ظرافت و کیفیت زیستن می‌بیند. زاد این نگاه را از جهان محصول به قلمرو فضا می‌برد؛ به خانه‌هایی که آرامش، نظم و شکوه را نه در نمایش، که در تناسبات، جزئیات و کیفیت حضورشان نشان می‌دهند.
+
+### دو. یک هنر
+زاد با تخصص در طراحی و ساخت آشپزخانه، کمد و فضاهای داخلی شکل گرفته است؛ فضاهایی که تنها برای دیده شدن ساخته نمی‌شوند، بلکه برای زندگی کردن، لمس شدن و ماندن در حافظه معنا پیدا می‌کنند.
+
+### سه. یک روایت
+در جهان زاد، جزئیات زبان سکوت‌اند و فضا، آرام و بی‌ادعا، کیفیت زندگی را روایت می‌کند. این همان روایتی است که زاد در هر اتاق تلاش می‌کند بازگو کند.`,
+      tags: ["سرزمین درسا", "اصالت", "زندگی آرام"],
+    },
+    {
+      id: "brandValue",
+      category: "ارزش‌های برند",
+      title: "ارزش‌های زاد",
+      summary:
+          "ارزش‌های زاد از دقت در طراحی، شناخت درست فضا و توجه به شیوه‌ی واقعی زندگی در خانه می‌آیند.",
+      content: `### یک. دقت پیش از نمایش
+ارزش‌های زاد از دقت در طراحی، شناخت درست فضا و توجه به شیوه‌ی واقعی زندگی در خانه می‌آیند. زاد فضای داخلی را فقط ترکیبی از اجزای زیبا نمی‌بیند؛ برای ما مهم است که فضا چطور استفاده می‌شود، چطور آرامش می‌سازد، چطور میزبان زندگی روزمره و لحظه‌های شخصی صاحب خانه می‌شود.
+
+### دو. زیبایی همراه با عملکرد
+در نگاه زاد، زیبایی زمانی معنا دارد که با عملکرد همراه باشد. تناسبات، مسیر حرکت، محل نگهداری، نور، جنس، دوام و جزئیاتی که شاید در نگاه اول دیده نشوند، همگی بر کیفیت زندگی در فضا اثر می‌گذارند.
+
+### سه. لوکس بدون نمایش
+لوکس بودن برای زاد به معنای اغراق یا نمایش نیست؛ ما آن را در طراحی سنجیده، اجرای دقیق و هماهنگی میان فرم و کاربرد می‌بینیم — فضایی که با گذر زمان همچنان درست، آرام و ارزشمند باقی می‌ماند. زاد فضاهایی می‌سازد که شخصیت دارند اما خودنمایی نمی‌کنند؛ فضاهایی که زندگی در آن‌ها ساده‌تر، منظم‌تر و خوشایندتر می‌شود.`,
+      tags: ["دقت", "عملکرد", "پرهیز از نمایش"],
+    },
+    {
+      id: "csr",
+      category: "مسئولیت‌های اجتماعی",
+      title: "مسئولیت‌های اجتماعی شرکت",
+      summary:
+          "چگونگی بازگرداندن صنعت، کرامت و سرپرستی به جوامعی که سنگِ ما را شکل می‌دهند.",
+      content: `### یک. هم‌ورزی صنعت
+آتلیه یک کارآموزی چندساله را در توسکانی ترتیب می‌دهد تا فن برش دستی و مونتاژ خشک را به نسل تازه‌ای از سنگ‌بُران بسپارد. هم‌ورزان از روز نخست حقوق می‌گیرند و نامشان بر تک‌سنگ‌هایی که پایان می‌دهند ثبت می‌شود.
+
+### دو. سرپرستی معدن
+ما تنها از معادن ثبت‌شماۀ راپولانو و تراورتن با برنامه‌های احیا می‌خریم. به ازای هر بلوک برش، سهمی سنجیده به بازسازی آب‌گذاری و منظرِ حوضه بازمی‌گردد.
+
+### سه. رفاه آتلیه
+استودیوهای فلورانس و میلان با هفتۀ چهارروزۀ ساخت کار می‌کنند، با درمان پولی، روزهای یادگیری پیوسته و سهم سود که به دست‌هایی پخش می‌شود که اثر را شکل می‌دهند.`,
+      tags: ["هم‌ورزی صنعت", "سرپرستی معدن", "رفاه آتلیه"],
+    },
+    {
+      id: "sustainability",
+      category: "سرپرستی ماده",
+      title: "پایداری",
+      summary:
+          "پایداری در زاد از طراحی سنجیده آغاز می‌شود و در کیفیت ساخت و مصرف مسئولانه‌ی منابع ادامه پیدا می‌کند.",
+      content: `### یک. مواد سنجیده
+در زاد، پایداری از طراحی سنجیده آغاز می‌شود و در کیفیت ساخت ادامه پیدا می‌کند. انتخاب دقیق مواد اولیه، اندازه‌گیری اصولی و کاهش اتلاف در فرایند تولید و اجرا، بخشی از رویکرد ما برای استفاده‌ی آگاهانه از منابع است.
+
+### دو. ساخته‌شده برای ماندن
+ما فضاها و محصولاتی می‌سازیم که کیفیت و کارایی خود را در گذر زمان حفظ کنند؛ هر چه بهتر ساخته شود، ماندگارتر خواهد بود و کمتر به تغییر یا جایگزینی نیاز خواهد داشت. برای زاد، پایداری یعنی مصرف مسئولانه‌ی منابع و خلق کیفیتی که ارزش خود را در طول زمان حفظ می‌کند.
+
+### سه. آینده‌ای مسئولانه
+توجه به دوام، انتخاب راهکارهای ماندگار و استفاده از تجهیزات کم‌مصرف، ادامه‌ی همین نگاه است؛ رویکردی مسئولانه که میان کیفیت نیازهای امروز و حفظ سرمایه‌های فردا پیوند برقرار می‌کند.`,
+      tags: ["مواد سنجیده", "ساخته‌شده برای ماندن", "مصرف مسئولانه"],
+    },
+  ],
+
   // ─── COLLECTION ────────────────────────────────────────────────────────────
   collection: [
     {
       id: "gavv",
-      number: "N°01",
+      number: "C°01",
       name: "GÁVV",
-      year: "2026",
+      year: "۲۰۲۶",
       designer: "ZAAD",
-      price: "$114,000+",
+      price: "$۱۱۴,۰۰۰+",
       dimensions:
-          "جزیره: بخش A (3.0 متر طول)، بخش B (2.0 متر طول). مساحت واحدهای بلند: 5.4 متر عرض x 2.98 متر ارتفاع",
+          "جزیره: بخش A (۳.۰ متر طول)، بخش B (۲.۰ متر طول). مساحت واحدهای بلند: ۵.۴ متر عرض x ۲.۹۸ متر ارتفاع",
       materials: [
         "روکش چوب اکالیپتوس طبیعی MDF",
         "سنگ راپولانو صیقل‌خورده",
@@ -491,23 +780,41 @@ export const fa = {
           "طراحی شده در ZAAD میلان ZAAD؛ سنگ آسیاب شده و با دست در راپولانو ترمه، توسکانی حکاکی شده است. توسط استاد سنگ‌تراش و کابینت‌ساز امضا شده است.",
       imageUrl:
           "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption: "آشپزخانه GÁVV - جزیره‌های سنگی یکپارچه دوگانه و کابینت‌های اکالیپتوس جامد",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption: "آشپزخانه GÁVV - واحدهای دیواری پاکتی باز با فرهای یکپارچه Gaggenau",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/gavv/gavv-02.jpg",
           orientation: "portrait",
-          caption: "آشپزخانه GÁVV - جزئیات نزدیک از صفحه سنگی طبیعی با سینک زیرکار مشکی",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۰۲",
+        },
+        {
+          url: "/image/gavv/gavv-05.jpg",
+          orientation: "portrait",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۰۵",
+        },
+        {
+          url: "/image/gavv/gavv-06.jpg",
+          orientation: "landscape",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۰۶",
+        },
+        {
+          url: "/image/gavv/gavv-07.jpg",
+          orientation: "portrait",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۰۷",
+        },
+        {
+          url: "/image/gavv/gavv-08.jpg",
+          orientation: "landscape",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۰۸",
+        },
+        {
+          url: "/image/gavv/gavv-09.jpg",
+          orientation: "portrait",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۰۹",
+        },
+        {
+          url: "/image/gavv/gavv-12.jpg",
+          orientation: "portrait",
+          caption: "GÁVV - آرشیو استودیو، پلاک ۱۲",
         },
       ],
       specifications: {
@@ -658,13 +965,13 @@ export const fa = {
     },
     {
       id: "zivv",
-      number: "N°02",
+      number: "C°02",
       name: "ZIVV",
-      year: "2026",
+      year: "۲۰۲۶",
       designer: "ZAAD",
-      price: "$132,000+",
+      price: "$۱۳۲,۰۰۰+",
       dimensions:
-          "جزیره یکپارچه: 1.9 متر طول x 1.2 متر عرض. دیوار واحدهای بلند: 4.8 متر عرض x 2.4 متر ارتفاع",
+          "جزیره یکپارچه: ۱.۹ متر طول x ۱.۲ متر عرض. دیوار واحدهای بلند: ۴.۸ متر عرض x ۲.۴ متر ارتفاع",
       materials: [
         "تراورتن کلاسیکو ایتالیایی",
         "روکش چوب طبیعی از پیش هم‌تراز شده CNC",
@@ -687,23 +994,36 @@ export const fa = {
           "طراحی و نمونه‌سازی شده در ZAAD میلان؛ سنگ تراورتن استخراج شده از معادن سنگ راپولانو، توسکانی. مهندسی کابینت تکمیل شده در لمباردی، ایتالیا.",
       imageUrl:
           "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption: "آشپزخانه ZIVV - جزیره تراورتن یکپارچه و ساختار پایه گردو منحنی",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/zivv/zivv-28.jpg",
           orientation: "portrait",
-          caption: "آشپزخانه ZIVV - درهای کابینت بلند کرم با پروفیل‌های نورپردازی برجسته افقی",
+          caption: "ZIVV - آرشیو استودیو، پلاک ۲۸",
         },
         {
-          url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/zivv/zivv-29.jpg",
           orientation: "landscape",
-          caption: "آشپزخانه ZIVV - ایستگاه قهوه یکپارچه Gaggenau و ستون ذخیره‌سازی",
+          caption: "ZIVV - آرشیو استودیو، پلاک ۲۹",
+        },
+        {
+          url: "/image/zivv/zivv-30.jpg",
+          orientation: "portrait",
+          caption: "ZIVV - آرشیو استودیو، پلاک ۳۰",
+        },
+        {
+          url: "/image/zivv/zivv-31.jpg",
+          orientation: "landscape",
+          caption: "ZIVV - آرشیو استودیو، پلاک ۳۱",
+        },
+        {
+          url: "/image/zivv/zivv-32.jpg",
+          orientation: "portrait",
+          caption: "ZIVV - آرشیو استودیو، پلاک ۳۲",
+        },
+        {
+          url: "/image/zivv/zivv-34.jpg",
+          orientation: "portrait",
+          caption: "ZIVV - آرشیو استودیو، پلاک ۳۴",
         },
       ],
       specifications: {
@@ -826,13 +1146,13 @@ export const fa = {
     },
     {
       id: "rakh",
-      number: "N°03",
+      number: "C°03",
       name: "RÁKH",
-      year: "2026",
+      year: "۲۰۲۶",
       designer: "استودیو ZAAD",
-      price: "$128,000+",
+      price: "$۱۲۸,۰۰۰+",
       dimensions:
-          "جزیره تراش‌خورده: 2.2 متر طول x 1.1 متر عرض. کابینت‌های بلند: 3.6 متر عرض x 2.8 متر ارتفاع",
+          "جزیره تراش‌خورده: ۲.۲ متر طول x ۱.۱ متر عرض. کابینت‌های بلند: ۳.۶ متر عرض x ۲.۸ متر ارتفاع",
       materials: [
         "ساختار MDF اکالیپتوس طبیعی",
         "سنگ اونیکس با رگه‌های طلایی تراش‌خورده با دست",
@@ -857,23 +1177,16 @@ export const fa = {
           "طراحی شده توسط ZAAD میلان ZAAD. نجاری تکمیل شده در فلورانس؛ حکاکی اونیکس تکمیل شده در کارارا، ایتالیا. مهر شده با مهر کلکتیو.",
       imageUrl:
           "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/rakh/rakh-52.jpg",
+          orientation: "portrait",
+          caption: "RÁKH - آرشیو استودیو، پلاک ۵۲",
+        },
+        {
+          url: "/image/rakh/rakh-53.jpg",
           orientation: "landscape",
-          caption: "آشپزخانه RÁKH - جزیره پایه اونیکس تراش‌خورده و صفحات چوبی شبکه‌ای خطی",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1400&q=90",
-          orientation: "portrait",
-          caption: "آشپزخانه RÁKH - نمای نزدیک از پایه اونیکس طلایی تراش‌خورده با دست",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1400&q=90",
-          orientation: "portrait",
-          caption: "آشپزخانه RÁKH - کابینت پاکتی سفارشی باز، نمایش پشت‌توری‌های چرمی برنزه دست‌دوز",
+          caption: "RÁKH - آرشیو استودیو، پلاک ۵۳",
         },
       ],
       specifications: {
@@ -931,13 +1244,13 @@ export const fa = {
     },
     {
       id: "varr",
-      number: "N°04",
+      number: "C°04",
       name: "VARR",
-      year: "2026",
+      year: "۲۰۲۶",
       designer: "ZAAD",
-      price: "$145,000+",
+      price: "$۱۴۵,۰۰۰+",
       dimensions:
-          "جزیره شناور: 2.8 متر طول x 1.2 متر عرض. دیوار واحدهای بلند: 4.8 متر عرض x 2.85 متر ارتفاع",
+          "جزیره شناور: ۲.۸ متر طول x ۱.۲ متر عرض. دیوار واحدهای بلند: ۴.۸ متر عرض x ۲.۸۵ متر ارتفاع",
       materials: [
         "سنگ تراورتن تیره ایتالیایی",
         "بازالت آتشفشانی سیسیلی",
@@ -961,23 +1274,21 @@ export const fa = {
           "طراحی شده در ZAAD میلان ZAAD؛ بازالت آتشفشانی استخراج شده و با دست در نزدیکی کوه اتنا، سیسیل آسیاب شده است. اجزای فولادی در تورین، ایتالیا جعل شده‌اند.",
       imageUrl:
           "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption: "آشپزخانه VARR - تراورتن تیره ایتالیایی و پیشخوان جزیره بازالت سیسیلی شناور عظیم",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/varr/varr-63.jpg",
           orientation: "portrait",
-          caption: "آشپزخانه VARR - کابینت‌های چوبی تیره که فنجان‌های مسی سفارشی و سینی‌های ذخیره‌سازی را نمایش می‌دهند",
+          caption: "VARR - آرشیو استودیو، پلاک ۶۳",
         },
         {
-          url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/varr/varr-64.jpg",
           orientation: "landscape",
-          caption: "آشپزخانه VARR - ترکیب کامل اتاق که جزیره بازالت را نشان می‌دهد که بالای پایه‌های پشتیبانی فلزی شناور است",
+          caption: "VARR - آرشیو استودیو، پلاک ۶۴",
+        },
+        {
+          url: "/image/varr/varr-67.jpg",
+          orientation: "portrait",
+          caption: "VARR - آرشیو استودیو، پلاک ۶۷",
         },
       ],
       specifications: {

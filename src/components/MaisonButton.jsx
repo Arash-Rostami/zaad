@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import {
   ArrowUpRight,
+  ArrowLeft,
   Compass,
   Sparkles,
   Eye,
@@ -30,17 +31,17 @@ const getRelevantIcon = (label) => {
 const getVariantStyles = (variant) => {
   switch (variant) {
     case "solid":
-      return "bg-ink text-on-indicator border border-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-sm";
+      return "bg-ink text-on-indicator border border-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-card-sm";
     case "outline":
-      return "border border-ink/20 text-ink rounded-full text-[10px] tracking-[0.2em] font-semibold uppercase px-8 py-4 bg-transparent";
+      return "border border-ink/20 text-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.2em] font-semibold uppercase px-8 py-4 bg-transparent";
     case "pill-dark":
-      return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[10px] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-sm";
+      return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-card-sm";
     case "pill-light":
-      return "border border-ink/20 text-ink rounded-full text-[9.5px] tracking-[0.2em] font-semibold uppercase px-6 py-3 bg-transparent";
+      return "border border-ink/20 text-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.2em] font-semibold uppercase px-6 py-3 bg-transparent";
     case "ghost":
-      return "text-muted hover:text-ink text-[10px] tracking-widest font-mono uppercase bg-transparent py-1";
+      return "text-muted hover:text-ink text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest font-mono uppercase bg-transparent py-1";
     case "tab":
-      return "text-[11px] font-mono tracking-widest uppercase pb-1 bg-transparent transition-colors";
+      return "text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest uppercase pb-1 bg-transparent transition-colors";
     case "material-choice":
       return "border border-ink/10 rounded-xl p-6 bg-panel-glass hover:bg-panel text-left transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]";
     case "text":
@@ -57,6 +58,9 @@ function MaisonButton({
                         type = "button",
                         disabled = false,
                         hideIcon = false,
+                        icon,
+                        labelClassName = "",
+                        ...rest
                       }) {
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -92,7 +96,7 @@ function MaisonButton({
 
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
 
-  const buttonStyleClass = `relative select-none outline-none focus:outline-none overflow-hidden transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 cursor-pointer ${getVariantStyles(variant)} ${className}`;
+  const buttonStyleClass = `maison-button relative select-none outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent overflow-hidden transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 cursor-pointer ${getVariantStyles(variant)} ${className}`;
 
   const renderContent = () => {
     if (variant === "material-choice") return children;
@@ -100,23 +104,24 @@ function MaisonButton({
     const isPlainString = typeof children === "string";
     if (isPlainString) {
       const label = children;
-      const IconComponent = getRelevantIcon(label);
+      const IconComponent = icon || getRelevantIcon(label);
+      const iconRtlClass = IconComponent === ArrowLeft ? "" : "rtl:-scale-x-100";
       return (
           <span className="relative block overflow-hidden h-6 leading-6">
           <span
               className="block transition-transform duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
               style={{ transform: isHovered ? "translateY(-50%)" : "translateY(0%)" }}
           >
-            <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap px-1">
-              <span className="font-semibold tracking-inherit">{label}</span>
+            <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap px-1 w-max mx-auto">
+              <span className={`font-semibold tracking-inherit ${labelClassName}`}>{label}</span>
               {!hideIcon && (
-                  <IconComponent className="w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0" style={{ opacity: 0.65 }} />
+                  <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass}`} style={{ opacity: 0.65 }} />
               )}
             </span>
-            <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap text-accent px-1">
-              <span className="font-semibold tracking-inherit">{label}</span>
+            <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap text-accent px-1 w-max mx-auto">
+              <span className={`font-semibold tracking-inherit ${labelClassName}`}>{label}</span>
               {!hideIcon && (
-                  <IconComponent className="w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0" />
+                  <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass}`} />
               )}
             </span>
           </span>
@@ -143,6 +148,7 @@ function MaisonButton({
           style={{ x: smoothX, y: smoothY }}
           whileTap={disabled ? undefined : { scale: 0.985 }}
           className={buttonStyleClass}
+          {...rest}
       >
         {isHovered && !disabled && (
             <span

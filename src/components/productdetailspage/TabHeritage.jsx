@@ -1,47 +1,87 @@
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { ShieldCheck, Sparkles } from "lucide-react";
 
-const TabHeritage = memo(function TabHeritage() {
+const DEFAULT_TRANSLATE = (key) => key;
+
+const HERITAGE_PILLARS = Object.freeze([
+    Object.freeze({
+        titleKey: "rawStoneCuration",
+        descKey: "rawStoneCurationDesc",
+    }),
+    Object.freeze({
+        titleKey: "eucalyptusVeneers",
+        descKey: "eucalyptusVeneersDesc",
+    }),
+]);
+
+const PillarCard = memo(function PillarCard({ title, description }) {
     return (
-        <div className="bg-panel-glass rounded-2xl border border-ink/5 p-6 sm:p-10 space-y-8">
-            <div className="max-w-3xl">
-                <div className="flex items-center space-x-2 mb-4">
-                    <Sparkles className="w-4 h-4 text-accent animate-pulse" />
-                    <span className="text-[9px] font-mono tracking-widest text-accent uppercase font-semibold">
-                        CRAFT INTEGRITY SEAL
-                    </span>
-                </div>
-                <h4 className="font-serif text-2xl font-light text-headline leading-snug mb-4">
-                    Architectural Honesty and Spatial Silence
-                </h4>
-                <p className="text-xs sm:text-sm text-muted leading-relaxed font-light mb-6">
-                    Each ZAAD object represents a rigorous response of quiet luxury against dynamic trends. Organized symmetrically across heavy, grounded natural travertine/rapolano stone cores and durable eucalyptus veneers, the design relies strictly on authentic physical materials to establish spiritual calm within the domestic landscape.
-                </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-ink/10 text-xs">
-                <div className="space-y-1.5 p-5 bg-surface-alt/20 rounded-xl">
-                    <h5 className="font-mono text-[10px] font-bold text-accent uppercase">THE RAW STONE CURATION</h5>
-                    <p className="text-muted leading-relaxed font-light">
-                        Milled, shaped, and completed directly inside Tuscan quarries under Carrara. All limestone, travertine, and onyx blocks are hand-polished using natural acid-free waxes to maintain historic texture honesty.
-                    </p>
-                </div>
-                <div className="space-y-1.5 p-5 bg-surface-alt/20 rounded-xl">
-                    <h5 className="font-mono text-[10px] font-bold text-accent uppercase">
-                        EUCALYPTUS VENEERS AND SADDLE LEATHER
-                    </h5>
-                    <p className="text-muted leading-relaxed font-light">
-                        Natural eucalyptus heartwoods overlaid at 22mm onto water-resistant structural cores. Accompanied by solid patinated brass and iron hardware cylinders wrapped in genuine Italian saddle leathers.
-                    </p>
-                </div>
-            </div>
-
-            <div className="flex items-center space-x-3 text-[10px] font-mono tracking-widest text-accent justify-center pt-6">
-                <ShieldCheck className="w-4 h-4" />
-                <span>ISSUED CERTIFICATE OF PROVENANCE SIGNED BY THE MASTER DESIGNER</span>
-            </div>
+        <div className="space-y-1.5 p-5 bg-surface-alt/20 rounded-xl">
+            <h5 className="font-mono text-[length:calc(11px*var(--zaad-font-scale))] font-bold text-accent uppercase">
+                {title}
+            </h5>
+            <p className="text-muted leading-relaxed font-light rtl:text-justify">
+                {description}
+            </p>
         </div>
     );
 });
 
-export default TabHeritage;
+function TabHeritage({ t }) {
+    const translate = typeof t === "function" ? t : DEFAULT_TRANSLATE;
+
+    const craftSeal = useMemo(() => translate("craftIntegritySeal"), [translate]);
+    const architecturalHonesty = useMemo(
+        () => translate("architecturalHonesty"),
+        [translate]
+    );
+    const heritageIntro = useMemo(() => translate("heritageIntro"), [translate]);
+    const certificateOfProvenance = useMemo(
+        () => translate("certificateOfProvenance"),
+        [translate]
+    );
+
+    const pillars = useMemo(() => {
+        return HERITAGE_PILLARS.map(({ titleKey, descKey }) => ({
+            key: titleKey,
+            title: translate(titleKey),
+            description: translate(descKey),
+        }));
+    }, [translate]);
+
+    return (
+        <div className="bg-panel-glass rounded-2xl border border-ink/5 p-6 sm:p-10 space-y-8">
+            <div className="max-w-3xl">
+                <div className="flex items-center space-x-2 mb-4">
+                    <Sparkles className="w-4 h-4 text-accent" />
+                    <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-accent uppercase font-semibold">
+                        {craftSeal}
+                    </span>
+                </div>
+                <h4 className="font-serif text-2xl font-light text-headline leading-snug mb-4">
+                    {architecturalHonesty}
+                </h4>
+                <p className="text-xs sm:text-sm text-muted leading-relaxed font-light mb-6 rtl:text-justify">
+                    {heritageIntro}
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-ink/10 text-xs">
+                {pillars.map(({ key, title, description }) => (
+                    <PillarCard
+                        key={key}
+                        title={title}
+                        description={description}
+                    />
+                ))}
+            </div>
+
+            <div className="flex items-center space-x-3 text-[length:calc(11px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-accent justify-center pt-6">
+                <ShieldCheck className="w-4 h-4" />
+                <span>{certificateOfProvenance}</span>
+            </div>
+        </div>
+    );
+}
+
+export default memo(TabHeritage);

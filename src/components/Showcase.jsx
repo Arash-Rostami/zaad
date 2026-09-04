@@ -10,7 +10,7 @@ import ProductPanel from "./showcase/ProductPanel";
 import ShowcaseLightbox from "./showcase/Lightbox";
 
 export default function Showcase({ onInquireItem, onViewDetails }) {
-    const { t, data, getItemTranslations } = useLanguage();
+    const { t, data, isFarsi } = useLanguage();
     const collection = data("collection") || [];
     const showcase = useShowcase();
     const { selectedItem } = showcase;
@@ -20,13 +20,12 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
     return (
         <section
             id="collection"
-            className="py-24 md:py-36 bg-surface px-6 sm:px-12 max-w-7xl mx-auto border-b border-ink/10"
+            className="section-y bg-surface px-6 sm:px-12 max-w-7xl mx-auto border-b border-ink/10"
         >
             <CollectionTabs
                 collection={collection}
                 selectedItem={selectedItem}
                 selectItem={showcase.selectItem}
-                getItemTranslations={getItemTranslations}
                 t={t}
             />
 
@@ -43,8 +42,8 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                     <ProductPanel
                         selectedItem={selectedItem}
                         showcase={showcase}
-                        getItemTranslations={getItemTranslations}
                         t={t}
+                        isFarsi={isFarsi}
                         onInquireItem={onInquireItem}
                         onViewDetails={onViewDetails}
                     />
@@ -55,6 +54,8 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                 selectedItem={selectedItem}
                 showcase={showcase}
                 onInquireItem={onInquireItem}
+                isRtl={isFarsi}
+                t={t}
             />
         </section>
     );

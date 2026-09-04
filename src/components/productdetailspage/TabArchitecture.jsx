@@ -1,38 +1,92 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
-function SpecCard({ title, heading, overview, partA, partB, listSpecs, listLabel }) {
+const EMPTY_ARRAY = Object.freeze([]);
+
+const SpecCard = memo(function SpecCard({
+                                            title,
+                                            heading,
+                                            overview,
+                                            partA,
+                                            partB,
+                                            listSpecs,
+                                            listLabel,
+                                            isFarsi,
+                                        }) {
+    const wrappedOverview = useMemo(
+        () => wrapLatinRuns(overview ?? "", isFarsi),
+        [overview, isFarsi]
+    );
+
+    const parts = useMemo(() => {
+        const items = [];
+        if (partA) items.push(partA);
+        if (partB) items.push(partB);
+        return items;
+    }, [partA, partB]);
+
+    const specs = useMemo(() => {
+        if (!Array.isArray(listSpecs)) return EMPTY_ARRAY;
+        return listSpecs.map((s) => ({
+            raw: s,
+            wrapped: wrapLatinRuns(s ?? "", isFarsi),
+        }));
+    }, [listSpecs, isFarsi]);
+
+    const hasSpecs = specs.length > 0;
+
     return (
         <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col justify-between">
             <div>
                 <div className="flex items-center space-x-2 mb-4">
                     <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-                    <span className="text-[9.5px] font-mono tracking-[0.25em] text-accent uppercase font-semibold">
+                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-[0.25em] text-accent uppercase font-semibold">
                         {title}
                     </span>
                 </div>
-                <h4 className="font-serif text-lg font-light text-headline mb-3">{heading}</h4>
-                <p className="text-xs text-muted leading-relaxed font-light mb-6">{overview}</p>
+                <h4 className="font-serif text-lg font-light text-headline mb-3">
+                    {heading}
+                </h4>
+                <p className="text-xs text-muted leading-relaxed font-light mb-6 rtl:text-justify">
+                    {wrappedOverview}
+                </p>
                 <div className="space-y-4">
-                    {[partA, partB].filter(Boolean).map((part, i) => (
-                        <div key={i} className="bg-surface-alt/30 p-4 rounded-xl">
-                            <h5 className="font-mono text-[9px] font-bold text-accent uppercase mb-1.5">{part.title}</h5>
-                            <ul className="list-disc list-inside space-y-1 text-[10.5px] text-muted leading-relaxed font-light">
-                                {part.bullets.map((b, bIdx) => <li key={bIdx}>{b}</li>)}
+                    {parts.map((part, i) => (
+                        <div
+                            key={part.title || i}
+                            className="bg-surface-alt/30 p-4 rounded-xl"
+                        >
+                            <h5 className="font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-bold text-accent uppercase mb-1.5">
+                                {part.title}
+                            </h5>
+                            <ul className="list-disc list-inside space-y-1 text-xs text-muted leading-relaxed font-light">
+                                {Array.isArray(part.bullets) &&
+                                    part.bullets.map((b, bIdx) => (
+                                        <li key={`${part.title || i}-bullet-${bIdx}`}>
+                                            {wrapLatinRuns(b ?? "", isFarsi)}
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                     ))}
                 </div>
             </div>
-            {listSpecs && (
+
+            {hasSpecs && (
                 <div className="mt-8 border-t border-ink/10 pt-6">
-                    <span className="text-[8.5px] font-mono tracking-widest text-muted block uppercase mb-3">
+                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-widest text-muted block uppercase mb-3">
                         {listLabel}
                     </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-mono">
-                        {listSpecs.map((s, sIdx) => (
-                            <div key={sIdx} className="flex items-center space-x-1.5 p-2 bg-panel/60 dark:bg-panel/5 rounded border border-ink/5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[length:calc(11px*var(--zaad-font-scale))] font-mono">
+                        {specs.map(({ raw, wrapped }, sIdx) => (
+                            <div
+                                key={raw || sIdx}
+                                className="flex items-center space-x-1.5 p-2 bg-panel/60 dark:bg-panel/5 rounded border border-ink/5"
+                            >
                                 <span className="text-accent">▪</span>
-                                <span className="truncate">{s}</span>
+                                <span title={raw} className="truncate">
+                                    {wrapped}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -40,82 +94,172 @@ function SpecCard({ title, heading, overview, partA, partB, listSpecs, listLabel
             )}
         </div>
     );
-}
+});
 
-export default function TabArchitecture({ item }) {
+const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
+    const overview = tallUnits?.overview;
+    const parts = tallUnits?.parts;
+    const adjacentA = tallUnits?.adjacentA;
+    const adjacentB = tallUnits?.adjacentB;
+    const listSpecs = tallUnits?.listSpecs;
+
+    const wrappedOverview = useMemo(
+        () => wrapLatinRuns(overview ?? "", isFarsi),
+        [overview, isFarsi]
+    );
+
+    const towerRows = useMemo(() => {
+        if (!Array.isArray(parts)) return EMPTY_ARRAY;
+        return parts.map((tower) => ({
+            key: tower?.key ?? "",
+            wrappedKey: wrapLatinRuns(tower?.key ?? "", isFarsi),
+            name: tower?.name ?? "",
+            wrappedName: wrapLatinRuns(tower?.name ?? "", isFarsi),
+        }));
+    }, [parts, isFarsi]);
+
+    const adjacentPlans = useMemo(() => {
+        const items = [];
+        if (adjacentA) {
+            items.push({
+                key: "adjacentA",
+                adj: adjacentA,
+                label: t("ergonomicsPlanA"),
+                reason: wrapLatinRuns(adjacentA.reason ?? "", isFarsi),
+            });
+        }
+        if (adjacentB) {
+            items.push({
+                key: "adjacentB",
+                adj: adjacentB,
+                label: t("ergonomicsPlanB"),
+                reason: wrapLatinRuns(adjacentB.reason ?? "", isFarsi),
+            });
+        }
+        return items;
+    }, [adjacentA, adjacentB, t, isFarsi]);
+
+    const specs = Array.isArray(listSpecs) ? listSpecs : EMPTY_ARRAY;
+    const hasParts = towerRows.length > 0;
+    const hasSpecs = specs.length > 0;
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {item.islandSpecs && (
-                <SpecCard
-                    title="CORE ISLAND GEOMETRIES"
-                    heading="Bi-Monolith Modular Central Core"
-                    overview={item.islandSpecs.overview}
-                    partA={item.islandSpecs.partA}
-                    partB={item.islandSpecs.partB}
-                    listSpecs={item.islandSpecs.listSpecs}
-                    listLabel="CONSTRUCTOR MANUAL SHEETS"
-                />
-            )}
-            {item.tallUnits && (
-                <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col justify-between">
-                    <div>
-                        <div className="flex items-center space-x-2 mb-4">
-                            <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-                            <span className="text-[9.5px] font-mono tracking-[0.25em] text-accent uppercase font-semibold">
-                                TALL CORE ARCHITECTURES
-                            </span>
-                        </div>
-                        <h4 className="font-serif text-lg font-light text-headline mb-3">
-                            Symmetric High-Yield Housing Wall
-                        </h4>
-                        <p className="text-xs text-muted leading-relaxed font-light mb-6">{item.tallUnits.overview}</p>
-                        {item.tallUnits.parts && (
-                            <div className="space-y-2 mb-6 text-[11px]">
-                                <span className="text-[8.5px] font-mono tracking-widest text-muted uppercase block mb-1">
-                                    ZAAD TOWER ROW SCHEDULING
-                                </span>
-                                <div className="grid grid-cols-1 gap-1.5 font-mono">
-                                    {item.tallUnits.parts.map((tower, tIdx) => (
-                                        <div key={tIdx} className="flex items-center justify-between p-2.5 bg-panel-glass dark:bg-panel/5 border border-ink/5 rounded-lg">
-                                            <span className="text-accent font-bold text-[9px] shrink-0 uppercase">{tower.key}</span>
-                                            <span className="text-muted truncate text-right">{tower.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        <div className="space-y-4">
-                            {[
-                                { adj: item.tallUnits.adjacentA, label: "Ergonomics Plan (A-Adjacent)" },
-                                { adj: item.tallUnits.adjacentB, label: "Ergonomics Plan (B-Adjacent)" },
-                            ].filter(({ adj }) => Boolean(adj)).map(({ adj, label }, i) => (
-                                <div key={i} className="bg-surface-alt/30 p-4 rounded-xl">
-                                    <span className="font-mono text-[8px] tracking-widest text-accent block mb-1.5 uppercase">{label}</span>
-                                    <p className="text-[10px] text-muted italic mb-2">{adj.reason}</p>
-                                    <ul className="list-disc list-inside space-y-1 text-[10.5px] text-muted leading-relaxed font-light">
-                                        {adj.bullets.map((b, bIdx) => <li key={bIdx}>{b}</li>)}
-                                    </ul>
+        <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col justify-between">
+            <div>
+                <div className="flex items-center space-x-2 mb-4">
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full" />
+                    <span className="text-[length:max(9px,calc(10.5px*var(--zaad-font-scale)))] font-mono tracking-[0.25em] text-accent uppercase font-semibold">
+                        {t("tallCoreArchitectures")}
+                    </span>
+                </div>
+                <h4 className="font-serif text-lg font-light text-headline mb-3">
+                    {t("symmetricHousingWall")}
+                </h4>
+                <p className="text-xs text-muted leading-relaxed font-light mb-6 rtl:text-justify">
+                    {wrappedOverview}
+                </p>
+
+                {hasParts && (
+                    <div className="space-y-2 mb-6 text-[length:calc(11px*var(--zaad-font-scale))]">
+                        <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-widest text-muted uppercase block mb-1">
+                            {t("zaadTowerRowScheduling")}
+                        </span>
+                        <div className="grid grid-cols-1 gap-1.5 font-mono">
+                            {towerRows.map(({ key, wrappedKey, name, wrappedName }, tIdx) => (
+                                <div
+                                    key={key || tIdx}
+                                    className="flex items-center justify-between p-2.5 bg-panel-glass dark:bg-panel/5 border border-ink/5 rounded-lg"
+                                >
+                                    <span className="text-accent font-bold text-[length:max(9px,calc(9px*var(--zaad-font-scale)))] shrink-0 uppercase">
+                                        {wrappedKey}
+                                    </span>
+                                    <span title={name} className="text-muted truncate text-end">
+                                        {wrappedName}
+                                    </span>
                                 </div>
                             ))}
                         </div>
                     </div>
-                    {item.tallUnits.listSpecs && (
-                        <div className="mt-8 border-t border-ink/10 pt-6">
-                            <span className="text-[8.5px] font-mono tracking-widest text-muted block uppercase mb-3">
-                                HOUSING STRUCTURAL COMPONENTS
+                )}
+
+                <div className="space-y-4">
+                    {adjacentPlans.map(({ key, adj, label, reason }) => (
+                        <div
+                            key={key}
+                            className="bg-surface-alt/30 p-4 rounded-xl"
+                        >
+                            <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-widest text-accent block mb-1.5 uppercase">
+                                {label}
                             </span>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-mono">
-                                {item.tallUnits.listSpecs.map((s, sIdx) => (
-                                    <div key={sIdx} className="flex items-center space-x-1.5 p-2 bg-panel/60 dark:bg-panel/5 rounded border border-ink/5">
-                                        <span className="text-accent">▪</span>
-                                        <span className="truncate">{s}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            <p className="text-[length:calc(11px*var(--zaad-font-scale))] text-muted italic mb-2">
+                                {reason}
+                            </p>
+                            <ul className="list-disc list-inside space-y-1 text-xs text-muted leading-relaxed font-light">
+                                {Array.isArray(adj.bullets) &&
+                                    adj.bullets.map((b, bIdx) => (
+                                        <li key={`${key}-bullet-${bIdx}`}>
+                                            {wrapLatinRuns(b ?? "", isFarsi)}
+                                        </li>
+                                    ))}
+                            </ul>
                         </div>
-                    )}
+                    ))}
+                </div>
+            </div>
+
+            {hasSpecs && (
+                <div className="mt-8 border-t border-ink/10 pt-6">
+                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-widest text-muted block uppercase mb-3">
+                        {t("housingStructuralComponents")}
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[length:calc(11px*var(--zaad-font-scale))] font-mono">
+                        {specs.map((s, sIdx) => (
+                            <div
+                                key={s || sIdx}
+                                className="flex items-center space-x-1.5 p-2 bg-panel/60 dark:bg-panel/5 rounded border border-ink/5"
+                            >
+                                <span className="text-accent">▪</span>
+                                <span title={s} className="truncate">
+                                    {s}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
     );
+});
+
+function TabArchitecture({ item, t, isFarsi }) {
+    if (!item) return null;
+
+    const islandSpecs = item.islandSpecs;
+    const tallUnits = item.tallUnits;
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {islandSpecs && (
+                <SpecCard
+                    title={t("coreIslandGeometries")}
+                    heading={t("biMonolithCore")}
+                    overview={islandSpecs.overview}
+                    partA={islandSpecs.partA}
+                    partB={islandSpecs.partB}
+                    listSpecs={islandSpecs.listSpecs}
+                    listLabel={t("constructorManualSheets")}
+                    isFarsi={isFarsi}
+                />
+            )}
+            {tallUnits && (
+                <TallUnitsCard
+                    tallUnits={tallUnits}
+                    t={t}
+                    isFarsi={isFarsi}
+                />
+            )}
+        </div>
+    );
 }
+
+export default memo(TabArchitecture);

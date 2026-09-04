@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLanguage } from "../services/TranslationService";
+import { useLanguage } from "@/services/TranslationService";
 import useLightbox from "./useLightbox";
 
 export default function useShowcase() {
@@ -7,7 +7,7 @@ export default function useShowcase() {
   const collection = data("collection") || [];
 
   const [selectedItem, setSelectedItem] = useState(() => collection[0]);
-  const [viewMode, setViewMode] = useState("editorial");
+  const [viewMode, setViewMode] = useState("360");
   const [isSpecsExpanded, setIsSpecsExpanded] = useState(false);
   const [zoomCoords, setZoomCoords] = useState({ x: 50, y: 50 });
   const [isZooming, setIsZooming] = useState(false);
@@ -17,7 +17,7 @@ export default function useShowcase() {
   const selectItem = (item) => {
     setSelectedItem(item);
     lightbox.setActiveImageIndex(0);
-    setViewMode("editorial");
+    setViewMode("360");
   };
 
   const handleNextImage = () => {

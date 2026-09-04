@@ -1,6 +1,8 @@
 import {notFound} from "next/navigation";
 import {en} from "@/lib/i18n/en";
+import {fa} from "@/lib/i18n/fa";
 import {getServerDictionary} from "@/lib/i18n/server";
+import {resolveCollectionImages} from "@/lib/collectionImages";
 import {MetadataService} from "@/services/MetaDataService";
 import JsonLd from "@/components/JsonLd";
 import ProductPageClient from "./ProductPageClient";
@@ -25,11 +27,14 @@ export default async function ProductPage({params}) {
     const item = dict.collection.find((i) => i.id === slug) ?? null;
     if (!item) notFound();
 
-    const {schemas} = await MetadataService.forCollection(item);
+    const lang = dict === fa ? "fa" : "en";
+    const resolvedItem = {...item, images: resolveCollectionImages(item, lang)};
+
+    const {schemas} = await MetadataService.forCollection(resolvedItem);
     return (
         <>
             <JsonLd schemas={schemas}/>
-            <ProductPageClient item={item}/>
+            <ProductPageClient item={resolvedItem}/>
         </>
     );
 }

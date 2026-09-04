@@ -1,20 +1,10 @@
 "use client";
 
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {AnimatePresence, motion} from "motion/react";
 import {defaultLanguage, languages} from "@/lib/i18n/config";
 import {en} from "@/lib/i18n/en";
 import {fa} from "@/lib/i18n/fa";
-
-const translationMap = {
-    en: () => import("../lib/i18n/en").then(m => m.en),
-    fa: () => import("../lib/i18n/fa").then(m => m.fa)
-};
-
-export const useTranslation = async (locale) => {
-    const loader = translationMap[locale] || translationMap[defaultLanguage];
-    return await loader();
-};
 
 const registry = {en, fa};
 
@@ -24,7 +14,6 @@ const LanguageContext = createContext({
     },
     t: (key) => key,
     data: (key) => null,
-    getItemTranslations: () => null,
     dir: "ltr",
     isFarsi: false,
 });
@@ -32,7 +21,7 @@ const LanguageContext = createContext({
 export function LanguageProvider({initialLanguage = defaultLanguage, children}) {
     const [language, setLanguageState] = useState(initialLanguage);
 
-    const setLanguage = (lang) => {
+    const setLanguage = useCallback((lang) => {
         setLanguageState(lang);
         try {
             localStorage.setItem("zaad_preferred_language", lang);
@@ -40,7 +29,7 @@ export function LanguageProvider({initialLanguage = defaultLanguage, children}) 
             console.warn("Could not persist language selection", e);
         }
         document.cookie = `zaad_preferred_language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
-    };
+    }, []);
 
     useEffect(() => {
         const root = document.documentElement;
@@ -53,29 +42,42 @@ export function LanguageProvider({initialLanguage = defaultLanguage, children}) 
         }
     }, [language]);
 
+
+    useEffect(() => {
+        let stored = null;
+        try {
+            const match = document.cookie.match(/(?:^|; )zaad_preferred_language=([^;]+)/);
+            stored = match ? decodeURIComponent(match[1]) : localStorage.getItem("zaad_preferred_language");
+        } catch (e) {
+            // ignore — defaults remain
+        }
+        if (stored && languages.some((l) => l.code === stored) && stored !== language) {
+            setLanguageState(stored);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const dir = language === "fa" ? "rtl" : "ltr";
     const isFarsi = language === "fa";
     const translations = registry[language] || registry[defaultLanguage];
 
-    const t = (key) =>
-        translations[key] ?? registry[defaultLanguage][key] ?? key;
+    const t = useCallback(
+        (key) => translations[key] ?? registry[defaultLanguage][key] ?? key,
+        [translations]
+    );
 
-    const data = (key) =>
-        translations[key] ?? registry[defaultLanguage][key] ?? null;
+    const data = useCallback(
+        (key) => translations[key] ?? registry[defaultLanguage][key] ?? null,
+        [translations]
+    );
 
-    const getItemTranslations = (id) => {
-        const cleanId = id.toLowerCase();
-        return (
-            translations.items?.[cleanId] ??
-            registry[defaultLanguage].items?.[cleanId] ??
-            null
-        );
-    };
+    const value = useMemo(
+        () => ({language, setLanguage, t, data, dir, isFarsi}),
+        [language, setLanguage, t, data, dir, isFarsi]
+    );
 
     return (
-        <LanguageContext.Provider
-            value={{language, setLanguage, t, data, getItemTranslations, dir, isFarsi}}
-        >
+        <LanguageContext.Provider value={value}>
             <div
                 style={{direction: dir}}
                 className={isFarsi ? "font-sans rtl" : "font-sans ltr"}
@@ -90,7 +92,7 @@ export function LanguageProvider({initialLanguage = defaultLanguage, children}) 
                         }}
                         exit={{
                             opacity: 0,
-                            transition: {duration: 0.05, ease: "linear"},
+                            transition: {duration: 0.5, ease: [0.16, 1, 0.3, 1]},
                         }}
                         className="w-full h-full min-h-screen"
                     >

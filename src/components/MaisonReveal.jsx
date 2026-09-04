@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
+
+const COUTURE_EASE = [0.16, 1, 0.3, 1];
 
 const getVariants = (variant, delay, duration) => {
   switch (variant) {
@@ -60,6 +62,93 @@ const getVariants = (variant, delay, duration) => {
   }
 };
 
+// Per-line mask reveal: takes a single element child whose own child is a
+// plain string (e.g. <MaisonReveal variant="lines"><h2>{t("key")}</h2></MaisonReveal>).
+// Measures the natural line breaks after mount, re-renders each visual line
+// inside its own overflow-hidden mask, and staggers the masks upward. Once the
+// last line lands it re-renders the plain text again so later reflows
+// (font-scale change, resize, locale switch remount) can never be clipped.
+function LinesReveal({ children, delay, duration, threshold }) {
+  const child = React.Children.only(children);
+  const { children: text, ...tagProps } = child.props;
+  const Tag = child.type;
+  const measureRef = useRef(null);
+  const measuredTextRef = useRef(null);
+  const [lines, setLines] = useState(null);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (typeof text !== "string") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDone(true);
+      return;
+    }
+    if (measuredTextRef.current === text) return;
+    // A text change without a remount re-enters the measurement pass first —
+    // the mask render carries no ref, so flip back before measuring.
+    setDone(false);
+    if (lines !== null) {
+      setLines(null);
+      return;
+    }
+    const el = measureRef.current;
+    if (!el) return;
+    const words = Array.from(el.querySelectorAll("[data-word]"));
+    if (!words.length) return;
+    const groups = [];
+    let lastTop = null;
+    words.forEach((word) => {
+      const top = Math.round(word.offsetTop);
+      if (top !== lastTop) {
+        groups.push([]);
+        lastTop = top;
+      }
+      groups[groups.length - 1].push(word.textContent);
+    });
+    measuredTextRef.current = text;
+    setLines(groups.map((group) => group.join(" ")));
+  }, [text, lines]);
+
+  if (typeof text !== "string" || done) {
+    return <Tag {...tagProps}>{text}</Tag>;
+  }
+
+  if (lines === null) {
+    const words = text.split(" ").filter(Boolean);
+    return (
+      <Tag {...tagProps} ref={measureRef}>
+        {words.map((word, i) => (
+          <React.Fragment key={i}>
+            <span data-word>{word}</span>
+            {i < words.length - 1 ? " " : null}
+          </React.Fragment>
+        ))}
+      </Tag>
+    );
+  }
+
+  return (
+    <Tag {...tagProps}>
+      {lines.map((line, i) => (
+        <span key={i} className="block overflow-hidden">
+          <motion.span
+            className="block"
+            initial={{ y: "115%" }}
+            whileInView={{ y: "0%" }}
+            viewport={{ once: true, amount: threshold }}
+            transition={{ duration: duration * 0.75, delay: delay + i * 0.12, ease: COUTURE_EASE }}
+            onAnimationComplete={() => {
+              if (i === lines.length - 1) setDone(true);
+            }}
+          >
+            {line}
+          </motion.span>
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
 function MaisonReveal({
                         children,
                         variant = "unveil",
@@ -72,6 +161,14 @@ function MaisonReveal({
       () => getVariants(variant, delay, duration),
       [variant, delay, duration]
   );
+
+  if (variant === "lines") {
+    return (
+      <LinesReveal delay={delay} duration={duration} threshold={threshold}>
+        {children}
+      </LinesReveal>
+    );
+  }
 
   return (
       <motion.div

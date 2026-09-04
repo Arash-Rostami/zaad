@@ -3,7 +3,10 @@
 import React from "react";
 import { useLanguage } from "@/services/TranslationService";
 import MaisonReveal from "./MaisonReveal";
+import NoiseBg from "./shared/NoiseBg";
 import { Hammer, ShieldCheck, Sparkles } from "lucide-react";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
+import wrapBrandNames from "@/lib/wrapBrandNames";
 
 const ICON_MAP = { I: Hammer, II: Sparkles, III: ShieldCheck };
 
@@ -19,33 +22,33 @@ const STATIC_BACKGROUND = (
 );
 
 function Advantages() {
-    const { t, data } = useLanguage();
+    const { t, data, isFarsi } = useLanguage();
     const cards = data("advantageCards") || [];
 
     return (
         <section
             id="advantages"
-            className="relative py-24 md:py-36 bg-surface-overlay px-6 sm:px-12 border-b border-ink/10 overflow-hidden text-left rtl:text-right"
+            className="relative section-y bg-surface-overlay px-6 sm:px-12 border-b border-ink/10 overflow-hidden text-left rtl:text-right"
         >
             {STATIC_BACKGROUND}
 
             <div className="max-w-7xl mx-auto relative z-10">
-                <div className="max-w-3xl mb-16 md:mb-24">
-                    <MaisonReveal variant="unveil" delay={0.1}>
-                        <span className="text-[11px] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                <div className="max-w-3xl mb-12 md:mb-16">
+                    <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
+                        <span className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
                             {t("advantagesBadge")}
                         </span>
                     </MaisonReveal>
 
-                    <MaisonReveal variant="unveil" delay={0.2}>
-                        <h2 className="text-3xl md:text-5xl font-serif font-light tracking-tight leading-tight text-[var(--text-primary)]">
+                    <MaisonReveal variant="lines" delay={0.3} threshold={0.01}>
+                        <h2 className="text-3xl md:text-5xl font-serif font-light tracking-tight leading-tight text-[var(--text-primary)] text-glow-subtle">
                             {t("advantagesTitle")}
                         </h2>
                     </MaisonReveal>
 
-                    <MaisonReveal variant="unveil" delay={0.3}>
+                    <MaisonReveal variant="unveil" delay={0.5} threshold={0.01}>
                         <div className="h-[1px] w-12 bg-[var(--border-color-15)] my-6"></div>
-                        <p className="text-sm md:text-base text-[var(--text-secondary)] leading-relaxed font-light">
+                        <p className="text-sm md:text-base text-[var(--text-secondary)] leading-relaxed font-light rtl:text-justify">
                             {t("advantagesSub")}
                         </p>
                     </MaisonReveal>
@@ -56,11 +59,12 @@ function Advantages() {
                         const IconComponent = ICON_MAP[card.num] || Hammer;
                         return (
                             <div key={card.id}>
-                                <MaisonReveal variant="slide-up-royal" delay={0.1 * idx}>
+                                <MaisonReveal variant="slide-up-royal" delay={0.75 + 0.15 * idx}>
                                     <div className="group h-full relative p-8 md:p-10 bg-[var(--bg-card-trans)] border border-[var(--border-color-10)] hover:border-[var(--text-bronze)]/50 transition-all duration-700 rounded-2xl flex flex-col justify-between overflow-hidden">
+                                        <NoiseBg filterId={`advantageNoise-${card.id}`} revealOnHover />
                                         <div className="absolute inset-0 bg-gradient-to-br from-transparent to-accent/3 dark:to-accent/3 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-                                        <div>
+                                        <div className="relative z-10">
                                             <div className="flex justify-between items-center mb-8">
                                                 <span className="font-mono text-xs tracking-widest text-[var(--text-bronze)] font-semibold">
                                                     {card.num}
@@ -71,17 +75,17 @@ function Advantages() {
                                             </div>
 
                                             <h3 className="text-lg md:text-xl font-serif font-medium text-[var(--text-primary)] mb-4 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-500">
-                                                {card.title}
+                                                {wrapBrandNames(card.title)}
                                             </h3>
 
-                                            <p className="text-xs md:text-sm text-[var(--text-secondary)] leading-relaxed font-light font-sans">
-                                                {card.desc}
+                                            <p className="text-xs md:text-sm text-[var(--text-secondary)] leading-relaxed font-light font-sans rtl:text-justify">
+                                                {wrapLatinRuns(card.desc, isFarsi)}
                                             </p>
                                         </div>
 
-                                        <div className="mt-8 pt-4 border-t border-[var(--border-color-10)] flex items-center justify-between">
-                                            <span className="text-[9px] font-mono tracking-widest text-[var(--text-bronze)]/50 uppercase">
-                                                {t("ZAADCertified")}
+                                        <div className="relative z-10 mt-8 pt-4 border-t border-[var(--border-color-10)] flex items-center justify-between">
+                                            <span className="text-[length:calc(10.5px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-bronze)]/50 uppercase">
+                                                {wrapBrandNames(t("ZAADCertified"))}
                                             </span>
                                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-bronze)] scale-75 opacity-30 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500" />
                                         </div>

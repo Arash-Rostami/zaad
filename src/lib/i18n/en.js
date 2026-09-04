@@ -11,59 +11,132 @@ export const en = {
   menuBrowse: "Browse",
   menuInquiry: "Inquiry",
   menuSystemDirectories: "SYSTEM DIRECTORIES",
-  menuLivingShowroom: "01 / Living Showroom",
-  menuLivingShowroomSub: "Monolithic installations & specimen explorer",
-  menuZAADBlueprints: "02 / ZAAD Blueprints",
-  menuZAADBlueprintsSub: "Visual alignment & technical guidelines",
+  menuHouseOfZAADPortalSub: "Return to the digital showroom",
+  menuZAADCatalogue: "02 / ZAAD Catalogue",
+  menuZAADCatalogueSub: "The complete collection, page by page",
   menuJourneyIndex: "JOURNEY INDEX",
   menuOriginsPhilosophy: "Origins & Philosophy",
-  menuChapter1: "CHAPTER I / MANIFESTO",
-  menuCuratedSeries: "The Curated Series",
-  menuChapter2: "CHAPTER II / MONOGRAPHS",
-  menuAcquisitionsCabinet: "Acquisitions Cabinet",
-  menuChapter3: "CHAPTER III / CONCIERGE",
-  menuCuratedSpecimens: "CURATED SPECIMENS",
+  menuChapter1: "CHAPTER I / ABOUT US",
+  menuStoryBrandValue: "Story & Brand Value",
+  menuChapter2: "CHAPTER II / NARRATIVE & VALUES",
+  menuSustainabilityResponsibility: "Sustainability & Responsibility",
+  menuChapter3: "CHAPTER III / STEWARDSHIP",
+  menuCuratedSpecimens: "CURATED COLLECTION",
   menuView: "VIEW",
-  menuDigitalEdition: "DIGITAL EDITION v4.0",
-  menuZAADIndex: "ZAAD SPECIMEN INDEX N°02",
+  editionVersion: "V1.0",
+  audioPlayLabel: "Play ambient sound",
+  audioMuteLabel: "Mute ambient sound",
+  menuZAADIndex: "ZAAD SPECIMEN INDEX C°02",
   menuThemeLabel: "LUME",
+  themeLabelLight: "LMN",
+  themeLabelMid: "ARA",
+  themeLabelDark: "UMB",
+  tooltipLangEn: "Switch to English",
+  tooltipLangFa: "Switch to Farsi",
+  tooltipThemeLight: "Light ambience",
+  tooltipThemeMid: "Mid ambience",
+  tooltipThemeDark: "Dark ambience",
+  menuHouseOfZAAD: "HOUSE OF ZAAD",
+  menuAboutUs: "About Us",
+  aboutEyebrow: "The Atelier",
+  aboutTitle: "An Atelier of Interior Architecture",
+  aboutIntro:
+      "ZAAD designs and builds luxury interior spaces, with particular expertise in kitchens, wardrobes and interiors — bringing a considered eye for quality and elegance to the scale of the home. Behind every project stands a 9,000 sqm production facility, 150 skilled specialists, an 8-person team of designers and architects, and a network of specialist partners who carry an idea from concept through to construction.",
+  aboutBackToShowroom: "Back to Showroom",
+  callStudio: "Call the Atelier",
+  callStudioSub: "Florence switchboard — Mon–Fri, 09–18 CET",
+  studioPhone: "+39 055 0000 000",
+  studioPhoneTel: "+3905500000000",
+
+  // ── House-of-ZAAD chapters: hero + stats + cross-links ──────────────────────
+  sustainabilityHeroEyebrow: "Material Stewardship",
+  sustainabilityHeroTitle: "Quality Is a Form of Sustainability",
+  sustainabilityHeroIntro:
+      "Sustainability begins in the studio, not the factory floor — in material choices, considered proportions, and a discipline against waste that carries through to the last detail of execution.",
+  csrHeroEyebrow: "Corporate Responsibility",
+  csrHeroTitle: "Returning Craft, Dignity and Stewardship",
+  csrHeroIntro:
+      "How the maison gives back to the hands and the landscapes that shape its stone — a quiet responsibility carried across generations, not a season.",
+  storyHeroEyebrow: "Origins",
+  storyHeroTitle: "Growth in the Land of Dorsa",
+  storyHeroIntro:
+      "A way of seeing that finds beauty in authenticity, elegance, and the quality of living — carried from the world of objects into the spaces that hold a life.",
+  brandValueHeroEyebrow: "Brand Values",
+  brandValueHeroTitle: "Beauty, Held to Function",
+  brandValueHeroIntro:
+      "Luxury is not exaggeration or display. It is precision, restraint, and a harmony between form and function that holds its value over time.",
+  aboutStats: [
+    { value: "9,000 m²", label: "Production Facility" },
+    { value: "150", label: "Skilled Specialists" },
+    { value: "8", label: "Designers & Architects" },
+  ],
+  sustainabilityStats: [
+    { value: "0%", label: "Quarry Refuse" },
+    { value: "92%", label: "Stone Under 200km" },
+    { value: "100%", label: "Re-honable Objects" },
+  ],
+  csrStats: [
+    { value: "4", label: "Day Making Week" },
+    { value: "100%", label: "Fellows Salaried" },
+    { value: "1:1", label: "Block to Basin Return" },
+  ],
+  crossLinkHeading: "Continue Through the House",
+  crossLinkAbout: "The atelier, the team and the process behind every ZAAD interior.",
+  crossLinkStoryValue: "The perspective and values behind every ZAAD interior.",
+  crossLinkSustainabilityResponsibility: "How ZAAD treats its materials — and the people behind them.",
+  crossLinkReadMore: "Read the chapter",
+  aboutHeroAlt: "ZAAD design atelier — considered interior architecture",
+  storyValueHeroEyebrow: "Narrative & Values",
+  storyValueHeroTitle: "Story & Brand Value",
+  storyValueHeroIntro:
+      "ZAAD designs and builds luxury interior spaces, with particular expertise in kitchens, wardrobes and interiors — bringing a considered eye for quality and elegance to the scale of the home. Behind every project stands a 9,000 sqm production facility, 150 skilled specialists, an 8-person team of designers and architects, and a network of specialist partners who carry an idea from concept through to construction.",
+  storyValueHeroAlt: "ZAAD interior architecture — narrative and values in one frame",
+  storyHeroAlt: "ZAAD interior architecture — quiet, considered living spaces",
+  brandValueHeroAlt: "ZAAD interior details — proportion, light and material in harmony",
+  sustainabilityResponsibilityHeroEyebrow: "Material & Community Stewardship",
+  sustainabilityResponsibilityHeroTitle: "Sustainability & Responsibility",
+  sustainabilityResponsibilityHeroIntro:
+      "ZAAD designs and builds luxury interior spaces, with particular expertise in kitchens, wardrobes and interiors — bringing a considered eye for quality and elegance to the scale of the home. Behind every project stands a 9,000 sqm production facility, 150 skilled specialists, an 8-person team of designers and architects, and a network of specialist partners who carry an idea from concept through to construction.",
+  sustainabilityResponsibilityHeroAlt: "ZAAD atelier — materials and the hands that shape them",
+  sustainabilityHeroAlt: "ZAAD production studio — considered material selection and craftsmanship",
+  csrHeroAlt: "ZAAD atelier — the hands and welfare behind the work",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────
-  bespokeObjects: "Bespoke Sculptural Objects",
-  heroTitle_1: "Simplicity is the",
-  heroTitle_italic: "ultimate level",
-  heroTitle_2: "of sophistication.",
-  heroDesc:
-      "The digital showroom of ZAAD. We design physical, numbered objects crafted in Tuscan quarries and Milanese ZAADs, designed to outlive trends.",
-  exploreCollection: "Explore Collection ↓",
-  ourPhilosophy: "Our Philosophy",
-  monograph: "Maison Monograph 2026",
-  heroQuote:
-      "The spacing of an object is as critical as the material itself. We define physical emptiness.",
-  estFlorence: "EST. MCMLXXXIX — FLORENCE",
-  heroExhibition: "EXHIBITION 01",
-  heroTravertineBase: "Rapolano Travertine Base",
+  bespokeObjects: "ZAAD Interior Architecture Atelier",
+  heroTitle_1: "Beauty found in",
+  heroTitle_italic: "authenticity, elegance,",
+  heroTitle_2: "and the quality.",
+  heroDesc: "The ZAAD Digital Showroom. Rooted in the land of Dorsa, our four distinct collections seamlessly blend the boldness of modern design with authentic architectural heritage. We craft luxury interior spaces that bring enduring quality, material stewardship, and quiet sophistication to the scale of home.",
+  exploreCollection: "Explore the Collections ↓",
+  ourPhilosophy: "Our Heritage & Vision",
+  monograph: "Comprehensive Catalogue",
+  heroQuote: "Luxury is not exaggeration or display; it is precision, restraint, and the harmony between form and function that preserves its value over time.",
+  estFlorence: "Born in the Land of Dorsa",
+  heroExhibition: "Four Distinct Collections",
+  heroTravertineBase: "Precision, Elegance, and Harmony",
+  heroPauseVideo: "Pause film",
+  heroPlayVideo: "Play film",
 
   // ─── STORY / MANIFESTO ─────────────────────────────────────────────────────
   manifestoBadge: "The Manifesto",
   storyQuote: "To assemble a space is to curate the silence within it.",
-  storyEmilio: "— EMILIO CAVALCANTI, HEAD CUTTER",
-  storyTactile: "The tactile memory of Travertine stone lingers forever on human touch.",
-  rawOrigin: "RAW ORIGIN",
-  quarryLocation: "Rapolano Classico Quarry, Section IV (Tuscany)",
+  storyFixturesLabel: "At the heart of",
+  storyFixturesText: "the GÁVV, ZIVV, RÁKH, and VARR collections.",
+  storyUtensilAlt: "ZAAD kitchen collection fixtures — precision culinary hardware",
+  storyFrameLabel: "View gallery frame {index} of {total}",
   storyEndText:
       "Rather than forcing items into noisy digital layouts, we treat each creation as curated museum inventory. When you place one of our works in your architectural residence, you are setting down a quiet reference point that will persist for centennials.",
-  weeksAssembly: "Weeks Assembly",
-  assemblyDays: "14",
-  sourcedItaly: "Sourced in Italy",
-  curatedCount: "3",
-  curatedLabel: "Curated Objects",
-  storyOurStory: "OUR STORY",
+  storySpecialistsCount: "150",
+  storySpecialistsLabel: "Skilled Specialists",
+  storyOriginLabel: "Made in Iran",
+  storyOriginValue: "100%",
+  collectionsCount: "4",
+  collectionsLabel: "Collections",
   storyTitle: "Precision, delicacy, and seamless harmony",
   storyQuote2:
       "Each collection is crafted to embrace, organize, and define space, bringing poetic balance to living.",
   storyP1:
-      "ZAAD looks at the world through the lens of precision and delicacy; where beauty is not confined to form but flows in the harmony between functionality, details, and accuracy. Powered by Dorsa, our four distinct kitchen collections—GÁVV, ZIVV, RÁKH, and VAAR—blend the boldness of modern design with authentic roots and architectural lines.",
+      "ZAAD looks at the world through the lens of precision and delicacy; where beauty is not confined to form but flows in the harmony between functionality, details, and accuracy. Powered by Dorsa, our four distinct kitchen collections—GÁVV, ZIVV, RÁKH, and VARR—blend the boldness of modern design with authentic roots and architectural lines.",
   storyP2:
       "Each collection is crafted to embrace, organize, and define space, bringing steadfast structure and poetic balance to everyday living.",
 
@@ -97,6 +170,7 @@ export const en = {
   showcaseNext: "NEXT",
   showcaseYear: "YEAR",
   showcaseLandscape: "LANDSCAPE VIEW",
+  showcaseTactileLens: "TACTILE LENS (3.0X)",
   showcasePortrait: "PORTRAIT VIEW",
   showcaseArchiveCollection: "ARCHIVE COLLECTION",
   showcaseBespokeCommission: "BESPOKE COMMISSION",
@@ -116,7 +190,6 @@ export const en = {
   showcasePrivateInquiry: "Initiate Private Inquiry",
   showcaseAirfreight:
       "Complimentary insured airfreight with whiteglove placement globally.",
-  showcaseDiscoverPerspectives: "DISCOVER OBJECT PERSPECTIVES",
 
   // ─── ADVANTAGES ────────────────────────────────────────────────────────────
   advantagesBadge: "DISTINCTIVE CREDENTIALS",
@@ -235,19 +308,28 @@ export const en = {
   formSuccess:
       "Connection Established. Our representative will contact you in 48 hours with technical specifications.",
   formSubmit: "Initiate Acquisition Process",
+  formErrorNameRequired: "Please enter your name.",
+  formErrorNameTooLong: "Name must be under 100 characters.",
+  formErrorEmailInvalid: "Please enter a valid email address.",
+  formErrorPhoneRequired: "Please enter your phone number.",
+  formErrorPhoneInvalid: "Please enter a valid phone number.",
+  formErrorConsultationInvalid: "Please select a consultation category.",
+  formErrorAppointmentWindowRequired: "Please select a preferred time.",
+  formErrorNoteTooLong: "Notes must be under 2,000 characters.",
+  formErrorGeneric: "Something went wrong. Please try again, or contact us directly.",
   acquisitionsServices: "ACQUISITIONS & SERVICES",
   privateCommissions: "Private Commissions",
   privateCommissionsSub:
-      "Every piece is made individually upon commission. Initiate an acquisition, schedule a private studio visit in Florence, or request architectural design consultations.",
-  acquisitionCard: "Acquisition & Booking Card",
+      "Every piece is made individually upon commission. Initiate an acquisition, schedule a private studio visit, or request architectural design consultations.",
+  acquisitionCard: "Acquisition & Consultation",
   bespokeClientName: "Bespoke Client Name *",
   clientNamePlaceholder: "e.g. Eleanor Vance",
-  secureContactEmail: "Secure Contact Email *",
-  directTelephone: "Direct Telephone (Optional)",
+  secureContactEmail: "Secure Contact Email (Optional)",
+  directTelephone: "Direct Telephone *",
   consultationCategory: "Consultation Category",
-  privateArchiveAcquisition: "Private Archive Acquisition",
-  residentialConsultation: "Residential Consultation ($25k fee)",
-  florenceViewing: "Florence ZAAD Private Viewing",
+  privateArchiveAcquisition: "Purchase & Order from the Collection",
+  residentialConsultation: "Consultation on the Collection",
+  florenceViewing: "In-Person Visit & Consultation at ZAAD",
   customMaterialSpec: "Custom Material Composition Spec",
   archivalSpecs: "Archival Architect Specs & Space Detail",
   spacePlaceholder:
@@ -255,17 +337,39 @@ export const en = {
   submitInquiry: "Submit Secure Inquiry",
   studioReplyStandard: "Studio Reply Standard: Insured within 4-6 business hours.",
   committedToArchive: "Committed to Archive",
+  committedConfirmationBody:
+    "{clientName}, your secure consultation card has been committed to our studio log. A dedicated design director will reach out directly to your coordinate email within 4 hours.",
   sessionRef: "SESSION REF",
   inquireAnotherObject: "Inquire for Another Object",
-  zaadDigitalCurator: "ZAAD Digital Curator",
+  ledgerEyebrow: "Private Register",
+  ledgerTitle: "The Ledger",
+  ledgerGateIntro:
+      "This room is reserved for the keeper of the house. Present your key.",
+  ledgerKeyLabel: "Access Key",
+  ledgerEnter: "Enter the Ledger",
+  ledgerOpening: "Opening...",
+  ledgerInvalidKey: "This key does not open this door.",
+  ledgerEmptyTitle: "A Quiet Ledger",
+  ledgerEmptyDesc:
+      "No inquiries have been committed to the archive yet. The first visitor has yet to arrive.",
+  ledgerEntryCount: "Entries",
+  ledgerLogout: "Close the Ledger",
+  ledgerDelete: "Remove Entry",
+  ledgerDeleteConfirm: "Confirm Removal",
+  ledgerPrev: "Previous",
+  ledgerNext: "Next",
+  ledgerReturnHome: "Return to ZAAD Home",
+  zaadDigitalCurator: "ZAAD - Digital Curator",
+  curatorModelBadge: "AI Assistant",
+  chatDownload: "Download Transcript",
   chatClient: "CLIENT",
-  chatCurator: "CURATOR",
+  chatCurator: "ASSISTANT",
   analyzingParams: "Analyzing composition parameters...",
   chatPlaceholder: "Ask about travertine pairings, room spacing, or materials...",
   curatorWelcome:
-      "Welcome to ZAAD's Private Consultation. I am your Digital Curator. If you are designing or completing an architectural space, describe its qualities, lighting, and layout, and I will recommend specific material compositions or objects from our vault.",
+      "Welcome to ZAAD's Curator Consultation. If you are designing or completing an architectural space, describe its qualities, lighting, and layout, and I will recommend specific material compositions or objects from our vault.",
   curatorError:
-      "The digital curator's transmission is temporarily interrupted. Please fill out our Private Inquiry card to coordinate directly with our Florence team.",
+      "The AI assistant's transmission is temporarily interrupted. Please fill out our Private Inquiry card to coordinate directly with our team.",
 
   // ─── AI ASSISTANT ──────────────────────────────────────────────────────────
   assistantBadge: "AI CONCIERGE ASSISTANT",
@@ -329,7 +433,7 @@ The architecture of ZAAD is designed to eliminate cognitive load and visual nois
 - **Primary Domain Root (Single Multi-Perspective Showroom View)**
   - **I. Hero Entrance Section (First Impression / Monograph Title)**
   - **II. Brand Story Section (Manifesto / Craftsmanship Origin)**
-  - **III. Curated Collection Showcase (Numbered Works - N°01, N°02, N°03)**
+  - **III. Curated Collection Showcase (Numbered Works - C°01, C°02, C°03)**
   - **IV. Material Analysis Explorer (Interactive Tactile Grid)**
   - **V. Concierge Intake Panel (Client inquiry form + Live AI Curator)**
 - **Meta-Directory Segment (Interactive Studio Design Blueprint System)**
@@ -408,6 +512,19 @@ Designed as highly modular, lightweight files to avoid package bloat:
   applianceList: "Appliance Specs",
   zoomHint: "[ Touch-drag or hover over image to pan texture detail ]",
   resolvingSpecimen: "RESOLVING SPECIMEN DETAIL...",
+  lightboxArchiveLabel: "ARCHIVE",
+  lightboxInquireLabel: "INQUIRE ACQUISITION",
+  fontScaleDecreaseLabel: "Decrease text size",
+  fontScaleIncreaseLabel: "Increase text size",
+  scrollToTopLabel: "Scroll to top",
+  scrollToBottomLabel: "Scroll to bottom",
+  lightboxCounterOf: "OF",
+  lightboxEnlargedPerspective: "ENLARGED PERSPECTIVE",
+  lightboxPerspectiveViewFallback: "Perspective View",
+  lightboxMuseumSpecimenCommission: "MUSEUM SPECIMEN COMMISSION",
+  lightboxAcquisitionCommission: "ACQUISITION COMMISSION",
+  lightboxEditorialPerspective: "EDITORIAL PERSPECTIVE",
+  lightboxMacroPerspective: "MACRO PERSPECTIVE",
   inquireThis: "Inquire About This Curated System",
   closeDossier: "Close Specification Dossier",
   tactileLens: "TACTILE LENS (3.0X)",
@@ -415,6 +532,13 @@ Designed as highly modular, lightweight files to avoid package bloat:
   productZAADArchive: "ZAAD ARCHIVE",
   productDirectory: "DIRECTORY",
   productArchitecturalRecord: "ARCHITECTURAL RECORD",
+  productSpin360Label: "360° View",
+  productStudioArchiveIndex: "MUSEUM ARCHIVE INDEX",
+  productStudioViewLabel: "VIEW",
+  productStudioLayoutFallback: "layout",
+  showcaseImageAlt: "{name} (Image {index} view)",
+  showcaseMacroAlt: "{name} (macro view)",
+  productStudioThumbnailAlt: "Perspective thumbnail {index}",
   productCurator: "Curator",
   productZAAD: "ZAAD",
   productRelease: "Release",
@@ -424,6 +548,69 @@ Designed as highly modular, lightweight files to avoid package bloat:
   productLeadTime: "Lead Time Range",
   productInitiateInquiry: "INITIATE PRIVATE CONCIERGE INQUIRY",
   productReturnGrid: "RETURN TO GRID",
+
+  // ─── PRODUCT DETAIL TABS / CTA (SpecsTabs, AcquisitionCTA, Tab*) ────────────
+  tabArchitectureLabel: "MONOLITHIC ANATOMY",
+  tabAppliancesLabel: "GAGGENAU INTEGRATION",
+  tabHeritageLabel: "COMPOSITIONAL INTEGRITY",
+  acquisitionPrivileges: "ACQUISITION PRIVILEGES",
+  acquisitionHeading: "Establish an Archetype of Permanent Symmetry inside Your Home",
+  acquisitionDesc:
+      "Through ZAAD concierge services, each bespoke order is supervised from stone selection at the quarry to local installation by master technicians.",
+  chassisTypology: "CHASSIS TYPOLOGY",
+  hardwareCore: "HARDWARE CORE",
+  integratedGlassware: "INTEGRATED GLASSWARE",
+  smartAccLed: "SMART ACC. & LED",
+  gaggenauIntegrationSpecifics: "GAGGENAU ZAAD CATALOG INTEGRATION SPECIFICS",
+  integrationRating: "INTEGRATION RATING",
+  gaggenauRating: "GAGGENAU 200/400",
+  kessebohmerStructures: "KESSEBÖHMER BUILT-IN ACCESSORIES STRUCTURES",
+  coreIslandGeometries: "CORE ISLAND GEOMETRIES",
+  biMonolithCore: "Bi-Monolith Modular Central Core",
+  constructorManualSheets: "CONSTRUCTOR MANUAL SHEETS",
+  tallCoreArchitectures: "TALL CORE ARCHITECTURES",
+  symmetricHousingWall: "Symmetric High-Yield Housing Wall",
+  zaadTowerRowScheduling: "ZAAD TOWER ROW SCHEDULING",
+  ergonomicsPlanA: "Ergonomics Plan (A-Adjacent)",
+  ergonomicsPlanB: "Ergonomics Plan (B-Adjacent)",
+  housingStructuralComponents: "HOUSING STRUCTURAL COMPONENTS",
+  craftIntegritySeal: "CRAFT INTEGRITY SEAL",
+  architecturalHonesty: "Architectural Honesty and Spatial Silence",
+  heritageIntro:
+      "Each ZAAD object represents a rigorous response of quiet luxury against dynamic trends. Organized symmetrically across heavy, grounded natural travertine/rapolano stone cores and durable eucalyptus veneers, the design relies strictly on authentic physical materials to establish spiritual calm within the domestic landscape.",
+  rawStoneCuration: "THE RAW STONE CURATION",
+  rawStoneCurationDesc:
+      "Milled, shaped, and completed directly inside Tuscan quarries under Carrara. All limestone, travertine, and onyx blocks are hand-polished using natural acid-free waxes to maintain historic texture honesty.",
+  eucalyptusVeneers: "EUCALYPTUS VENEERS AND SADDLE LEATHER",
+  eucalyptusVeneersDesc:
+      "Natural eucalyptus heartwoods overlaid at 22mm onto water-resistant structural cores. Accompanied by solid patinated brass and iron hardware cylinders wrapped in genuine Italian saddle leathers.",
+  certificateOfProvenance: "ISSUED CERTIFICATE OF PROVENANCE SIGNED BY THE MASTER DESIGNER",
+
+  // ─── LOOKBOOK POETRY (LookbookPoetry) ──────────────────────────────────────
+  lookbookMonographEyebrow: "MATERIAL MONOGRAPH & HERITAGE NARRATIVE",
+  lookbookHeritageHeading: "The Heritage of {name}",
+  lookbookProvenanceLabel: "Provenance Record:",
+
+  // ─── APPOINTMENT (InquiryForm — Audience & Cadence) ─────────────────────────
+  appointmentAudienceLabel: "Availability for",
+  appointmentCadenceLabel: "Cadence",
+  appointmentModeCall: "Private Call",
+  appointmentModeAudience: "Studio Audience",
+  appointmentWindowArrangement: "By Arrangement",
+  appointmentSlotMorning1Name: "Morning",
+  appointmentSlotMorning1Time: "08:00 – 10:00",
+  appointmentSlotMorning2Name: "Noon",
+  appointmentSlotMorning2Time: "10:00 – 12:00",
+  appointmentSlotMiddayName: "Midday",
+  appointmentSlotMiddayTime: "12:00 – 14:00",
+  appointmentSlotEvening1Name: "Evening",
+  appointmentSlotEvening1Time: "14:00 – 18:00",
+  appointmentSlotEvening2Name: "Night",
+  appointmentSlotEvening2Time: "18:00 – 21:00",
+  appointmentHintAudience: "By appointment only",
+  appointmentHintCall: "The studio will reach your direct line",
+  appointmentRequestedAudience: "A Studio Audience is requested — {window}.",
+  appointmentRequestedCall: "A Private Call is requested — {window}.",
 
   // ─── FOOTER ────────────────────────────────────────────────────────────────
   footerTitle: "ZAAD",
@@ -440,12 +627,31 @@ Designed as highly modular, lightweight files to avoid package bloat:
   footerPhilosophy: "Our Philosophy",
   footerCollection: "The Collection",
   footerConcierge: "Acquisition Concierge",
+  footerHouseDir: "HOUSE OF ZAAD",
+  footerAboutUs: "About Us",
+  footerStoryBrandValue: "Story & Brand Value",
+  footerSustainabilityResponsibility: "Sustainability & Responsibility",
   footerBlueprintTitle: "STUDIO BLUEPRINT",
   footerBlueprintLink: "Design Blueprint Archive",
   footerMilanZAAD: "Milan ZAAD — Lombardy",
   footerRapolanoStone: "Rapolano Stone — Tuscany",
-  footerCopyright: "© 1989 — 2026 ZAAD S.P.A. ALL PRIVACY COMMITTED.",
-  footerCraft: "CRAFTED WITH ARCHITECTURAL SOVEREIGNTY",
+  footerCopyright: "© {year} - All Rights Reserved.",
+  footerCraft: "Crafted With Love BY Persol Business Solution",
+  atelierClockCity: "Florence",
+  atelierClockOpen: "Atelier open",
+  atelierClockClosed: "Atelier closed",
+
+  // ─── STATUS SCREENS (not-found / error) ────────────────────────────────────
+  notFoundEyebrow: "404",
+  notFoundTitle: "This Room Doesn't Exist",
+  notFoundDesc:
+      "The page you're looking for has moved, or never existed. Let's take you back to the showroom.",
+  notFoundCta: "Return to Showroom",
+  errorEyebrow: "Interrupted",
+  errorTitle: "Something Went Wrong",
+  errorDesc:
+      "An unexpected error interrupted this page. Please try again, or return to the showroom.",
+  errorRetry: "Try Again",
 
   // ─── BRAND STORY ───────────────────────────────────────────────────────────
   brandStory: {
@@ -457,11 +663,95 @@ Designed as highly modular, lightweight files to avoid package bloat:
         "We do not believe in mass catalogs. We believe a domestic living space needs only magnificent architectural focal points to achieve eternal spiritual resonance: an island that serves as the social cradle, a tall cabinet wall that structures organization, and exquisite stones that play with natural light. This is our holy trio.",
   },
 
+  // ─── ABOUT / CSR / SUSTAINABILITY ──────────────────────────────────────────
+  aboutSections: [
+    {
+      id: "about",
+      category: "The Maison",
+      title: "About ZAAD",
+      summary:
+          "A design-and-build atelier bringing considered quality and elegance to the scale of the home, from a 9,000 sqm production facility staffed by 150 specialists.",
+      content: `### I. THE ATELIER
+ZAAD designs and builds luxury interior spaces, with particular expertise in kitchens, wardrobes and interiors — bringing a considered eye for quality and elegance to the scale of the home. Behind every project stands a 9,000 sqm production facility, 150 skilled specialists, an 8-person team of designers and architects, and a network of specialist partners who carry an idea from concept through to construction.
+
+### II. THE PROCESS
+Every project begins with understanding how a family actually lives — their needs, their habits, their taste. From there, the design and architecture team builds spaces that are not only beautiful but function properly: precise proportions, considered details, quality materials, and solutions that make daily life calmer, more organised and more pleasant.
+
+### III. THE PARTNERSHIP
+Alongside design and construction, ZAAD works with selected specialist partners and draws on Dorsa Home furniture to offer a considered range of accessories, hardware and luxury details — the elements that complete a space's final quality and give each project a more personal, more lasting identity.`,
+      tags: ["Interior Architecture", "150 Specialists", "Design & Build"],
+    },
+    {
+      id: "story",
+      category: "Brand Story",
+      title: "The Story of ZAAD",
+      summary:
+          "ZAAD was formed in the Land of Dorsa from a way of seeing that finds beauty in authenticity, elegance, and the quality of living.",
+      content: `### I. A PERSPECTIVE
+ZAAD was formed in the Land of Dorsa, from a way of seeing that finds beauty in authenticity, elegance and the quality of living. We carry that perspective from the world of objects into the realm of space — into homes that hold tranquility, order and quiet magnificence not through display, but through proportion, detail, and the quality of their presence.
+
+### II. A CRAFT
+ZAAD is built on expertise in designing and constructing kitchens, wardrobes and interior spaces — spaces made not simply to be seen, but to be lived in, touched, and remembered. In the world of ZAAD, details are the language of silence.
+
+### III. A NARRATIVE
+Calm and unassuming, the space itself narrates the quality of life lived within it. This is the story ZAAD sets out to tell in every room it shapes.`,
+      tags: ["Land of Dorsa", "Authenticity", "Quiet Living"],
+    },
+    {
+      id: "brandValue",
+      category: "Brand Values",
+      title: "What ZAAD Values",
+      summary:
+          "Beauty is meaningful only when it is accompanied by function — precision, restraint, and a home that holds its value over time.",
+      content: `### I. PRECISION OVER DISPLAY
+ZAAD's values come from precision in design, a genuine understanding of space, and attention to how a home is actually lived in. A space is never just a combination of beautiful parts — what matters is how it is used, how it creates calm, and how it holds the daily life and personal moments of the people who live there.
+
+### II. BEAUTY WITH FUNCTION
+Beauty is meaningful only when it is accompanied by function. Proportion, circulation, storage, light, material and durability — along with details that may not be noticed at first glance — all shape the quality of life within a space.
+
+### III. LUXURY WITHOUT DISPLAY
+Luxury, for ZAAD, is not exaggeration. It is thoughtful design, precise execution, and a harmony between form and function that remains right, calm and valuable over time — spaces with character that never show off, where life becomes simpler, more organized, and more pleasant.`,
+      tags: ["Precision", "Function", "Restraint"],
+    },
+    {
+      id: "csr",
+      category: "Corporate Responsibility",
+      title: "Corporate Social Responsibility",
+      summary:
+          "How the maison returns craft, dignity, and stewardship to the communities that shape its stone.",
+      content: `### I. CRAFT FELLOWSHIP
+The atelier sponsors a multi-year apprenticeship in Tuscany, transferring hand-cutting and dry-assembly technique to a new generation of stonemasons. Fellows are salaried from the first day and credited on the monoliths they finish.
+
+### II. QUARRY STEWARDSHIP
+We source exclusively from registered Rapolano and Travertine quarries operating under restored-extraction plans. For every block we cut, a measured contribution returns to the basin's hydrological and landscape rehabilitation.
+
+### III. ATELIER WELFARE
+Florentine and Milanese studios operate on a four-day making week, with funded healthcare, continuous-learning days, and a profit share distributed to the hands that shape the work.`,
+      tags: ["Craft Fellowship", "Quarry Stewardship", "Atelier Welfare"],
+    },
+    {
+      id: "sustainability",
+      category: "Material Stewardship",
+      title: "Sustainability",
+      summary:
+          "Sustainability begins in thoughtful design and continues through the quality of manufacture — a considered, deliberate use of resources at every step.",
+      content: `### I. CONSIDERED MATERIALS
+Sustainability at ZAAD begins with thoughtful design and continues through the quality of manufacture. Careful selection of raw materials, principled measurement and waste reduction across production and execution are part of a conscious, deliberate use of resources.
+
+### II. BUILT TO LAST
+We build spaces and products that hold their quality and function over time — the better something is made, the longer it lasts, and the less it will ever need to be altered or replaced. For ZAAD, sustainability means the responsible consumption of resources and a quality that keeps its value across time.
+
+### III. A RESPONSIBLE FUTURE
+Attention to durability, enduring solutions and energy-efficient equipment continue this same approach — a responsible bridge between the quality today's homes need and the assets tomorrow's homes will inherit.`,
+      tags: ["Considered Materials", "Built to Last", "Responsible Resources"],
+    },
+  ],
+
   // ─── COLLECTION ────────────────────────────────────────────────────────────
   collection: [
     {
       id: "gavv",
-      number: "N°01",
+      number: "C°01",
       name: "GÁVV",
       year: "2026",
       designer: "ZAAD",
@@ -491,26 +781,41 @@ Designed as highly modular, lightweight files to avoid package bloat:
           "Designed in ZAAD Milan ZAAD; Stone milled and hand-carved in Rapolano Terme, Tuscany. Signed by the master stonecutter and cabinetmaker.",
       imageUrl:
           "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption:
-              "GÁVV Kitchen - Dual Monolithic Stone Islands and Solid Eucalyptus Cabinets",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption:
-              "GÁVV Kitchen - Open Pocket Wall units with integrated Gaggenau Ovens",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/gavv/gavv-02.jpg",
           orientation: "portrait",
-          caption:
-              "GÁVV Kitchen - Close detailing of natural stone countertop with black under-sink",
+          caption: "GÁVV — Studio Archive, Plate 02",
+        },
+        {
+          url: "/image/gavv/gavv-05.jpg",
+          orientation: "portrait",
+          caption: "GÁVV — Studio Archive, Plate 05",
+        },
+        {
+          url: "/image/gavv/gavv-06.jpg",
+          orientation: "landscape",
+          caption: "GÁVV — Studio Archive, Plate 06",
+        },
+        {
+          url: "/image/gavv/gavv-07.jpg",
+          orientation: "portrait",
+          caption: "GÁVV — Studio Archive, Plate 07",
+        },
+        {
+          url: "/image/gavv/gavv-08.jpg",
+          orientation: "landscape",
+          caption: "GÁVV — Studio Archive, Plate 08",
+        },
+        {
+          url: "/image/gavv/gavv-09.jpg",
+          orientation: "portrait",
+          caption: "GÁVV — Studio Archive, Plate 09",
+        },
+        {
+          url: "/image/gavv/gavv-12.jpg",
+          orientation: "portrait",
+          caption: "GÁVV — Studio Archive, Plate 12",
         },
       ],
       specifications: {
@@ -663,7 +968,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
     },
     {
       id: "zivv",
-      number: "N°02",
+      number: "C°02",
       name: "ZIVV",
       year: "2026",
       designer: "ZAAD",
@@ -692,26 +997,36 @@ Designed as highly modular, lightweight files to avoid package bloat:
           "Designed and prototyped in Milanese ZAAD; Travertine stone extracted from Rapolano stone quarries, Tuscany. Cabinet engineering completed in Lombardy, Italy.",
       imageUrl:
           "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption:
-              "ZIVV Kitchen - Seamless Travertine Island and Curved Walnut Base structure",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/zivv/zivv-28.jpg",
           orientation: "portrait",
-          caption:
-              "ZIVV Kitchen - Cream tall cabinets doors with horizontal accent lighting profiles",
+          caption: "ZIVV — Studio Archive, Plate 28",
         },
         {
-          url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/zivv/zivv-29.jpg",
           orientation: "landscape",
-          caption:
-              "ZIVV Kitchen - Integrated Gaggenau coffee station and storage column",
+          caption: "ZIVV — Studio Archive, Plate 29",
+        },
+        {
+          url: "/image/zivv/zivv-30.jpg",
+          orientation: "portrait",
+          caption: "ZIVV — Studio Archive, Plate 30",
+        },
+        {
+          url: "/image/zivv/zivv-31.jpg",
+          orientation: "landscape",
+          caption: "ZIVV — Studio Archive, Plate 31",
+        },
+        {
+          url: "/image/zivv/zivv-32.jpg",
+          orientation: "portrait",
+          caption: "ZIVV — Studio Archive, Plate 32",
+        },
+        {
+          url: "/image/zivv/zivv-34.jpg",
+          orientation: "portrait",
+          caption: "ZIVV — Studio Archive, Plate 34",
         },
       ],
       specifications: {
@@ -834,7 +1149,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
     },
     {
       id: "rakh",
-      number: "N°03",
+      number: "C°03",
       name: "RÁKH",
       year: "2026",
       designer: "ZAAD Studio",
@@ -865,26 +1180,16 @@ Designed as highly modular, lightweight files to avoid package bloat:
           "Designed by ZAAD Milan ZAAD. Woodworking completed in Florence; Onyx carving completed in Carrara, Italy. Stamped with the collective's seal.",
       imageUrl:
           "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/rakh/rakh-52.jpg",
+          orientation: "portrait",
+          caption: "RÁKH — Studio Archive, Plate 52",
+        },
+        {
+          url: "/image/rakh/rakh-53.jpg",
           orientation: "landscape",
-          caption:
-              "RÁKH Kitchen - Sculpted Onyx Base Island and Linear Slatted wood screens",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1400&q=90",
-          orientation: "portrait",
-          caption:
-              "RÁKH Kitchen - Close-up on the monolithic golden-onyx hand-carved plinth support",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1400&q=90",
-          orientation: "portrait",
-          caption:
-              "RÁKH Kitchen - Custom pocket cabinet open, showing hand-stitched tan leather backings",
+          caption: "RÁKH — Studio Archive, Plate 53",
         },
       ],
       specifications: {
@@ -942,7 +1247,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
     },
     {
       id: "varr",
-      number: "N°04",
+      number: "C°04",
       name: "VARR",
       year: "2026",
       designer: "ZAAD",
@@ -972,26 +1277,21 @@ Designed as highly modular, lightweight files to avoid package bloat:
           "Designed in ZAAD Milan ZAAD; volcanic basalt quarried and hand-milled near Mount Etna, Sicily. Steel components forged in Turin, Italy.",
       imageUrl:
           "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=90",
-      macroUrl:
-          "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=80",
       images: [
         {
-          url: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=90",
-          orientation: "landscape",
-          caption:
-              "VARR Kitchen - Italian Dark Travertine and Massive Floating Sicilian Basalt Island Counter",
-        },
-        {
-          url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/varr/varr-63.jpg",
           orientation: "portrait",
-          caption:
-              "VARR Kitchen - Dark timber cabinets displaying customized copper cups and storage trays",
+          caption: "VARR — Studio Archive, Plate 63",
         },
         {
-          url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=90",
+          url: "/image/varr/varr-64.jpg",
           orientation: "landscape",
-          caption:
-              "VARR Kitchen - Complete room composition showing the basalt island floating above metal support legs",
+          caption: "VARR — Studio Archive, Plate 64",
+        },
+        {
+          url: "/image/varr/varr-67.jpg",
+          orientation: "portrait",
+          caption: "VARR — Studio Archive, Plate 67",
         },
       ],
       specifications: {
