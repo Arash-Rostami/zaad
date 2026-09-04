@@ -6,5 +6,10 @@ dist
 .env.local
 .DS_Store
 *.log
-public/pdf/
+public/
 data/
+.claude/
+.idea/
+content.txt
+claude-agent.ps1
+claude-launcher.bat
