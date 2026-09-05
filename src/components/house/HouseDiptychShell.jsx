@@ -15,7 +15,7 @@ function ColumnHeader({ eyebrow, title, intro }) {
 
   return (
     <div className="mb-10 text-left rtl:text-right">
-      <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+      <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
         {eyebrow}
       </span>
       <h3 className="text-2xl md:text-3xl font-serif font-light tracking-tight leading-[1.2] text-ink">

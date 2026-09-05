@@ -1,20 +1,55 @@
 "use client";
 
-import React from "react";
-import {AnimatePresence, motion} from "motion/react";
-import {Globe, Hammer, Landmark, Sliders} from "lucide-react";
-import Image from "next/image";
-import MaisonButton from "./MaisonButton";
+import React, {useCallback, useEffect, useMemo, useRef} from "react";
+import {AnimatePresence, motion, useReducedMotion} from "motion/react";
+import {ArrowUpRight, Globe, Hammer, Landmark, Sliders} from "lucide-react";
 import MaisonReveal from "./MaisonReveal";
+import NoiseBg from "./shared/NoiseBg";
 import {useLanguage} from "@/services/TranslationService";
 import useActiveSelection from "../hooks/useActiveSelection";
+import useDeferredMedia from "../hooks/useDeferredMedia";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
+
+const MATERIAL_VIDEOS = {
+    "natural-eucalyptus": "eucalyptus",
+    "natural-stone": "stone",
+    "saddle-leather": "leather",
+};
+
+const EMPTY_ARRAY = Object.freeze([]);
+
+const FA_INDEX_FORMAT = new Intl.NumberFormat("fa-IR", {minimumIntegerDigits: 2, useGrouping: false});
+const EN_INDEX_FORMAT = new Intl.NumberFormat("en-US", {minimumIntegerDigits: 2, useGrouping: false});
 
 function Materials() {
     const {t, data, isFarsi} = useLanguage();
-    const materialSamples = data("materialSamples") || [];
-    const samples = materialSamples.length ? materialSamples : [];
-    const {active, setActive} = useActiveSelection(samples);
+    const reduceMotion = useReducedMotion();
+    const samples = useMemo(() => data("materialSamples") || EMPTY_ARRAY, [data]);
+    const {active, setActive} = useActiveSelection(samples, "materialSelection");
+    const numberFormatter = isFarsi ? FA_INDEX_FORMAT : EN_INDEX_FORMAT;
+    const [mediaReady, mediaRef] = useDeferredMedia();
+    const videoRef = useRef(null);
+
+    const preparedSamples = useMemo(
+        () => samples.map((mat) => ({ ...mat, wrappedCategory: wrapLatinRuns(mat.category, isFarsi) })),
+        [samples, isFarsi]
+    );
+
+    const wrappedActiveHistory = useMemo(
+        () => (active ? wrapLatinRuns(active.history, isFarsi) : ""),
+        [active, isFarsi]
+    );
+
+    const handleVideoLoadedData = useCallback(() => {
+        if (reduceMotion) return;
+        videoRef.current?.play().catch(() => {});
+    }, [reduceMotion]);
+
+    useEffect(() => {
+        if (mediaReady && !reduceMotion) {
+            videoRef.current?.load();
+        }
+    }, [mediaReady, reduceMotion, active?.id]);
 
     return (
         <section className="section-y bg-surface-overlay px-6 sm:px-12 border-b border-ink/10 relative overflow-hidden text-left rtl:text-right">
@@ -33,28 +68,49 @@ function Materials() {
                         </MaisonReveal>
 
                         <MaisonReveal variant="unveil" delay={0.5} threshold={0.01}>
-                        <div className="space-y-4">
-                            {samples.map((mat) => (
-                                <MaisonButton
-                                    key={mat.id}
-                                    variant="material-choice"
-                                    onClick={() => setActive(mat)}
-                                    className={`w-full flex items-center justify-between group ${active?.id === mat.id ? "bg-panel border-ink! shadow-card-sm" : ""}`}
-                                >
-                                    <div className="text-left rtl:text-right">
-                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-accent font-semibold block mb-1 uppercase">
-                      {wrapLatinRuns(mat.category, isFarsi)}
-                    </span>
-                                        <span className="text-lg md:text-xl font-serif font-farsi font-light text-ink block">
-                      {mat.name}
-                    </span>
-                                    </div>
-                                    <span className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-ink transition-transform duration-300 shrink-0 ${active?.id === mat.id ? "translate-x-1 rtl:-translate-x-1 font-semibold text-accent" : "opacity-40 group-hover:opacity-100"}`}>
-                    {t("hexaSample")}
-                  </span>
-                                </MaisonButton>
-                            ))}
-                        </div>
+                            <div className="space-y-4">
+                                {preparedSamples.map((mat, index) => {
+                                    const isActive = active?.id === mat.id;
+                                    return (
+                                        <button
+                                            key={mat.id}
+                                            type="button"
+                                            onClick={() => setActive(mat)}
+                                            aria-pressed={isActive}
+                                            className={`group relative block w-full overflow-hidden bg-panel border rounded-2xl p-6 md:p-7 text-left rtl:text-right transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.98] ${
+                                                isActive
+                                                    ? "border-accent/50 shadow-ambient"
+                                                    : "border-ink/10 hover:border-accent/40 hover:shadow-ambient"
+                                            }`}
+                                        >
+                                            <NoiseBg filterId={`materialNoise-${mat.id}`} revealOnHover />
+                                            <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                                            <span className={`absolute bottom-0 left-0 w-full h-[2px] bg-accent origin-left rtl:origin-right transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                                                isActive
+                                                    ? "scale-x-100"
+                                                    : "scale-x-0 group-hover:scale-x-100 [@media(hover:none)]:scale-x-100"
+                                            }`} />
+                                            <div className="relative z-10 flex items-start justify-between gap-4">
+                                                <div>
+                                                <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-accent block mb-2 uppercase !font-light">
+                                                    {mat.wrappedCategory}
+                                                </span>
+                                                    <span className="text-xl md:text-2xl font-serif font-farsi font-light text-ink block leading-tight">
+                                                    {mat.name}
+                                                </span>
+                                                </div>
+                                                <span className={`text-sm font-serif tracking-widest shrink-0 pt-1 ${isFarsi ? "font-farsi" : "font-latin"}`}>
+                                                {numberFormatter.format(index + 1)}
+                                            </span>
+                                            </div>
+                                            <span className={`relative z-10 inline-flex items-center gap-2 mt-5 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase transition-colors duration-700 ${isActive ? "text-accent" : "text-muted group-hover:text-accent"}`}>
+                                            {t("hexaSample")}
+                                                <ArrowUpRight className="w-3.5 h-3.5 rtl:-scale-x-100 transition-transform duration-700 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5"/>
+                                        </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </MaisonReveal>
                     </div>
 
@@ -69,14 +125,18 @@ function Materials() {
                                     transition={{duration: 0.6, ease: [0.16, 1, 0.3, 1]}}
                                     className="bg-surface border border-ink/10 p-8 shadow-card-lg relative rounded-2xl"
                                 >
-                                    <div className="relative aspect-video w-full overflow-hidden border border-ink/10 mb-6 rounded-xl shadow-ambient">
-                                        <Image
-                                            src={active.imageUrl}
-                                            alt={`${active.name} Macro Close-up`}
-                                            fill
-                                            sizes="(min-width: 1024px) 50vw, 90vw"
-                                            className="object-cover lux-ken-burns"
-                                            referrerPolicy="no-referrer"
+                                    <div ref={mediaRef} className="relative aspect-[1168/784] w-full overflow-hidden border border-ink/10 mb-6 rounded-xl shadow-ambient">
+                                        <video
+                                            key={active.id}
+                                            ref={videoRef}
+                                            src={`/video/material/${MATERIAL_VIDEOS[active.id]}.mp4`}
+                                            poster={`/video/material/${MATERIAL_VIDEOS[active.id]}.jpg`}
+                                            muted
+                                            playsInline
+                                            preload={mediaReady && !reduceMotion ? "auto" : "none"}
+                                            onLoadedData={handleVideoLoadedData}
+                                            aria-hidden="true"
+                                            className="absolute inset-0 w-full h-full object-contain"
                                         />
                                         <div className="absolute top-4 right-4 bg-ink text-on-indicator px-3 py-1 font-mono text-[length:calc(9px*var(--zaad-font-scale))] tracking-widest uppercase rounded-md">
                                             {t("macroPreview")}
@@ -91,7 +151,7 @@ function Materials() {
                                         {t("geographicalOrigin")} {active.origins}
                                     </p>
 
-                                    <p className="text-sm text-ink font-light leading-relaxed mb-6 italic rtl:text-justify">
+                                    <p className="text-sm text-ink font-light leading-relaxed mb-6 rtl:text-justify">
                                         "{active.philosophicalNote}"
                                     </p>
 
@@ -113,7 +173,7 @@ function Materials() {
                           {t("historicalProvenance")}
                         </span>
                                                 <span className="text-xs text-ink font-light leading-relaxed">
-                          {wrapLatinRuns(active.history, isFarsi)}
+                          {wrappedActiveHistory}
                         </span>
                                             </div>
                                         </div>

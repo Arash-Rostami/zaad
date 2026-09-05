@@ -56,7 +56,7 @@ function CollectionTabs({ collection, selectedItem, selectItem, t }) {
             <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-ink/10">
                     <div>
-                        <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                        <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
                             {t("showcaseBadge")}
                         </span>
                         <h2 className="text-3xl md:text-5xl font-serif text-ink tracking-tight font-light text-glow-subtle">

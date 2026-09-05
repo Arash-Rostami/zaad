@@ -10,11 +10,11 @@ export const en = {
   menuClose: "Close",
   menuBrowse: "Browse",
   menuInquiry: "Inquiry",
-  menuSystemDirectories: "SYSTEM DIRECTORIES",
+  menuSystemDirectories: "MAIN PAGES",
   menuHouseOfZAADPortalSub: "Return to the digital showroom",
-  menuZAADCatalogue: "02 / ZAAD Catalogue",
+  menuZAADCatalogue: "ZAAD Catalogue",
   menuZAADCatalogueSub: "The complete collection, page by page",
-  menuJourneyIndex: "JOURNEY INDEX",
+  menuJourneyIndex: "OTHER PAGES",
   menuOriginsPhilosophy: "Origins & Philosophy",
   menuChapter1: "CHAPTER I / ABOUT US",
   menuStoryBrandValue: "Story & Brand Value",
@@ -22,6 +22,8 @@ export const en = {
   menuSustainabilityResponsibility: "Sustainability & Responsibility",
   menuChapter3: "CHAPTER III / STEWARDSHIP",
   menuCuratedSpecimens: "CURATED COLLECTION",
+  menuContinueBrowsing: "CONTINUE",
+  menuDismissContinueBrowsing: "Dismiss",
   menuView: "VIEW",
   editionVersion: "V1.0",
   audioPlayLabel: "Play ambient sound",
@@ -44,9 +46,11 @@ export const en = {
       "ZAAD designs and builds luxury interior spaces, with particular expertise in kitchens, wardrobes and interiors — bringing a considered eye for quality and elegance to the scale of the home. Behind every project stands a 9,000 sqm production facility, 150 skilled specialists, an 8-person team of designers and architects, and a network of specialist partners who carry an idea from concept through to construction.",
   aboutBackToShowroom: "Back to Showroom",
   callStudio: "Call the Atelier",
-  callStudioSub: "Florence switchboard — Mon–Fri, 09–18 CET",
-  studioPhone: "+39 055 0000 000",
-  studioPhoneTel: "+3905500000000",
+  callStudioSub: "Tehran studio — Sat–Thu, 09–18 (Iran Standard Time)",
+  studioStatusOpen: "Open now",
+  studioStatusClosed: "By appointment",
+  studioPhone: "+98 21 0000 0000",
+  studioPhoneTel: "+982100000000",
 
   // ── House-of-ZAAD chapters: hero + stats + cross-links ──────────────────────
   sustainabilityHeroEyebrow: "Material Stewardship",
@@ -118,10 +122,10 @@ export const en = {
   heroPlayVideo: "Play film",
 
   // ─── STORY / MANIFESTO ─────────────────────────────────────────────────────
-  manifestoBadge: "The Manifesto",
+  manifestoBadge: "Our Story",
   storyQuote: "To assemble a space is to curate the silence within it.",
   storyFixturesLabel: "At the heart of",
-  storyFixturesText: "the GÁVV, ZIVV, RÁKH, and VARR collections.",
+  storyFixturesText: "the GÁVV, ZIVV, RÁKH, and VAAR collections.",
   storyUtensilAlt: "ZAAD kitchen collection fixtures — precision culinary hardware",
   storyFrameLabel: "View gallery frame {index} of {total}",
   storyEndText:
@@ -136,12 +140,12 @@ export const en = {
   storyQuote2:
       "Each collection is crafted to embrace, organize, and define space, bringing poetic balance to living.",
   storyP1:
-      "ZAAD looks at the world through the lens of precision and delicacy; where beauty is not confined to form but flows in the harmony between functionality, details, and accuracy. Powered by Dorsa, our four distinct kitchen collections—GÁVV, ZIVV, RÁKH, and VARR—blend the boldness of modern design with authentic roots and architectural lines.",
+      "ZAAD looks at the world through the lens of precision and delicacy; where beauty is not confined to form but flows in the harmony between functionality, details, and accuracy. Powered by Dorsa, our four distinct kitchen collections—GÁVV, ZIVV, RÁKH, and VAAR—blend the boldness of modern design with authentic roots and architectural lines.",
   storyP2:
       "Each collection is crafted to embrace, organize, and define space, bringing steadfast structure and poetic balance to everyday living.",
 
   // ─── SHOWCASE / COLLECTION ─────────────────────────────────────────────────
-  showcaseBadge: "The Collection",
+  showcaseBadge: "Collections",
   showcaseTitle: "Curated Showcase",
   editorialView: "Editorial View",
   macroView: "Macro Detail",
@@ -165,7 +169,7 @@ export const en = {
   accessoriesLabel: "Internal Storage Accessories",
   lightLabel: "Micro Profile Illumination",
   showcaseCatalogueDesc:
-      "A precise trilogy of physical objects designed with absolute spatial reduction and noble raw materials.",
+      "A precise quartet of physical objects designed with absolute spatial reduction and noble raw materials.",
   showcasePrev: "PREV",
   showcaseNext: "NEXT",
   showcaseYear: "YEAR",
@@ -186,13 +190,13 @@ export const en = {
   showcasePrimaryMaterials: "Primary Composition Materials",
   showcaseCatalogueText:
       "Complete technical descriptions, bilingual poetry logs, & Gaggenau appliance details exist in our dedicated master catalogue.",
-  showcaseRevealDossier: "REVEAL BESPOKE DOSSIER",
+  showcaseRevealDossier: "VIEW IN CATALOGUE",
+  showcaseOpenPiece: "VIEW THE PIECE",
   showcasePrivateInquiry: "Initiate Private Inquiry",
-  showcaseAirfreight:
-      "Complimentary insured airfreight with whiteglove placement globally.",
+  showcaseAirfreight: "Delivery and installation arranged upon inquiry.",
 
   // ─── ADVANTAGES ────────────────────────────────────────────────────────────
-  advantagesBadge: "DISTINCTIVE CREDENTIALS",
+  advantagesBadge: "Advantages",
   advantagesTitle: "Our Competitive Advantages",
   advantagesSub:
       "The flawless intersection of precision design, engineering milestones, and custom curated European hardware.",
@@ -227,9 +231,9 @@ export const en = {
   densityLabel: "Volumetric Density",
   porosityLabel: "Structural Porosity",
   hardnessLabel: "Mineral Hardness",
-  materialArchaeology: "MATERIAL ARCHAEOLOGY",
+  materialArchaeology: "Materials",
   materialStudy: "A Study in Physical Realism",
-  hexaSample: "HEXA SAMPLE →",
+  hexaSample: "View Sample",
   macroPreview: "MACRO PREVIEW",
   materialAnalysisPrefix: "",
   materialAnalysisSuffix: "Analysis",
@@ -239,58 +243,52 @@ export const en = {
   coreSurfaceQualities: "Core Surface Qualities",
   materialSamples: [
     {
-      id: "travertine-classico",
-      name: "Travertine Classico",
-      category: "Sedimentary Calcium Carbonate",
-      origins: "Tuscan Thermal Springs, Rapolano (Italy)",
+      id: "natural-eucalyptus",
+      name: "Natural Eucalyptus",
+      category: "Solid Hardwood",
+      origins: "22mm solid fronts — the ZAAD atelier standard",
       properties: [
-        "High thermal crystallization resistant",
-        "Naturally aerated vesicular voids",
-        "Honed satin tactile profile",
+        "Continuous heartwood grain across every panel",
+        "Solid-batten construction, not a laminate skin",
+        "Hand-oiled satin finish",
       ],
       philosophicalNote:
-          "Travertine is solidified time itself. Emerging from natural hot thermal springs, its mineral pockets and craters register thousands of years of cooling, ensuring no two blocks share the same structural pattern.",
+          "Eucalyptus is the one hardwood every ZAAD collection shares. It fronts every pocket door and pull-out across GÁVV, ZIVV, RÁKH, and VAAR — the constant grain running quietly beneath four very different kitchens.",
       history:
-          "Favored by Roman architects to raise monumental structures such as the Colosseum and St. Peter's Basilica. We leave the craters unfilled to honor its brutalist history.",
-      density: "2.42 g/cm³ (High density load)",
-      imageUrl:
-          "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=90",
+          "Milled to 22mm and left to show its own heartwood rather than a stain — the same specification, unchanged, across the full range since Design 2026.",
+      density: "Solid batten, not veneered ply",
     },
     {
-      id: "american-walnut",
-      name: "Aged Walnut Timber",
-      category: "Hardwood (Juglans nigra)",
-      origins: "Apennine Mountain Foothills (Northern Italy)",
+      id: "natural-stone",
+      name: "Natural Stone",
+      category: "Countertop & Cladding Slab",
+      origins: "Selected slab-by-slab, per commission",
       properties: [
-        "Friction-polished continuous grain",
-        "Solid wood joint flexion support",
-        "Aged naturally for 3 years",
+        "Monolithic top counters and side cladding",
+        "Hand-polished, acid-free finish",
+        "High thermal mass at the cooking zone",
       ],
       philosophicalNote:
-          "American walnut lends structural elegance. It behaves like a skeletal foundation, providing a high strength-to-weight ratio that permits fluid, continuous curved furniture frames with zero metal anchors.",
+          "No two slabs share the same vein — the studio selects each one for the kitchen it will become, rather than cutting to a repeatable pattern.",
       history:
-          "Utilized for centuries by renaissance cabinet makers. Our timber is burnished by hand using organic local beeswax and friction blocks, without toxic VOC varnishes.",
-      density: "0.68 g/cm³ (High wood strength)",
-      imageUrl:
-          "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=90",
+          "The countertop and island cladding on all four collections, cut and polished by hand for the specific commission it's built into.",
+      density: "20mm slab, hand-polished",
     },
     {
-      id: "wool-boucle",
-      name: "Hand-Spun Biella Bouclé",
-      category: "72% Raw Wool / 18% Alpaca / 10% Raw Silk",
-      origins: "Historic Spinning Mills of Biella (Italy)",
+      id: "saddle-leather",
+      name: "Saddle Leather",
+      category: "Hand-Wrapped Hardware",
+      origins: "Wrapped by hand, cylinder by cylinder",
       properties: [
-        "High physical loop density",
-        "Retained natural lanolin odor",
-        "Non-uniform rustic texture",
+        "Iron cylinder handles, wrapped not molded",
+        "Wall-covering niche lining behind open shelving",
+        "Patinas honestly with daily use",
       ],
       philosophicalNote:
-          "The envelope must breathe. Spun exclusively in Biella's alpine mills, this raw wool is hand-handled to keep vegetable fragments in place, providing an honest tactile landscape.",
+          "The signature touchpoint of GÁVV, RÁKH, and VAAR — every handle is an iron cylinder wrapped by hand in leather, so the grip changes character the more a kitchen is actually used.",
       history:
-          "Initially selected by high-fashion Parisian ZAADs in the 1950s. We have widened the loops to maximize microscopic shadows on the chair's surface.",
-      density: "1.24 kg/m² (Luxurious fiber weight)",
-      imageUrl:
-          "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1200&q=90",
+          "Also lines the leather wall-covering niches behind the open tall-unit shelving, paired with painted-MDF shelf faces rather than leather on the shelves themselves.",
+      density: "Iron core, hand-wrapped leather sleeve",
     },
   ],
 
@@ -317,11 +315,12 @@ export const en = {
   formErrorAppointmentWindowRequired: "Please select a preferred time.",
   formErrorNoteTooLong: "Notes must be under 2,000 characters.",
   formErrorGeneric: "Something went wrong. Please try again, or contact us directly.",
-  acquisitionsServices: "ACQUISITIONS & SERVICES",
+  acquisitionsServices: "Inquiry & Consultation",
   privateCommissions: "Private Commissions",
   privateCommissionsSub:
       "Every piece is made individually upon commission. Initiate an acquisition, schedule a private studio visit, or request architectural design consultations.",
   acquisitionCard: "Acquisition & Consultation",
+  formChatAlternative: "Prefer to talk it through? You can also share these details directly with our AI Curator in the chat, and our team will follow up.",
   bespokeClientName: "Bespoke Client Name *",
   clientNamePlaceholder: "e.g. Eleanor Vance",
   secureContactEmail: "Secure Contact Email (Optional)",
@@ -364,6 +363,8 @@ export const en = {
   ledgerTabViewed: "Viewed",
   ledgerUnviewedCount: "Unviewed",
   ledgerMarkViewed: "Mark Viewed",
+  ledgerSourceChat: "AI Chat",
+  ledgerSourceForm: "Form",
   ledgerMarkUnviewed: "Mark Unviewed",
   ledgerSearchLabel: "Search entries",
   ledgerSearchPlaceholder: "Search by name, email, phone, or ref",
@@ -374,11 +375,15 @@ export const en = {
   chatClient: "CLIENT",
   chatCurator: "ASSISTANT",
   analyzingParams: "Analyzing composition parameters...",
-  chatPlaceholder: "Ask about travertine pairings, room spacing, or materials...",
+  chatPlaceholder: "Ask about stone pairings, room spacing, or materials...",
   curatorWelcome:
       "Welcome to ZAAD's Curator Consultation. If you are designing or completing an architectural space, describe its qualities, lighting, and layout, and I will recommend specific material compositions or objects from our vault.",
+  curatorWelcomeWithItem:
+      "Welcome back. Since you were just viewing the {name}, I would be glad to discuss it further — or describe your space and I will recommend other compositions from our vault.",
   curatorError:
       "The AI assistant's transmission is temporarily interrupted. Please fill out our Private Inquiry card to coordinate directly with our team.",
+  curatorSubmitFailed:
+      "I couldn't save that automatically — please use the form below instead, or try again in a moment.",
 
   // ─── AI ASSISTANT ──────────────────────────────────────────────────────────
   assistantBadge: "AI CONCIERGE ASSISTANT",
@@ -386,7 +391,7 @@ export const en = {
   assistantDesc:
       "Consult with our server-bound virtual assistant on quarry origins, structural weight constraints, and bespoke architectural integration.",
   assistantInputPlaceholder:
-      "Ask about marble quarries, shipping coordinates, or delivery times...",
+      "Ask about material sourcing, shipping coordinates, or delivery times...",
   assistantSend: "PROBE",
   assistantLoading: "Analyzing materials...",
 
@@ -396,121 +401,8 @@ export const en = {
   blueprintsSub:
       "Detailed engineering layouts illustrating pocket doors, interlocking timber joints, and modular stone cantilevers.",
   specValueLabel: "Value Metric",
-  studioArchives: "STUDIO ARCHIVES",
-  zaadBlueprint: "ZAAD Blueprint",
-  blueprintIntroText:
-      "The full structural, typographical, UX, and technical architecture requested to launch a world-class luxury web platform built with ultimate engineering discipline.",
-  exploreBriefingFiles: "EXPLORE BRIEFING FILES",
-  chapterFile: "CHAPTER FILE",
-  statusCompliant: "STATUS: COMPLIANT",
-  blueprintSystemTags: "BLUEPRINT SYSTEM TAGS:",
-  blueprintSections: [
-    {
-      id: "design-system",
-      title: "01. Aesthetic Systems & Identity",
-      category: "Visual Archetype",
-      summary:
-          "Complete design, typography, color, and spacing specifications designed for lasting premium visual authority.",
-      content: `### 1. FULL DESIGN SYSTEM
-Our design system is based on the principle of **Architectural Honesty**. There is no tech-larping, no margin clutter, and no artificial neon glows. It prioritizes pristine alignment, tactile materials representation, and heavy negative space.
-
-### 2. TYPOGRAPHY SYSTEM
-- **Display Typography (Headings):** \`Playfair Display\` (Serif). Confident, traditional yet modern, designed for large editorial tracking-tight titles. Used at \`text-4xl\` up to \`text-8xl\`.
-- **UI Core Elements:** \`Inter\` (Sans-serif). Exceptionally legible, lightweight, clean.
-- **Specification Elements:** \`JetBrains Mono\` (Monospace). Captures technical precision for dimensions, pricing sheets, weights, and dates.
-
-### 3. COLOR SYSTEM
-- **Base Canvas:** \`#FAF9F6\` (Sand Sand-100). Safe on eyes, warm off-white that reminds players of raw plaster or linen.
-- **Contrast Base:** \`#1C1C1C\` (Deep Graphite / Charcoal). Pure deep stone tone, high contrast without the artificial harshness of black.
-- **Natural Midtones:** \`#F4F2EB\` (Sand-200), \`#EAE7DC\` (Sand-300). Used for card bases, structural gutters, and dividers.
-- **Luxury Spot Colors:** \`#C5A880\` (Bronze Light), \`#8C7355\` (Bronze Dark). Earthy bronze accents representing patinated metal.
-
-### 4. SPACING SYSTEM
-- **Gutter Rule:** 1.5x proportional multipliers.
-- **Section Spacing:** Generous \`py-24\` (96px) and \`py-36\` (144px) to create vertical breathing room. Whitespace is managed as a core visual luxury asset.
-- **Grid Layouts:** Dynamic 12-column asymmetric setups supporting off-axis focal points.`,
-      tags: ["Typography", "Color System", "Margins", "CSS Variables"],
-    },
-    {
-      id: "ux-strategy",
-      title: "02. Core Sitemap & UX Strategy",
-      category: "Information Architecture",
-      summary:
-          "Section-by-section strategic user flows, site schema, sitemap, and component layout hierarchies.",
-      content: `### 5. COMPLETE SITEMAP
-The architecture of ZAAD is designed to eliminate cognitive load and visual noise.
-- **Primary Domain Root (Single Multi-Perspective Showroom View)**
-  - **I. Hero Entrance Section (First Impression / Monograph Title)**
-  - **II. Brand Story Section (Manifesto / Craftsmanship Origin)**
-  - **III. Curated Collection Showcase (Numbered Works - C°01, C°02, C°03)**
-  - **IV. Material Analysis Explorer (Interactive Tactile Grid)**
-  - **V. Concierge Intake Panel (Client inquiry form + Live AI Curator)**
-- **Meta-Directory Segment (Interactive Studio Design Blueprint System)**
-
-### 6. HOMEPAGE STRUCTURE
-Engineered as a cinematic scroll narrative that transitions from abstract core statements to functional museum-grid detailed interactions.
-
-### 7. SECTION-BY-SECTION UX STRATEGY
-1. **Hero Intake:** Establish prestige instantly via a stunning high-resolution architectural header. Use brief aspirational copy (\`Quietude is the highest form of resolution\`).
-2. **The Manifesto Story:** Slow down the reader's attention with a large-format travertine stone closeup, paired with the ZAAD history.
-3. **The Object Grid:** Reveal curated products individually rather than mass grids. Allow people to switch from Editorial to Macro View to feel the loop textures of wool or stone craters.
-4. **The Concierge Chat:** Remove traditional static contact forms. Introduce an elite digital curator (Gemini API) that counsels clients on how objects interact with room sunlight.`,
-      tags: ["Sitemap", "User Journey", "UX Hierarchy", "Curatorship"],
-    },
-    {
-      id: "interaction",
-      title: "03. Code Architecture & Motion Specs",
-      category: "Technical Frontend",
-      summary:
-          "Animation specifications, mobile adaptations, front-end implementation path, and premium interactions.",
-      content: `### 8. COMPONENT ARCHITECTURE (React + Vite + ESM)
-Designed as highly modular, lightweight files to avoid package bloat:
-- \`Header.tsx\`: Transparent navigation with dynamic scrolls.
-- \`Hero.tsx\`: Staggered entrance animations.
-- \`Story.tsx\`: Grid layouts presenting material narratives.
-- \`Showcase.tsx\`: Single-object focal viewer. Supports multi-view texture analysis.
-- \`Materials.tsx\`: Geographic micro-explorer.
-- \`Concierge.tsx\`: Acquisition scheduler + Server-side Gemini chat gateway.
-
-### 9. MOBILE ADAPTATIONS
-- All tap targets are strict \`min-h-[44px]\` minimum.
-- Vertical layout shifts content smoothly to a single premium vertical catalog on smaller viewport break points.
-- Scroll indicators and text dimensions adapt with precise Tailwind screen widths.
-
-### 10. ANIMATION SPECIFICATIONS (Framer Motion)
-- **Entrance Ease:** Staggered transitions with luxury cubic-bezier eases (\`ease: [0.16, 1, 0.3, 1]\` - Ultra-fluid entrance).
-- **Duration Tuning:** Main reveals trigger at \`1.2s\` to \`1.8s\` to reinforce premium confidence.
-- **Macro Image Dissolves:** Smooth dissolve crossfades (\`duration: 0.6s\`) when transitioning between editorial product and macro detail coordinates.`,
-      tags: ["Modular Architecture", "Framer Motion", "Viewport", "CSS Transitions"],
-    },
-    {
-      id: "production",
-      title: "04. Optimization, SEO & Roadmap",
-      category: "Digital Compliance",
-      summary:
-          "Accessibility, performance assets strategy, SEO schemas, and step-by-step launch roadmap.",
-      content: `### 11. ACCESSIBILITY STRATEGY (WCAG)
-- **Contrast Ratios:** Text pairings exceed strict WCAG AA contrast against Sand-100 panels (Charcoal text matches a high contrast 14.3:1 ratio).
-- **Reduced Motion Support:** All transitions utilize motion media queries (\`@media (prefers-reduced-motion)\`) to gracefully degrade to static displays.
-- **Aria Roles:** Full implementation on interactive inputs, select triggers, and button elements.
-
-### 12. PERFORMANCE OPTIMIZATION STRATEGY
-- **Asset Sizing:** Image files utilize modern web formats (.webp / .avif) and lazy-load using \`referrerPolicy="no-referrer"\`.
-- **HMR Disabling:** The framework handles incremental development saves cleanly, avoiding flashing or layout reflow jitter.
-- **GPU Accelerated Transforms:** Framer Motion configurations strictly leverage GPU pathways (translate3d, opacity) to yield fluid 60fps on mobile.
-
-### 13. SEO STRUCTURE & SCHEMA
-- **Metadata Card:** Fully updated with clean, literal descriptions.
-- **Structured Data:** Implements JSON-LD LocalBusiness and Product schemas for high-end search engine crawling.
-
-### 14. PRODUCTION-READY ROADMAP
-1. **ZAAD Verification:** Finalize core layout builds on Port 3000.
-2. **Environment Setup:** Secure and test the server-side \`GEMINI_API_KEY\` key via the platform settings.
-3. **Staging Review:** Test accessibility compliance across viewports.
-4. **Deploy:** Compile using \`esbuild\` into a single, highly performant \`server.cjs\` executable.`,
-      tags: ["SEO Schema", "Roadmap", "Core Web Vitals", "Optimization"],
-    },
-  ],
+  zaadAtAGlance: "ZAAD at a glance",
+  glanceRailLabel: "Collection chapters",
 
   // ─── PRODUCT DETAIL PAGE ───────────────────────────────────────────────────
   backToCollection: "← Back to Collection View",
@@ -586,13 +478,13 @@ Designed as highly modular, lightweight files to avoid package bloat:
   craftIntegritySeal: "CRAFT INTEGRITY SEAL",
   architecturalHonesty: "Architectural Honesty and Spatial Silence",
   heritageIntro:
-      "Each ZAAD object represents a rigorous response of quiet luxury against dynamic trends. Organized symmetrically across heavy, grounded natural travertine/rapolano stone cores and durable eucalyptus veneers, the design relies strictly on authentic physical materials to establish spiritual calm within the domestic landscape.",
+      "Each ZAAD object represents a rigorous response of quiet luxury against dynamic trends. Organized symmetrically across heavy, grounded natural stone cores and durable eucalyptus veneers, the design relies strictly on authentic physical materials to establish spiritual calm within the domestic landscape.",
   rawStoneCuration: "THE RAW STONE CURATION",
   rawStoneCurationDesc:
-      "Milled, shaped, and completed directly inside Tuscan quarries under Carrara. All limestone, travertine, and onyx blocks are hand-polished using natural acid-free waxes to maintain historic texture honesty.",
+      "Milled, shaped, and hand-polished in the ZAAD atelier using natural acid-free waxes, so each slab keeps its own texture rather than a uniform factory sheen.",
   eucalyptusVeneers: "EUCALYPTUS VENEERS AND SADDLE LEATHER",
   eucalyptusVeneersDesc:
-      "Natural eucalyptus heartwoods overlaid at 22mm onto water-resistant structural cores. Accompanied by solid patinated brass and iron hardware cylinders wrapped in genuine Italian saddle leathers.",
+      "Natural eucalyptus heartwoods overlaid at 22mm onto water-resistant structural cores, paired with iron hardware cylinders wrapped by hand in genuine saddle leather.",
   certificateOfProvenance: "ISSUED CERTIFICATE OF PROVENANCE SIGNED BY THE MASTER DESIGNER",
 
   // ─── LOOKBOOK POETRY (LookbookPoetry) ──────────────────────────────────────
@@ -604,7 +496,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
   appointmentAudienceLabel: "Availability for",
   appointmentCadenceLabel: "Cadence",
   appointmentModeCall: "Private Call",
-  appointmentModeAudience: "Studio Audience",
+  appointmentModeAudience: "Studio Visit",
   appointmentWindowArrangement: "By Arrangement",
   appointmentSlotMorning1Name: "Morning",
   appointmentSlotMorning1Time: "08:00 – 10:00",
@@ -618,7 +510,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
   appointmentSlotEvening2Time: "18:00 – 21:00",
   appointmentHintAudience: "By appointment only",
   appointmentHintCall: "The studio will reach your direct line",
-  appointmentRequestedAudience: "A Studio Audience is requested — {window}.",
+  appointmentRequestedAudience: "A Studio Visit is requested — {window}.",
   appointmentRequestedCall: "A Private Call is requested — {window}.",
 
   // ─── FOOTER ────────────────────────────────────────────────────────────────
@@ -631,7 +523,7 @@ Designed as highly modular, lightweight files to avoid package bloat:
   newsletterPlaceholder: "email@address.com",
   newsletterBtn: "Register",
   rightsReserved:
-      "All rights reserved. Styled for quiet luxury. Built in Florence & Milan.",
+      "All rights reserved. Styled for quiet luxury. Built in Tehran.",
   footerShowroomDir: "SHOWROOM DIRECTORY",
   footerPhilosophy: "Our Philosophy",
   footerCollection: "The Collection",
@@ -640,26 +532,27 @@ Designed as highly modular, lightweight files to avoid package bloat:
   footerAboutUs: "About Us",
   footerStoryBrandValue: "Story & Brand Value",
   footerSustainabilityResponsibility: "Sustainability & Responsibility",
-  footerBlueprintTitle: "STUDIO BLUEPRINT",
-  footerBlueprintLink: "Design Blueprint Archive",
-  footerMilanZAAD: "Milan ZAAD — Lombardy",
-  footerRapolanoStone: "Rapolano Stone — Tuscany",
+  footerBlueprintTitle: "STUDIO ARCHIVES",
+  footerFullLookbook: "Full Lookbook",
+  footerMilanZAAD: "ZAAD Atelier — Tehran",
+  footerConnectWithUs: "Connect With Us",
+  footerSocialInstagram: "Follow on Instagram",
+  footerSocialLinkedin: "Follow on LinkedIn",
+  footerSocialTelegram: "Message on Telegram",
+  footerSocialWhatsapp: "Message on WhatsApp",
   footerCopyright: "© {year} - All Rights Reserved.",
   footerCraft: "Crafted With Love BY Persol Business Solution",
-  atelierClockCity: "Florence",
-  atelierClockOpen: "Atelier open",
-  atelierClockClosed: "Atelier closed",
 
   // ─── STATUS SCREENS (not-found / error) ────────────────────────────────────
   notFoundEyebrow: "404",
   notFoundTitle: "This Room Doesn't Exist",
   notFoundDesc:
-      "The page you're looking for has moved, or never existed. Let's take you back to the showroom.",
+      "The page you're looking for has moved, or never existed. Let's take you back to the main page.",
   notFoundCta: "Return to Showroom",
   errorEyebrow: "Interrupted",
   errorTitle: "Something Went Wrong",
   errorDesc:
-      "An unexpected error interrupted this page. Please try again, or return to the showroom.",
+      "An unexpected error interrupted this page. Please try again, or return to the main page.",
   errorRetry: "Try Again",
 
   // ─── BRAND STORY ───────────────────────────────────────────────────────────
@@ -729,13 +622,13 @@ Luxury, for ZAAD, is not exaggeration. It is thoughtful design, precise executio
       summary:
           "How the maison returns craft, dignity, and stewardship to the communities that shape its stone.",
       content: `### I. CRAFT FELLOWSHIP
-The atelier sponsors a multi-year apprenticeship in Tuscany, transferring hand-cutting and dry-assembly technique to a new generation of stonemasons. Fellows are salaried from the first day and credited on the monoliths they finish.
+The atelier sponsors a multi-year apprenticeship in Tehran, transferring hand-cutting and dry-assembly technique to a new generation of stonemasons. Fellows are salaried from the first day and credited on the monoliths they finish.
 
 ### II. QUARRY STEWARDSHIP
-We source exclusively from registered Rapolano and Travertine quarries operating under restored-extraction plans. For every block we cut, a measured contribution returns to the basin's hydrological and landscape rehabilitation.
+We source stone slab-by-slab from vetted quarries operating under restored-extraction plans. For every block we cut, a measured contribution returns to the source basin's hydrological and landscape rehabilitation.
 
 ### III. ATELIER WELFARE
-Florentine and Milanese studios operate on a four-day making week, with funded healthcare, continuous-learning days, and a profit share distributed to the hands that shape the work.`,
+The Tehran studio operates on a four-day making week, with funded healthcare, continuous-learning days, and a profit share distributed to the hands that shape the work.`,
       tags: ["Craft Fellowship", "Quarry Stewardship", "Atelier Welfare"],
     },
     {
@@ -764,20 +657,19 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
       name: "GÁVV",
       year: "2026",
       designer: "ZAAD",
-      price: "$114,000+",
+      price: "Available upon inquiry",
       dimensions:
           "Island: Part A (3.0m L), Part B (2.0m L). Tall Units Area: 5.4m W x 2.98m H",
       materials: [
         "MDF Nature Ocaliptus (Eucalyptus) Veneer",
-        "Friction-Burnished Rapolano Stone",
-        "Italian Saddle Leather Cylinders",
+        "Hand-Polished Natural Stone",
+        "Leather-Wrapped Iron Cylinder Handles",
         "Anodized Black Aluminum",
-        "Solid American Walnut",
       ],
       description:
-          "An architectural kitchen landscape celebrating raw earth, origin, and functional symmetry. GÁVV (the generous earth) organizes the domestic space into a dual-island centerpiece and a massive full-height wall cabinet system, utilizing pocket-hinge doors, nature eucalyptus surfaces, and leather-wrapped steel details.",
+          "An architectural kitchen landscape celebrating raw earth, origin, and functional symmetry. GÁVV (the generous earth) organizes the domestic space into a dual-island centerpiece and a massive full-height wall cabinet system, utilizing pocket-hinge doors, nature eucalyptus surfaces, and leather-wrapped iron details.",
       story:
-          "GÁVV (named after 'the generous earth' as the cradle of existence) represents a narrative born from soil and stone. Designed in 2026 on a system of quiet grandeur. The cabinetry features active pocket doors in Eucalyptus natural veneer with custom handles made of iron cylinders wrapped in genuine saddle leather. The structural islands are carved from solid thermal Rapolano stone, offering a heavy, grounding physical presence that redefines the luxury kitchen typology.",
+          "GÁVV (named after 'the generous earth' as the cradle of existence) represents a narrative born from soil and stone. Designed in 2026 on a system of quiet grandeur. The cabinetry features active pocket doors in Eucalyptus natural veneer with custom handles made of iron cylinders wrapped in genuine saddle leather. The structural islands are carved from solid natural stone, offering a heavy, grounding physical presence that redefines the luxury kitchen typology.",
       farsiStory: {
         title: "داستان گوو",
         paragraphs: [
@@ -787,9 +679,8 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         ],
       },
       provenance:
-          "Designed in ZAAD Milan ZAAD; Stone milled and hand-carved in Rapolano Terme, Tuscany. Signed by the master stonecutter and cabinetmaker.",
-      imageUrl:
-          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=90",
+          "Designed by the ZAAD Studio, Tehran; stone hand-milled and carved in the ZAAD atelier. Signed by the master stonecutter and cabinetmaker.",
+      imageUrl: "https://zaad.com/image/gavv/gavv-02.jpg",
       images: [
         {
           url: "/image/gavv/gavv-02.jpg",
@@ -828,9 +719,9 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         },
       ],
       specifications: {
-        weight: "approx. 1250 kg (project scale)",
-        leadTime: "16 to 20 weeks (curated build)",
-        origin: "ZAAD Milan & Tuscany, Italy",
+        weight: "Available upon inquiry",
+        leadTime: "Available upon inquiry",
+        origin: "ZAAD Atelier, Tehran",
         finish:
             "Natural wax burnished stone, Eucalyptus veneer with tactile leather cylinder handles",
       },
@@ -869,22 +760,22 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           "Concealed dynamic dishwasher: 60 x 60 cm space",
           "Structures: 16mm water-resistant melamine-faced MDF",
           "Front doors: 22mm MDF overlaid with Natural Eucalyptus wood veneer",
-          "Sides & Top Counter: 20mm premium burnished Rapolano stone",
+          "Sides & Top Counter: 20mm hand-polished natural stone",
         ],
       },
       tallUnits: {
         overview:
             "The tall cabinet wall consists of 5 modular vertical towers standing at 2.98m high, housing heavy appliances, pantry spaces, and beverage curation zones.",
         parts: [
-          { key: "Tower A", name: "Solid Integrated Refrigerator Column" },
+          { key: "Tower A", name: "Solid Integrated Refrigerator & Freezer Column" },
           { key: "Tower B", name: "The Cookie Bar / Coffee station with pocket folding doors" },
-          { key: "Tower C", name: "Concealed Oven and Steam Oven center core" },
+          { key: "Tower C", name: "Concealed Microwave and Oven center core" },
           { key: "Tower D", name: "The Social Bar with leather linings and stem glass shelving" },
           { key: "Tower E", name: "High-capacity Pantry Cabinet with internal steel storage bays" },
         ],
         adjacentA: {
           reason:
-              "Towers A, B, and C (Refrigerator, Cookie Bar, Oven) are placed directly behind Island Part A:",
+              "Towers A, B, and C (Refrigerator, Freezer, Cookie Bar, Oven) are placed directly behind Island Part A:",
           bullets: [
             "Immediate access to raw ingredients during cooking.",
             "Drastic reduction of physical transit times between cooking and heating.",
@@ -903,7 +794,8 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         listSpecs: [
           "Internal structural frame: 16mm melamine-faced MDF base",
           "Drawers & pull-out structural systems: 22mm Nature Eucalyptus wood with iron leather handles",
-          "Main open shelving system: Covered in authentic Italian saddle leather with integrated LED lights",
+          "Wall-covering niche: genuine leather lining behind open shelving",
+          "Main shelves: painted 22mm MDF with integrated LED lights",
           "Integrated appliances: Gaggenau professional ovens, coffee machines, and storage modules",
         ],
       },
@@ -927,6 +819,14 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           ],
         },
         {
+          category: "Ventilation",
+          name: "Gaggenau Series 200 Wall-Mounted Hood AW 270/271/273",
+          specs: [
+            "Width: 90 cm",
+            "Vertical vapour screen provides particularly generous free space above the cooktop",
+          ],
+        },
+        {
           category: "Ovens",
           name: "Gaggenau Series 200 BOP 220/221 Pyrolytic Oven",
           specs: [
@@ -940,8 +840,16 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           name: "Gaggenau Series 200 Fully Automatic Espresso Machine CMP 250",
           specs: [
             "Width: 60 cm, direct water connection option",
-            "Up to 8 personalized drinks memorized by name",
-            "Aroma double-shot grinding and extraction for pure flavor",
+            "Beverages can be personalised and memorised",
+          ],
+        },
+        {
+          category: "Dishwasher",
+          name: "Gaggenau Series 400 Dishwasher DF 481/480",
+          specs: [
+            "Width: 60 cm, 8 programmes, 6 options",
+            "Remaining time projection or Info-Light",
+            "Very quiet 42 dB",
           ],
         },
         {
@@ -950,7 +858,15 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           specs: [
             "Niche: 56 x 177.5 cm, premium design",
             "Three climate zones including fresh cooling close to 0°C",
-            "Cushioned self-closing door system with zero-frost technology",
+            "Net volume 302 liters",
+          ],
+        },
+        {
+          category: "Refrigeration",
+          name: "Gaggenau Series 200 Vario Freezer RF 287",
+          specs: [
+            "Niche: 56 x 177.5 cm",
+            "Net volume 212 liters",
           ],
         },
       ],
@@ -981,11 +897,11 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
       name: "ZIVV",
       year: "2026",
       designer: "ZAAD",
-      price: "$132,000+",
+      price: "Available upon inquiry",
       dimensions:
-          "Seamless Island: 1.9m L x 1.2m W. Tall Units Wall: 4.8m W x 2.4m H",
+          "Seamless Island: approx. 8.15m L (with dual snack-bar ends) x 1.2m W. Tall Units Wall: 4.8m W x 2.7m–4.1m H",
       materials: [
-        "Italian Travertine Classico",
+        "Natural Stone",
         "CNC Prealigned Natural Wood Veneer",
         "Lacquered RAL 1013 Satin Melamine",
         "Aluminium 8mm Snack Counter",
@@ -994,7 +910,7 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
       description:
           "An elegant manifestation of organic softness and structured radiance. The ZIVV collection features a seamless rounded stone-top island with a carved wooden body, double-sided snack bars, and symmetric warm cream cabinetry featuring top-tier Gaggenau 400 series integration.",
       story:
-          "ZIVV (derived from the words for 'adornment' and 'beauty') represents a manifestation of radiance that illuminates. Designed in 2026, ZIVV plays with organic curves: both ends of the travertine island feature rounded structural forms that form snack bars with seamless aluminum counter wraps. The pristine wall cabinets are finished in satin RAL 1013 cream lacquer with integrated Domus horizontal light lanes, pairing the boldness of modern design with delicate craftsmanship.",
+          "ZIVV (derived from the words for 'adornment' and 'beauty') represents a manifestation of radiance that illuminates. Designed in 2026, ZIVV plays with organic curves: both ends of the stone island feature rounded structural forms that form snack bars with seamless aluminum counter wraps. The pristine wall cabinets are finished in satin RAL 1013 cream lacquer with integrated Domus horizontal light lanes, pairing the boldness of modern design with delicate craftsmanship.",
       farsiStory: {
         title: "داستان زیوو",
         paragraphs: [
@@ -1003,9 +919,8 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         ],
       },
       provenance:
-          "Designed and prototyped in Milanese ZAAD; Travertine stone extracted from Rapolano stone quarries, Tuscany. Cabinet engineering completed in Lombardy, Italy.",
-      imageUrl:
-          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=90",
+          "Designed and prototyped by the ZAAD Studio, Tehran; stone selected slab-by-slab, cabinet engineering completed in the ZAAD atelier.",
+      imageUrl: "https://zaad.com/image/zivv/zivv-28.jpg",
       images: [
         {
           url: "/image/zivv/zivv-28.jpg",
@@ -1039,11 +954,11 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         },
       ],
       specifications: {
-        weight: "approx. 1100 kg (total weight)",
-        leadTime: "14 to 16 weeks",
-        origin: "ZAAD Milan & Tuscan Stone Studio, Italy",
+        weight: "Available upon inquiry",
+        leadTime: "Available upon inquiry",
+        origin: "ZAAD Atelier, Tehran",
         finish:
-            "Acid-free honed raw Travertine Classico, natural wood cladding, and lacquer RAL 1013",
+            "Acid-free honed natural stone, natural wood cladding, and lacquer RAL 1013",
       },
       partners: {
         typology: "Bespoke Curved Kitchen System",
@@ -1068,7 +983,7 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         listSpecs: [
           "Internal framing structures: Melamine-faced MDF (16mm thickness)",
           "Curved front panels: 22mm MDF custom-grooved with high precision CNC wood veneer",
-          "Top counter: Custom-polished 20mm Travertine Classico stone slab",
+          "Top counter: Custom-polished 20mm natural stone slab",
           "Plinths: 14cm black melamine-faced MDF waterproof plinth",
         ],
       },
@@ -1086,7 +1001,7 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         adjacentB: {
           reason: "Part B (Rear Row Cabinetry):",
           bullets: [
-            "Features shallower storage depths of 35cm to prevent clutter.",
+            "Features a shallower storage depth to prevent clutter.",
             "Houses pull-out pantry baskets, cleaning drawers, and long-term storage.",
             "Preserves a light, compact architectural presence that stays flush.",
           ],
@@ -1098,6 +1013,24 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         ],
       },
       appliancesDetail: [
+        {
+          category: "Sink",
+          name: "Stainless Steel Sink",
+          specs: ["Cutout: 60 x 90 cm", "Positioned on the central stone countertop"],
+        },
+        {
+          category: "Cooktop",
+          name: "Gaggenau Series 200 Flex Induction CI 292",
+          specs: [
+            "Cutout: 60 x 90 cm",
+            "5 flexible induction cooking zones with magnetic Twist-Pad control",
+          ],
+        },
+        {
+          category: "Dishwasher",
+          name: "Gaggenau Series 400 Dishwasher DF 481/480",
+          specs: ["Cutout: 60 x 60 cm", "8 programmes, 6 options, 42 dB"],
+        },
         {
           category: "Ovens",
           name: "Gaggenau Series 400 BO 470/471 Pyrolytic Oven",
@@ -1111,7 +1044,7 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           category: "Combi-Steam",
           name: "Gaggenau Series 400 BS 450/451 Combi-Steam Oven",
           specs: [
-            "Width: 60 cm, motorized water-tank lift",
+            "Width: 60 cm, removable 1.3 liter water tank",
             "Hot air combinable with precise mist, steam, and humidity control",
             "Sous-vide cooking program with core heat sensors",
           ],
@@ -1121,6 +1054,7 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           name: "Gaggenau Series 400 WS 461 Dinner service drawer",
           specs: [
             "Width: 60 cm, height 14 cm, net volume 19 l",
+            "Capacity: dinner service for 6 settings",
             "Personalized temperature settings (40°C to 80°C) for warming up plates",
             "Yogurt preparation, slow cooking, and yeast dough proofing programs",
           ],
@@ -1162,21 +1096,21 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
       name: "RÁKH",
       year: "2026",
       designer: "ZAAD Studio",
-      price: "$128,000+",
+      price: "Available upon inquiry",
       dimensions:
           "Sculpted Island: 2.2m L x 1.1m W. Tall Cabinets: 3.6m W x 2.8m H",
       materials: [
         "MDF Nature Ocaliptus Structure",
-        "Hand-carved Golden Veined Onyx Stone",
-        "Italian Leather Panels",
+        "Hand-Carved Natural Stone",
+        "Leather Wall Panels",
         "Domus LED micro-profiles",
-        "Cast Bronze Door Handles",
+        "Leather-Wrapped Iron Cylinder Handles",
         "Satin Brushed Lacquer",
       ],
       description:
-          "An architectural dialogue between Japanese poetic restraint and Italian material weight. The RÁKH collection stands on a sculpted, hand-carved stone base offset by an elongated slab countertop, backed by slatted sliding screens and dark Eucalyptus timber tall units.",
+          "An architectural dialogue between Japanese poetic restraint and material weight. The RÁKH collection stands on a sculpted, hand-carved stone base offset by an elongated slab countertop, backed by slatted sliding screens and dark Eucalyptus timber tall units.",
       story:
-          "RÁKH (born from precision and tenderness) represents hours of intricate, dedicated craftsmanship. Designed in 2026, RÁKH draws dense inspiration from Japanese aesthetics, guiding the kitchen landscape into minimal, peaceful balances. The island stands as a structural block: the solid golden-brown onyx stone base is hand-carved to look like an organic sculpture. This supports a floating marble countertop that serves as a quiet threshold between beauty and utility.",
+          "RÁKH (born from precision and tenderness) represents hours of intricate, dedicated craftsmanship. Designed in 2026, RÁKH draws dense inspiration from Japanese aesthetics, guiding the kitchen landscape into minimal, peaceful balances. The island stands as a structural block: the solid natural-stone base is hand-carved to look like an organic sculpture. This supports a floating stone countertop that serves as a quiet threshold between beauty and utility.",
       farsiStory: {
         title: "داستان رخ",
         paragraphs: [
@@ -1186,9 +1120,8 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         ],
       },
       provenance:
-          "Designed by ZAAD Milan ZAAD. Woodworking completed in Florence; Onyx carving completed in Carrara, Italy. Stamped with the collective's seal.",
-      imageUrl:
-          "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=90",
+          "Designed by the ZAAD Studio, Tehran. Woodworking and stone carving completed in the ZAAD atelier. Stamped with the collective's seal.",
+      imageUrl: "https://zaad.com/image/rakh/rakh-52.jpg",
       images: [
         {
           url: "/image/rakh/rakh-52.jpg",
@@ -1202,11 +1135,11 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         },
       ],
       specifications: {
-        weight: "approx. 1400 kg (highly monolithic stone)",
-        leadTime: "16 to 18 weeks",
-        origin: "Carrara Stone Labs & Florence Wood Studio, Italy",
+        weight: "Available upon inquiry",
+        leadTime: "Available upon inquiry",
+        origin: "ZAAD Atelier, Tehran",
         finish:
-            "Hand-honed raw onyx stone, natural eucalyptus wood with acid-patinated cast-bronze handles",
+            "Hand-honed natural stone, natural eucalyptus wood with leather-wrapped iron handles",
       },
       partners: {
         typology: "Fine Craft Kitchen Architecture",
@@ -1220,9 +1153,9 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         overview:
             "The RÁKH island stands as a sculptural landmark, utilizing raw weight as a structural anchor.",
         partA: {
-          title: "The Sculpted Onyx Pedestal & Elongated Countertop",
+          title: "The Sculpted Natural-Stone Pedestal & Elongated Countertop",
           bullets: [
-            "The main support base is carved from a single dense block of golden-brown Italian Onyx.",
+            "The main support base is carved from a single dense block of natural stone.",
             "Generates a deep, physical design statement that shifts under room lighting.",
             "The floating countertop cantilevers over the base, accommodating an offset 8mm matching structural aluminum snack tray.",
             "Eucalyptus drawers with custom integrated vertical finger pulls.",
@@ -1231,7 +1164,7 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         listSpecs: [
           "Internal framing structures: Melamine-faced MDF (18mm, customized colors)",
           "Front doors: MDF 22mm with Natural Eucalyptus wood cladding",
-          "Base support & Top Countertop: Premium selected Carrara Onyx stone, hand-polished",
+          "Base support & Top Countertop: Premium selected natural stone, hand-polished",
           "Concealed plinths: 14cm black waterproof solid timber supports",
         ],
       },
@@ -1243,37 +1176,35 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
           bullets: [
             "Hides secondary sinks and food ingredients behind linear slats, preserving geometric calm.",
             "Lets internal warm LED light flow like a paper lantern during evening hours.",
-            "Constructed using ancient Japanese finger joints, keeping sliding frames lightweight.",
+            "Built as traditional Japanese lattice (Kōshi) screens, keeping the sliding frames light.",
           ],
         },
         listSpecs: [
           "Structures: MDF 18mm high moisture resistant melamine-faced core",
           "Doors & basket fronts: MDF 22mm clad with Eucalyptus wood veneer",
           "Handles: Iron cylinders covered in genuine leather",
-          "Inner back walls: Clad in custom Italian tan leather panels with Domus micro-LEDs",
+          "Inner back walls: Clad in custom tan leather panels with Domus micro-LEDs",
         ],
       },
     },
     {
-      id: "varr",
+      id: "vaar",
       number: "C°04",
-      name: "VARR",
+      name: "VAAR",
       year: "2026",
       designer: "ZAAD",
-      price: "$145,000+",
-      dimensions:
-          "Floating Island: 2.8m L x 1.2m W. Tall Units Wall: 4.8m W x 2.85m H",
+      price: "Available upon inquiry",
+      dimensions: "Available upon inquiry",
       materials: [
-        "Italian Dark Travertine Stone",
-        "Sicilian Volcanic Basalt",
-        "Burnished Blackened Carbon Steel",
-        "Nature Ocaliptus Structure",
-        "Authentic Italian Saddle Leather",
+        "Natural Stone",
+        "Nature Ocaliptus (Eucalyptus) Structure",
+        "Leather-Wrapped Iron Cylinder Handles",
+        "Anodized Black Aluminum",
       ],
       description:
-          "An outstanding architectural statement of absolute horizontal lines and massive spatial weight. Developed under the design name VAAR, this kitchen collection utilizes floating dark volcanic stone counters, industrial blackened carbon steel legs, and integrated Coopersburg compartments.",
+          "An outstanding architectural statement of absolute horizontal lines and massive spatial weight. VAAR is where architectural lines, intelligent forms, and carefully engineered details come together, expressed through a floating natural-stone island and integrated Coopersburg compartments.",
       story:
-          "VARR (historically designed as VAAR in ZAAD catalog) is not merely a recipe kitchen; it designs space and establishes absolute, geometric order in the home. Built in 2026, the collection has a majestic look: structural lines are precise and engineered. Slabs of Sicilian volcanic basalt and deep gray travertine are unified onto blackened carbon steel support trusses. Backed by tall units with hand-wrapped leather handles, VARR projects a calm yet steadfast presence that gives structure to beauty.",
+          "Design in VAAR is not merely the creation of beauty; it builds structure, creates order, and shapes space. VAAR is where architectural lines, intelligent forms, and carefully engineered details come together to express a clear idea: strength in organization, beauty in structure. This collection is designed to embrace, organize, and define space. Its presence is calm yet steadfast, its function precise yet elegant — VAAR, where structure gives meaning to beauty.",
       farsiStory: {
         title: "داستان وار",
         paragraphs: [
@@ -1283,64 +1214,324 @@ Attention to durability, enduring solutions and energy-efficient equipment conti
         ],
       },
       provenance:
-          "Designed in ZAAD Milan ZAAD; volcanic basalt quarried and hand-milled near Mount Etna, Sicily. Steel components forged in Turin, Italy.",
-      imageUrl:
-          "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=90",
+          "Designed by the ZAAD Studio, Tehran; stone hand-milled in the ZAAD atelier.",
+      imageUrl: "https://zaad.com/image/vaar/vaar-63.jpg",
       images: [
         {
-          url: "/image/varr/varr-63.jpg",
+          url: "/image/vaar/vaar-63.jpg",
           orientation: "portrait",
-          caption: "VARR — Studio Archive, Plate 63",
+          caption: "VAAR — Studio Archive, Plate 63",
         },
         {
-          url: "/image/varr/varr-64.jpg",
+          url: "/image/vaar/vaar-64.jpg",
           orientation: "landscape",
-          caption: "VARR — Studio Archive, Plate 64",
+          caption: "VAAR — Studio Archive, Plate 64",
         },
         {
-          url: "/image/varr/varr-67.jpg",
+          url: "/image/vaar/vaar-67.jpg",
           orientation: "portrait",
-          caption: "VARR — Studio Archive, Plate 67",
+          caption: "VAAR — Studio Archive, Plate 67",
         },
       ],
       specifications: {
-        weight: "approx. 1550 kg (extreme density volcanic stone)",
-        leadTime: "18 to 22 weeks",
-        origin: "Mount Etna, Sicily & Turin Steel Labs, Italy",
+        weight: "Available upon inquiry",
+        leadTime: "Available upon inquiry",
+        origin: "ZAAD Atelier, Tehran",
         finish:
-            "Sanding-burnished volcanic basalt with hand-burnished blackened carbon steel structures",
+            "Hand-polished natural stone with eucalyptus veneer and leather-wrapped iron handles",
       },
       partners: {
         typology: "Architectural Kitchen Architecture",
         hardware: "SALICE soft close systems",
-        appliances: "Gaggenau 400 Series professional cooking tools",
+        appliances: "Gaggenau cooking systems & Coopersburg (sink, oven, exhaust)",
         furniture: "DORSA HOME metal high bar stools",
-        accessories: "Coopersburg built-in internal drawers",
+        accessories: "Kesseböhmer storage systems",
         light: "Domus micro LED lines",
       },
       islandSpecs: {
         overview:
-            "The VARR island acts as an engineering masterpiece, showcasing a large piece of volcanic basalt cantilevered on solid carbon steel legs with absolute horizontal geometry.",
+            "The VAAR island acts as an engineering masterpiece, showcasing a large piece of natural stone cantilevered over recessed geometric plinths with absolute horizontal geometry.",
         listSpecs: [
-          "Structures: MDF 18mm melanime-faced panels with custom dark coating",
-          "Doors & drawers: MDF 22mm with authentic Nature Eucalyptus timber veneer",
-          "Countertop: Sicilian hand-selected volcanic basalt slab (thickness 30mm) with stain sealing",
-          "Sides: Solid volcanic basalt sheets",
+          "Structures: MDF 18mm melamine-faced panels (colored core)",
+          "Doors & drawers: MDF 22mm with Nature Eucalyptus timber veneer",
+          "Countertop: Natural stone slab, hand-polished",
+          "Sides: Bookmatched natural stone",
           "Snack counter: Cantilevered Aluminium 8mm panel",
-          "Integrated components: Triple under-sink, built-in induction burner, and table-flush exhaust ventilation",
+          "Integrated Coopersburg components: sink, oven, and exhaust ventilation",
         ],
       },
       tallUnits: {
         overview:
             "Symmetric vertical tall cabinets designed to anchor the space and structure the dry-good storing compartments.",
         listSpecs: [
-          "Internal framework: Melamine-faced MDF 18mm high density sheets",
+          "Internal framework: Melamine-faced MDF 18mm high density sheets (colored core)",
           "Doors & drawers: MDF 22mm clad in Eucalyptus timber panels with vertical orientation",
-          "Cabinet handles: Solid iron cylinder tubes wrapped in heavy Italian saddle leather",
-          "Open shelves: MDF 22mm lacquer coat with genuine leather coverings",
-          "Integrated appliances: Dual Gaggenau Vario column wine refrigerators and professional microwave ovens",
+          "Cabinet handles: Solid iron cylinder tubes wrapped in genuine leather",
+          "Wall-covering niche: genuine leather lining",
+          "Open shelves: painted 22mm MDF",
+          "Integrated appliances: Gaggenau cooking and refrigeration systems",
         ],
       },
     },
   ],
+  glance: {
+    eyebrow: "ZAAD at a glance",
+    heroTitle: "The Kitchen Collection",
+    heroTitleAccent: "2026",
+    heroIntro:
+        "Four architectural kitchen collections — GÁVV, ZIVV, RÁKH and VAAR — each a complete statement of structure, material and craft. Narratives, typologies, island and tall-unit architecture, material specifications, integrated appliances, and the master partner matrix, documented at a glance.",
+    heroBadge: "Lookbook",
+    heroBadgeLabel: "Kitchen Collection 2026",
+    heroImage: "/image/gavv/gavv-02.jpg",
+    heroImageAlt: "ZAAD Kitchen Collection — island architecture in natural stone",
+    overviewLabel: "Overview",
+    matrixLabel: "Master Specification",
+    sections: {
+      narrative: "Narrative & Concept",
+      partners: "Brand Partners & Typology",
+      island: "Island Architecture",
+      tallUnits: "Tall Units & Circulation",
+      materials: "Material & Structural Specifications",
+      dimensions: "Technical Dimensions",
+      appliances: "Integrated Appliances",
+      fittings: "Internal Fittings & Accessories",
+      furniture: "Furniture Integration",
+      layouts: "Layout Documentation",
+      directory: "Partner Directory",
+    },
+    overview: {
+      heading: "Brand Overview & Core Philosophy",
+      statement:
+          "ZAAD looks at the world through the lens of precision and delicacy; where beauty is not confined to form but flows in the harmony between functionality, details, and accuracy.",
+      intro: "Design 2026 — four collections, four architectural temperaments:",
+      collections: [
+        {
+          id: "gavv",
+          blurb:
+              "Inspired by the fertile earth and primal origins; focused on steadfastness, modular duality, and seamless entertaining.",
+        },
+        {
+          id: "zivv",
+          blurb:
+              "Inspired by adornment, radiance, and soft curves; featuring continuous geometry, dual-depth cabinetry, and subtle craft.",
+        },
+        {
+          id: "rakh",
+          blurb:
+              "Influenced by Japanese aesthetics; balanced around intentional simplicity, slatted light filtration, and carved stone sculpture.",
+        },
+        {
+          id: "vaar",
+          blurb:
+              "Built around architectural lines and structural definition; showcasing monolithic volumes, order, and spatial presence.",
+        },
+      ],
+    },
+    supplements: {
+      gavv: {
+        tagline: "The generous earth",
+        narrative:
+            "Authenticity, like ancient roots, always calls us back to our very origin; to the place where ZAAD resided, and GÁVV 'the generous earth' became the cradle of existence.\nThe GÁVV is an echo of this very source, a narrative born from the soil, from a beginning imbued with grandeur and steadfastness.",
+        materialTable: {
+          head: ["Component", "Island", "Tall Units"],
+          rows: [
+            ["Internal Carcass / Structure", "16 mm Melamine MDF", "16 mm Melamine MDF"],
+            ["Inner Shelves", "—", "18 mm Melamine MDF"],
+            ["Front Doors & Pull-Out Faces", "22 mm MDF, Natural Eucalyptus", "22 mm MDF, Natural Eucalyptus"],
+            ["Handles", "Integrated / Clean edge profile", "Leather-wrapped cylindrical iron handles"],
+            ["Side Cladding", "Natural Stone", "Natural Stone / Cabinet panels"],
+            ["Countertop", "Natural Stone", "—"],
+            ["Wall Covering / Niche", "—", "Leather cladding"],
+            ["Accent / Main Shelves", "—", "22 mm Painted MDF"],
+            ["Snack Counter Extension", "8 mm Solid Aluminum", "—"],
+            ["Sink Cutout", "Stainless steel, 60 × 90 cm", "—"],
+            ["Cooktop Cutout", "60 × 90 cm", "—"],
+            ["Dishwasher Integration", "60 × 60 cm", "—"],
+          ],
+        },
+        dimensions: [
+          { label: "Tall Units Total Height", value: "298.0 cm" },
+          { label: "Door Parking Mechanism", value: "Pocket / retractable sliding door system with leather-lined parking pockets" },
+          { label: "Island Width (carcass core depth)", value: "58.0 cm" },
+          { label: "Island Length", value: "300.0 cm (Part A) + 200.0 cm (Part B) + circular cantilevered snack table" },
+          { label: "Tall Units Appliance Plan", value: "Refrigerator + Freezer + Fully Automatic Coffee Machine + Microwave / Warming Drawer + Oven" },
+        ],
+        fittings: [
+          {
+            name: "Base Unit Towel Rail Pull-Out (Art. No. 03 5418)",
+            specs: [
+              "Width: 15 cm",
+              "Full-extension runners engineered for 90° installation, right-hand mount.",
+            ],
+          },
+          {
+            name: "Arena Classic Internal Pull-Out Trays",
+            specs: [
+              "Integrated spacer strips for mounting behind hinged doors.",
+              "Lowered front edges for ergonomic item access.",
+              "Integrated soft self-closing mechanism with protective runner shroud.",
+            ],
+          },
+          {
+            name: "Dispensa Junior (Arena Style)",
+            specs: [
+              "Fits base cabinet widths: 30 cm to 60 cm.",
+              "Height-adjustable dual tray capacity, floor-panel mounted.",
+            ],
+          },
+        ],
+        furniture: {
+          name: "Counter / Bar Stool — DORSA HOME",
+          specs: [
+            "Circular upholstered leather/fabric seat cushion.",
+            "Industrial-grade threaded steel height-adjustment mechanism.",
+            "Multi-legged pedestal base with an integrated circular perimeter footrest ring.",
+          ],
+        },
+      },
+      zivv: {
+        tagline: "Adornment & radiance",
+        narrative:
+            "ZIVV, derived from the words for 'adornment' and 'beauty,' is a manifestation of a radiance that illuminates the space; an interplay between the boldness of modern design and the delicate subtleties that may remain hidden at first glance, yet reveal their depth and elegance through interaction.\nEach piece in ZIVV tells a story of harmonious contrasts: strong, modern lines alongside soft curves and handcrafted details, enriched with subtle elements that invite the eye to explore.",
+        materialTable: {
+          head: ["Component", "Island", "Tall Units & Central Section"],
+          rows: [
+            ["Internal Carcass / Structure", "16 mm Melamine MDF", "18 mm Melamine MDF"],
+            ["Inner Shelves", "—", "18 mm Melamine MDF"],
+            ["Front Doors & Pull-Out Faces", "22 mm MDF, Natural Wood", "22 mm MDF, finished in RAL 1013 (Oyster White / Warm Pearl)"],
+            ["Handle Typology", "Integrated CNC milled finger pulls", "Integrated CNC milled profiles"],
+            ["Exposed Sides", "Natural Curved Wood", "Matching lacquered / clad panels"],
+            ["Countertops", "Natural Stone", "Natural Stone (backsplash & worktop)"],
+            ["Plinths", "Height: 14 cm, 18 mm Black MDF", "Black recessed toe-kick"],
+            ["Snack Counters", "8 mm Solid Aluminum", "—"],
+          ],
+        },
+        dimensions: [
+          { label: "Cabinet Run Heights", value: "270.0 / 280.0 cm base lines, up to 340.0 and 410.0 cm architectural envelopes" },
+          { label: "Island Core Base Units", value: "95.0 / 190.0 cm modularity; overall width 120.0 cm; radius profiles R60 cm" },
+          { label: "Plinth Height", value: "14.0 cm" },
+          { label: "Snack Table Overhangs", value: "100.0 cm clearances; overall footprint ≈ 814.8 cm including extended pedestals" },
+          { label: "Appliance Stacks", value: "Microwave / warmer / coffee / oven columns in 60.0 and 70.0 cm widths; 14.0 cm warming drawer niche" },
+          { label: "Refrigerator / Freezer Pairs", value: "60.0 cm column modules with 3.0 mm precision reveal joints" },
+        ],
+        fittings: [
+          {
+            name: "Tandem Swivel Larder Pull-Out",
+            specs: [
+              "Split-storage opening mechanism bringing rear shelves forward upon opening.",
+              "Adjustable multi-tier baskets, soft and silent hydraulic damping.",
+            ],
+          },
+        ],
+        furniture: {
+          name: "ZIVV Adjustable Counter Stool — DORSA HOME",
+          specs: [
+            "Minimalist turned leather cushion top with integrated steel screw-lift mechanism.",
+          ],
+        },
+      },
+      rakh: {
+        tagline: "Intentional simplicity",
+        narrative:
+            "The RÁKH is born from precision and tenderness, where every detail reflects hours of craftsmanship and creativity.\nInspired by Japanese aesthetics, it leads us toward intentional simplicity and poetic balance.\nIn RÁKH, vibrant colors come to life, reflecting the energy and spirit of living through delicate design, allowing light and movement to flow freely through the forms.",
+        materialTable: {
+          head: ["Component", "Island", "Tall Units"],
+          rows: [
+            ["Internal Carcass / Structure", "18 mm Melamine MDF (colored core)", "18 mm Melamine MDF (colored core)"],
+            ["Inner Shelves", "—", "18 mm Melamine MDF"],
+            ["Doors & Slatted Fronts", "22 mm MDF, Natural Eucalyptus", "22 mm MDF, Natural Eucalyptus"],
+            ["Handles", "Integrated / Concealed", "Leather-covered iron cylinder handles"],
+            ["Cabinet Sides & Cladding", "Natural Stone", "Slatted timber / architectural panels"],
+            ["Countertop", "Natural Stone", "Natural Stone"],
+            ["Wall Covering / Niche", "—", "Leather covering"],
+            ["Shelves", "—", "22 mm Painted MDF"],
+            ["Snack Bar Surface", "8 mm Solid Aluminum", "—"],
+            ["Architectural Lighting", "Domus integrated systems", "Domus integrated strip and shelf illumination"],
+          ],
+        },
+        layouts: [
+          "Plan View",
+          "Front View with Closed Doors — closed sliding lattice screens",
+          "Front View with Opened Doors — open shelving and appliance zones",
+          "Door Joinery Detail — fine carpentry and sliding tracks",
+        ],
+      },
+      vaar: {
+        tagline: "Strength in organization, beauty in structure",
+        narrative:
+            "Design in VAAR is not merely the creation of beauty; it builds structure, creates order. And it shapes space.\nVAAR is where architectural lines, intelligent forms, and carefully engineered details come together to express a clear idea: strength in organization, beauty in structure.\nThis collection is designed to embrace, organize, and define space. Its presence is calm yet steadfast, its function precise yet elegant.\nVAAR — where structure gives meaning to beauty.",
+        materialTable: {
+          head: ["Component", "Island", "Tall Units"],
+          rows: [
+            ["Internal Carcass / Structure", "18 mm Melamine MDF (colored core)", "18 mm Melamine MDF (colored core)"],
+            ["Inner Shelves", "—", "18 mm Melamine MDF"],
+            ["Front Doors & Pull-Out Faces", "22 mm MDF, Natural Eucalyptus", "22 mm MDF, Natural Eucalyptus"],
+            ["Handles", "Integrated / Touch-latch", "Leather-wrapped iron cylinders"],
+            ["Island Sides", "Bookmatched Natural Stone", "Wood / Stone casing"],
+            ["Countertop", "Thick Edge Natural Stone", "Natural Stone niche"],
+            ["Wall Covering / Niche", "—", "Leather covering"],
+            ["Accent Shelves", "—", "22 mm Painted MDF"],
+            ["Snack Surface", "8 mm Solid Aluminum", "—"],
+            ["Appliance Providers", "Sink, oven, exhaust: Coopersburg / Gaggenau", "Gaggenau & Coopersburg"],
+            ["Hardware", "Salice", "Salice"],
+            ["Lighting", "Domus", "Domus"],
+          ],
+        },
+        layouts: [
+          "Plan View",
+          "Front View with Closed Doors",
+          "Front View with Opened Doors",
+          "Door Detail & Sub-frame Assemblies",
+        ],
+      },
+    },
+    matrix: {
+      heading: "Cross-Collection Master Specification",
+      table: {
+        head: ["Parameter", "GÁVV", "ZIVV", "RÁKH", "VAAR"],
+        rows: [
+          ["Carcass Thickness", "16 mm Melamine MDF", "16 mm (island) / 18 mm (tall) Melamine MDF", "18 mm Melamine MDF (color)", "18 mm Melamine MDF (color)"],
+          ["Inner Shelves", "18 mm Melamine MDF", "18 mm Melamine MDF", "18 mm Melamine MDF", "18 mm Melamine MDF"],
+          ["Front Door Faces", "22 mm MDF, Natural Eucalyptus", "22 mm MDF, Natural Wood / RAL 1013 lacquer", "22 mm MDF, Natural Eucalyptus", "22 mm MDF, Natural Eucalyptus"],
+          ["Handle Solution", "Leather-covered iron cylinder", "CNC integrated recessed grip", "Leather-covered iron cylinder / concealed", "Leather-covered iron cylinder"],
+          ["Countertop Material", "Natural Stone", "Natural Stone", "Natural Stone", "Natural Stone"],
+          ["Snack Bar Extension", "8 mm Solid Aluminum", "8 mm Solid Aluminum", "8 mm Solid Aluminum", "8 mm Solid Aluminum"],
+          ["Feature Finishes", "Leather niche lining", "Curved wood fluting & cove LED", "Slatted sliding screens & leather", "Monolithic stone & leather"],
+        ],
+      },
+      directory: [
+        {
+          brand: "Gaggenau",
+          role: "Built-in luxury appliances",
+          products:
+              "CI 292 Flex Induction · BOP 220/221 & BO 470/471 ovens · BS 450/451 combi-steam · BMP 224/225 microwave · WS 461 warming drawer · CMP 250/270 coffee · DF 480/481 dishwasher · AL 400 downdraft, AW 270/271/273 wall hood, AC 400 canopy hood · Vario cooling: RC 289 / RF 287, RC 472 / RF 471 / RF 463, RW 464 wine cabinet",
+        },
+        {
+          brand: "Coopersburg",
+          role: "Built-in appliances",
+          products: "Sink, oven, and exhaust units — featured in the VAAR collection.",
+        },
+        {
+          brand: "SALICE",
+          role: "Cabinet hardware",
+          products: "Concealed hinges, pocket door runner mechanics, and drawer slide systems.",
+        },
+        {
+          brand: "Kesseböhmer",
+          role: "Storage accessories",
+          products: "15 cm towel rail pull-out (Art. 03 5418) · Arena Classic pull-out trays · Dispensa Junior base pull-out · Tandem Swivel tall larder units.",
+        },
+        {
+          brand: "Domus",
+          role: "Architectural lighting",
+          products: "Integrated linear LED shelf profiles, niche accents, and task illumination.",
+        },
+        {
+          brand: "DORSA HOME",
+          role: "Furniture integration",
+          products: "Signature height-adjustable counter stools with turned mechanical spindles and upholstered round cushions.",
+        },
+      ],
+    },
+  },
 };

@@ -14,19 +14,21 @@ import { ArrowDown, ArrowUpRight, Pause, Phone, Play } from "lucide-react";
 import MaisonReveal from "../MaisonReveal";
 import MaisonButton from "../MaisonButton";
 import NoiseBg from "../shared/NoiseBg";
+import useDeferredMedia from "@/hooks/useDeferredMedia";
 import { useLanguage } from "@/services/TranslationService";
 import { animateScrollTo } from "@/services/ScrollService";
 import wrapBrandNames from "@/lib/wrapBrandNames";
+import { isStudioOpenNow } from "@/lib/studioHours";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 const CHAPTER_HERO_VIDEOS = [
-  "/video/gavv.mp4",
-  "/video/zivv.mp4",
-  "/video/rakh.mp4",
-  "/video/varr.mp4",
+  "/video/house/chapter-gavv.mp4",
+  "/video/house/chapter-zivv.mp4",
+  "/video/house/chapter-rakh.mp4",
+  "/video/house/chapter-vaar.mp4",
 ];
 
 export const AMBIENT = (
@@ -157,7 +159,7 @@ export function EditorialSignature({ className = "" }) {
       variant="unveil"
       delay={0.15}
       threshold={0.1}
-      className={`relative py-2 max-w-3xl mt-14 md:mt-20 ${className}`}
+      className={`relative py-2 max-w-3xl mt-10 md:mt-12 ${className}`}
     >
       <motion.div
         initial={{ scaleX: 0 }}
@@ -185,14 +187,18 @@ export function StatGrid({ stats, align = "start" }) {
   if (!stats || !stats.length) return null;
   const centered = align === "center";
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-12 border-t border-ink/10">
+    <div className="grid grid-cols-3 gap-4 md:gap-8 border-t border-ink/10">
       {stats.map((s, i) => (
         <MaisonReveal
           key={i}
           variant="unveil"
           delay={0.2 + i * 0.15}
           threshold={0.01}
-          className={centered ? "text-center" : "text-left rtl:text-right"}
+          className={
+            centered
+              ? "text-center"
+              : "text-center md:text-left rtl:md:text-right"
+          }
         >
           <StatValue value={s.value} />
           <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase mt-2">
@@ -215,11 +221,11 @@ export function CrossLinks({ siblings }) {
     <section className="relative px-6 sm:px-12 section-y border-t border-ink/10">
       <div className="max-w-7xl mx-auto">
         <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-          <span className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3 text-center">
+          <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3 text-center">
             {t("crossLinkHeading")}
           </span>
         </MaisonReveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-12 md:mt-16">
           {siblings.map((s, i) => (
             <MaisonReveal
               key={s.href}
@@ -258,14 +264,26 @@ export function CrossLinks({ siblings }) {
 
 export function CallStrip() {
   const { t } = useLanguage();
+  const [isOpen, setIsOpen] = useState(null);
+
+  useEffect(() => {
+    setIsOpen(isStudioOpenNow());
+  }, []);
+
   return (
     <section className="px-6 sm:px-12 pb-20">
       <div className="max-w-7xl mx-auto">
         <MaisonReveal variant="slide-up-royal" delay={0.2} threshold={0.1}>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-panel border border-ink/10 rounded-2xl p-6 sm:p-8 shadow-ambient">
             <div className="text-left rtl:text-right">
-              <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-1.5">
+              <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase mb-1.5 flex items-center gap-2">
                 {t("callStudio")}
+                {isOpen !== null && (
+                  <span className="inline-flex items-center gap-1.5 text-[length:calc(9px*var(--zaad-font-scale))] font-mono tracking-widest normal-case text-muted">
+                    <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-accent" : "bg-muted/50"}`} />
+                    {isOpen ? t("studioStatusOpen") : t("studioStatusClosed")}
+                  </span>
+                )}
               </span>
               <p className="text-xs text-muted font-light leading-relaxed rtl:text-justify">
                 {t("callStudioSub")}
@@ -295,6 +313,7 @@ export function ChapterHero({
   heroBadge,
   heroBadgeLabel,
   scrollTargetId = "house-editorial",
+  withVideo = true,
 }) {
   const { t } = useLanguage();
   const scrollToEditorial = useCallback(() => {
@@ -303,6 +322,7 @@ export function ChapterHero({
 
   const [activeVideo, setActiveVideo] = useState(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [heroVideoReady] = useDeferredMedia({ mode: "idle" });
   const videoRef = useRef(null);
   const sectionRef = useRef(null);
   const mediaColRef = useRef(null);
@@ -314,12 +334,17 @@ export function ChapterHero({
   );
 
   useEffect(() => {
+    if (!withVideo || !heroVideoReady) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     setActiveVideo(
       CHAPTER_HERO_VIDEOS[
         Math.floor(Math.random() * CHAPTER_HERO_VIDEOS.length)
       ],
     );
+  }, [withVideo, heroVideoReady]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const mm = gsap.matchMedia();
 
@@ -469,6 +494,7 @@ export function ChapterHero({
                 src={heroImage}
                 alt={heroImageAlt}
                 fill
+                priority
                 sizes="(min-width: 1024px) 520px, 90vw"
                 className="object-cover lux-ken-burns"
                 referrerPolicy="no-referrer"

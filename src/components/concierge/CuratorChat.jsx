@@ -27,6 +27,11 @@ const ChatMessage = memo(function ChatMessage({ msg, isFarsi, t }) {
         [msg.content],
     );
 
+    const renderedLines = useMemo(
+        () => lines.map((line, i) => renderCuratorLine(line, isFarsi, i)),
+        [lines, isFarsi],
+    );
+
     const bubble = (
         <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -40,7 +45,7 @@ const ChatMessage = memo(function ChatMessage({ msg, isFarsi, t }) {
                     : "bg-panel text-ink border border-ink/10 rounded-2xl rounded-tl-none rtl:rounded-tl-2xl rtl:rounded-tr-none"
             }`}>
                 <div className="space-y-1.5">
-                    {lines.map((line, i) => renderCuratorLine(line, isFarsi, i))}
+                    {renderedLines}
                 </div>
             </div>
             <span className="text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] font-mono text-muted/70 mt-1 uppercase tracking-widest">
@@ -144,7 +149,7 @@ function CuratorChat({ concierge, t, language }) {
                     disabled={chatLoading || !userQuery.trim()}
                     className="bg-ink text-on-indicator border border-ink w-12 h-12 rounded-full hover:bg-transparent hover:text-ink transition-all flex items-center justify-center disabled:opacity-30 disabled:hover:bg-ink disabled:hover:text-on-indicator shrink-0 cursor-pointer"
                 >
-                    <Send className="w-4 h-4 translate-x-px -translate-y-px rtl:-scale-x-100" />
+                    <Send className="w-4 h-4 translate-x-px rotate-45 rtl:-rotate-45 rtl:-scale-x-100" />
                 </button>
             </form>
         </MaisonReveal>

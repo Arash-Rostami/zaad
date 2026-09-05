@@ -22,8 +22,13 @@ const SpecCard = memo(function SpecCard({
         const items = [];
         if (partA) items.push(partA);
         if (partB) items.push(partB);
-        return items;
-    }, [partA, partB]);
+        return items.map((part) => ({
+            title: part.title,
+            wrappedBullets: Array.isArray(part.bullets)
+                ? part.bullets.map((b) => wrapLatinRuns(b ?? "", isFarsi))
+                : EMPTY_ARRAY,
+        }));
+    }, [partA, partB, isFarsi]);
 
     const specs = useMemo(() => {
         if (!Array.isArray(listSpecs)) return EMPTY_ARRAY;
@@ -60,12 +65,11 @@ const SpecCard = memo(function SpecCard({
                                 {part.title}
                             </h5>
                             <ul className="list-disc list-inside space-y-1 text-xs text-muted leading-relaxed font-light">
-                                {Array.isArray(part.bullets) &&
-                                    part.bullets.map((b, bIdx) => (
-                                        <li key={`${part.title || i}-bullet-${bIdx}`}>
-                                            {wrapLatinRuns(b ?? "", isFarsi)}
-                                        </li>
-                                    ))}
+                                {part.wrappedBullets.map((wrapped, bIdx) => (
+                                    <li key={`${part.title || i}-bullet-${bIdx}`}>
+                                        {wrapped}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     ))}
@@ -123,7 +127,9 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
         if (adjacentA) {
             items.push({
                 key: "adjacentA",
-                adj: adjacentA,
+                bullets: Array.isArray(adjacentA.bullets)
+                    ? adjacentA.bullets.map((b) => wrapLatinRuns(b ?? "", isFarsi))
+                    : EMPTY_ARRAY,
                 label: t("ergonomicsPlanA"),
                 reason: wrapLatinRuns(adjacentA.reason ?? "", isFarsi),
             });
@@ -131,7 +137,9 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
         if (adjacentB) {
             items.push({
                 key: "adjacentB",
-                adj: adjacentB,
+                bullets: Array.isArray(adjacentB.bullets)
+                    ? adjacentB.bullets.map((b) => wrapLatinRuns(b ?? "", isFarsi))
+                    : EMPTY_ARRAY,
                 label: t("ergonomicsPlanB"),
                 reason: wrapLatinRuns(adjacentB.reason ?? "", isFarsi),
             });
@@ -183,7 +191,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                 )}
 
                 <div className="space-y-4">
-                    {adjacentPlans.map(({ key, adj, label, reason }) => (
+                    {adjacentPlans.map(({ key, bullets, label, reason }) => (
                         <div
                             key={key}
                             className="bg-surface-alt/30 p-4 rounded-xl"
@@ -195,12 +203,11 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                                 {reason}
                             </p>
                             <ul className="list-disc list-inside space-y-1 text-xs text-muted leading-relaxed font-light">
-                                {Array.isArray(adj.bullets) &&
-                                    adj.bullets.map((b, bIdx) => (
-                                        <li key={`${key}-bullet-${bIdx}`}>
-                                            {wrapLatinRuns(b ?? "", isFarsi)}
-                                        </li>
-                                    ))}
+                                {bullets.map((wrapped, bIdx) => (
+                                    <li key={`${key}-bullet-${bIdx}`}>
+                                        {wrapped}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     ))}

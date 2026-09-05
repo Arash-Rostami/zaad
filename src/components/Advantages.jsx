@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useLanguage } from "@/services/TranslationService";
 import MaisonReveal from "./MaisonReveal";
 import NoiseBg from "./shared/NoiseBg";
@@ -9,6 +9,7 @@ import wrapLatinRuns from "@/lib/wrapLatinRuns";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 
 const ICON_MAP = { I: Hammer, II: Sparkles, III: ShieldCheck };
+const EMPTY_ARRAY = Object.freeze([]);
 
 const STATIC_BACKGROUND = (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
@@ -23,7 +24,21 @@ const STATIC_BACKGROUND = (
 
 function Advantages() {
     const { t, data, isFarsi } = useLanguage();
-    const cards = data("advantageCards") || [];
+    const cards = useMemo(() => data("advantageCards") || EMPTY_ARRAY, [data]);
+
+    const preparedCards = useMemo(
+        () =>
+            cards.map((card) => ({
+                id: card.id,
+                num: card.num,
+                IconComponent: ICON_MAP[card.num] || Hammer,
+                wrappedTitle: wrapBrandNames(card.title),
+                wrappedDesc: wrapLatinRuns(card.desc, isFarsi),
+            })),
+        [cards, isFarsi]
+    );
+
+    const certifiedLabel = useMemo(() => wrapBrandNames(t("ZAADCertified")), [t]);
 
     return (
         <section
@@ -35,7 +50,7 @@ function Advantages() {
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="max-w-3xl mb-12 md:mb-16">
                     <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-                        <span className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                        <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
                             {t("advantagesBadge")}
                         </span>
                     </MaisonReveal>
@@ -55,8 +70,8 @@ function Advantages() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {cards.map((card, idx) => {
-                        const IconComponent = ICON_MAP[card.num] || Hammer;
+                    {preparedCards.map((card, idx) => {
+                        const IconComponent = card.IconComponent;
                         return (
                             <div key={card.id}>
                                 <MaisonReveal variant="slide-up-royal" delay={0.75 + 0.15 * idx}>
@@ -75,17 +90,17 @@ function Advantages() {
                                             </div>
 
                                             <h3 className="text-lg md:text-xl font-serif font-medium text-[var(--text-primary)] mb-4 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-500">
-                                                {wrapBrandNames(card.title)}
+                                                {card.wrappedTitle}
                                             </h3>
 
                                             <p className="text-xs md:text-sm text-[var(--text-secondary)] leading-relaxed font-light font-sans rtl:text-justify">
-                                                {wrapLatinRuns(card.desc, isFarsi)}
+                                                {card.wrappedDesc}
                                             </p>
                                         </div>
 
                                         <div className="relative z-10 mt-8 pt-4 border-t border-[var(--border-color-10)] flex items-center justify-between">
                                             <span className="text-[length:calc(10.5px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-bronze)]/50 uppercase">
-                                                {wrapBrandNames(t("ZAADCertified"))}
+                                                {certifiedLabel}
                                             </span>
                                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-bronze)] scale-75 opacity-30 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500" />
                                         </div>

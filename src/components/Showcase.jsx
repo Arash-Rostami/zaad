@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useLanguage } from "@/services/TranslationService";
 import useShowcase from "../hooks/useShowcase";
@@ -9,9 +9,11 @@ import ImageViewer from "./showcase/ImageViewer";
 import ProductPanel from "./showcase/ProductPanel";
 import ShowcaseLightbox from "./showcase/Lightbox";
 
+const EMPTY_ARRAY = Object.freeze([]);
+
 export default function Showcase({ onInquireItem, onViewDetails }) {
     const { t, data, isFarsi } = useLanguage();
-    const collection = data("collection") || [];
+    const collection = useMemo(() => data("collection") || EMPTY_ARRAY, [data]);
     const showcase = useShowcase();
     const { selectedItem } = showcase;
 

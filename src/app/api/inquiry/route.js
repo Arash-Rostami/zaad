@@ -12,6 +12,7 @@ const MAX_NOTE_LENGTH = 2000;
 function validateInquiry(body) {
     const errors = {};
     let hasErrors = false;
+    const fromChat = body.source === "chat";
 
     const name = typeof body.clientName === "string" ? body.clientName.trim() : "";
     const email = typeof body.clientEmail === "string" ? body.clientEmail.trim() : "";
@@ -42,22 +43,27 @@ function validateInquiry(body) {
         hasErrors = true;
     }
 
-    if (!CONSULTATION_VALUES.has(consultation)) {
-        errors.desiredConsultation = "formErrorConsultationInvalid";
-        hasErrors = true;
-    }
+    // A chat-captured lead has no consultation-type/appointment picker (see
+    // src/app/README.md's /api/inquiry section) — name + phone are the only
+    // hard requirements there; the manual form's stricter rules are unchanged.
+    if (!fromChat) {
+        if (!CONSULTATION_VALUES.has(consultation)) {
+            errors.desiredConsultation = "formErrorConsultationInvalid";
+            hasErrors = true;
+        }
 
-    if (appointmentMode !== undefined && !APPOINTMENT_MODE_VALUES.has(appointmentMode)) {
-        errors.appointmentMode = "formErrorConsultationInvalid";
-        hasErrors = true;
-    }
+        if (appointmentMode !== undefined && !APPOINTMENT_MODE_VALUES.has(appointmentMode)) {
+            errors.appointmentMode = "formErrorConsultationInvalid";
+            hasErrors = true;
+        }
 
-    if (!APPOINTMENT_WINDOW_VALUES.has(appointmentWindow)) {
-        errors.appointmentWindow = "formErrorConsultationInvalid";
-        hasErrors = true;
-    } else if (!appointmentWindow) {
-        errors.appointmentWindow = "formErrorAppointmentWindowRequired";
-        hasErrors = true;
+        if (!APPOINTMENT_WINDOW_VALUES.has(appointmentWindow)) {
+            errors.appointmentWindow = "formErrorConsultationInvalid";
+            hasErrors = true;
+        } else if (!appointmentWindow) {
+            errors.appointmentWindow = "formErrorAppointmentWindowRequired";
+            hasErrors = true;
+        }
     }
 
     if (note.length > MAX_NOTE_LENGTH) {
@@ -68,7 +74,12 @@ function validateInquiry(body) {
     return {
         hasErrors,
         errors,
-        clean: { name, email, phone, note, consultation, appointmentMode, appointmentWindow },
+        clean: {
+            name, email, phone, note,
+            consultation: fromChat ? (CONSULTATION_VALUES.has(consultation) ? consultation : "consultation") : consultation,
+            appointmentMode: fromChat ? null : appointmentMode,
+            appointmentWindow: fromChat ? "" : appointmentWindow,
+        },
     };
 }
 
@@ -98,6 +109,7 @@ export async function POST(request) {
         appointmentMode: clean.appointmentMode ?? null,
         appointmentWindow: clean.appointmentWindow || null,
         language: payload.language === "fa" ? "fa" : "en",
+        source: payload.source === "chat" ? "chat" : "form",
         submittedAt: new Date().toISOString(),
         viewed: false,
     };

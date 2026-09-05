@@ -762,8 +762,16 @@ faces are no longer loaded. (`FractulAlt-*.ttf` also lives in `/public/fonts`
 but is Latin-only — 0 Persian glyphs — and is not currently wired to any
 selector; do not point the Farsi rules at it.)
 
-The `@font-face` blocks are `font-display: swap`, so a first Farsi paint can flash the
-`Tahoma` fallback. To kill that flash, `app/layout.js` emits three `<link rel="preload">`
+All `@font-face` blocks are `font-display: block` (changed 2026-09-06 from `swap`, user
+request "always fonts take effect": `swap` painted the Tahoma/Latin fallback first and
+flashed to the real face on arrival — visible on every cold load and most refreshes,
+since the loader only covers the first visit per session). `block` renders text
+invisible for up to 3s instead of wrong — with same-origin preloaded fonts the invisible
+window is a fraction of a second and the first paint is already the correct face. The
+four `next/font` faces in `app/layout.js` carry the same `display: "block"` — keep all
+font sources on `block`; do not reintroduce `swap` for any single face or the flash
+returns for that face. To shorten the invisible window, `app/layout.js` emits three
+`<link rel="preload">`
 lines (`Dorsa-Regular.otf` + `Dorsa-Light.otf` + `Dorsa-Black.otf` — the only weights
 Farsi actually uses above the fold: 400 for body/headings, 300 for `.font-mono` labels,
 900 for the `.italic` accent rule below, which the home hero's title uses) when
@@ -771,7 +779,7 @@ Farsi actually uses above the fold: 400 for body/headings, 300 for `.font-mono` 
 `font-weight: 900` above, and the later `@font-face` declaration wins, so preloading
 Heavy would double-fetch. If the Farsi weight usage ever changes, change the preload
 set in the same edit. On the `force-static` routes (which bake `en`) the preload no-ops
-and Dorsa loads via plain swap after the client-side locale restore.
+and Dorsa loads block-first after the client-side locale restore.
 
 ### `.font-farsi` — opt-in Dorsa for non-heading `.font-serif` text
 `html[lang="fa"] .font-farsi { font-family: "Dorsa", "Tahoma", sans-serif !important; }`
@@ -786,7 +794,8 @@ never touched. **Heading tags (`h1`–`h6`) are covered automatically regardless
 selector is safe to broaden without a per-instance `.font-latin`/`.font-farsi` judgment call) —
 `.font-farsi` is only needed on non-heading elements (`span`/`p`/`div`) carrying `.font-serif`
 that render translated text: e.g. card/box titles in `header/JourneyIndex.jsx`,
-`header/SystemPortals.jsx`, `Materials.jsx`'s material `name`, `Blueprint.jsx`'s section `title`,
+`header/SystemPortals.jsx`, `Materials.jsx`'s material `name`, `glance/GlancePage.jsx`'s rail/chip chapter labels and
+overview statement blockquote, `glance/GlanceChapter.jsx`'s tagline + narrative paragraphs,
 `Story.jsx`'s pull-quotes/stat labels, `header/ControlsFooter.jsx`'s `BRAND_NAME[language]` span
 (the "زاد" transliteration in its edition badge — see `src/components/README.md`'s note on the
 wordmark-vs-incidental-mention distinction), and `productdetailspage/LookbookPoetry.jsx`'s
@@ -799,7 +808,7 @@ the latter case, not this one.
 ### `.font-latin` — opt-out back to Latin for permanently non-Farsi brand content
 `html[lang="fa"] .font-latin { font-family: "JetBrains Mono", "Inter", monospace !important; }`
 is the inverse of `.font-farsi`: some fields are Latin **in both dictionaries** — collection
-`number` ("C°01"…"C°04") and `name` (the product codenames "GÁVV"/"ZIVV"/"RÁKH"/"VARR") are never
+`number` ("C°01"…"C°04") and `name` (the product codenames "GÁVV"/"ZIVV"/"RÁKH"/"VAAR") are never
 translated, by brand design (see `src/lib/i18n/README.md`). Left alone, these inherit Dorsa from
 an ancestor's `.font-mono`/`.font-sans` class (or from `body` itself, since the blanket
 `html[lang="fa"], html[lang="fa"] body` rule cascades to any element with no explicit
@@ -810,7 +819,9 @@ in `productdetailspage/ProductMeta.jsx`). Elements that are Latin-only outright 
 `item.number` span) can carry `.font-latin` directly instead of nesting a child span. Current call
 sites: `header/SpecimenGrid.jsx`, `productdetailspage/NavBar.jsx`, `productdetailspage/ProductMeta.jsx`
 (the `item.number` span only — see below), `showcase/ProductPanel.jsx`,
-`shared/Lightbox.jsx` (`archiveNumber`). `showcase/CollectionTabs.jsx`'s `item.number`/`item.name`
+`shared/Lightbox.jsx` (`archiveNumber`), `glance/GlancePage.jsx` (overview card
+`item.number` eyebrow) and `glance/GlanceChapter.jsx` (header `item.number` — the
+`item.year` beside it stays unwrapped, Farsi digits). `showcase/CollectionTabs.jsx`'s `item.number`/`item.name`
 spans carry neither class — both sit under plain `.font-serif` (no `.font-mono`/`.font-sans`
 ancestor), so they fall under the same exclusion as `item.name` below and need no wrapping.
 `item.name` under plain `.font-serif` (no `.font-mono`/
@@ -833,10 +844,9 @@ rule (documented above under `.font-farsi`) is a raw **element** selector — it
 `Footer.jsx`'s "ZAAD" wordmark was wrapped in `<h3>`, so despite being plain `.font-serif` (which
 is otherwise excluded from the blanket override) it rendered in Dorsa anyway — fixed by changing
 `<h3>` → `<p>` (identical classes), matching how `Header.jsx`'s and `house/HouseFooter.jsx`'s
-wordmarks already avoid heading tags for exactly this reason. `Blueprint.jsx`'s page title
-(`t("zaadBlueprint")` = "نقشه ZAAD") and `concierge/CuratorChat.jsx`'s `t("zaadDigitalCurator")` = "کیوریتور دیجیتال ZAAD" — both
-real Farsi text with an embedded Latin brand token, sitting
-directly inside an `<h1>`/`<h3>` — had the same problem. **Rule of thumb when adding or touching
+wordmarks already avoid heading tags for exactly this reason. `concierge/CuratorChat.jsx`'s
+`t("zaadDigitalCurator")` = "کیوریتور دیجیتال ZAAD" — real Farsi text with an embedded Latin
+brand token, sitting directly inside an `<h3>` — had the same problem. **Rule of thumb when adding or touching
 an `h1`–`h6`:** if it's ever going to render a Latin brand token (a hardcoded "ZAAD", a collection
 codename, a model badge) either directly or mixed into translated Farsi copy, either wrap the
 render with `wrapBrandNames(value)` (see below — the current fix for both of the mixed-content
@@ -845,9 +855,8 @@ in — don't use a heading tag for it at all.
 
 ### Brand tokens always render in `font-serif` — a deliberate identity rule, not a bug fix
 Wherever the literal strings **"ZAAD"**, **"Dorsa"**, **"Persol Business Solution"**, or a
-collection codename (**"GÁVV"**, **"ZIVV"**, **"RÁKH"**, **"VARR"** — the exact spellings live in
-each `collection[].name` entry in `src/lib/i18n/en.js`/`fa.js`; "VAAR" appearing in a few prose
-strings is a pre-existing typo, not an alternate spelling, and is out of scope here) appear
+collection codename (**"GÁVV"**, **"ZIVV"**, **"RÁKH"**, **"VAAR"** — the exact spellings live in
+each `collection[].name` entry in `src/lib/i18n/en.js`/`fa.js`) appear
 anywhere in the UI, they render in the site's Playfair `font-serif`, regardless of what
 font-family the surrounding text uses (`font-mono`, `font-sans`, or inherited) — an explicit
 user-specified brand-identity preference, independent of the Dorsa-heading bug above (fixing that
@@ -860,9 +869,7 @@ the two helpers on the same string). It is a no-op (returns the input unchanged)
 matches, so it is safe to call unconditionally on any string that *might* contain one. Real call
 sites: `Footer.jsx` and `house/HouseFooter.jsx` (`footerCraft`, replacing a per-file
 `.split("Persol Business Solution")` one-off), `Hero.jsx` (`estFlorence`), `Advantages.jsx`
-(`ZAADCertified`), `Blueprint.jsx` (`zaadBlueprint`, replacing its earlier `wrapLatinRuns` fix —
-`.font-latin` and this rule want *different* fonts for the same substring, so `wrapBrandNames` is
-correct here and `wrapLatinRuns` is not), `concierge/CuratorChat.jsx` (`zaadDigitalCurator`, same
+(`ZAADCertified`), `concierge/CuratorChat.jsx` (`zaadDigitalCurator`, same
 reasoning), `productdetailspage/ProductMeta.jsx` and `showcase/ProductPanel.jsx` (`item.designer`
 /`selectedItem.designer`, `item.specifications.origin`, `productZAAD` — same `wrapLatinRuns`→
 `wrapBrandNames` swap for the same reason).
@@ -926,7 +933,9 @@ looks broken. This is deliberately global (targets the utility class, not indivi
 components) so every current and future `italic` usage is covered automatically; do
 not add per-component Farsi exceptions to re-enable italic or to dial the weight back
 down. Confirm `Dorsa` has a `900` weight file loaded in the `@font-face` block above
-before changing this value.
+before changing this value. Single user-directed exception (2026-09-05): `Materials.jsx`'s
+philosophical-note paragraph dropped its `italic` class entirely — both languages render it
+upright and light, so the global rule never engages for it.
 
 ### `@custom-variant dark` — `dark:` utilities key to the app themes, not the OS
 `@custom-variant dark (&:where(.dark, .dark *, .mid, .mid *));` is declared immediately
@@ -989,19 +998,28 @@ uncompensated (+5% in Farsi — negligible, and headings override them via the `
 rule anyway). **Do not "simplify" these numbers away:** they are 1:1 tied to the 1.05 bump;
 change one, change both.
 
-### Section vertical rhythm — `section-y` / `section-y-break` (2026-09-01)
+### Section vertical rhythm — `section-y` / `section-y-break` (rebalanced 2026-09-05)
 
-Section padding is no longer per-file `py-*` values — it flows through two tokens +
-two `@utility` classes defined at the top of `globals.css`:
+Section padding is no longer per-file `py-*` values — it flows through four tokens +
+two `@utility` classes defined at the top of `globals.css`. Since 2026-09-05 the rhythm is
+**asymmetric** (quiet entry, generous exit — the luxury cadence; the boundary between two
+`section-y` sections lands at 128px desktop):
 
-- `--zaad-section-y: 3.5rem` (mobile 56px) / `5rem` at `≥48rem` (80px) — the standard
-  section rhythm, consumed via the `section-y` class.
-- `--zaad-section-y-break: 5rem` (mobile 80px) / `8rem` at `≥48rem` (128px) — the
-  "act break", consumed via `section-y-break`; used **only** where the narrative pivots
-  (Story's manifesto, Concierge's inquiry). Luxury rhythm = restraint + a few deliberate
-  pauses, not uniform inflation.
+- `--zaad-section-y-top` / `--zaad-section-y-bottom`: `2rem`/`3.5rem` mobile, `3rem`/`5rem`
+  at `≥48rem` — the standard section rhythm, consumed via the `section-y` class.
+- `--zaad-section-y-break-top` / `--zaad-section-y-break-bottom`: `2rem`/`4.5rem` mobile,
+  `3rem`/`7rem` at `≥48rem` — the "act break", consumed via `section-y-break`; used
+  **only** where the narrative pivots (Story's manifesto, Concierge's inquiry). Luxury
+  rhythm = restraint + a few deliberate pauses, not uniform inflation.
 
 Tuning the whole site's vertical rhythm = editing those two token blocks; nothing else.
+(Before this rebalance the tokens were symmetric — 80/80 and 128/128 desktop — and the
+stacked 160/208px boundaries read as bloat; keep the top lean.) Two fixed-header pages can't
+consume the tokens and instead hard-code the same cadence into header-calibrated calcs —
+`ProductDetailsPage.jsx` (`pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-14 md:pb-20`) and
+`ledger/Ledger.jsx` (same `pt` calcs, `pb-20`) — match their additives/bottoms when retuning
+the tokens (the `61px`/`73px` figures are `Header.jsx`'s rendered heights; see
+`src/components/README.md`).
 
 **Revert map** (the pre-2026-09-01 generous style — swap back per file to fully restore):
 
@@ -1014,7 +1032,6 @@ Tuning the whole site's vertical rhythm = editing those two token blocks; nothin
 | `Showcase.jsx:23` | `section-y` | `py-24 md:py-36` |
 | `Concierge.jsx:16` | `section-y-break` | `py-24 md:py-36` |
 | `concierge/SectionHeader.jsx:8` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
-| `Blueprint.jsx:53` | `section-y` | `py-24 md:py-32` |
 | `house/HouseChapterShell.jsx:32` | `section-y` | `py-20 md:py-32` |
 | `house/HouseChapterShell.jsx:44` | `section-y` | `py-20 md:py-24` |
 | `house/HouseDiptychShell.jsx:25` | `section-y` | `py-20 md:py-32` |
@@ -1055,7 +1072,7 @@ explicit `rounded-md` classes — nav settings trigger (`ExpandOnHoverPill`, bot
 variants), the control rows in `ControlsFooter` + `HouseChrome` (tracks, segment
 buttons, indicator blobs), audio toggle, tooltip, video play/pause + expand
 chips, prev/next arrows, every floating badge/pill over imagery (viewer,
-lightbox, studio gallery), Blueprint tag chips, and the CTAs. A single unlayered
+lightbox, studio gallery), and the CTAs. A single unlayered
 rule block at the end of `globals.css` ("Radius language") is the safety net;
 it resolves, sitewide:
 

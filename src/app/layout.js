@@ -13,7 +13,7 @@ const playfair = localFont({
   weight: "400 900",
   style: "normal",
   variable: "--font-playfair",
-  display: "swap",
+  display: "block",
 });
 
 const playfairItalic = localFont({
@@ -21,8 +21,7 @@ const playfairItalic = localFont({
   weight: "400 900",
   style: "italic",
   variable: "--font-playfair-italic",
-  display: "swap",
-  preload: false,
+  display: "block",
 });
 
 const inter = localFont({
@@ -30,7 +29,7 @@ const inter = localFont({
   weight: "100 900",
   style: "normal",
   variable: "--font-inter",
-  display: "swap",
+  display: "block",
 });
 
 const jetbrainsMono = localFont({
@@ -38,13 +37,13 @@ const jetbrainsMono = localFont({
   weight: "100 800",
   style: "normal",
   variable: "--font-jetbrains",
-  display: "swap",
+  display: "block",
   preload: false,
 });
 
 export const metadata = {
   metadataBase: new URL("https://zaad.com"),
-  authors: [{ name: "Arash Rostami", url: "https://time-gr.com/cv/" }],
+  authors: [{ name: "Arash Rostami", url: "https://persolbs.com" }],
 };
 
 export const viewport = {

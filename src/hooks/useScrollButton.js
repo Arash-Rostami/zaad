@@ -10,7 +10,10 @@ export default function useScrollButton() {
   const [direction, setDirection] = useState("down");
 
   useEffect(() => {
+    let rafId = null;
+
     const update = () => {
+      rafId = null;
       const scrollY = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
@@ -23,12 +26,18 @@ export default function useScrollButton() {
       setDirection(scrollY >= maxScroll / 2 ? "up" : "down");
     };
 
+    const schedule = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(update);
+    };
+
     update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, []);
 

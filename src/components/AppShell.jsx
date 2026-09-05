@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
@@ -8,7 +9,6 @@ import Showcase from "../components/Showcase";
 import Advantages from "../components/Advantages";
 import Materials from "../components/Materials";
 import Concierge from "../components/Concierge";
-import Blueprint from "../components/Blueprint";
 import Footer from "../components/Footer";
 import ProductDetailsPage from "../components/ProductDetailsPage";
 import ScrollButton from "../components/shared/ScrollButton";
@@ -29,6 +29,25 @@ export default function AppShell({ utensilImages }) {
     } = useShowroomNav();
 
     useLenisScroll();
+
+    const handleBackFromProduct = useCallback(() => {
+        setSelectedProduct(null);
+        setTimeout(() => {
+            animateScrollTo("collection", 1400);
+        }, 120);
+    }, [setSelectedProduct]);
+
+    const handleScrollToCollection = useCallback(
+        () => handleScrollToSection("collection"),
+        [handleScrollToSection]
+    );
+
+    const handleScrollToStory = useCallback(
+        () => handleScrollToSection("story"),
+        [handleScrollToSection]
+    );
+
+    const handleClearPreselected = useCallback(() => setPreselectedItem(null), [setPreselectedItem]);
 
     return (
         <MotionConfig reducedMotion="user">
@@ -53,24 +72,9 @@ export default function AppShell({ utensilImages }) {
                             >
                                 <ProductDetailsPage
                                     item={selectedProduct}
-                                    onBack={() => {
-                                        setSelectedProduct(null);
-                                        setTimeout(() => {
-                                            animateScrollTo("collection", 1400);
-                                        }, 120);
-                                    }}
+                                    onBack={handleBackFromProduct}
                                     onInquire={handleInquireItem}
                                 />
-                            </motion.div>
-                        ) : activeTab === "blueprint" ? (
-                            <motion.div
-                                key="blueprint"
-                                initial={{ opacity: 0, scale: 0.99 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.99 }}
-                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                                <Blueprint />
                             </motion.div>
                         ) : (
                             <motion.div
@@ -81,8 +85,8 @@ export default function AppShell({ utensilImages }) {
                                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                             >
                                 <Hero
-                                    onScrollToCollection={() => handleScrollToSection("collection")}
-                                    onScrollToStory={() => handleScrollToSection("story")}
+                                    onScrollToCollection={handleScrollToCollection}
+                                    onScrollToStory={handleScrollToStory}
                                 />
                                 <Story utensilImages={utensilImages} />
                                 <Showcase
@@ -93,7 +97,7 @@ export default function AppShell({ utensilImages }) {
                                 <Materials />
                                 <Concierge
                                     preselectedItem={preselectedItem}
-                                    onClearPreselected={() => setPreselectedItem(null)}
+                                    onClearPreselected={handleClearPreselected}
                                 />
                             </motion.div>
                         )}

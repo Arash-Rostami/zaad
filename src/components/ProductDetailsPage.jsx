@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useLanguage } from "@/services/TranslationService";
+import { setPreference } from "@/services/PreferenceService";
 import useLightbox from "../hooks/useLightbox";
 import NavBar from "./productdetailspage/NavBar";
 import StudioGallery from "./productdetailspage/StudioGallery";
@@ -21,8 +22,12 @@ export default function ProductDetailsPage({ item, onBack, onInquire }) {
         animateScrollToTop(1300);
     }, [item.id]);
 
+    useEffect(() => {
+        setPreference("lastViewedItem", { id: item.id, name: item.name, number: item.number });
+    }, [item.id, item.name, item.number]);
+
     return (
-        <div className="bg-surface text-ink min-h-screen pt-[calc(61px+2.5rem)] sm:pt-[calc(73px+2.5rem)] md:pt-[calc(73px+2.5rem)] pb-10 md:pb-16 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto border-b border-ink/10 transition-colors duration-1050">
+        <div className="bg-surface text-ink min-h-screen pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-14 md:pb-20 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto border-b border-ink/10 transition-colors duration-1050">
             <NavBar item={item} t={t} onBack={onBack} />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start mb-12 md:mb-16">

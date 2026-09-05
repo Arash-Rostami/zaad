@@ -7,6 +7,13 @@ import MaisonReveal from "../MaisonReveal";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 
+const CATALOGUE_PAGES = Object.freeze({
+    gavv: 4,
+    zivv: 26,
+    rakh: 50,
+    vaar: 62,
+});
+
 const EASE_IN_OUT = Object.freeze([0.16, 1, 0.3, 1]);
 const EASE_EXIT = Object.freeze([0.7, 0, 0.84, 0]);
 
@@ -46,6 +53,8 @@ function ProductPanel({
                           onViewDetails,
                       }) {
     const {isSpecsExpanded = false, toggleSpecs} = showcase ?? {};
+    const cataloguePage = CATALOGUE_PAGES[selectedItem?.id];
+    const catalogueHref = cataloguePage ? `/showcase/index.html#p=${cataloguePage}` : null;
 
     const name = selectedItem?.name;
     const designer = selectedItem?.designer;
@@ -89,17 +98,13 @@ function ProductPanel({
         ];
     }, [t, dimensions, finish, weight, leadTime, isFarsi, selectedItem]);
 
-    const handleViewDetails = useCallback(
-        (e) => {
-            e.preventDefault();
-            onViewDetails?.(selectedItem);
-        },
-        [onViewDetails, selectedItem]
-    );
-
     const handleInquire = useCallback(() => {
         onInquireItem?.(selectedItem);
     }, [onInquireItem, selectedItem]);
+
+    const handleViewDetails = useCallback(() => {
+        onViewDetails?.(selectedItem);
+    }, [onViewDetails, selectedItem]);
 
     if (!selectedItem) return null;
 
@@ -222,8 +227,9 @@ function ProductPanel({
                                         {t("showcaseCatalogueText")}
                                     </span>
                                     <Link
-                                        href={`/collection/${selectedItem.id}`}
-                                        onClick={handleViewDetails}
+                                        href={catalogueHref}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-[0.2em] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 focus:outline-none cursor-pointer hover:shadow-md"
                                     >
                                         <span>{t("showcaseRevealDossier")}</span>
@@ -240,6 +246,9 @@ function ProductPanel({
                 className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <MaisonButton variant="solid" onClick={handleInquire} icon={Sparkles} className="w-full">
                     {t("showcasePrivateInquiry")}
+                </MaisonButton>
+                <MaisonButton variant="outline" onClick={handleViewDetails} icon={ArrowUpRight} className="w-full">
+                    {t("showcaseOpenPiece")}
                 </MaisonButton>
             </div>
 

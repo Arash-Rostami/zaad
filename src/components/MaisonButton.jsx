@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 import {
   ArrowUpRight,
   ArrowLeft,
@@ -42,13 +42,13 @@ const getVariantStyles = (variant) => {
       return "text-muted hover:text-ink text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest font-mono uppercase bg-transparent py-1";
     case "tab":
       return "text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest uppercase pb-1 bg-transparent transition-colors";
-    case "material-choice":
-      return "border border-ink/10 rounded-xl p-6 bg-panel-glass hover:bg-panel text-left transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]";
     case "text":
     default:
       return "text-xs font-semibold tracking-[0.2em] text-ink uppercase hover:opacity-80 transition-opacity";
   }
 };
+
+const SPRING_CONFIG = Object.freeze({ damping: 22, stiffness: 100, mass: 0.9 });
 
 function MaisonButton({
                         children,
@@ -60,36 +60,51 @@ function MaisonButton({
                         hideIcon = false,
                         icon,
                         labelClassName = "",
+                        iconClassName = "",
                         ...rest
                       }) {
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [reflectionPos, setReflectionPos] = useState({ x: 50, y: 50 });
 
   const driftX = useMotionValue(0);
   const driftY = useMotionValue(0);
-  const springConfig = { damping: 22, stiffness: 100, mass: 0.9 };
-  const smoothX = useSpring(driftX, springConfig);
-  const smoothY = useSpring(driftY, springConfig);
+  const smoothX = useSpring(driftX, SPRING_CONFIG);
+  const smoothY = useSpring(driftY, SPRING_CONFIG);
+  const reflectionX = useMotionValue(50);
+  const reflectionY = useMotionValue(50);
+  const reflectionBackground = useMotionTemplate`radial-gradient(circle 120px at ${reflectionX}% ${reflectionY}%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%)`;
+
+  const pendingEventRef = useRef(null);
+  const frameRef = useRef(null);
 
   const handleMouseMove = useCallback((e) => {
-    if (!containerRef.current || disabled) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const { clientX, clientY } = e;
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const strength = 0.08;
-    const maxDrift = 4;
-    driftX.set(Math.max(-maxDrift, Math.min(maxDrift, (clientX - centerX) * strength)));
-    driftY.set(Math.max(-maxDrift, Math.min(maxDrift, (clientY - centerY) * strength)));
-    setReflectionPos({
-      x: ((clientX - rect.left) / rect.width) * 100,
-      y: ((clientY - rect.top) / rect.height) * 100,
+    if (disabled) return;
+    pendingEventRef.current = { clientX: e.clientX, clientY: e.clientY };
+    if (frameRef.current) return;
+    frameRef.current = requestAnimationFrame(() => {
+      frameRef.current = null;
+      const container = containerRef.current;
+      const pending = pendingEventRef.current;
+      if (!container || !pending) return;
+      const rect = container.getBoundingClientRect();
+      const { clientX, clientY } = pending;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const strength = 0.08;
+      const maxDrift = 4;
+      driftX.set(Math.max(-maxDrift, Math.min(maxDrift, (clientX - centerX) * strength)));
+      driftY.set(Math.max(-maxDrift, Math.min(maxDrift, (clientY - centerY) * strength)));
+      reflectionX.set(((clientX - rect.left) / rect.width) * 100);
+      reflectionY.set(((clientY - rect.top) / rect.height) * 100);
     });
-  }, [disabled, driftX, driftY]);
+  }, [disabled, driftX, driftY, reflectionX, reflectionY]);
 
   const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
+    if (frameRef.current) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
     driftX.set(0);
     driftY.set(0);
   }, [driftX, driftY]);
@@ -99,8 +114,6 @@ function MaisonButton({
   const buttonStyleClass = `maison-button relative select-none outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent overflow-hidden transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] disabled:opacity-40 cursor-pointer ${getVariantStyles(variant)} ${className}`;
 
   const renderContent = () => {
-    if (variant === "material-choice") return children;
-
     const isPlainString = typeof children === "string";
     if (isPlainString) {
       const label = children;
@@ -115,13 +128,13 @@ function MaisonButton({
             <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap px-1 w-max mx-auto">
               <span className={`font-semibold tracking-inherit ${labelClassName}`}>{label}</span>
               {!hideIcon && (
-                  <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass}`} style={{ opacity: 0.65 }} />
+                  <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass} ${iconClassName}`} style={{ opacity: 0.65 }} />
               )}
             </span>
             <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap text-accent px-1 w-max mx-auto">
               <span className={`font-semibold tracking-inherit ${labelClassName}`}>{label}</span>
               {!hideIcon && (
-                  <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass}`} />
+                  <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass} ${iconClassName}`} />
               )}
             </span>
           </span>
@@ -151,10 +164,10 @@ function MaisonButton({
           {...rest}
       >
         {isHovered && !disabled && (
-            <span
+            <motion.span
                 className="absolute inset-0 pointer-events-none block opacity-35 transition-opacity duration-500"
                 style={{
-                  background: `radial-gradient(circle 120px at ${reflectionPos.x}% ${reflectionPos.y}%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%)`,
+                  background: reflectionBackground,
                   mixBlendMode: "overlay",
                 }}
             />

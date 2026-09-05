@@ -31,7 +31,7 @@ function HouseChapterShell({
             {/* ── Editorial chapter ────────────────────────────────────── */}
             <section id="house-editorial" className="relative px-6 sm:px-12 section-y bg-surface-overlay border-y border-ink/10 overflow-hidden">
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="max-w-3xl mx-auto mb-14 md:mb-20 text-center">
+                    <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="max-w-3xl mx-auto mb-12 md:mb-16 text-center">
                         <h2 className="text-2xl md:text-3xl font-serif font-light tracking-tight leading-[1.2] text-ink">
                             {heroTitle}
                         </h2>

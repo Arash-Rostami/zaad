@@ -4,18 +4,31 @@ import path from "node:path";
 const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 const FA_DIGITS = { 0: "۰", 1: "۱", 2: "۲", 3: "۳", 4: "۴", 5: "۵", 6: "۶", 7: "۷", 8: "۸", 9: "۹" };
 const CHUNK = 65536;
+const listCache = new Map();
+const dimensionCache = new Map();
 
 function toFaDigits(value) {
     return String(value).replace(/\d/g, (d) => FA_DIGITS[d]);
 }
 
 function listSortedImages(folder) {
+    const cached = listCache.get(folder);
+    if (cached) return cached;
     const files = fs.readdirSync(folder).filter((f) => IMAGE_EXTENSIONS.has(path.extname(f).toLowerCase()));
     files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    listCache.set(folder, files);
     return files;
 }
 
 function readDimensions(filePath) {
+    const cached = dimensionCache.get(filePath);
+    if (cached) return cached;
+    const dims = scanDimensions(filePath);
+    dimensionCache.set(filePath, dims);
+    return dims;
+}
+
+function scanDimensions(filePath) {
     const fd = fs.openSync(filePath, "r");
     try {
         let buf = Buffer.alloc(CHUNK);

@@ -108,8 +108,8 @@ function StudioGallery({ item, lightbox }) {
   const { spin360Src, spinPosterSrc } = useMemo(() => {
     const id = itemId ?? "";
     return {
-      spin360Src: `/video/${id}-360.mp4`,
-      spinPosterSrc: `/video/${id}-360.jpg`,
+      spin360Src: `/video/spin/spin-${id}-360.mp4`,
+      spinPosterSrc: `/video/spin/spin-${id}-360.jpg`,
     };
   }, [itemId]);
 
@@ -259,6 +259,7 @@ function StudioGallery({ item, lightbox }) {
               >
                 <Image
                   fill
+                  priority
                   src={activeImage?.url}
                   alt={activeImageAlt}
                   sizes="(min-width: 1024px) 58vw, 100vw"

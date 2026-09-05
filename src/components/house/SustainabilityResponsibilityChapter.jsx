@@ -55,7 +55,7 @@ function SustainabilityResponsibilityChapter() {
             heroEyebrow={t("sustainabilityResponsibilityHeroEyebrow")}
             heroTitle={t("sustainabilityResponsibilityHeroTitle")}
             heroIntro={t("sustainabilityResponsibilityHeroIntro")}
-            heroImage="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=90"
+            heroImage="/video/material/stone.jpg"
             heroImageAlt={t("sustainabilityResponsibilityHeroAlt")}
             heroBadge={t("menuHouseOfZAAD")}
             heroBadgeLabel={t("sustainabilityResponsibilityHeroEyebrow")}

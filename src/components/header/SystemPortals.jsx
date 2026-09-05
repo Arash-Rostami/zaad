@@ -26,7 +26,13 @@ const PortalCard = memo(function PortalCard({ label, sub, isActive, onClick, fil
     );
 });
 
-const SystemPortals = memo(function SystemPortals({ t, activeTab, selectedProduct, onShowroom, onBlueprint }) {
+const SystemPortals = memo(function SystemPortals({
+    t,
+    activeTab,
+    selectedProduct,
+    onShowroom,
+    onBlueprint,
+}) {
     return (
         <div className="md:col-span-4 flex flex-col space-y-2">
             <span className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-bold uppercase border-b border-ink/5 pb-1 mb-0.5 text-left rtl:text-right">

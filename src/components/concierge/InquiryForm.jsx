@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AlertCircle, Calendar, Check, ChevronDown, Clock, Send, RefreshCw } from "lucide-react";
 import MaisonButton from "../MaisonButton";
 import MaisonReveal from "../MaisonReveal";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
+
+const SLOT_KEYS = {
+    "morning-1": { name: "appointmentSlotMorning1Name", time: "appointmentSlotMorning1Time" },
+    "morning-2": { name: "appointmentSlotMorning2Name", time: "appointmentSlotMorning2Time" },
+    "midday":    { name: "appointmentSlotMiddayName",    time: "appointmentSlotMiddayTime" },
+    "evening-1": { name: "appointmentSlotEvening1Name", time: "appointmentSlotEvening1Time" },
+    "evening-2": { name: "appointmentSlotEvening2Name", time: "appointmentSlotEvening2Time" },
+};
+
+const SLOT_ORDER = ["morning-1", "morning-2", "midday", "evening-1", "evening-2"];
 
 function FieldError({ message }) {
     if (!message) return null;
@@ -33,30 +43,55 @@ export default function InquiryForm({ concierge, t, language }) {
         handleInquirySubmit,
     } = concierge;
 
-    const SLOT_KEYS = {
-        "morning-1": { name: "appointmentSlotMorning1Name", time: "appointmentSlotMorning1Time" },
-        "morning-2": { name: "appointmentSlotMorning2Name", time: "appointmentSlotMorning2Time" },
-        "midday":    { name: "appointmentSlotMiddayName",    time: "appointmentSlotMiddayTime" },
-        "evening-1": { name: "appointmentSlotEvening1Name", time: "appointmentSlotEvening1Time" },
-        "evening-2": { name: "appointmentSlotEvening2Name", time: "appointmentSlotEvening2Time" },
-    };
     const slotLabel = appointmentWindow
         ? `${t(SLOT_KEYS[appointmentWindow].name)} (${t(SLOT_KEYS[appointmentWindow].time)})`
         : t("appointmentWindowArrangement");
 
     const [cadenceOpen, setCadenceOpen] = useState(false);
-    const cadenceSlots = [
-        { id: "morning-1", name: t("appointmentSlotMorning1Name"), time: t("appointmentSlotMorning1Time") },
-        { id: "morning-2", name: t("appointmentSlotMorning2Name"), time: t("appointmentSlotMorning2Time") },
-        { id: "midday",    name: t("appointmentSlotMiddayName"),    time: t("appointmentSlotMiddayTime") },
-        { id: "evening-1", name: t("appointmentSlotEvening1Name"), time: t("appointmentSlotEvening1Time") },
-        { id: "evening-2", name: t("appointmentSlotEvening2Name"), time: t("appointmentSlotEvening2Time") },
-    ];
-    const activeSlot = cadenceSlots.find((s) => s.id === appointmentWindow);
-    const selectCadence = (id) => {
-        setAppointmentWindow(appointmentWindow === id ? "" : id);
-        setCadenceOpen(false);
-    };
+
+    const cadenceSlots = useMemo(
+        () => SLOT_ORDER.map((id) => ({ id, name: t(SLOT_KEYS[id].name), time: t(SLOT_KEYS[id].time) })),
+        [t]
+    );
+    const appointmentModeOptions = useMemo(
+        () => [
+            { id: "call", label: t("appointmentModeCall") },
+            { id: "audience", label: t("appointmentModeAudience") },
+        ],
+        [t]
+    );
+    const activeSlot = useMemo(
+        () => cadenceSlots.find((s) => s.id === appointmentWindow),
+        [cadenceSlots, appointmentWindow]
+    );
+
+    const handleAppointmentModeClick = useCallback(
+        (e) => selectAppointmentMode(e.currentTarget.value),
+        [selectAppointmentMode]
+    );
+    const selectCadence = useCallback(
+        (id) => {
+            setAppointmentWindow((prev) => (prev === id ? "" : id));
+            setCadenceOpen(false);
+        },
+        [setAppointmentWindow]
+    );
+    const handleCadenceOptionClick = useCallback(
+        (e) => selectCadence(e.currentTarget.value),
+        [selectCadence]
+    );
+    const toggleCadenceOpen = useCallback(() => setCadenceOpen((v) => !v), []);
+    const closeCadence = useCallback(() => setCadenceOpen(false), []);
+
+    const handleInquireAnother = useCallback(() => {
+        setFormSubmitted(false);
+        setFormErrors({});
+        setClientName("");
+        setClientEmail("");
+        setClientPhone("");
+        setAdditionalNote("");
+        resetAppointment();
+    }, [setFormSubmitted, setFormErrors, setClientName, setClientEmail, setClientPhone, setAdditionalNote, resetAppointment]);
 
     return (
         <MaisonReveal
@@ -64,10 +99,13 @@ export default function InquiryForm({ concierge, t, language }) {
             delay={0.5}
             className="lg:col-span-6 border-b lg:border-b-0 lg:border-r lg:rtl:border-r-0 lg:rtl:border-l border-ink/10 pb-12 lg:pb-0 lg:pr-12 lg:rtl:pr-0 lg:rtl:pl-12 text-left rtl:text-right"
         >
-            <h3 className="text-xl md:text-2xl font-serif text-ink font-light mb-8 flex items-center justify-start tracking-tight">
+            <h3 className="text-xl md:text-2xl font-serif text-ink font-light mb-2 flex items-center justify-start tracking-tight">
                 <Calendar className="w-5 h-5 mr-3 rtl:mr-0 rtl:ml-3 text-accent shrink-0" />
                 {t("acquisitionCard")}
             </h3>
+            <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-muted mb-8 leading-relaxed">
+                {t("formChatAlternative")}
+            </p>
 
             <AnimatePresence mode="wait">
                 {!formSubmitted ? (
@@ -126,15 +164,21 @@ export default function InquiryForm({ concierge, t, language }) {
                                 <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
                                     {t("consultationCategory")}
                                 </label>
-                                <select
-                                    value={desiredConsultation}
-                                    onChange={(e) => setDesiredConsultation(e.target.value)}
-                                    className="w-full bg-panel border border-ink/15 px-4 py-3 text-base sm:text-sm focus:border-ink focus:outline-none transition-colors rounded-xl block font-sans"
-                                >
-                                    <option value="acquisition">{t("privateArchiveAcquisition")}</option>
-                                    <option value="consultation">{t("residentialConsultation")}</option>
-                                    <option value="visit">{t("florenceViewing")}</option>
-                                </select>
+                                <div className="relative">
+                                    <select
+                                        value={desiredConsultation}
+                                        onChange={(e) => setDesiredConsultation(e.target.value)}
+                                        className="w-full bg-panel border border-ink/15 ps-4 pe-10 py-3 text-base sm:text-sm focus:border-ink focus:outline-none transition-colors rounded-xl block font-sans appearance-none cursor-pointer"
+                                    >
+                                        <option value="acquisition">{t("privateArchiveAcquisition")}</option>
+                                        <option value="consultation">{t("residentialConsultation")}</option>
+                                        <option value="visit">{t("florenceViewing")}</option>
+                                    </select>
+                                    <ChevronDown
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/70"
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -160,14 +204,12 @@ export default function InquiryForm({ concierge, t, language }) {
                                         {t("appointmentAudienceLabel")}
                                     </label>
                                     <div data-touch-boost className="flex items-center relative rounded-full bg-toggle-track p-0.5 font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-widest h-9 w-full">
-                                        {[
-                                            { id: "call", label: t("appointmentModeCall") },
-                                            { id: "audience", label: t("appointmentModeAudience") },
-                                        ].map((opt) => (
+                                        {appointmentModeOptions.map((opt) => (
                                             <button
                                                 key={opt.id}
                                                 type="button"
-                                                onClick={() => selectAppointmentMode(opt.id)}
+                                                value={opt.id}
+                                                onClick={handleAppointmentModeClick}
                                                 className={`cursor-pointer flex-1 h-full rounded-full transition-colors duration-700 relative z-10 flex items-center justify-center px-2 ${appointmentMode === opt.id ? "text-on-indicator font-semibold" : "text-muted hover:text-headline"}`}
                                                 data-touch-boost
                                             >
@@ -193,7 +235,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                     </label>
                                     <button
                                         type="button"
-                                        onClick={() => setCadenceOpen((v) => !v)}
+                                        onClick={toggleCadenceOpen}
                                         aria-expanded={cadenceOpen}
                                         className={`cursor-pointer w-full flex items-center justify-between gap-2 bg-panel border rounded-full h-9 px-3 transition-colors duration-700 ${
                                             formErrors.appointmentWindow ? "border-danger" : cadenceOpen ? "border-accent" : "border-ink/15 hover:border-ink/30"
@@ -214,7 +256,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                             <>
                                                 <div
                                                     className="fixed inset-0 z-20"
-                                                    onClick={() => setCadenceOpen(false)}
+                                                    onClick={closeCadence}
                                                 />
                                                 <motion.div
                                                     initial={{ opacity: 0, y: -8, scale: 0.97 }}
@@ -229,7 +271,8 @@ export default function InquiryForm({ concierge, t, language }) {
                                                             <button
                                                                 key={opt.id}
                                                                 type="button"
-                                                                onClick={() => selectCadence(opt.id)}
+                                                                value={opt.id}
+                                                                onClick={handleCadenceOptionClick}
                                                                 className={`cursor-pointer w-full flex items-center justify-between gap-3 px-3 py-2 rounded-xl text-left rtl:text-right transition-colors duration-500 ${active ? "bg-accent/10" : "hover:bg-ink/[0.03]"}`}
                                                             >
                                                                 <span className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase ${active ? "text-accent" : "text-ink"}`}>
@@ -260,6 +303,7 @@ export default function InquiryForm({ concierge, t, language }) {
                             type="submit"
                             variant="solid"
                             icon={Send}
+                            iconClassName="rotate-45 rtl:-rotate-45"
                             disabled={formSubmitting}
                             className="w-full font-sans"
                         >
@@ -293,20 +337,13 @@ export default function InquiryForm({ concierge, t, language }) {
                                 ? t("appointmentRequestedAudience").replace("{window}", slotLabel)
                                 : t("appointmentRequestedCall").replace("{window}", slotLabel)}
                         </p>
+                        <br />
                         <div className="border-t border-ink/10 pt-4 font-mono text-[length:calc(9px*var(--zaad-font-scale))] text-accent tracking-widest uppercase">
                             {t("sessionRef")}: <span dir="ltr" className="font-latin">SEC-COM-{sessionRef}</span>
                         </div>
                         <MaisonButton
                             variant="ghost"
-                            onClick={() => {
-                                setFormSubmitted(false);
-                                setFormErrors({});
-                                setClientName("");
-                                setClientEmail("");
-                                setClientPhone("");
-                                setAdditionalNote("");
-                                resetAppointment();
-                            }}
+                            onClick={handleInquireAnother}
                             icon={RefreshCw}
                             className="mt-6 text-xs text-ink cursor-pointer"
                         >

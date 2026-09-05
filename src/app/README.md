@@ -7,20 +7,21 @@
 
 | Segment | File | Type | Notes |
 |---|---|---|---|
-| `/` | `page.js` | Server (async) | `generateMetadata` via `MetadataService.forHome()`; calls `resolveHomeUtensilImages()` (`src/lib/collectionImages.js`) and renders `<JsonLd/>` + `<AppShell utensilImages={...}/>` (client) — the image list feeds `Story.jsx`'s auto-cycling carousel |
+| `/` | `page.js` | Server (async) | `generateMetadata` via `MetadataService.forHome()`; calls `resolveHomeUtensilImages()` (`src/lib/collectionImages.js`) and renders `<JsonLd/>` + `<AppShell utensilImages={...}/>` (client) — the image list is currently dormant: `Story.jsx`'s gallery is video-driven now, the `utensilImages` prop is threaded but unconsumed |
 | `/about` | `(house)/about/page.js` | Server (async, `force-static`) | `generateMetadata` via `MetadataService.forAbout()`; renders `<JsonLd/>` + `<AboutChapter/>` (single-column `HouseChapterShell`) inside the shared `(house)/layout.js` chrome. |
 | `/story` | `(house)/story/page.js` | Server (async, `force-static`) | `generateMetadata` via `MetadataService.forStory()`; renders `<JsonLd/>` + `<StoryValueChapter/>` — a two-column `HouseDiptychShell` pairing the `story` and `brandValue` `aboutSections` entries. |
 | `/sustainability` | `(house)/sustainability/page.js` | Server (async, `force-static`) | `generateMetadata` via `MetadataService.forSustainability()`; renders `<JsonLd/>` + `<SustainabilityResponsibilityChapter/>` — a two-column `HouseDiptychShell` pairing the `sustainability` and `csr` `aboutSections` entries. |
 | `(house)` shared layout | `(house)/layout.js` | Server | Renders `components/house/HouseSmoothScroll.jsx` (render-null client leaf mounting the shared `useLenisScroll` hook — gives House routes the same Lenis smooth-scroll as the showroom) + `components/house/HouseChrome.jsx` (slim header: back-to-showroom, ZAAD wordmark, the current page's name as a static underlined label — no `layoutId`, no multi-link nav; see CLAUDE.md's Load-bearing contracts — compact language/theme control) + `{children}` + `components/house/HouseFooter.jsx`. Not the showroom `Header`/`Footer`. |
 | `/collection/[slug]` | `collection/[slug]/page.js` | Server (async) | `generateStaticParams` (en ids only), `generateMetadata` via `MetadataService.forCollection(item)`, `notFound()` on miss; renders `<JsonLd/>` + `<ProductPageClient item={item}/>` |
 | `/collection/[slug]` leaf | `collection/[slug]/ProductPageClient.jsx` | Client (`"use client"`) | `onSelectProduct` given to `Header`: `router.push` to `/collection/${id}` for a real product, `router.push("/")` when `product` is `null` — `MenuPanel`'s Showroom/Blueprint portals call `onSelectProduct(null)` as a "clear selection" signal (harmless on the home page, where it's just `setSelectedProduct`); this leaf must not assume a non-null product |
+| `/glance` | `glance/page.js` | Server (async, `force-static`) | "ZAAD at a glance" lookbook route (added 2026-09-05) — `generateMetadata` via `MetadataService.forGlance()` (wrapped in a module-level React `cache()` so the metadata + schema pass builds once, not twice per render); renders `<GlancePage/>` + `<JsonLd/>` **after** the page tree (the user's explicit "SEO tags at bottom" placement). Standalone route on the Ledger precedent (own slim `glance/GlanceHeader.jsx` chrome, `useLenisScroll` called inside the client shell) — deliberately **not** in the `(house)` group. Reached from `Footer.jsx`'s "Studio Archives" column (`Link href="/glance"` labeled `zaadAtAGlance`) and `house/HouseFooter.jsx`'s Showroom Directory column (same key). Closes with `house/HouseFooter` + `shared/ScrollButton`, both mounted inside `GlancePage` since the standalone route gets no `(house)` layout. |
 | `/api/curate` | `api/curate/route.js` | Server route handler | `POST` only — the Gemini chat route (badge reads "AI Assistant"/"دستیار هوش مصنوعی" via `curatorModelBadge`; `chatCurator`/`curatorWelcome`/`curatorError` say "assistant"; the `zaadDigitalCurator` title remains "ZAAD Digital Curator"/"کیوریتور دیجیتال ZAAD") |
 | `/api/inquiry` | `api/inquiry/route.js` | Server route handler | `POST` only — validates and persists the Concierge inquiry form (see "The `/api/inquiry` route" below) |
 | `/api/health` | `api/health/route.js` | Server route handler | `GET` → `{ status, time }` |
 | `/ledger` | `ledger/page.js` | Server (async, `force-dynamic`) | Private admin register of the inquiry data — key-gated, never cached, noindexed (see "The `/ledger` route" below) |
 | root layout | `layout.js` | Server (async) | `metadata`, `viewport`, `RootLayout` |
 | robots | `robots.js` | Server metadata file | `allow: "/"`, `disallow: ["/api/", "/ledger"]` |
-| sitemap | `sitemap.js` | Server metadata file | `/`, `/about`, `/story`, `/sustainability`, `/showcase/index.html`, + dynamic `en.collection` ids |
+| sitemap | `sitemap.js` | Server metadata file | `/`, `/about`, `/story`, `/sustainability`, `/glance`, `/showcase/index.html`, + dynamic `en.collection` ids |
 
 There is **no** `loading.js`. There are three branded status boundaries, all `"use client"`
 and all built on `components/shared/StatusScreen.jsx`:
@@ -68,9 +69,17 @@ The root layout is a **server** component. It runs `getServerLanguage()` (reads 
 - When `initialLanguage === "fa"`, the layout renders three `<link rel="preload">`
   lines (`/fonts/Dorsa-Regular.otf`, `Dorsa-Light.otf`, `Dorsa-Black.otf`,
   `crossOrigin="anonymous"`) at the top of `<body>` — React 19 hoists them into
-  `<head>`. Dorsa is the only raw `@font-face` font (`font-display: swap`, so Farsi
-  would otherwise flash Tahoma); Playfair/Inter/JetBrains are `next/font` and preload
-  themselves. Keep the three files in sync with Farsi above-the-fold weight usage
+  `<head>`. Dorsa is the only raw `@font-face` font (`font-display: block` — like the four
+  `next/font` faces above, changed 2026-09-06 from `swap` so no face ever paints its fallback
+  first; text is briefly invisible instead, then appears already typeset correctly, where
+  a raw `swap` would have flashed the Tahoma fallback). Playfair/Playfair-Italic/Inter are
+  `next/font` and preload themselves (`preload` defaults to `true`; **`playfairItalic` was
+  briefly `preload: false`, fixed 2026-09-06** — under `display: "block"` a non-preloaded
+  face only starts fetching once the browser parses the render-blocking CSS, which meant a
+  real invisible-text window on the Hero's above-the-fold italic accent title specifically,
+  not just a smaller version of the flash this change was meant to remove). `jetbrainsMono`
+  keeps `preload: false` deliberately — it only backs small mono labels, not above-the-fold
+  hero text, so the same tradeoff doesn't apply there. Keep the three files in sync with Farsi above-the-fold weight usage
   (400 body/headings, 300 `.font-mono` labels, 900 the `html[lang="fa"] .italic`
   accent rule — Hero's italic title span sits above the fold; **Black, not Heavy**:
   both declare weight 900 and the later `@font-face` declaration wins) — see
@@ -111,6 +120,10 @@ itself only validates the request, assembles the system prompt, and shapes the r
   `messages` array; 400 on bad input. `language` (sent by `hooks/useConcierge.js`) picks
   which locale's catalogue/house data grounds the answer — defaults to `en` in
   `CuratorService.buildContext` if omitted or not `"fa"`.
+- **History is bounded** (2026-09-06): only the last **20** messages are sent to the
+  model and each message's text is capped at **2000 chars** — a long conversation can
+  no longer grow the request (and token cost) without limit. The client still keeps its
+  full transcript for display; only what crosses the wire is truncated.
 - **Grounding:** `systemInstruction` = the brand-tone `BRAND_HERITAGE_PROMPT` (voice/style
   only — no product facts) + `CuratorService.buildContext(language)` (the real product
   catalogue, House/brand copy, and acquisition/consultation strings pulled live from
@@ -124,21 +137,43 @@ itself only validates the request, assembles the system prompt, and shapes the r
   no code change needed. See `.env.example` for all four vars.
 - **Response:** 200 `{ text }` on success; 200 with a graceful fallback message if neither
   `GEMINI_API_KEY` nor `GEMINI_BASE_URL` is set; 500 `{ error }` on caught error.
+- **Anti-hallucination + chat lead-capture (added 2026-09-06):** `BRAND_HERITAGE_PROMPT`
+  instructs the model to never guess when a question falls outside the supplied context —
+  say so plainly and offer to have a specialist follow up — and, once it has a visitor's
+  name and phone number (email optional; the only two required fields) **and** explicit
+  confirmation to send it, to reply with its normal confirmation sentence followed by a
+  literal `[[SUBMIT_INQUIRY]]\n{"clientName": "...", "clientEmail": "...", "clientPhone":
+  "...", "additionalNote": "..."}\n[[/SUBMIT_INQUIRY]]` block. This works identically on
+  both AI backends (native SDK or the OpenAI-compatible gateway) since it's plain text, not
+  provider-specific function-calling. **The exact marker tokens are load-bearing** — they
+  must match `hooks/useConcierge.js`'s `SUBMIT_INQUIRY_RE` regex verbatim, or chat-captured
+  leads silently stop reaching `/api/inquiry`. See that hook's entry in
+  `src/hooks/README.md` for the client-side parsing/submission side, and the `/api/inquiry`
+  section below for the `source: "chat"` request shape it posts.
 
 ## The `/api/inquiry` route (added 2026-09-03)
 
 `api/inquiry/route.js` — `POST` only. Backs the Concierge "Inquiry & Booking" form
-(`concierge/InquiryForm.jsx` via `hooks/useConcierge.js`'s `handleInquirySubmit`).
+(`concierge/InquiryForm.jsx` via `hooks/useConcierge.js`'s `handleInquirySubmit`) **and**
+(added 2026-09-06) the AI Curator chat's confirmed lead-capture (`hooks/useConcierge.js`'s
+`submitChatInquiry`, triggered by `resolveCuratorReply` parsing the `[[SUBMIT_INQUIRY]]`
+block described in the `/api/curate` section above).
 
 - **Request:** JSON `{ clientName, clientEmail, clientPhone, desiredConsultation,
-  additionalNote, appointmentMode, appointmentWindow, language }`.
+  additionalNote, appointmentMode, appointmentWindow, language, source }`. `source` is
+  optional and only ever sent as `"chat"` by the AI Curator path — omitted (or any other
+  value) means the manual form, which is the strict/default validation path below.
 - **Validation is server-side, not a UI nicety** — `validateInquiry(body)` checks name
   (2–100 chars), **phone required** (regex format), **email optional** (regex format only
   if provided — swapped from the original email-required/phone-optional design at the
   user's explicit request), `desiredConsultation` against `["acquisition", "consultation",
   "visit"]` (the form's 3-option category select — not `"interior"`/`"material"`, an
   earlier 4-option design), `appointmentMode`/`appointmentWindow` against their own fixed
-  enums, and a 2000-char cap on `additionalNote`. On failure: 400
+  enums, and a 2000-char cap on `additionalNote`. **`source === "chat"` skips the
+  `desiredConsultation`/`appointmentMode`/`appointmentWindow` checks entirely** — a chat
+  lead has no consultation-type or appointment-slot picker — defaulting them to
+  `"consultation"`/`null`/`""` in the saved record instead of erroring; name/phone/email/
+  note keep the exact same rules as the manual form on both paths. On failure: 400
   `{ ok: false, errors: { field: i18nKey } }` — the values are **dictionary keys**
   (`"formErrorNameRequired"`, `"formErrorPhoneRequired"`, etc., defined in both
   `lib/i18n/en.js`/`fa.js`), not translated strings; the client calls `t()` on them. Do
@@ -156,8 +191,11 @@ itself only validates the request, assembles the system prompt, and shapes the r
   a request that bypasses the browser UI).
 - **Persistence:** on success, appends a record (`sessionRef` — a `crypto.randomInt`
   5-digit number, not `Math.random()` — the validated/trimmed fields, `language`,
-  `submittedAt`, `viewed: false` — the ledger's read/unread flag, flipped only by
-  `/ledger`'s `setViewedAction`, never by the visitor) to `data/inquiries.json` (repo-root `data/`, a sibling of `public/`, not
+  `source: "chat" | "form"` (2026-09-06, so a human scanning `data/inquiries.json`/`/ledger`
+  can tell which channel a lead came from — `Ledger.jsx` renders it as
+  `t("ledgerSourceChat")`/`t("ledgerSourceForm")` in each entry's meta line, defaulting to
+  "form" for any pre-existing record with no `source` field at all), `submittedAt`, `viewed: false` — the ledger's
+  read/unread flag, flipped only by `/ledger`'s `setViewedAction`, never by the visitor) to `data/inquiries.json` (repo-root `data/`, a sibling of `public/`, not
   nested under `src/` — gitignored, holds real customer PII: name/email/phone). Writes
   go through the **shared serialized store** `src/lib/inquiriesStore.js`
   (`mutateInquiries(transform)`): a module-level promise chain serializes every
@@ -218,8 +256,12 @@ a CMS-style panel: one gated editorial page in the app's own design language, ba
 ## Config
 
 - **`next.config.mjs`** is the active config (Next loads `.mjs` first): `reactStrictMode:
-  true`, `images.remotePatterns` for `images.unsplash.com` and `ai.google.dev` over
-  https. Any new remote image host needs a `remotePatterns` entry here.
+  true`, `images.remotePatterns` for `ai.google.dev` over https only — no remote stock
+  imagery anywhere in this codebase (2026-09-05); every image/video source is a local file
+  under `public/`. Any new remote image host needs a `remotePatterns` entry here.
+  `images.formats` is `["image/avif", "image/webp"]` (2026-09-06) — Next serves AVIF to
+  browsers that accept it (~20–30% smaller than WebP at the same quality); the first entry
+  is the preferred format, so keep AVIF first.
 - **`next.config.js` was a dead duplicate** (only a webpack `IgnorePlugin` for
   README.md) — it has been **deleted**. Do not recreate it; edit `next.config.mjs`.
 - `jsconfig.json`: `baseUrl: "."`, `paths: { "@/*": ["./src/*"] }`.
@@ -255,7 +297,7 @@ a CMS-style panel: one gated editorial page in the app's own design language, ba
   rollover for `ControlsFooter`'s date), the client's hydration pass can compute a
   different value than what's baked into the static HTML. The footer year spans carry
   `suppressHydrationWarning` to silence the resulting console warning; `ControlsFooter`
-  does not yet. None of the three are gated behind the mount-effect idiom the `atelierClock`
-  studio-time strip and `ChapterHero`'s `activeVideo` already use for the same class of
+  does not yet. Neither is gated behind the mount-effect (`useState(null)` guard, render
+  nothing until mounted) idiom `ChapterHero`'s `activeVideo` uses for the same class of
   problem — an intentional, low-risk tradeoff (the mismatch window is narrow and cosmetic),
   not an oversight, but worth revisiting if a stricter hydration-parity bar is ever wanted.

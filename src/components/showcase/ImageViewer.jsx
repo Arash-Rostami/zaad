@@ -78,8 +78,8 @@ function ImageViewer({ selectedItem, showcase, t }) {
     const { spin360Src, spinPosterSrc } = useMemo(() => {
         const id = itemId ?? "";
         return {
-            spin360Src: `/video/${id}-360.mp4`,
-            spinPosterSrc: `/video/${id}-360.jpg`,
+            spin360Src: `/video/spin/spin-${id}-360.mp4`,
+            spinPosterSrc: `/video/spin/spin-${id}-360.jpg`,
         };
     }, [itemId]);
 

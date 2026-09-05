@@ -23,9 +23,17 @@ Locales (see `config.js`): `en` (LTR, default) and `fa` (RTL).
 
 - `en.js` and `fa.js` each export a single top-level object with the **same shape**:
   flat string keys (`t("showcaseTitle")`) plus structured arrays/objects
-  (`advantageCards`, `materialSamples`, `blueprintSections`, `aboutSections`, `brandStory`,
-  `aboutStats`/`sustainabilityStats`/`csrStats`, and the
-  `collection` array of 4 items by `id`: `gavv`, `zivv`, `rakh`, `varr`). `aboutSections`
+  (`advantageCards`, `materialSamples`, `aboutSections`, `brandStory`,
+  `aboutStats`/`sustainabilityStats`/`csrStats`, the
+  `collection` array of 4 items by `id`: `gavv`, `zivv`, `rakh`, `vaar`). The fourth
+  item's `id`, asset paths (`/image/vaar/*`, `/video/vaar*.mp4`) and URL slug are all
+  **"vaar"** — the lookbook's correct spelling, renamed end-to-end in the 2026-09-05
+  follow-up to the content-accuracy pass. (Until that date `id`/assets/URL were the
+  misspelled `varr` while only the displayed `name` said "VAAR" — a temporary
+  decoupling, since removed. The id must keep matching the asset folder name:
+  `resolveCollectionImages` reads `public/image/{id}/` at request time and the 360
+  spin is `/video/{id}-360.mp4`, so a partial rename silently breaks the image
+  pipeline and the 360 player.) `aboutSections`
   (5 items by `id`: `about`, `story`, `brandValue`, `sustainability`, `csr`) powers the
   **three** House routes' editorial blocks, even though there are 5 data entries — `/about`
   reads only `about` (on the single-column `house/HouseChapterShell.jsx`); `/story` reads
@@ -36,6 +44,19 @@ Locales (see `config.js`): `en` (LTR, default) and `fa` (RTL).
   `house/ChapterPieces.jsx`. `story` and `brandValue` have no dedicated stats array —
   `StoryValueChapter` passes `stats={[]}` for both columns, which the stat grid renders as
   nothing. Keep it parallel in `fa.js` like the others.
+- `glance` (added 2026-09-05) is the "ZAAD at a glance" lookbook composite for the
+  `/glance` route: hero copy, an `overview` chapter, `sections` labels, and per-collection
+  `supplements` (gavv/zivv: `tagline`, `narrative`, `materialTable`, `dimensions`,
+  `fittings`, `furniture`; rakh/vaar: `tagline`, `narrative`, `materialTable`, `layouts`)
+  plus the `matrix` (master spec table + partner directory). It is **supplement-only** —
+  the page composes it with `data("collection")` for the shared item data
+  (narratives/partners/island specs/appliances), so it must never duplicate collection
+  facts. The supplements' key shape is part of the contract: a missing/extra key per id
+  in one locale silently renders nothing — keep `en.js` and `fa.js` byte-parallel in shape.
+  The flat keys `zaadAtAGlance` and `glanceRailLabel` (the rail `aria-label`) live
+  alongside the other flat keys. (A `glance.tags` SEO-keyword block existed briefly on
+  2026-09-05 — visible chips + schema `keywords` — and was removed at the user's
+  direction the same day; do not re-add visible keyword tags to this page.)
 - `fa.js` is a **complete parallel dictionary**, including its own full `collection`
   array — not a thin text-override map. When the active language is `fa`,
   `data("collection")` returns the Farsi collection with already-localized text.
@@ -54,8 +75,17 @@ serves both locales (fragile only if the id sets ever diverge). The
 `productdetailspage/` UI chrome (tab labels, section headings, CTAs, the Lookbook
 block) is localized via `t(...)`.
 
-> Note: the Farsi copy in `fa.js` (collection + UI strings) is currently placeholder,
-> to be refined. The localization **logic** is complete; only the text content is mock.
+> Note (updated 2026-09-05): the `collection` array in both `en.js` and `fa.js` is now
+> fact-checked against the real ZAAD lookbook (`ZAAD LOOKBOOK-050216.pdf`, cross-referenced
+> against `.claude/data/ZAAD Kitchen Collection.md` — a local research file, not part of
+> the tracked repo) rather than mock/invented copy. ZAAD's real location is **Tehran** —
+> do not reintroduce Italian geography (Milan/Tuscany/Florence/Carrara/Turin/Sicily/
+> Rapolano etc.) into any collection, About, Footer, or CSR copy; an earlier version of
+> this content invented a full fictional "Italian atelier" backstory (specific quarries,
+> price/weight/lead-time figures, a mistranslated Farsi "forged" as "جعل" i.e.
+> "counterfeited") that had no basis in the source material and has been removed. Where
+> the lookbook doesn't specify a fact (e.g. per-item price, weight, or lead time), the
+> honest value is "Available upon inquiry" / "بر اساس استعلام", not an invented number.
 
 ## Using it in components
 
@@ -86,7 +116,6 @@ then `null`.
 data("collection")        // the 4-item array, already in the active language
 data("advantageCards")    // array of advantage card objects
 data("materialSamples")   // array of material sample objects
-data("blueprintSections") // array of blueprint section objects
 data("brandStory")        // { philosophy, tagline, narrative_1, narrative_2 }
 ```
 
@@ -135,7 +164,7 @@ Every number in `fa.js` uses **Farsi-Indic digits** (۰–۹) — phone display 
 
 **A Farsi-digit value that has more than one space-separated group still needs
 `dir="ltr"` on its wrapping element** (but *not* `.font-latin` — that forces a Latin font
-that lacks Persian digit glyphs). `studioPhone` (`"+۳۹ ۰۵۵ ۰۰۰۰ ۰۰۰"`) is the example:
+that lacks Persian digit glyphs). `studioPhone` (`"+۹۸ ۲۱ ۰۰۰۰ ۰۰۰۰"`) is the example:
 Arabic-script digits are native to RTL text and usually need no help (a single token like
 `year` or a colon-joined range like `appointmentSlotMorning1Time` renders correctly with
 no wrapper at all), but once a value is a *sequence* of space-separated numeric groups,
@@ -151,6 +180,13 @@ code. Scientific unit values (`density: "2.42 g/cm³ …"`) and Gaggenau model
 names/ratings are technical/brand terms, not "numbers", and are left as-is for the same
 reason `number`/`name` are — they aren't translatable prose.
 
+**Trailing-punctuation pinning:** when a dictionary string ends in punctuation after a
+run whose direction differs from the rendering paragraph (e.g. `footerCraft`'s tooltip
+"LATIN. period" on an RTL host, or `footerCopyright`'s final dot after Persian prose),
+append the matching invisible directional mark — U+200E (LRM) for Latin-ending strings,
+U+200F (RLM) for Farsi-ending ones — so the punctuation stays attached to its run
+instead of flinging to the far edge. `fa.js`'s `footerCopyright` carries the RLM.
+
 ## Do not
 
 - Hardcode language strings in components with `isFarsi ? "FA" : "EN"` ternaries —
@@ -161,6 +197,6 @@ reason `number`/`name` are — they aren't translatable prose.
   even if the text is placeholder.
 - Add an `items` override object to `fa.js` — the per-item-override architecture was
   replaced by the full-dictionary swap. (A previous version of this README described
-  an `items: { gavv, zivv, rakh, varr }` object and a `getItemTranslations(id)`
+  an `items: { gavv, zivv, rakh, vaar }` object and a `getItemTranslations(id)`
   helper; neither exists in the code. `getItemTranslations` was dead code that always
   returned `null` and has been removed.)

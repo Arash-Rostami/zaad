@@ -1,9 +1,9 @@
-@font-face { font-family: "Dorsa"; font-weight: 300; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Light.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 400; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Regular.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 700; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Bold.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 800; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-ExtraBold.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Heavy.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: swap; src: url("/fonts/Dorsa-Black.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 300; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Light.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Regular.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Bold.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 800; font-style: normal; font-display: block; src: url("/fonts/Dorsa-ExtraBold.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Heavy.otf") format("opentype"); }
+@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Black.otf") format("opentype"); }
 
 html.skip-loader #zaad-loader {
     display: none !important;
@@ -14,25 +14,29 @@ html.skip-loader #zaad-loader {
 @custom-variant dark (&:where(.dark, .dark *, .mid, .mid *));
 
 :root {
-    --zaad-section-y: 3.5rem;
-    --zaad-section-y-break: 5rem;
+    --zaad-section-y-top: 2rem;
+    --zaad-section-y-bottom: 3.5rem;
+    --zaad-section-y-break-top: 2rem;
+    --zaad-section-y-break-bottom: 4.5rem;
 }
 
 @media (min-width: 48rem) {
     :root {
-        --zaad-section-y: 5rem;
-        --zaad-section-y-break: 8rem;
+        --zaad-section-y-top: 3rem;
+        --zaad-section-y-bottom: 5rem;
+        --zaad-section-y-break-top: 3rem;
+        --zaad-section-y-break-bottom: 7rem;
     }
 }
 
 @utility section-y {
-    padding-top: var(--zaad-section-y);
-    padding-bottom: var(--zaad-section-y);
+    padding-top: var(--zaad-section-y-top);
+    padding-bottom: var(--zaad-section-y-bottom);
 }
 
 @utility section-y-break {
-    padding-top: var(--zaad-section-y-break);
-    padding-bottom: var(--zaad-section-y-break);
+    padding-top: var(--zaad-section-y-break-top);
+    padding-bottom: var(--zaad-section-y-break-bottom);
 }
 
 :root {
@@ -923,14 +927,6 @@ html[lang="fa"] .italic {
     }
 }
 
-/* ── Radius language (sitewide) ─────────────────────────────────────────────
-   One near-sharp radius — 6px — across every route (showroom, House,
-   product). Controls and badges carry explicit rounded-md classes; this
-   block is the safety net: the whole radius scale, MaisonButton pills,
-   and the concierge section's leftover rounded-fulls (#concierge).
-   True circles keep rounded-full: ambient glows, status dots, the
-   "Z"/"&" medallions, the custom cursor. Unlayered on purpose — it must
-   beat Tailwind's @layer utilities. Documented in styles/README.md. */
 .rounded,
 .rounded-sm,
 .rounded-md,

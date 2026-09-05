@@ -14,6 +14,13 @@ raw PNG/JPEG bytes (no external image library) to set `orientation`. Falls back 
 Called from `src/app/collection/[slug]/page.js` only — never import this into a client
 component, it will crash (no `fs` in the browser).
 
+**Both fs passes are module-level cached** (2026-09-06): `listSortedImages` memoizes
+the sorted filename list per folder (`listCache`) and `readDimensions` wraps the SOF-marker
+scan with a per-file `dimensionCache` — a folder is listed and each file's bytes are
+dimension-scanned exactly once per server process, not per request. `public/image/` is
+deploy-time-static content, so an unbounded Map keyed by path is safe here; clear the
+caches only if that assumption ever breaks (never in dev where `public/` can change).
+
 `resolveHomeUtensilImages()` — same file, same server-only constraint. Reads
 `public/image/home/` (no `item`/`lang` params — a flat folder, not per-collection-item),
 filters by the same `IMAGE_EXTENSIONS` set, sorts numerically, and returns
@@ -24,26 +31,64 @@ hardcoded array (`utensil-01.png`, `utensil-02.png`, with their real dimensions)
 folder is missing/empty, mirroring `resolveCollectionImages`'s fallback philosophy.
 Whatever files exist in that folder at request time are picked up automatically —
 adding a 3rd, 10th, or 98th image needs no code change. Called from `src/app/page.js`
-only, which passes the result down as `AppShell`'s `utensilImages` prop → `Story.jsx`'s
-auto-cycling carousel (see `src/components/README.md`).
+only, which passes the result down as `AppShell`'s `utensilImages` prop — currently
+**dormant**: `Story.jsx`'s gallery is video-driven now, the prop is threaded but
+unconsumed (see `src/components/README.md`).
 
 ## `localizedYear.js`
 
 `localizedYear(isFarsi)` returns the current Gregorian year (`new Date().getFullYear()`)
 formatted via `Intl.NumberFormat` with `useGrouping: false` — Persian digit glyphs when
-`isFarsi`, Latin digits otherwise. `useGrouping` must stay `false`: `Intl.NumberFormat`
+`isFarsi`, Latin digits otherwise. The two `Intl.NumberFormat` instances are hoisted to
+module scope (2026-09-06) — call sites hit the render path every paint, and constructing
+an `Intl.NumberFormat` per call is real work (locale-data lookup), not free.
+`useGrouping` must stay `false`: `Intl.NumberFormat`
 inserts a thousands separator by default, which turns a 4-digit year into `"2,026"`.
 Gregorian year, not a Jalali calendar conversion. Called at render time, not cached in
-state — call sites: `Footer.jsx`, `house/HouseFooter.jsx`, composing
-`t("footerCopyright").replace("{year}", localizedYear(isFarsi))` (now a single-year
-string, e.g. `© {year} ZAAD S.P.A. ...` — no start-date range) before that string reaches
-`wrapLatinRuns`.
+state — call sites: `Footer.jsx`, `house/HouseFooter.jsx`, both composing
+`t("footerCopyright").replace("{year}", localizedYear(isFarsi))` (a single-year string,
+e.g. `© {year} - All Rights Reserved.` — no start-date range). **The two call sites now
+diverge after that point** (2026-09-04): `house/HouseFooter.jsx` passes the composed
+string straight to `wrapLatinRuns`, unchanged; `Footer.jsx` additionally strips the
+leading `"© "` (`.replace(/^©\s*/, "")`) before `wrapLatinRuns`, since its `©` renders
+separately as the hidden `/ledger` link (see `src/components/README.md`'s "hidden link"
+note) — `house/HouseFooter.jsx` has no such link, so its `©` stays part of the one string.
+
+## `socialLinks.js` (added 2026-09-04)
+
+Exports `SOCIAL_LINKS` — a frozen 4-entry array (`id`, `href`, `icon` — a `lucide-react`
+component reference, `labelKey`) for Instagram, LinkedIn, Telegram, and WhatsApp. The
+single shared source `shared/SocialLinks.jsx` (see `src/components/README.md`) maps over
+it, so both `Footer.jsx` and `house/HouseFooter.jsx` render the identical row from one
+config instead of duplicating four hrefs/icons/labels twice. **`href` values are
+placeholders** (`https://instagram.com/zaad_placeholder`, etc.) — same unresolved-handle
+gap `services/MetaDataService.js`'s JSON-LD `sameAs` array already has a `// TODO` for.
+Replace all four with the real handles before this ships; nothing else needs to change
+(`shared/SocialLinks.jsx` and both footers only ever read from this one file). Telegram
+has no dedicated `lucide-react` icon, so `Send` (paper airplane) stands in — it happens to
+already resemble Telegram's own logo shape. WhatsApp has no dedicated icon either;
+`MessageCircle` is the closest generic chat-bubble glyph `lucide-react` offers.
+
+## `studioHours.js` (added 2026-09-06)
+
+Client-safe, no hook calls. `isStudioOpenNow(date = new Date())` resolves the
+Tehran-local weekday/hour via `Intl.DateTimeFormat("en-US", { timeZone: "Asia/Tehran",
+weekday: "short", hour: "numeric", hour12: false })`, independent of the visitor's own
+device timezone/locale — Node/Next.js ships full ICU by default, so `timeZone: "Asia/
+Tehran"` needs no extra polyfill/data in either SSR or the browser. Open Sat–Thu
+09:00–18:00 Tehran time (`weekday !== "Fri"` — Friday is the only closed day, matching
+`callStudioSub`'s stated hours literally, not general knowledge about Iran's weekend).
+Sole consumer: `house/ChapterPieces.jsx`'s `CallStrip` (see `src/components/README.md`),
+which calls it inside a mount-only effect (`isOpen` starts `null` so SSR and first paint
+render no status dot — the same hydration-safe idiom as `useLocalPreference`) and renders
+`t("studioStatusOpen")`/`t("studioStatusClosed")` next to a `bg-accent`/`bg-muted/50` dot
+(no new hardcoded color).
 
 ## `wrapBrandNames.js`
 
 Client-safe, no hook calls, no `isFarsi` parameter needed. `wrapBrandNames(text)` scans a
 string for a fixed token list — split into `ZAAD_TOKENS` ("ZAAD", "Dorsa", "Persol Business
-Solution", and the four collection codenames "GÁVV"/"ZIVV"/"RÁKH"/"VARR") and `PARTNER_TOKENS`
+Solution", and the four collection codenames "GÁVV"/"ZIVV"/"RÁKH"/"VAAR") and `PARTNER_TOKENS`
 ("Gaggenau", "Domus", "Salice", "Kesseböhmer", "Coopersburg" — the manufacturing/supply
 partners named in `en.js`/`fa.js` appliance/hardware spec text), merged into one combined
 `BRAND_TOKENS` list — and wraps each match in `<span dir="ltr" className="font-serif">`.
@@ -81,7 +126,7 @@ left alone" exception — it isn't; that note has been corrected).
 
 **Wraps in `.font-serif`, not `.font-latin` (changed 2026-09-02, explicit user request).**
 Every call site here isolates embedded proper nouns inside Farsi prose — our own brand/
-collection names (`ZAAD`, `Dorsa`, `GÁVV`/`ZIVV`/`RÁKH`/`VARR`) and third-party partner
+collection names (`ZAAD`, `Dorsa`, `GÁVV`/`ZIVV`/`RÁKH`/`VAAR`) and third-party partner
 brands (`Gaggenau`, `Domus`, `Salice`, `Kesseböhmer`, etc.) — and the site's rule is that
 brand-adjacent proper nouns render in the Playfair `.font-serif` face, not the monospace
 `.font-latin` face (see `src/styles/README.md`'s "Brand tokens always render in
@@ -114,7 +159,7 @@ a string becomes JSX children (e.g. `{wrapLatinRuns(item.description, isFarsi)}`
 on a string that still gets `.replace()`/concatenation/template-literal composition
 afterward (`wrapLatinRuns` returns a React node array, not a string, once it's actually
 wrapped something). Current call sites: `Story.jsx`, `Advantages.jsx`, `Materials.jsx`,
-`Blueprint.jsx`, `Footer.jsx`, `house/HouseFooter.jsx`, `concierge/InquiryForm.jsx`,
+`Footer.jsx`, `house/HouseFooter.jsx`, `concierge/InquiryForm.jsx`,
 `productdetailspage/ProductMeta.jsx`, `productdetailspage/LookbookPoetry.jsx`,
 `productdetailspage/TabArchitecture.jsx` (also its `tower.key`/`listSpecs` entries, not
 just `overview`/bullets — anything rendering a dictionary string with embedded Latin
@@ -171,6 +216,19 @@ heritage), and a handful of acquisition/consultation strings. Pulled out of
 formatting logic sits alongside `wrapBrandNames.js`/`wrapLatinRuns.js` rather than living
 inside a service class. No caching here — `CuratorService.buildContext` is what memoizes
 the result per language; calling this function directly re-formats every time.
+
+## `studioHours.js` (added 2026-09-06)
+
+Client-safe pure function, no hooks, no fetch. `isStudioOpenNow(date = new Date())`
+returns a boolean: open Sat–Thu 09:00–18:00, closed only Friday, evaluated in
+**`Asia/Tehran`** local time regardless of the visitor's own timezone (via
+`Intl.DateTimeFormat(..., { timeZone: "Asia/Tehran", weekday: "short", hour: "numeric",
+hour12: false })`, not the browser's local clock) — matches the real hours already
+stated in `en.js`/`fa.js`'s `callStudioSub` copy; if that copy's hours ever change, this
+function's `OPEN_HOUR`/`CLOSE_HOUR`/`CLOSED_WEEKDAY` constants must change with it. Only
+call site: `house/ChapterPieces.jsx`'s `CallStrip` (see `src/components/README.md`) —
+called inside a mount-only `useEffect`, never at render time, since `new Date()` would
+otherwise differ between server and client and trip a hydration mismatch.
 
 ## `inquiriesStore.js` (added 2026-09-03)
 

@@ -3,12 +3,13 @@
 import React, { memo, useCallback, useEffect, useActionState, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { AlertCircle, ArrowLeft, ChevronDown, Eye, EyeOff, KeyRound, LogOut, Search, Trash2 } from "lucide-react";
 import LedgerHeader from "./LedgerHeader";
 import Footer from "@/components/Footer";
 import ScrollButton from "@/components/shared/ScrollButton";
 import useLenisScroll from "@/hooks/useLenisScroll";
+import useDeferredMedia from "@/hooks/useDeferredMedia";
 import MaisonButton from "../MaisonButton";
 import MaisonReveal from "../MaisonReveal";
 import StatusScreen from "../shared/StatusScreen";
@@ -84,63 +85,107 @@ function countFor(value, language) {
     return formatter.format(value);
 }
 
+const GATE_FALLBACK_VIDEOS = ["eucalyptus", "stone", "leather"];
+
 const LedgerGate = memo(function LedgerGate({ unlockAction, t }) {
     const [state, submit, pending] = useActionState(unlockAction, EMPTY_STATE);
+    const reduceMotion = useReducedMotion();
+    const [clipIndex, setClipIndex] = useState(0);
+
+    const handleEnded = useCallback(() => {
+        setClipIndex((current) => (current + 1) % GATE_FALLBACK_VIDEOS.length);
+    }, []);
+    const clip = GATE_FALLBACK_VIDEOS[clipIndex];
+    const [gateVideoReady, gateVideoRef] = useDeferredMedia();
+    const gateVideoElRef = useRef(null);
+
+    const handleClipLoadedData = useCallback(() => {
+        if (reduceMotion) return;
+        gateVideoElRef.current?.play().catch(() => {});
+    }, [reduceMotion]);
 
     return (
-        <div className="min-h-screen bg-surface text-ink flex items-center justify-center px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-24">
-            <MaisonReveal variant="unveil" className="max-w-md w-full text-center">
-                <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-5">
-                    {t("ledgerEyebrow")}
-                </span>
-                <h1 className="text-4xl sm:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light text-glow-subtle mb-6">
-                    {t("ledgerTitle")}
-                </h1>
-                <p className="text-sm text-muted font-light leading-relaxed mb-10">{t("ledgerGateIntro")}</p>
-                <form action={submit} className="space-y-5 text-left rtl:text-right">
-                    <div>
-                        <label
-                            htmlFor="ledger-key"
-                            className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium"
+        <div className="min-h-screen bg-surface text-ink flex items-center justify-center px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-20">
+            <div className="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+                <MaisonReveal variant="unveil" className="max-w-md w-full mx-auto text-center">
+                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                        {t("ledgerEyebrow")}
+                    </span>
+                    <h1 className="text-4xl sm:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light text-glow-subtle mb-6">
+                        {t("ledgerTitle")}
+                    </h1>
+                    <p className="text-sm text-muted font-light leading-relaxed mb-10">{t("ledgerGateIntro")}</p>
+                    <form action={submit} className="space-y-5 text-left rtl:text-right">
+                        <div>
+                            <label
+                                htmlFor="ledger-key"
+                                className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium"
+                            >
+                                {t("ledgerKeyLabel")}
+                            </label>
+                            <input
+                                id="ledger-key"
+                                type="password"
+                                name="key"
+                                required
+                                autoComplete="off"
+                                autoFocus
+                                className="w-full bg-panel border border-ink/15 focus:border-ink focus:outline-none px-4 py-3 text-base sm:text-sm font-mono rounded-xl placeholder-dim-faint transition-colors"
+                            />
+                            {state.error && (
+                                <p className="flex items-center gap-1.5 text-danger text-[length:calc(11px*var(--zaad-font-scale))] font-mono mt-1.5">
+                                    <AlertCircle className="w-3 h-3 shrink-0" />
+                                    <span>{t(state.error)}</span>
+                                </p>
+                            )}
+                        </div>
+                        <MaisonButton
+                            type="submit"
+                            variant="solid"
+                            icon={KeyRound}
+                            disabled={pending}
+                            className="w-full font-sans"
                         >
-                            {t("ledgerKeyLabel")}
-                        </label>
-                        <input
-                            id="ledger-key"
-                            type="password"
-                            name="key"
-                            required
-                            autoComplete="off"
-                            autoFocus
-                            className="w-full bg-panel border border-ink/15 focus:border-ink focus:outline-none px-4 py-3 text-base sm:text-sm font-mono rounded-xl placeholder-dim-faint transition-colors"
-                        />
-                        {state.error && (
-                            <p className="flex items-center gap-1.5 text-danger text-[length:calc(11px*var(--zaad-font-scale))] font-mono mt-1.5">
-                                <AlertCircle className="w-3 h-3 shrink-0" />
-                                <span>{t(state.error)}</span>
-                            </p>
-                        )}
+                            {pending ? t("ledgerOpening") : t("ledgerEnter")}
+                        </MaisonButton>
+                    </form>
+                    <div className="mt-8 flex justify-center">
+                        <Link
+                            href="/"
+                            className="flex items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            {t("ledgerReturnHome")}
+                        </Link>
                     </div>
-                    <MaisonButton
-                        type="submit"
-                        variant="solid"
-                        icon={KeyRound}
-                        disabled={pending}
-                        className="w-full font-sans"
+                </MaisonReveal>
+                <MaisonReveal variant="scale-down-unveil" delay={0.2} className="hidden lg:block">
+                    <div
+                        ref={gateVideoRef}
+                        className="relative h-[70vh] max-h-[640px] aspect-[9/16] mx-auto"
+                        aria-hidden="true"
                     >
-                        {pending ? t("ledgerOpening") : t("ledgerEnter")}
-                    </MaisonButton>
-                </form>
-                <div className="mt-8 flex justify-center">
-                    <Link
-                        href="/"
-                        className="flex items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500"
-                    >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        {t("ledgerReturnHome")}
-                    </Link>
-                </div>
-            </MaisonReveal>
+                        <AnimatePresence mode="wait">
+                            <motion.video
+                                key={clip}
+                                ref={gateVideoElRef}
+                                src={`/video/material/fallback/${clip}.mp4`}
+                                poster={`/video/material/fallback/${clip}.jpg`}
+                                muted
+                                playsInline
+                                preload={gateVideoReady && !reduceMotion ? "auto" : "none"}
+                                onLoadedData={handleClipLoadedData}
+                                onEnded={handleEnded}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.6, ease: EASE_IN_OUT }}
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                        </AnimatePresence>
+                    </div>
+                </MaisonReveal>
+            </div>
         </div>
     );
 });
@@ -163,7 +208,9 @@ const LedgerFilterTab = memo(function LedgerFilterTab({ tab, isActive, onSelect,
         <button
             type="button"
             role="tab"
+            id={`ledger-tab-${tab.id}`}
             aria-selected={isActive}
+            aria-controls="ledger-entries-panel"
             onClick={handleClick}
             className="group relative pb-3 sm:pb-4 flex items-center gap-2 transition-colors duration-300 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shrink-0"
         >
@@ -175,12 +222,11 @@ const LedgerFilterTab = memo(function LedgerFilterTab({ tab, isActive, onSelect,
                 {t(tab.labelKey)}
             </span>
             <span
-                dir="ltr"
-                className={`font-latin font-mono text-[10px] tracking-widest transition-colors ${
+                className={`font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-widest transition-colors ${
                     isActive ? "text-accent" : "text-muted/40"
                 }`}
             >
-                {countFor(tab.count, language)}
+                ({countFor(tab.count, language)})
             </span>
             {isActive && (
                 <motion.div
@@ -248,9 +294,18 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                 >
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-x-3 gap-y-1 flex-wrap">
-                            {!inquiry.viewed && (
-                                <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-                            )}
+                            <span
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[length:calc(9px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase shrink-0 ${
+                                    inquiry.viewed ? "border-ink/10 text-muted/60" : "border-accent/40 text-accent bg-accent/5"
+                                }`}
+                            >
+                                {inquiry.viewed ? (
+                                    <Eye className="w-2.5 h-2.5 shrink-0" />
+                                ) : (
+                                    <EyeOff className="w-2.5 h-2.5 shrink-0" />
+                                )}
+                                {inquiry.viewed ? t("ledgerTabViewed") : t("ledgerTabUnviewed")}
+                            </span>
                             <span dir="ltr" className="font-latin font-mono text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest text-accent shrink-0">
                                 SEC-COM-{inquiry.sessionRef}
                             </span>
@@ -260,7 +315,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                             </span>
                         </div>
                         <p className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted/70 mt-1.5 tracking-wide">
-                            {stamp} · {inquiry.language === "fa" ? "FA" : "EN"}
+                            {stamp} · {inquiry.language === "fa" ? "FA" : "EN"} · {inquiry.source === "chat" ? t("ledgerSourceChat") : t("ledgerSourceForm")}
                         </p>
                     </div>
                     <ChevronDown
@@ -351,7 +406,12 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
     const [pageIndex, setPageIndex] = useState(0);
     const [activeFilter, setActiveFilter] = useState("all");
     const [query, setQuery] = useState("");
+    const [viewedOverrides, setViewedOverrides] = useState(EMPTY_STATE);
     const [isMutating, startMutationTransition] = useTransition();
+
+    useEffect(() => {
+        setViewedOverrides(EMPTY_STATE);
+    }, [inquiries]);
 
     const toggleEntry = useCallback((entryKey) => {
         setOpenKey((current) => (current === entryKey ? null : entryKey));
@@ -374,12 +434,12 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
 
     const handleSetViewed = useCallback(
         (sessionRef, submittedAt, viewed) => {
+            setViewedOverrides((prev) => ({ ...prev, [`${sessionRef}-${submittedAt}`]: viewed }));
             startMutationTransition(async () => {
                 await setViewedAction(sessionRef, submittedAt, viewed);
-                router.refresh();
             });
         },
-        [setViewedAction, router],
+        [setViewedAction],
     );
 
     const goToPage = useCallback((next) => {
@@ -389,20 +449,31 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
 
     useLenisScroll();
 
-    const setActiveTab = (tab) => {
-        if (tab === "pdf") {
-            window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
-            return;
-        }
-        router.push("/");
-    };
-    const onScrollToSection = (sectionId) => router.push(`/#${sectionId}`);
+    const setActiveTab = useCallback(
+        (tab) => {
+            if (tab === "pdf") {
+                window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
+                return;
+            }
+            router.push("/");
+        },
+        [router],
+    );
+    const onScrollToSection = useCallback((sectionId) => router.push(`/#${sectionId}`), [router]);
 
-    const unviewedCount = useMemo(() => inquiries.filter((inquiry) => !inquiry.viewed).length, [inquiries]);
-    const viewedCount = inquiries.length - unviewedCount;
+    const effectiveInquiries = useMemo(() => {
+        if (!Object.keys(viewedOverrides).length) return inquiries;
+        return inquiries.map((inquiry) => {
+            const key = `${inquiry.sessionRef}-${inquiry.submittedAt}`;
+            return key in viewedOverrides ? { ...inquiry, viewed: viewedOverrides[key] } : inquiry;
+        });
+    }, [inquiries, viewedOverrides]);
+
+    const unviewedCount = useMemo(() => effectiveInquiries.filter((inquiry) => !inquiry.viewed).length, [effectiveInquiries]);
+    const viewedCount = effectiveInquiries.length - unviewedCount;
 
     const filteredInquiries = useMemo(() => {
-        let list = inquiries;
+        let list = effectiveInquiries;
         if (activeFilter !== "all") {
             const wantViewed = activeFilter === "viewed";
             list = list.filter((inquiry) => Boolean(inquiry.viewed) === wantViewed);
@@ -418,7 +489,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
             });
         }
         return list;
-    }, [inquiries, activeFilter, query, t]);
+    }, [effectiveInquiries, activeFilter, query, t]);
 
     useEffect(() => {
         setPageIndex(0);
@@ -432,11 +503,14 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
 
     const countLabel = countFor(inquiries.length, language);
 
-    const filterTabs = [
-        { id: "all", labelKey: "ledgerTabAll", count: inquiries.length },
-        { id: "unviewed", labelKey: "ledgerTabUnviewed", count: unviewedCount },
-        { id: "viewed", labelKey: "ledgerTabViewed", count: viewedCount },
-    ];
+    const filterTabs = useMemo(
+        () => [
+            { id: "all", labelKey: "ledgerTabAll", count: inquiries.length },
+            { id: "unviewed", labelKey: "ledgerTabUnviewed", count: unviewedCount },
+            { id: "viewed", labelKey: "ledgerTabViewed", count: viewedCount },
+        ],
+        [inquiries.length, unviewedCount, viewedCount],
+    );
 
     const body = !unlocked ? (
         <LedgerGate unlockAction={unlockAction} t={t} />
@@ -449,10 +523,10 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
             onPrimary={handleLock}
         />
     ) : (
-        <div className="min-h-screen bg-surface text-ink px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+4rem)] pb-24">
+        <div className="min-h-screen bg-surface text-ink px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-20">
             <div className="max-w-3xl mx-auto">
-                <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="mb-10">
-                    <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-5">
+                <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="mb-12 md:mb-16">
+                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
                         {t("ledgerEyebrow")}
                     </span>
                     <div className="flex items-end justify-between gap-6 flex-wrap">
@@ -464,17 +538,12 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                         </MaisonButton>
                     </div>
                     <p className="mt-4 font-mono text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest uppercase text-muted">
-                        <span dir="ltr" className="font-latin">
-                            {countLabel}
-                        </span>{" "}
-                        {t("ledgerEntryCount")}
+                        {countLabel} {t("ledgerEntryCount")}
                         {unviewedCount > 0 && (
                             <>
                                 {" "}
                                 ·{" "}
-                                <span dir="ltr" className="font-latin text-accent">
-                                    {countFor(unviewedCount, language)}
-                                </span>{" "}
+                                <span className="text-accent">{countFor(unviewedCount, language)}</span>{" "}
                                 {t("ledgerUnviewedCount")}
                             </>
                         )}
@@ -485,12 +554,12 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                     variant="unveil"
                     delay={0.15}
                     threshold={0.01}
-                    className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5"
+                    className="mb-10 pb-4 border-b border-ink/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5"
                 >
                     <div
                         role="tablist"
                         aria-orientation="horizontal"
-                        className="flex items-center gap-6 border-b border-ink/10 sm:border-0 overflow-x-auto scrollbar-none"
+                        className="flex items-center gap-6 overflow-x-auto scrollbar-none"
                     >
                         {filterTabs.map((tab) => (
                             <LedgerFilterTab
@@ -511,11 +580,12 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                             onChange={(event) => setQuery(event.target.value)}
                             placeholder={t("ledgerSearchPlaceholder")}
                             aria-label={t("ledgerSearchLabel")}
-                            className="w-full bg-panel border border-ink/15 focus:border-ink focus:outline-none pl-9 rtl:pl-4 rtl:pr-9 pr-4 py-2 text-sm font-light rounded-full placeholder-dim-faint transition-colors"
+                            className="w-full bg-panel border border-ink/15 focus:border-ink focus:outline-none pl-9 rtl:pl-4 rtl:pr-9 pr-4 py-2 text-sm font-light rounded-xl placeholder-dim-faint transition-colors"
                         />
                     </div>
                 </MaisonReveal>
 
+                <div id="ledger-entries-panel" role="tabpanel" aria-labelledby={`ledger-tab-${activeFilter}`}>
                 {pageEntries.length === 0 ? (
                     <p className="text-sm text-muted font-light text-center py-16">{t("ledgerNoResults")}</p>
                 ) : (
@@ -554,7 +624,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                         </button>
                         <span
                             dir="ltr"
-                            className="font-latin font-mono tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] text-muted"
+                            className="font-mono tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] text-muted"
                         >
                             {countFor(safePage + 1, language)} / {countFor(pageCount, language)}
                         </span>
@@ -570,6 +640,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                         </button>
                     </div>
                 )}
+                </div>
             </div>
         </div>
     );

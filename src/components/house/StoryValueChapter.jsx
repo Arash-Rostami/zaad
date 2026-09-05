@@ -9,7 +9,7 @@ const EMPTY_ARRAY = [];
 function StoryValueChapter() {
     const { t, data } = useLanguage();
 
-    const sections = data("aboutSections") || EMPTY_ARRAY;
+    const sections = useMemo(() => data("aboutSections") || EMPTY_ARRAY, [data]);
     const story = useMemo(() => sections.find((s) => s.id === "story"), [sections]);
     const brandValue = useMemo(() => sections.find((s) => s.id === "brandValue"), [sections]);
 
@@ -53,7 +53,7 @@ function StoryValueChapter() {
             heroEyebrow={t("storyValueHeroEyebrow")}
             heroTitle={t("storyValueHeroTitle")}
             heroIntro={t("storyValueHeroIntro")}
-            heroImage="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=90"
+            heroImage="/video/house/chapter-gavv.jpg"
             heroImageAlt={t("storyValueHeroAlt")}
             heroBadge={t("menuHouseOfZAAD")}
             heroBadgeLabel={t("storyValueHeroEyebrow")}

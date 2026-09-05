@@ -1,4 +1,5 @@
 import { getServerLanguage } from "@/lib/i18n/server";
+import { en } from "@/lib/i18n/en";
 
 const BRAND    = "ZAAD";
 const SITE_URL = "https://zaad.com";
@@ -13,6 +14,8 @@ const COPY = {
         storyDesc:    "The perspective that shaped ZAAD, and the values — precision, restraint, function — that hold every space to it.",
         sustainabilityTitle: "Sustainability & Responsibility",
         sustainabilityDesc:  "How ZAAD treats the materials it shapes, and the people and places behind them — considered resource use and craft stewardship together.",
+        glanceTitle:    "ZAAD at a glance — The Kitchen Collection",
+        glanceDesc:     "The complete ZAAD Kitchen Collection lookbook: GÁVV, ZIVV, RÁKH and VAAR — narratives, island and tall-unit architecture, material specifications, integrated appliances and the master partner matrix.",
     },
     fa: {
         homeTitle:     "اشیاء مجسمه‌وار لاکچری و طراحی معماری",
@@ -23,6 +26,8 @@ const COPY = {
         storyDesc:    "نگاهی که زاد را شکل داد، و ارزش‌هایی — دقت، پرهیز از نمایش، عملکرد — که هر فضا را به آن پایبند نگه می‌دارند.",
         sustainabilityTitle: "پایداری و مسئولیت",
         sustainabilityDesc:  "چگونگی رفتار زاد با موادی که شکل می‌دهد، و انسان‌ها و مکان‌های پشت آن — مصرف سنجیده منابع و سرپرستی صنعت در کنار هم.",
+        glanceTitle:    "زاد در یک نگاه — مجموعه‌ی آشپزخانه",
+        glanceDesc:     "لوک‌بوک کامل مجموعه‌ی آشپزخانه‌ی زاد: GÁVV، ZIVV، RÁKH و VAAR — روایت‌ها، معماری جزیره و واحدهای قدی، مشخصات متریال، تجهیزات یکپارچه و جدول جامع شرکا.",
     },
 };
 
@@ -175,6 +180,45 @@ export class MetadataService {
             isPartOf:    { "@type": "WebSite", name: BRAND, url: SITE_URL },
             about:       "Environmental stewardship and corporate social responsibility of the ZAAD atelier",
         }));
+    }
+
+    static async forGlance() {
+        const lang      = await getServerLanguage();
+        const copy      = COPY[lang] ?? COPY.en;
+        const canonical = `${SITE_URL}/glance`;
+        const title     = copy.glanceTitle;
+
+        return {
+            meta: buildMeta({ rawTitle: title, description: copy.glanceDesc, image: "/og/home.jpg", canonical, lang }),
+            schemas: [
+                breadcrumbSchema(title, canonical),
+                MetadataService.orgSchema,
+                {
+                    "@context":   "https://schema.org",
+                    "@type":      "CollectionPage",
+                    name:         title,
+                    url:          canonical,
+                    inLanguage:   lang,
+                    description:  copy.glanceDesc,
+                    isPartOf:      { "@type": "WebSite", name: BRAND, url: SITE_URL },
+                    about:        { "@type": "Brand", name: BRAND },
+                    hasPart: {
+                        "@type": "ItemList",
+                        itemListElement: en.collection.map((item, index) => ({
+                            "@type":  "ListItem",
+                            position: index + 1,
+                            item: {
+                                "@type":      "Product",
+                                name:         item.name,
+                                description:  item.description,
+                                url:          `${SITE_URL}/collection/${item.id}`,
+                                brand:        { "@type": "Brand", name: BRAND },
+                            },
+                        })),
+                    },
+                },
+            ],
+        };
     }
 
 }

@@ -19,6 +19,7 @@ export default function sitemap() {
         entry("/about", "monthly", 0.7),
         entry("/story", "monthly", 0.7),
         entry("/sustainability", "monthly", 0.7),
+        entry("/glance", "monthly", 0.8),
         entry("/showcase/index.html", "weekly", 0.8),
     ];
 

@@ -18,6 +18,10 @@ export default function renderChatMarkdown(text, isFarsi) {
             out.push(bold ? <span key={key++} className="text-accent">{node}</span> : node);
             continue;
         }
+        if (!node.includes("**")) {
+            if (node) out.push(bold ? <span key={key++} className="text-accent">{node}</span> : node);
+            continue;
+        }
         for (const piece of node.split(MARKER)) {
             if (piece === "**") {
                 bold = !bold;

@@ -48,7 +48,7 @@ function runRafScroll(runId, startY, distance, duration) {
     requestAnimationFrame(step);
 }
 
-export function animateScrollTo(elementId, duration = 1450) {
+export function animateScrollTo(elementId, duration = 1450, extraOffset = 0) {
     const runId = ++scrollRunId;
 
     function attempt(elapsed) {
@@ -66,7 +66,7 @@ export function animateScrollTo(elementId, duration = 1450) {
         const targetY =
             target.getBoundingClientRect().top + startY;
 
-        const offset = getHeaderOffset();
+        const offset = getHeaderOffset() + extraOffset;
         const distance = targetY - startY - offset;
 
         if (Math.abs(distance) < 5) return;

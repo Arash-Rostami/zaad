@@ -1,6 +1,6 @@
 import React from "react";
 
-const ZAAD_TOKENS = ["Persol Business Solution", "ZAAD", "Dorsa", "GÁVV", "ZIVV", "RÁKH", "VARR"];
+const ZAAD_TOKENS = ["Persol Business Solution", "ZAAD", "Dorsa", "GÁVV", "ZIVV", "RÁKH", "VAAR"];
 const PARTNER_TOKENS = ["Gaggenau", "Domus", "Salice", "Kesseböhmer", "Coopersburg"];
 const BRAND_TOKENS = [...ZAAD_TOKENS, ...PARTNER_TOKENS];
 

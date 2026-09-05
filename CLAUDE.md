@@ -10,19 +10,19 @@ small and proportionate to a ~66-file project.
 - **Tailwind CSS v4** (CSS-first `@theme`, PostCSS plugin — no `tailwind.config.js`)
 - **Motion** (the `motion` package; client components import from `motion/react`) — the app's
   animation system for scroll-into-view reveals and interactive state
-- **GSAP** (`gsap` + `ScrollTrigger`) — scoped to exactly four spots that need timeline sequencing,
+- **GSAP** (`gsap` + `ScrollTrigger`) — scoped to exactly three spots that need timeline sequencing,
   a scroll-pin, or a scrubbed parallax `motion` can't do natively (`Hero.jsx`'s entrance timeline,
-  `Story.jsx`'s pinned image column, `Blueprint.jsx`'s pinned nav column, `house/ChapterPieces.jsx`'s
-  `ChapterHero` scrubbed media-column parallax — a hard pin doesn't work there since the hero's two
-  columns are roughly equal height, so it uses a non-pinning `scrub` tween instead), plus one
-  integration-only consumer: `useLenisScroll` (see below) drives Lenis's raf through `gsap.ticker`
+  `Story.jsx`'s pinned image column, `house/ChapterPieces.jsx`'s `ChapterHero` scrubbed
+  media-column parallax — a hard pin doesn't work there since the hero's two columns are roughly
+  equal height, so it uses a non-pinning `scrub` tween instead), plus one integration-only
+  consumer: `useLenisScroll` (see below) drives Lenis's raf through `gsap.ticker`
   and syncs `ScrollTrigger.update` — no timelines, no pins. Not a `motion` replacement — see
   `src/components/README.md`'s Conventions section before adding a fifth usage.
 - **Lenis** — inertial smooth scrolling on the window. Initialized via the shared `src/hooks/useLenisScroll.js`
   hook (dynamic import, gsap-ticker-driven, synced with `ScrollTrigger`), consumed by `AppShell.jsx`
   (showroom), `house/HouseSmoothScroll.jsx` (a render-null leaf mounted in `(house)/layout.js` for the
-  House routes), and `collection/[slug]/ProductPageClient.jsx` (product pages) — one instance per
-  mounted route, never more than one at a time. `ScrollService`'s three `animate*` exports delegate
+  House routes), `collection/[slug]/ProductPageClient.jsx` (product pages), and `ledger/Ledger.jsx`
+  (`/ledger`) — one instance per mounted route, never more than one at a time. `ScrollService`'s three `animate*` exports delegate
   to the registered instance. Skipped entirely under `prefers-reduced-motion` (RAF fallback runs
   instead). Inner scrollers must opt out via `data-lenis-prevent`.
 - **lucide-react** icons · **`@google/genai`** for the AI Assistant (Gemini) route
@@ -113,6 +113,8 @@ machinery from other projects.
 - **`activeAppointmentBlob`** (concierge `InquiryForm`) — the Audience toggle's
   indicator. Local to the inquiry form (not a cross-section group), but the same
   single-mounted rule applies: only the selected pill renders it, or the blob flies.
+- **`activeLedgerFilterLine`** (`ledger/Ledger.jsx`'s all/unviewed/viewed tabs) — same
+  local-scope, single-mounted pattern as `activeAppointmentBlob`, on the `/ledger` route.
 - **The House top nav shows only the current page, not all 3 links.** `house/HouseChrome.jsx`
   renders `t(currentNavItem.key)` (`NAV.find((item) => item.href === pathname)`) as a static label
   with a static underline bar beneath it (the "ON" look) — no `motion.span`, no `layoutId`, since
@@ -156,9 +158,10 @@ machinery from other projects.
 - **`animateScrollTo` retries until the target mounts** — if `getElementById` returns
   null it retries every 100ms up to 1200ms, then bails silently; a module-level run-id
   makes the newest call cancel older retry/scroll loops (last-call-wins). The **120ms
-  pre-scroll timeouts** in `MenuPanel`, `Header`, `Footer`, and `useShowroomNav` are now
+  pre-scroll timeouts** in `MenuPanel`, `Header`, `useShowroomNav`, and `AppShell` are now
   a soft lead-time, not a hard race — but keep them: they still avoid visibly scrolling
-  mid-transition.
+  mid-transition. (`Footer`'s are 100ms — a deliberate shorter lead-time in the current
+  live-edited file, not drift to be "fixed".)
 - **`generateStaticParams` emits `en.collection` ids only** — collection URLs derive
   from the English collection. Item `id`s must be URL-safe and stable.
 - **Directional icons always point left in Farsi**, regardless of which direction they point
@@ -171,6 +174,13 @@ machinery from other projects.
   Latin for permanently-Latin brand content (collection `number`/`year`/`name`). Picking the
   wrong one either leaves real Farsi text in the wrong typeface or forces Dorsa onto Latin
   product codes like "C°01"/"GÁVV".
+- **The `[[SUBMIT_INQUIRY]]`/`[[/SUBMIT_INQUIRY]]` marker tokens** (AI Curator chat
+  lead-capture, added 2026-09-06) — `api/curate/route.js`'s system prompt instructs the
+  model to emit this exact block once it has confirmed contact info to forward, and
+  `hooks/useConcierge.js`'s `SUBMIT_INQUIRY_RE` regex parses it back out client-side.
+  Change one and not the other and chat-submitted leads silently stop reaching
+  `/api/inquiry` — no error, just nothing saved. See `src/app/README.md`'s `/api/curate`
+  section and `src/hooks/README.md`'s `useConcierge.js` entry.
 
 ## Known issues (documented in folder docs; fix, don't replicate)
 
@@ -180,6 +190,10 @@ machinery from other projects.
   `/collection?q={search_term_string}` — no such route/search exists (404). The sitemap
   and collection breadcrumb no longer 404 (sitemap lists `/showcase/index.html`, the real
   static URL; breadcrumb is `Home → Item`). See `src/app/README.md`.
+- OG/logo assets 404 (found in the 2026-09-06 perf audit): metadata references
+  `/og/home.jpg` and `${SITE_URL}/logo.png`, which don't exist under `public/` — social
+  shares fall back to no image. Needs real brand assets or a reference change; the
+  `images.remotePatterns` allow-list doesn't cover it (these are same-origin paths).
 
 ## Coding conventions
 

@@ -69,21 +69,77 @@ const { isMuted, toggleMute } = useAmbientAudio();
 ```
 
 - The actual `Audio` object is a **module-level singleton**, not component state — created lazily
-  on first call (guarded by `typeof window !== "undefined"`), src `/audio/ambient.mp3`, `loop = true`.
-  This mirrors `useTheme.js`'s pattern (local `useState` per call site, synced from a shared source
-  of truth on mount) rather than a React context, since none of the calling components are ever
-  mounted simultaneously. It also means playback survives the calling component unmounting (e.g.
-  closing the hamburger menu) since the `Audio` object itself isn't tied to that component's
-  lifecycle — only the *toggle UI* is.
-- Starts muted; `audio.play()` is called muted on mount (allowed without a user gesture by all
-  browsers), so it's already playing silently before the user ever interacts. Unmuting happens
-  inside the `toggleMute` click handler, which counts as a user gesture and satisfies autoplay-with-
-  sound policies.
-- Persists the mute preference to `localStorage` under `"zaad-audio-muted"`.
-- **Requires** an actual file at `public/audio/ambient.mp3` — none ships with the repo. Without it
-  `audio.play()` rejects silently (caught, no crash) and the toggle just has nothing to unmute.
+  on first unmute (guarded by `typeof window !== "undefined"`), src `/audio/ambient-loop.m4a`, `loop = true`,
+  `preload = "none"`. This mirrors `useTheme.js`'s pattern (local `useState` per call site, no React
+  context, since none of the calling components are ever mounted simultaneously). Playback survives
+  the calling component unmounting (e.g. closing the hamburger menu) since the `Audio` object isn't
+  tied to that component's lifecycle — only the *toggle UI* is.
+  **`isMuted`'s initial state must read the singleton, not assume `true`:** since every remount
+  (e.g. reopening the menu) re-runs `useState`, a plain `useState(true)` would show "muted" on
+  reopen even if playback never stopped — fixed (2026-09-05) via a lazy initializer,
+  `useState(() => !audioEl || audioEl.paused)`, so a remount reflects the real singleton state
+  instead of resetting the icon. Safe under SSR: `audioEl` is `null` on the server (never created
+  there), so `!audioEl` short-circuits before `.paused` is ever read.
+- **Off by default and zero-cost until enabled:** every page load starts muted, no `Audio` object
+  exists yet, and nothing is fetched. The element is created only inside the `toggleMute` unmute
+  click (a user gesture, satisfying autoplay-with-sound policies); `preload = "none"` means the
+  browser downloads no bytes before that click. Mute is a hard stop: `pause()`, not a silent
+  `muted` flag — no autoplay-on-mount hack, no muted `play()` warm-up.
+- **No preference persistence** (deliberate): a stored "unmuted" preference can't be honored on
+  reload without a user gesture, so the toggle honestly restarts muted on every load.
+- Requires the file at `public/audio/ambient-loop.m4a`. Without it `audio.play()` rejects silently
+  (caught, no crash) and the toggle just has nothing to unmute.
 - **Used by:** `header/ControlsFooter.jsx`, `house/HouseChrome.jsx` (via `shared/AudioToggle.jsx`,
   see `src/components/README.md`).
+
+---
+
+### `useDeferredMedia.js` (added 2026-09-06)
+
+The shared deferred-multimedia gate — one hook, three load techniques, so no component
+re-rolls its own video/audio loading strategy. Returns `[ready, ref]`; attach `ref` to the
+media's container element (not the `<video>` itself) for the in-view modes.
+
+```js
+const [ready, ref] = useDeferredMedia({ mode, idleDelay, rootMargin });
+```
+
+- **`mode: "in-view"` (default)** — `IntersectionObserver` on `ref` with `rootMargin`
+  (default `"300px"`, fires ~one screen before the media enters view, once — then disconnects).
+  For below-fold media: nothing loads while it's off-screen.
+- **`mode: "idle"`** — `ready` flips after `idleDelay` ms (default `1500`). For above-fold
+  heroes whose video must not block first paint: paint the cheap poster branch first, mount
+  the `<video>` once the page is idle.
+- **`mode: "eager"`** — `ready` immediately; exists so "load now" is expressed through the same
+  API rather than a bypass.
+- Fallbacks: if the ref target isn't mounted when the effect runs (conditionally rendered
+  consumer), the observe is retried once on the next animation frame; if it's still absent
+  or `IntersectionObserver` doesn't exist, `ready` flips immediately — the hook degrades to
+  eager, never to "never loads".
+- SSR/hydration-safe: `ready` starts `false` on both server and client (no mismatch), and
+  all timing/observer work happens inside the effect. Cleanup disconnects the observer /
+  clears the timeout.
+- **Playback is driven from the element, not a state effect.** With `preload="none"` no
+  media events fire at all; once `ready` flips the consumer raises preload to `"auto"`,
+  the load starts, and the `<video>`'s own `onLoadedData` handler (gated on
+  `!reduceMotion`) calls `play()`. A play *effect* keyed on the consumer's state is wrong
+  under `AnimatePresence mode="wait"` — the state changes while the old element is still
+  exiting, so the effect fires against the old element and never re-runs when the new one
+  mounts (two confirmed dead-video bugs in the first pass, fixed 2026-09-06). Reduced-motion
+  visitors keep `preload="none"` — poster only, zero clip bytes.
+- **Consumers** (the 2026-09-06 media pass): `house/ChapterPieces.jsx`'s `ChapterHero`
+  (`idle` — all three House routes + `/glance`), `Materials.jsx` and
+  `ledger/Ledger.jsx`'s `LedgerGate` clip reel (both in-view, `preload="none"`→`"auto"` +
+  `onLoadedData` play). `Hero.jsx`'s reel doesn't use the hook — its need is progressive
+  *mount staging* of a rotating set, hand-rolled as `mountedCount`/`nextEager` state (see
+  `src/components/README.md`; its play/rate effects depend on `mountedCount` too, so a
+  far-dot click that mounts a not-yet-rendered clip re-runs them). The two bespoke gates
+  that predate the hook (`Story.jsx`'s `storyGalleryMounted`, the 360° spin's
+  `canMountSpin`) intentionally keep their own logic — documented there, don't refactor
+  them onto this hook without checking those contracts first.
+- **Not for images:** `next/image` already lazy-loads by default; the image-side discipline
+  is `priority` on above-fold LCP images (`ChapterHero`'s poster, `StudioGallery`'s main
+  pane — 2026-09-06) and nothing elsewhere.
 
 ---
 
@@ -101,7 +157,7 @@ const {
 } = useShowroomNav();
 ```
 
-- `activeTab`: `"showroom"` | `"blueprint"` | `"pdf"` (the last opens `/showcase/index.html` externally — see the note further down; `header/SystemPortals.jsx`'s Catalogue card highlights on `"pdf"`, the tab it actually sets)
+- `activeTab`: `"showroom"` | `"pdf"` (the latter opens `/showcase/index.html` externally — see the note further down; `header/SystemPortals.jsx`'s Catalogue card highlights on `"pdf"`, the tab it actually sets)
 - `selectedProduct`: a full collection item object or `null`
 - `handleScrollToSection(sectionId)`: smooth-scrolls within the showroom tab
 - `handleInquireItem(item)`: pre-fills the concierge form with the selected item and scrolls to the concierge section
@@ -127,6 +183,12 @@ const {
 
 - Reads the collection via `data("collection")` from `useLanguage()` — no direct data imports.
 - Cross-collection navigation: when the last image of an item is reached, `handleNextImage` advances to the first image of the next item.
+- **`handleMacroMouseMove`/`handleMacroTouchMove` are rAF-coalesced** (2026-09-06): the
+  handler stores the latest coords in `zoomCoordsRef` and schedules a single
+  `requestAnimationFrame`-flushed `setZoomCoords` — one React render per frame no matter
+  how many mousemove events fired. Cleanup cancels the pending rAF. Keep new
+  pointer-coordinate state on this idiom (`CustomCursor.jsx` is the precedent); per-event
+  `setState` re-renders once per event.
 - **Used by:** `Showcase.jsx`
 
 ---
@@ -162,6 +224,16 @@ const {
 - **`setLightboxScale` is a ref-syncing wrapper (`applyScale`)** — it accepts the same
   value-or-updater signature, but also mirrors the scale into a ref so the native pinch
   listener reads the gesture-start scale without stale closures. Don't bypass it.
+- **Pan updates are rAF-coalesced; pinch stays synchronous** (2026-09-06). `handleLightboxMouseMove`
+  and single-finger `handleLightboxTouchMove` write into `panRef` and flush `setLightboxPan` once
+  per frame via a scheduled rAF (`scheduleLightboxPan`). The native pinch handlers
+  (`handlePinchTouchMove`/`handlePinchTouchEnd`) are synchronous `{ passive: false }` listeners
+  and call `cancelPendingPan()` before their own `setLightboxPan` — otherwise a stale rAF from a
+  just-finished mousemove could clobber the pinch-anchored pan a frame later. The zoom-reset
+  effect (on `activeImageIndex`/`isEnlarged` change) follows the same guard — cancel + ref-sync
+  before resetting pan to 50/50 — so a queued rAF can't resurrect pre-navigation coordinates
+  after an image switch. If you touch pan
+  code, keep that cancel-before-set guard.
 - `goNextWrapped()` / `goPrevWrapped()` — wrap-around image navigation
 - **Used by:** `useShowcase.js` (via composition), `ProductDetailsPage.jsx` (directly)
 
@@ -172,11 +244,35 @@ const {
 Generic hook for tracking the active item in a list. Used for tabs/panels where one item is "open" at a time.
 
 ```js
-const { active, setActive } = useActiveSelection(items);
-// active defaults to items[0]
+const { active, setActive } = useActiveSelection(items, persistKey);
+// active defaults to items[0]; persistKey is optional
 ```
 
-- **Used by:** `Materials.jsx`, `Blueprint.jsx`
+- **`persistKey`** (added 2026-09-06, optional) — when given, the selected item's `id` is
+  saved via `services/PreferenceService.js` and restored (in a mount-only effect) the next
+  time the same `persistKey` is used, so a returning visitor's choice sticks instead of
+  always resetting to `items[0]`. Internally the hook now tracks `activeId`, not the full
+  item, and re-resolves `active = items.find(i => i.id === activeId) || items[0] || null`
+  every render — safe against `items` being a fresh array reference each render (as it is
+  at both call sites below, derived from `data(...)`), since the lookup is by `id`, not
+  identity. The external `{active, setActive}` contract is unchanged for callers that omit
+  `persistKey` — `setActive` still takes the full item, not an id.
+- **Used by:** `Materials.jsx` (`persistKey="materialSelection"`)
+
+---
+
+### `useLocalPreference.js` (added 2026-09-06)
+
+Reactive wrapper around `services/PreferenceService.js` for components that need to
+*render* a stored preference, not just write one. Full contract, the hydration-safe
+seed/populate idiom it follows, and the current table of preference keys/consumers all
+live in `src/services/README.md`'s `PreferenceService.js` section — read that first.
+
+```js
+const [value, update] = useLocalPreference(key, fallback);
+```
+
+- **Used by:** `header/MenuPanel.jsx` (`lastViewedItem`, for the "Continue Browsing" link)
 
 ---
 
@@ -218,11 +314,41 @@ const {
   pushes a `t("curatorError")` assistant message. The welcome message (`id:
   "curator-welcome"`) is **filtered out of the payload** — sending it as a "model" turn
   made Gemini echo the greeting back as its reply, so the chat showed the welcome twice.
+- **Chat-driven lead capture (added 2026-09-06)** — `triggerCuratorResponse` runs the raw
+  model text through `resolveCuratorReply` before displaying it: a module-scoped
+  `SUBMIT_INQUIRY_RE` looks for a `[[SUBMIT_INQUIRY]]{...json...}[[/SUBMIT_INQUIRY]]` block
+  (the exact tokens the `/api/curate` system prompt is instructed to emit — see
+  `src/app/README.md`'s `/api/curate` section; keep both in sync). If found, the JSON is
+  parsed, the block is stripped from what's shown, and — only if the parsed object has both
+  `clientName` and `clientPhone` — `submitChatInquiry` POSTs `{clientName, clientEmail,
+  clientPhone, additionalNote, language, source: "chat"}` to `/api/inquiry` (the same
+  route/validation/persistence path `handleInquirySubmit` uses, just with the
+  consultation/appointment fields omitted — see that route's doc for the `source: "chat"`
+  branch). On success the displayed message gets `\n\n{sessionRef label}: #{ref}` appended;
+  on a missing-field parse, a failed submit, or malformed JSON, it falls back to the
+  cleaned text (with `t("curatorSubmitFailed")` appended for the latter two cases) rather
+  than ever silently dropping the visitor's message. The AI is prompted to only ever emit
+  the block after it has both required fields and the visitor has explicitly confirmed —
+  this hook trusts that confirmation happened and does not re-ask; it never submits without
+  the block being present.
 - Auto-scrolls the chat window via `scrollRef` (pairs with the sentinel div in
   `concierge/CuratorChat.jsx` — keep that div the last child of the scroll container).
 - When `preselectedItem` changes, pre-fills `additionalNote` with an acquisition note
   (FA/EN branches), pushes a user inquiry, triggers a curator response, then calls
   `onClearPreselected()`.
+- **Welcome message is personalized when relevant (added 2026-09-06).** The existing
+  `[language, t]` welcome-reset effect now calls a `buildWelcomeContent()` helper: if
+  there is **no** `preselectedItem` (read via a `preselectedItemRef` updated every
+  render, deliberately *not* an effect dependency — see below) and
+  `PreferenceService.getPreference("lastViewedItem")` returns something, the welcome uses
+  `t("curatorWelcomeWithItem")` (`{name}` replaced) instead of the plain
+  `t("curatorWelcome")`. The effect's dependency array intentionally stays `[language,
+  t]` (not `[language, t, preselectedItem]`) — adding `preselectedItem` would re-run this
+  effect and **wipe the in-progress chat history** every time "Inquire" is clicked on a
+  second item mid-session, which is the opposite of the separate `preselectedItem` effect
+  above's job (append to history, not reset it). The `useEffect`
+  disable-line comment on this effect is intentional, not a masked bug — the ref exists
+  precisely so the effect can read the *current* preselect state without depending on it.
 - **Used by:** `Concierge.jsx`
 
 ---
@@ -269,7 +395,8 @@ useLenisScroll();
   `typeof window !== "undefined"` (mirrors `components/Story.jsx`'s idiom) since this
   module may be pulled into a tree that also has server-rendered ancestors.
 - **Used by:** `AppShell.jsx`, `house/HouseSmoothScroll.jsx` (mounted by
-  `app/(house)/layout.js`), `collection/[slug]/ProductPageClient.jsx`. See
+  `app/(house)/layout.js`), `collection/[slug]/ProductPageClient.jsx`, and
+  `ledger/Ledger.jsx`. See
   `src/components/README.md`'s Lenis section for the full contract (config values,
   inner-scroller opt-outs, scroll-locked-overlay opt-ins).
 

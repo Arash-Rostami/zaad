@@ -92,7 +92,7 @@ function formatServices(dict) {
     return items.length ? `### Acquisitions & Services\n${items.join("\n")}` : "";
 }
 
-export default function formatCuratorContext(dict) {
+function buildCuratorContext(dict) {
     const services = formatServices(dict);
 
     return [
@@ -104,4 +104,17 @@ export default function formatCuratorContext(dict) {
     ]
         .filter(Boolean)
         .join("\n\n");
+}
+
+const contextCache = new WeakMap();
+
+export default function formatCuratorContext(dict) {
+    if (!dict || typeof dict !== "object") return buildCuratorContext(dict);
+
+    const cached = contextCache.get(dict);
+    if (cached !== undefined) return cached;
+
+    const result = buildCuratorContext(dict);
+    contextCache.set(dict, result);
+    return result;
 }

@@ -1,4 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { getPreference } from "@/services/PreferenceService";
+
+const SUBMIT_INQUIRY_RE = /\[\[SUBMIT_INQUIRY\]\]\s*([\s\S]*?)\s*\[\[\/SUBMIT_INQUIRY\]\]/;
 
 export default function useConcierge({ language, preselectedItem, onClearPreselected, t }) {
   const [clientName, setClientName] = useState("");
@@ -14,6 +17,15 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
   const [appointmentWindow, setAppointmentWindow] = useState("");
   const userTouchedMode = useRef(false);
   const handledPreselectRef = useRef(null);
+  const preselectedItemRef = useRef(preselectedItem);
+  preselectedItemRef.current = preselectedItem;
+
+  const buildWelcomeContent = () => {
+    const lastViewedItem = !preselectedItemRef.current ? getPreference("lastViewedItem") : null;
+    return lastViewedItem
+        ? t("curatorWelcomeWithItem").replace("{name}", lastViewedItem.name)
+        : t("curatorWelcome");
+  };
 
   const [chatMessages, setChatMessages] = useState(() => [
     {
@@ -32,11 +44,104 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
       {
         id: "curator-welcome",
         role: "assistant",
-        content: t("curatorWelcome"),
+        content: buildWelcomeContent(),
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);
   }, [language, t]);
+
+  const submitChatInquiry = useCallback(
+      async (fields) => {
+        try {
+          const res = await fetch("/api/inquiry", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              clientName: fields.clientName,
+              clientEmail: fields.clientEmail,
+              clientPhone: fields.clientPhone,
+              additionalNote: fields.additionalNote,
+              language,
+              source: "chat",
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.ok) return null;
+          return data.sessionRef;
+        } catch (err) {
+          console.error("Chat inquiry submission error:", err);
+          return null;
+        }
+      },
+      [language]
+  );
+
+  const resolveCuratorReply = useCallback(
+      async (rawText) => {
+        const match = SUBMIT_INQUIRY_RE.exec(rawText);
+        if (!match) return rawText;
+
+        const cleanedText = rawText.replace(SUBMIT_INQUIRY_RE, "").trim();
+        const jsonText = match[1].trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+        let fields;
+        try {
+          fields = JSON.parse(jsonText);
+        } catch (err) {
+          console.error("Malformed SUBMIT_INQUIRY block:", err);
+          return `${cleanedText}\n\n${t("curatorSubmitFailed")}`;
+        }
+
+        if (!fields?.clientName || !fields?.clientPhone) return cleanedText;
+
+        const sessionRef = await submitChatInquiry(fields);
+        return sessionRef
+            ? `${cleanedText}\n\n${t("sessionRef")}: #${sessionRef}`
+            : `${cleanedText}\n\n${t("curatorSubmitFailed")}`;
+      },
+      [t, submitChatInquiry]
+  );
+
+  const triggerCuratorResponse = useCallback(
+      async (history) => {
+        setChatLoading(true);
+        try {
+          const payload = history
+              .filter((m) => m.id !== "curator-welcome")
+              .map((m) => ({ role: m.role, content: m.content }));
+          const res = await fetch("/api/curate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: payload, language }),
+          });
+          if (!res.ok) throw new Error("API call failed");
+          const data = await res.json();
+          const content = await resolveCuratorReply(data.text ?? "");
+          setChatMessages((prev) => [
+            ...prev,
+            {
+              id: `curator-reply-${Date.now()}`,
+              role: "assistant",
+              content,
+              timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            },
+          ]);
+        } catch (err) {
+          console.error("AI Curator error:", err);
+          setChatMessages((prev) => [
+            ...prev,
+            {
+              id: `curator-reply-error-${Date.now()}`,
+              role: "assistant",
+              content: t("curatorError"),
+              timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            },
+          ]);
+        } finally {
+          setChatLoading(false);
+        }
+      },
+      [language, resolveCuratorReply, t]
+  );
 
   useEffect(() => {
     if (!preselectedItem) {
@@ -82,111 +187,89 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
     }
   }, [chatMessages, chatLoading]);
 
-  const triggerCuratorResponse = async (history) => {
-    setChatLoading(true);
-    try {
-      const payload = history
-          .filter((m) => m.id !== "curator-welcome")
-          .map((m) => ({ role: m.role, content: m.content }));
-      const res = await fetch("/api/curate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: payload, language }),
-      });
-      if (!res.ok) throw new Error("API call failed");
-      const data = await res.json();
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          id: `curator-reply-${Date.now()}`,
-          role: "assistant",
-          content: data.text,
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        },
-      ]);
-    } catch (err) {
-      console.error("AI Curator error:", err);
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          id: `curator-reply-error-${Date.now()}`,
-          role: "assistant",
-          content: t("curatorError"),
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        },
-      ]);
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
-  const selectAppointmentMode = (mode) => {
+  const selectAppointmentMode = useCallback((mode) => {
     userTouchedMode.current = true;
     setAppointmentMode(mode);
-  };
+  }, []);
 
-  const resetAppointment = () => {
+  const resetAppointment = useCallback(() => {
     userTouchedMode.current = false;
     setAppointmentWindow("");
     setAppointmentMode(desiredConsultation === "visit" ? "audience" : "call");
-  };
+  }, [desiredConsultation]);
 
-  const handleInquirySubmit = async (e) => {
-    e.preventDefault();
-    if (formSubmitting) return;
+  const handleInquirySubmit = useCallback(
+      async (e) => {
+        e.preventDefault();
+        if (formSubmitting) return;
 
-    setFormSubmitting(true);
-    setFormErrors({});
+        setFormSubmitting(true);
+        setFormErrors({});
 
-    try {
-      const res = await fetch("/api/inquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          clientName,
-          clientEmail,
-          clientPhone,
-          desiredConsultation,
-          additionalNote,
-          appointmentMode,
-          appointmentWindow,
-          language,
-        }),
-      });
-      const data = await res.json();
+        try {
+          const res = await fetch("/api/inquiry", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              clientName,
+              clientEmail,
+              clientPhone,
+              desiredConsultation,
+              additionalNote,
+              appointmentMode,
+              appointmentWindow,
+              language,
+            }),
+          });
+          const data = await res.json();
 
-      if (!res.ok || !data.ok) {
-        const FIELDS_WITH_UI = new Set(["clientName", "clientEmail", "clientPhone", "additionalNote", "appointmentWindow"]);
-        const hasVisibleError = data.errors && Object.keys(data.errors).some((key) => FIELDS_WITH_UI.has(key));
-        if (hasVisibleError) setFormErrors(data.errors);
-        else setFormErrors({ form: data.error || "formErrorGeneric" });
-        return;
-      }
+          if (!res.ok || !data.ok) {
+            const FIELDS_WITH_UI = new Set(["clientName", "clientEmail", "clientPhone", "additionalNote", "appointmentWindow"]);
+            const hasVisibleError = data.errors && Object.keys(data.errors).some((key) => FIELDS_WITH_UI.has(key));
+            if (hasVisibleError) setFormErrors(data.errors);
+            else setFormErrors({ form: data.error || "formErrorGeneric" });
+            return;
+          }
 
-      setSessionRef(data.sessionRef);
-      setFormSubmitted(true);
-    } catch (err) {
-      console.error("Inquiry submission error:", err);
-      setFormErrors({ form: "formErrorGeneric" });
-    } finally {
-      setFormSubmitting(false);
-    }
-  };
+          setSessionRef(data.sessionRef);
+          setFormSubmitted(true);
+        } catch (err) {
+          console.error("Inquiry submission error:", err);
+          setFormErrors({ form: "formErrorGeneric" });
+        } finally {
+          setFormSubmitting(false);
+        }
+      },
+      [
+        formSubmitting,
+        clientName,
+        clientEmail,
+        clientPhone,
+        desiredConsultation,
+        additionalNote,
+        appointmentMode,
+        appointmentWindow,
+        language,
+      ]
+  );
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!userQuery.trim() || chatLoading) return;
-    const userMsg = {
-      id: `user-query-${Date.now()}`,
-      role: "user",
-      content: userQuery,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    };
-    const updatedHistory = [...chatMessages, userMsg];
-    setChatMessages(updatedHistory);
-    setUserQuery("");
-    triggerCuratorResponse(updatedHistory);
-  };
+  const handleSendMessage = useCallback(
+      (e) => {
+        e.preventDefault();
+        if (!userQuery.trim() || chatLoading) return;
+        const userMsg = {
+          id: `user-query-${Date.now()}`,
+          role: "user",
+          content: userQuery,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        };
+        const updatedHistory = [...chatMessages, userMsg];
+        setChatMessages(updatedHistory);
+        setUserQuery("");
+        triggerCuratorResponse(updatedHistory);
+      },
+      [userQuery, chatLoading, chatMessages, triggerCuratorResponse]
+  );
 
   return {
     clientName, setClientName,

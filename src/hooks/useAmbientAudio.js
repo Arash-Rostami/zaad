@@ -1,42 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-const AUDIO_SRC = "/audio/ambient.mp3";
-const STORAGE_KEY = "zaad-audio-muted";
+const AUDIO_SRC = "/audio/ambient-loop.m4a";
 
 let audioEl = null;
 
 function getAudioEl() {
     if (typeof window === "undefined") return null;
     if (!audioEl) {
-        audioEl = new Audio(AUDIO_SRC);
+        audioEl = new Audio();
         audioEl.loop = true;
-        audioEl.muted = true;
+        audioEl.preload = "none";
+        audioEl.src = AUDIO_SRC;
     }
     return audioEl;
 }
 
 export default function useAmbientAudio() {
-    const [isMuted, setIsMuted] = useState(true);
+    const [isMuted, setIsMuted] = useState(() => !audioEl || audioEl.paused);
 
-    useEffect(() => {
-        const audio = getAudioEl();
-        if (!audio) return;
-        const cached = localStorage.getItem(STORAGE_KEY);
-        const initialMuted = cached === null ? true : cached === "true";
-        audio.muted = initialMuted;
-        setIsMuted(initialMuted);
-        audio.play().catch(() => {});
+    const toggleMute = useCallback(() => {
+        setIsMuted((muted) => {
+            if (muted) {
+                const audio = getAudioEl();
+                if (!audio) return muted;
+                audio.play().catch(() => {});
+                return false;
+            }
+            audioEl?.pause();
+            return true;
+        });
     }, []);
-
-    const toggleMute = () => {
-        const audio = getAudioEl();
-        if (!audio) return;
-        const next = !audio.muted;
-        audio.muted = next;
-        setIsMuted(next);
-        localStorage.setItem(STORAGE_KEY, String(next));
-        if (!next) audio.play().catch(() => {});
-    };
 
     return { isMuted, toggleMute };
 }

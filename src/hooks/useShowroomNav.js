@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { animateScrollTo } from "@/services/ScrollService";
 
 export default function useShowroomNav() {
@@ -6,29 +6,29 @@ export default function useShowroomNav() {
   const [preselectedItem, setPreselectedItem] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const setActiveTab = (tab) => {
+  const setActiveTab = useCallback((tab) => {
     if (tab === "pdf") {
       window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
       return;
     }
 
     setActiveTabRaw(tab);
-    if (selectedProduct) setSelectedProduct(null);
-  };
+    setSelectedProduct((prev) => (prev ? null : prev));
+  }, []);
 
-  const handleScrollToSection = (sectionId) => {
+  const handleScrollToSection = useCallback((sectionId) => {
     setActiveTabRaw("showroom");
-    if (selectedProduct) setSelectedProduct(null);
+    setSelectedProduct((prev) => (prev ? null : prev));
     animateScrollTo(sectionId);
-  };
+  }, []);
 
-  const handleInquireItem = (item) => {
+  const handleInquireItem = useCallback((item) => {
     setSelectedProduct(null);
     setPreselectedItem(item);
     setTimeout(() => {
       animateScrollTo("concierge", 1600);
     }, 120);
-  };
+  }, []);
 
   return {
     activeTab,

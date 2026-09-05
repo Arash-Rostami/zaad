@@ -1,7 +1,8 @@
 # `src/services/` — Scroll, Metadata, the i18n context, and the AI Curator
 
-> **Scope:** `ScrollService.js`, `MetaDataService.js`, `TranslationService.jsx`,
-> `CuratorService.js`. Read this before editing anything under `src/services/`.
+> **Scope:** `ScrollService.js`, `PreferenceService.js`, `MetaDataService.js`,
+> `TranslationService.jsx`, `CuratorService.js`. Read this before editing anything under
+> `src/services/`.
 
 **Important:** the React i18n context (`LanguageProvider` / `useLanguage`) lives here,
 in `TranslationService.jsx` — **not** in `src/contexts/` (that folder is empty, a
@@ -16,8 +17,12 @@ subscription system — there is no global state, no subscriber registry, no cle
 
 Exports (three):
 
-- `animateScrollTo(elementId, duration = 1450)` — resolves `document.getElementById`,
+- `animateScrollTo(elementId, duration = 1450, extraOffset = 0)` — resolves `document.getElementById`,
   bails silently if missing, runs a `requestAnimationFrame` loop with `easeInOutQuint`.
+  `extraOffset` (added 2026-09-05 for the `/glance` mobile chapter rail) is folded into
+  the live header offset in both the Lenis and RAF branches — a page-specific sticky
+  bar that covers the target's heading passes its `offsetHeight` (0 when
+  `display:none`); do **not** extend `getHeaderOffset()` globally for per-page bars.
 - `animateScrollToTop(duration = 1300)` — same, toward 0.
 - `animateScrollToBottom(duration = 1300)` — same shape as `animateScrollToTop`, toward
   `document.documentElement.scrollHeight - window.innerHeight`; bails if already at/past
@@ -60,6 +65,44 @@ three named exports; there is no lower-level hook surface.
 
 ---
 
+## `PreferenceService.js` — the `localStorage` wrapper (added 2026-09-06)
+
+The single place any code reads or writes a per-visitor preference. Two named exports,
+both SSR-guarded (`typeof window !== "undefined"`) and try/catch-wrapped (private
+browsing, blocked storage, or quota errors fail silently — a missing preference is never
+a crash):
+
+- `getPreference(key, fallback = null)` — `JSON.parse`s the stored value, or returns
+  `fallback` if absent/unreadable.
+- `setPreference(key, value)` — `JSON.stringify`s and stores it.
+
+Keys are stored under a shared `zaad_pref_` prefix — do not read/write `localStorage`
+directly anywhere else in the app; add a new preference through this module so every
+consumer shares one storage namespace and one failure-handling policy.
+
+### `hooks/useLocalPreference.js` — the reactive wrapper
+
+For components that need to *render* a preference reactively (not just write one).
+`const [value, update] = useLocalPreference(key, fallback)`. Follows the same
+hydration-safe idiom already established in this codebase for anything client-only
+(`ChapterHero`'s `activeVideo`, the `initialLanguage` static-route restore — see
+`src/components/README.md`): the `useState` seeds `fallback` so SSR and first client
+paint match, then a mount-only `useEffect` populates the real value from
+`getPreference` — a one-frame "flash" from empty to populated is expected and correct,
+not a bug. `update(next)` writes through `setPreference` and updates local state in one
+call. A component that only ever *writes* (never reads back reactively) should call
+`setPreference` directly instead of pulling in this hook — see
+`ProductDetailsPage.jsx`'s "last viewed item" effect.
+
+### Current preference keys
+
+| Key | Shape | Written by | Read by |
+| :--- | :--- | :--- | :--- |
+| `lastViewedItem` | `{ id, name, number }` | `ProductDetailsPage.jsx` (effect on `item.id`/`name`/`number`) | `header/MenuPanel.jsx` → `header/SpecimenGrid.jsx`'s "Continue Browsing" link (below the four collection cards); `hooks/useConcierge.js`'s welcome-message personalization |
+| `materialSelection` | material `id` string | `Materials.jsx` via `useActiveSelection`'s `persistKey` | same, on next visit |
+
+---
+
 ## `MetaDataService.js` — server-only SEO/metadata
 
 Builds static Next.js metadata objects + schema.org JSON-LD. **No network calls**, no
@@ -79,6 +122,13 @@ env vars — `BRAND = "ZAAD"` and `SITE_URL = "https://zaad.com"` are hardcoded 
   - `static async forCollection(item)` → `Product` + `BreadcrumbList` (Home → Item);
     canonical `${SITE_URL}/collection/${item.slug ?? item.id}`; description sliced to
     155 chars.
+  - `static async forGlance()` (added 2026-09-05) → `BreadcrumbList` +
+    `orgSchema` + `CollectionPage` whose `hasPart` ItemList carries all four
+    `en.collection` items as `Product`s (the top-level `en` import is server-side-safe —
+    the dictionaries are plain data modules); canonical `${SITE_URL}/glance`; COPY keys
+    `glanceTitle`/`glanceDesc` in both locales. The `/glance` page renders `<JsonLd/>`
+    **after** the page tree, not before it — the user's explicit "SEO tags at bottom"
+    placement (unique among the routes; everywhere else JsonLd comes first).
 
 ### Known issues
 - **`hreflangFor` returns identical URLs for `en` and `fa`** — not a valid

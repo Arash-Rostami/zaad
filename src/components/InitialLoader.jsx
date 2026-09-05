@@ -72,13 +72,11 @@ function InitialLoader() {
         const finish = () => {
             if (done) return;
             done = true;
-            clearTimeout(capTimer);
             clearTimeout(minTimer);
             setIsLoading(false);
             sessionStorage.setItem("zaad_loader_complete", "true");
             window.dispatchEvent(new Event("zaad:loaderComplete"));
         };
-        const capTimer = setTimeout(finish, 5000);
 
         const minBrandTime = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2400;
         const startedAt = performance.now();
@@ -86,9 +84,15 @@ function InitialLoader() {
             document.readyState === "complete" || !document.fonts
                 ? Promise.resolve()
                 : document.fonts.ready;
+        const windowLoaded =
+            document.readyState === "complete"
+                ? Promise.resolve()
+                : new Promise((resolve) => {
+                      window.addEventListener("load", resolve, { once: true });
+                  });
         const doubleFrame = new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-        Promise.all([fontsSettled, doubleFrame]).then(() => {
+        Promise.all([fontsSettled, windowLoaded, doubleFrame]).then(() => {
             if (done) return;
             const remaining = minBrandTime - (performance.now() - startedAt);
             minTimer = setTimeout(finish, Math.max(remaining, 0));
@@ -96,7 +100,6 @@ function InitialLoader() {
 
         return () => {
             done = true;
-            clearTimeout(capTimer);
             clearTimeout(minTimer);
         };
     }, []);

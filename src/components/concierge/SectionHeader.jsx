@@ -4,7 +4,7 @@ import MaisonReveal from "../MaisonReveal";
 
 const SectionHeader = memo(function SectionHeader({ t }) {
     return (
-        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+        <div className="max-w-2xl mb-12 md:mb-16 text-left rtl:text-right">
             <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
                 <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
                     {t("acquisitionsServices")}

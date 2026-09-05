@@ -3,7 +3,7 @@ import { en } from "@/lib/i18n/en";
 import { fa } from "@/lib/i18n/fa";
 import formatCuratorContext from "@/lib/formatCuratorContext";
 
-const DEFAULT_MODEL = "gemini-2.5-flash";
+const DEFAULT_MODEL = "gemini-3.1-flash";
 const REQUEST_TIMEOUT_MS = 30000;
 const MAX_TOKENS = 1200;
 const TEMPERATURE = 0.7;

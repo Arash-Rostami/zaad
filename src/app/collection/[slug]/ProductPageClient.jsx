@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -11,17 +12,31 @@ export default function ProductPageClient({ item }) {
     useLenisScroll();
     const router = useRouter();
 
-    const setActiveTab = (tab) => {
-        if (tab === "pdf") {
-            window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
-            return;
-        }
-        router.push("/");
-    };
+    const setActiveTab = useCallback(
+        (tab) => {
+            if (tab === "pdf") {
+                window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
+                return;
+            }
+            router.push("/");
+        },
+        [router]
+    );
 
-    const onScrollToSection = (sectionId) => {
-        router.push(`/#${sectionId}`);
-    };
+    const onScrollToSection = useCallback(
+        (sectionId) => {
+            router.push(`/#${sectionId}`);
+        },
+        [router]
+    );
+
+    const onSelectProduct = useCallback(
+        (product) => router.push(product ? `/collection/${product.id}` : "/"),
+        [router]
+    );
+
+    const onBack = useCallback(() => router.back(), [router]);
+    const onInquire = useCallback(() => router.push("/#concierge"), [router]);
 
     return (
         <div className="min-h-screen flex flex-col justify-between selection:bg-selection selection:text-ink">
@@ -29,15 +44,15 @@ export default function ProductPageClient({ item }) {
                 activeTab="showroom"
                 setActiveTab={setActiveTab}
                 selectedProduct={item}
-                onSelectProduct={(product) => router.push(product ? `/collection/${product.id}` : "/")}
+                onSelectProduct={onSelectProduct}
                 onScrollToSection={onScrollToSection}
             />
 
             <main className="flex-1">
                 <ProductDetailsPage
                     item={item}
-                    onBack={() => router.back()}
-                    onInquire={() => router.push("/#concierge")}
+                    onBack={onBack}
+                    onInquire={onInquire}
                 />
             </main>
 

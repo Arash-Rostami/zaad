@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo } from "react";
 import { motion } from "motion/react";
+import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { animateScrollToTop } from "@/services/ScrollService";
+import useLocalPreference from "@/hooks/useLocalPreference";
 import NoiseBg from "../shared/NoiseBg";
 import SystemPortals from "./SystemPortals";
 import JourneyIndex from "./JourneyIndex";
@@ -24,6 +26,18 @@ export default function MenuPanel(
         onScrollToSection,
     }) {
     const router = useRouter();
+    const [lastViewedItem, setLastViewedItem] = useLocalPreference("lastViewedItem", null);
+    const lastViewedFullItem = useMemo(
+        () => (lastViewedItem ? collection.find((c) => c.id === lastViewedItem.id) : null),
+        [collection, lastViewedItem]
+    );
+    const lastViewedDisplay = useMemo(
+        () =>
+            lastViewedItem
+                ? { ...lastViewedItem, name: lastViewedFullItem?.name ?? lastViewedItem.name }
+                : null,
+        [lastViewedItem, lastViewedFullItem]
+    );
 
     const journeyLinks = useMemo(
         () => [
@@ -68,6 +82,24 @@ export default function MenuPanel(
         setActiveTab("showroom");
         onClose();
         setTimeout(() => onScrollToSection("collection"), 120);
+    }, [setActiveTab, onClose, onScrollToSection]);
+
+    const onContinueBrowsing = useCallback(() => {
+        const fullItem = collection.find((c) => c.id === lastViewedItem?.id);
+        if (!fullItem) return;
+        setActiveTab("showroom");
+        onSelectProduct(fullItem);
+        onClose();
+    }, [collection, lastViewedItem, setActiveTab, onSelectProduct, onClose]);
+
+    const onClearLastViewed = useCallback(() => {
+        setLastViewedItem(null);
+    }, [setLastViewedItem]);
+
+    const onNavigateToConcierge = useCallback(() => {
+        setActiveTab("showroom");
+        onClose();
+        setTimeout(() => onScrollToSection("concierge"), 120);
     }, [setActiveTab, onClose, onScrollToSection]);
 
     return (
@@ -117,8 +149,16 @@ export default function MenuPanel(
                         />
                     </div>
 
-                    <div className="md:col-span-8">
+                    <div className="md:col-span-8 md:col-start-5 flex flex-col space-y-2">
                         <JourneyIndex journeyLinks={journeyLinks} t={t} onNavigate={navigateTo} />
+                        <button
+                            type="button"
+                            onClick={onNavigateToConcierge}
+                            className="group inline-flex items-center gap-1 pb-0 self-start text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-bold uppercase hover:border-[#C5A059] pt-2 hover:text-[#C5A059] text-left rtl:text-right transition-colors duration-500 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                        >
+                            {t("zaadDigitalCurator")}
+                            <ChevronRight className="w-3 h-3 shrink-0 rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                        </button>
                     </div>
 
                     <div className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent my-1 sm:my-2" />
@@ -130,6 +170,9 @@ export default function MenuPanel(
                             t={t}
                             onSelect={onSelect}
                             onNavigateToCollection={onNavigateToCollection}
+                            lastViewedItem={lastViewedDisplay}
+                            onContinueBrowsing={onContinueBrowsing}
+                            onClearLastViewed={onClearLastViewed}
                         />
                     </div>
                 </motion.div>
