@@ -1,18 +1,19 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
-import Story from "../components/Story";
+import Vision from "../components/Vision";
 import Showcase from "../components/Showcase";
 import Advantages from "../components/Advantages";
 import Materials from "../components/Materials";
 import Concierge from "../components/Concierge";
 import Footer from "../components/Footer";
-import ProductDetailsPage from "../components/ProductDetailsPage";
+import CollectionPage from "./CollectionPage";
 import ScrollButton from "../components/shared/ScrollButton";
 import { animateScrollTo } from "@/services/ScrollService";
+import { getPreference, setPreference } from "@/services/PreferenceService";
 import useShowroomNav from "../hooks/useShowroomNav";
 import useLenisScroll from "@/hooks/useLenisScroll";
 
@@ -30,6 +31,23 @@ export default function AppShell({ utensilImages }) {
 
     useLenisScroll();
 
+    useEffect(() => {
+        const hash = window.location.hash.slice(1);
+        if (!hash) return;
+        const id = window.setTimeout(() => {
+            animateScrollTo(hash, 1450);
+            window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        }, 120);
+        return () => window.clearTimeout(id);
+    }, []);
+
+    useEffect(() => {
+        const pendingItem = getPreference("pendingInquiryItem");
+        if (!pendingItem) return;
+        setPreselectedItem(pendingItem);
+        setPreference("pendingInquiryItem", null);
+    }, [setPreselectedItem]);
+
     const handleBackFromProduct = useCallback(() => {
         setSelectedProduct(null);
         setTimeout(() => {
@@ -42,8 +60,8 @@ export default function AppShell({ utensilImages }) {
         [handleScrollToSection]
     );
 
-    const handleScrollToStory = useCallback(
-        () => handleScrollToSection("story"),
+    const handleScrollToVision = useCallback(
+        () => handleScrollToSection("vision"),
         [handleScrollToSection]
     );
 
@@ -60,7 +78,7 @@ export default function AppShell({ utensilImages }) {
                     onScrollToSection={handleScrollToSection}
                 />
 
-                <main className="flex-1">
+                <main id="main-content" className="flex-1">
                     <AnimatePresence mode="wait">
                         {selectedProduct ? (
                             <motion.div
@@ -70,7 +88,7 @@ export default function AppShell({ utensilImages }) {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                             >
-                                <ProductDetailsPage
+                                <CollectionPage
                                     item={selectedProduct}
                                     onBack={handleBackFromProduct}
                                     onInquire={handleInquireItem}
@@ -86,9 +104,9 @@ export default function AppShell({ utensilImages }) {
                             >
                                 <Hero
                                     onScrollToCollection={handleScrollToCollection}
-                                    onScrollToStory={handleScrollToStory}
+                                    onScrollToVision={handleScrollToVision}
                                 />
-                                <Story utensilImages={utensilImages} />
+                                <Vision utensilImages={utensilImages} />
                                 <Showcase
                                     onInquireItem={handleInquireItem}
                                     onViewDetails={setSelectedProduct}
@@ -107,6 +125,7 @@ export default function AppShell({ utensilImages }) {
                 <Footer
                     onScrollToSection={handleScrollToSection}
                     setActiveTab={setActiveTab}
+                    onSelectProduct={setSelectedProduct}
                 />
 
                 <ScrollButton />

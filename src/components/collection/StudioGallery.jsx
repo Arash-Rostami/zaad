@@ -16,8 +16,8 @@ import {
   Play,
   RotateCw,
 } from "lucide-react";
-import { useLanguage } from "@/services/TranslationService";
-import MaisonReveal from "../MaisonReveal";
+import { useLanguage } from "@/services/LanguageProvider";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const EASE_CUBIC = Object.freeze([0.16, 1, 0.3, 1]);
 
@@ -64,7 +64,7 @@ const GalleryThumbnail = memo(function GalleryThumbnail({
       type="button"
       onClick={handleClick}
       aria-pressed={isActive}
-      className="group relative aspect-[16/10] overflow-hidden border border-ink/10 hover:border-accent/50 rounded-sm cursor-pointer active:scale-[0.98] transition-all duration-500"
+      className="group relative aspect-[16/10] overflow-hidden border border-ink/10 hover:border-accent/50 rounded-sm cursor-pointer active:scale-[0.98] transition-all duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <Image
         src={image?.url}
@@ -168,6 +168,16 @@ function StudioGallery({ item, lightbox }) {
     setShow360(true);
   }, []);
 
+  const handleContainerKeyDown = useCallback(
+    (e) => {
+      if (show360 || !openLightbox) return;
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      openLightbox();
+    },
+    [show360, openLightbox],
+  );
+
   const digitFormatter = useMemo(
     () => new Intl.NumberFormat(isFarsi ? "fa-IR" : "en-US"),
     [isFarsi],
@@ -203,6 +213,9 @@ function StudioGallery({ item, lightbox }) {
   const handleContainerClick = show360 ? undefined : openLightbox;
   const playPauseAriaLabel = t(isPlaying ? "heroPauseVideo" : "heroPlayVideo");
   const activeImageAlt = activeImage?.caption || item.name;
+  const openImageLabel = t("productEnlargeImageLabel").replace("{name}", item.name);
+  const prevImageLabel = t("showcasePrev");
+  const nextImageLabel = t("showcaseNext");
 
   return (
     <MaisonReveal
@@ -213,8 +226,12 @@ function StudioGallery({ item, lightbox }) {
     >
       <div className="flex flex-col space-y-2.5 w-full">
         <div
-          className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-surface-alt border border-ink/10 overflow-hidden shadow-ambient rounded-sm group"
+          className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-surface-alt border border-ink/10 overflow-hidden shadow-ambient rounded-sm group outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           onClick={handleContainerClick}
+          onKeyDown={handleContainerKeyDown}
+          role={show360 ? undefined : "button"}
+          tabIndex={show360 ? undefined : 0}
+          aria-label={show360 ? undefined : openImageLabel}
         >
           {show360 ? (
             <div className="relative w-full h-full">
@@ -275,16 +292,18 @@ function StudioGallery({ item, lightbox }) {
               <button
                 type="button"
                 onClick={handlePrevClick}
+                aria-label={prevImageLabel}
                 data-touch-boost
-                className="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
+                className="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
               >
                 <ChevronLeft className="w-4 h-4 text-ink stroke-[1]" />
               </button>
               <button
                 type="button"
                 onClick={handleNextClick}
+                aria-label={nextImageLabel}
                 data-touch-boost
-                className="absolute right-4 top-1/2 -translate-y-1/2 translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
+                className="absolute right-4 top-1/2 -translate-y-1/2 translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
               >
                 <ChevronRight className="w-4 h-4 text-ink stroke-[1]" />
               </button>
@@ -340,17 +359,16 @@ function StudioGallery({ item, lightbox }) {
               index={idx}
               isActive={!show360 && activeImageIndex === idx}
               onSelect={handleSelectThumbnail}
-              altText={t("productStudioThumbnailAlt").replace(
-                "{index}",
-                String(idx + 1),
-              )}
+              altText={t("productStudioThumbnailAlt")
+                .replace("{name}", item.name)
+                .replace("{index}", String(idx + 1))}
             />
           ))}
           <button
             type="button"
             onClick={handleSelectSpin}
             aria-pressed={show360}
-            className="group relative aspect-[16/10] overflow-hidden border border-ink/10 hover:border-accent/50 rounded-sm cursor-pointer active:scale-[0.98] transition-all duration-500 flex items-center justify-center gap-1.5"
+            className="group relative aspect-[16/10] overflow-hidden border border-ink/10 hover:border-accent/50 rounded-sm cursor-pointer active:scale-[0.98] transition-all duration-500 flex items-center justify-center gap-1.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <Image
               src={firstImage?.url}

@@ -195,8 +195,10 @@ themes for contrast, same shift direction as `--text-bronze`.
 | `border-danger` | Input border swap on a field with an active validation error |
 | `bg-danger/{n}` | Very low-opacity fill behind a generic error banner (e.g. `bg-danger/5`) |
 
-**Only call site today:** `concierge/InquiryForm.jsx`'s server-validation error display
-(see `src/components/README.md` and `src/app/README.md`'s `/api/inquiry` section). Do not
+**Call sites today:** `concierge/InquiryForm.jsx`'s server-validation error display
+(see `src/components/README.md` and `src/app/README.md`'s `/api/inquiry` section), plus
+`ledger/Ledger.jsx`'s admin chrome — the gate form's validation-error message and the
+delete button's destructive-confirm state. Do not
 reach for `text-danger` for anything that isn't a validation/error state — it exists
 specifically to be rare, the same way `accent` does.
 
@@ -218,7 +220,7 @@ Used exclusively where the background is always dark, regardless of active theme
 > `text-canvas` is **not** a valid inverted pair (both go light in dark/mid — invisible);
 > inverted pills use `bg-ink` + `text-on-indicator`, which inverts per theme by design.
 
-> The reverse mistake is just as real: never use a theme-adaptive token (`text-accent`, `border-accent`, etc.) on a `bg-foundation` surface either. `Footer.jsx` is fully static by design (see above) except its link `hover:text-accent` states used to slip through unnoticed — `text-accent` resolves to a different value per theme (bronze in light, aged bronze in dark, **luminous champagne gold tuned for a navy field** in mid), so the hover color visibly shifted between themes even though the footer's background never does. Fixed to `hover:text-canvas` (full-opacity cream, brightening from the resting `text-canvas/80`/`/40`) — every color used inside a `bg-foundation` block should be a `canvas`/`foundation` token, with no exceptions for hover/active states.
+> The reverse mistake is just as real: never use a theme-adaptive token (`text-accent`, `border-accent`, etc.) on a `bg-foundation` surface either. `Footer.jsx` is fully static by design (see above) — `text-accent` resolves to a different value per theme (bronze in light, aged bronze in dark, **luminous champagne gold tuned for a navy field** in mid), so a hover color keyed to it visibly shifts between themes even though the footer's background never does. The current live file still carries two `hover:text-accent` links inside the footer (the PBS strip and the hidden `©` `/ledger` link) — the standing exceptions to the canvas-only rule; every other color used inside a `bg-foundation` block should stay a `canvas`/`foundation` token.
 
 ---
 
@@ -261,7 +263,7 @@ For pre-computed composites (`bg-surface-overlay`, `bg-panel-glass`, etc.) the o
 
 ## Part IV — Shadow Scale
 
-Named shadows replace arbitrary `shadow-[0_30px_100px_rgba(0,0,0,0.06)]` strings across components. `shadow-ambient` is the one theme-aware shadow — it resolves `var(--shadow-color)`, which is tuned per theme (faint in light mode, much stronger in both dark modes) — and is deliberately used for every primary photography frame (`Story`, `StudioGallery`, `showcase/ImageViewer`, `house/ChapterPieces`) precisely so product/editorial images keep a visible "lifted" depth cue in dark mode. All the other named shadows use static RGBA values and do not adapt to theme; a former `shadow-canvas-low` token existed with a flat `rgba(0,0,0,0.06)` value and was removed after it visibly flattened photography frames in dark mode — do not reintroduce a static shadow for image frames.
+Named shadows replace arbitrary `shadow-[0_30px_100px_rgba(0,0,0,0.06)]` strings across components. `shadow-ambient` is the one theme-aware shadow — it resolves `var(--shadow-color)`, which is tuned per theme (faint in light mode, much stronger in both dark modes) — and is deliberately used for every primary photography frame (`StudioGallery`, `showcase/ImageViewer`, `house/ChapterPieces`) precisely so product/editorial images keep a visible "lifted" depth cue in dark mode. All the other named shadows use static RGBA values and do not adapt to theme; a former `shadow-canvas-low` token existed with a flat `rgba(0,0,0,0.06)` value and was removed after it visibly flattened photography frames in dark mode — do not reintroduce a static shadow for image frames.
 
 | Tailwind class | Value | Intended use |
 |---|---|---|
@@ -286,6 +288,8 @@ Named shadows replace arbitrary `shadow-[0_30px_100px_rgba(0,0,0,0.06)]` strings
 ### Scrollbar — "quiet luxury"
 A thin custom scrollbar (WebKit): 6px wide, `--bg-primary` track, `--bg-secondary` thumb (3px radius), thumb hover lifts to `--color-tone`. Defined in `globals.css` under `@layer utilities`.
 
+Two scrollbar utility classes live next to it: `.scrollbar-none` (hides the bar entirely — used by `glance/GlancePage.jsx`'s mobile chip rail, `ledger/Ledger.jsx`'s filter-tab rail, and `collection/SpecsTabs.jsx`'s tab row) and `.scrollbar-sleek` (added 2026-09-06 for `concierge/CuratorChat.jsx`'s message list): 4px full-round thumb in `--color-muted` on a transparent track, hover warms to `--color-accent`, Firefox via `scrollbar-width: thin` + `scrollbar-color`. Use `.scrollbar-sleek` for any visible inner scroller — the site-wide global above already covers the window.
+
 ### Selection & caret — theme-adaptive micro-details
 Selection paints `--color-selection` with `--text-primary` text: the authored cream `#EAE7DC` in light, translucent bronze in mid (`rgba(242,210,153,0.30)`) and dark (`rgba(203,185,167,0.32)`) — the `.mid`/`.dark` blocks override the token so the single rule stays readable everywhere. `AppShell`'s root and the `layout.js` `<body>` both carry the Tailwind `selection:bg-selection selection:text-ink` utilities (same values, same system — keep all three in agreement). The global `::selection` rule covers everything else, including status screens. `input`/`textarea` caret is `--text-bronze`. The browser-default blue selection/caret must never surface anywhere.
 
@@ -296,12 +300,13 @@ Selection paints `--color-selection` with `--text-primary` text: the authored cr
 | Tailwind class | Effect |
 |---|---|
 | `lux-vignette` | `::after` radial corner-darkening overlay (transparent 55% → rgba(0,0,0,0.16)), z-index 1, `pointer-events: none` — filmic depth for full-bleed media frames. Call sites: `Hero.jsx`'s video frame, `ChapterHero`'s media frame |
-| `lux-ken-burns` | 26s perpetual 1.0→1.045 scale + drift (`kenBurnsDrift`, `--couture-ease`, alternate) — still photography that breathes. Call sites: `ChapterHero`'s fallback still, `Materials.jsx`'s macro preview (it replaced hover-zoom there). Never on interactive/zoomable imagery (`ImageViewer`, lightbox, GSAP-pinned columns) |
+| `lux-ken-burns` | 26s perpetual 1.0→1.045 scale + drift (`kenBurnsDrift`, `--couture-ease`, alternate) — still photography that breathes. Call site: only `house/ChapterPieces.jsx`'s `ChapterHero` fallback still (`Materials.jsx`'s macro preview no longer uses it). Never on interactive/zoomable imagery (`ImageViewer`, lightbox, GSAP-pinned columns) |
 
-Both are neutralised by the global `prefers-reduced-motion` block. (`Story.jsx`'s home
-carousel is the one pinned-column exception that still breathes — via a bounded per-slide
-Motion drift (`scale: 1 → 1.035`, linear, 7s, per slide) rather than this perpetual CSS class;
-see `src/components/README.md`.)
+Both are neutralised by the global `prefers-reduced-motion` block. (`Vision.jsx`'s home-story
+video column is the one pinned-column exception that still breathes — the stills carousel this
+note used to describe is fully commented out; the pinned video frame now runs a GSAP scrubbed
+`scale: 1 → 1.06` tween over its 6-video gallery rather than this perpetual CSS class; see
+`src/components/README.md`.)
 
 ---
 
@@ -338,7 +343,7 @@ Typography is one of the most important luxury signals. It must communicate:
   (scoped per element — headings, labels, and mono/uppercase micro-copy
   stay ragged; chat bubble text is justified too via `rtl:text-justify` on the
   `whitespace-pre-wrap` content div; quotes are judged per block: the hero's brand quote is
-  justified via `rtl:md:text-justify` to beat its `md:text-center`, Story's italic pull-quote
+  justified via `rtl:md:text-justify` to beat its `md:text-center`, Vision's italic pull-quote
   stays ragged)
 - `text-wrap: balance` (headings) and `text-wrap: pretty` (paragraphs) are global base rules — line breaks self-select; never hand-tune them with `<br>` in body copy
 
@@ -466,7 +471,7 @@ This curve produces a rapid initial acceleration followed by a long, smooth dece
 - **Interactive motion duration range:** 300ms–800ms depending on element weight
 - **Reveal animation minimum duration:** 1000ms
 
-**Deliberate exception — `showcase/ProductPanel.jsx`'s specs accordion.** The
+**Deliberate exception — `showcase/CollectionPanel.jsx`'s specs accordion.** The
 dimensions/materials/finish disclosure panel runs its clip-path reveal at `1.1s` (toggle
 icon rotation at `0.7s`), above the 800ms interactive ceiling, by explicit user request:
 this one control is meant to read as a graceful, dignified unfurl — a considered reveal
@@ -561,7 +566,7 @@ Elements animate in once when entering the viewport, then remain static. There i
 | `royal-gate` | Opacity + X translate + scale + blur | Lateral panel reveals |
 | `lines` | Per-line mask rise (measured line breaks, 0.12s stagger) | Flagship serif section headings only |
 
-**`lines` contract:** takes a single element child whose own child is a plain string — `<MaisonReveal variant="lines"><h2 …>{t("key")}</h2></MaisonReveal>`. It measures the natural line breaks after mount, lifts each visual line out of its own overflow-hidden mask, then re-renders the plain text once the last line lands — masks never persist, so a later reflow (font-scale change, resize, locale remount) can never clip. `prefers-reduced-motion` renders plain immediately. Call sites: the Advantages, Materials, and Concierge `SectionHeader` h2s.
+**`lines` contract:** takes a single element child whose own child is a plain string — `<MaisonReveal variant="lines"><h2 …>{t("key")}</h2></MaisonReveal>`. It measures the natural line breaks after mount, lifts each visual line out of its own overflow-hidden mask, then re-renders the plain text once the last line lands — masks never persist, so a later reflow (font-scale change, resize, locale remount) can never clip. `prefers-reduced-motion` renders plain immediately. Call sites: the Advantages, Materials, and Concierge `SectionHeader` h2s, and `Vision.jsx`'s `storyTitle` h2.
 
 - Delay between sibling reveals: **0.1s–0.3s** increments
 - Default reveal duration: **1.6s**
@@ -584,7 +589,7 @@ Elements animate in once when entering the viewport, then remain static. There i
 
 ### Editorial Keyframe: Sunbeam Glare
 
-The `.sunbeam-signature-glare` class applies a slow diagonal light sweep across surfaces. Use only on decorative overlay elements, never on interactive elements. The CSS default is `28s` (no delay); consumers (`Advantages`, `Story`) apply it with no inline override, so the sweep runs at the default 28s.
+The `.sunbeam-signature-glare` class applies a slow diagonal light sweep across surfaces. Use only on decorative overlay elements, never on interactive elements. The CSS default is `28s` (no delay); every consumer overrides it inline: `Advantages.jsx` sets `animationDuration: "28s"` (the default value, restated), `Vision.jsx` carries two sweeps (one at `26s`, a second at `35s` with an `-8s` delay), and `house/ChapterPieces.jsx`'s `AMBIENT` sets `26s`.
 
 ```jsx
 <div
@@ -778,8 +783,37 @@ Farsi actually uses above the fold: 400 for body/headings, 300 for `.font-mono` 
 `initialLanguage === "fa"`. Note the 900 file is **Black, not Heavy** — both declare
 `font-weight: 900` above, and the later `@font-face` declaration wins, so preloading
 Heavy would double-fetch. If the Farsi weight usage ever changes, change the preload
-set in the same edit. On the `force-static` routes (which bake `en`) the preload no-ops
-and Dorsa loads block-first after the client-side locale restore.
+set in the same edit.
+
+**On a route that always bakes `initialLanguage="en"` regardless of the real visitor,
+this server-side preload can't run at all — `cookies()` returns nothing useful in that
+context.** This used to be true of the House pages, `collection/[slug]`, and `/glance`
+alike (all either `force-static` or otherwise unable to see the real per-request
+cookie). Without a preload hint, Dorsa only started loading after the client-side
+locale-restore effect (`LanguageProvider.jsx`) flipped `<html lang>`/`.farsi-mode`, so a
+returning Farsi visitor saw a much longer `font-display: block` invisible-text window
+than on routes that could bake `fa` directly — long enough in practice to run past the
+block period and paint the `Tahoma` fallback before Dorsa finally swapped in, which read
+as "wrong/default font" rather than a brief flash. `shared/DorsaPreloadScript.jsx`
+(added 2026-09-07) closed that gap client-side: the same static `<script>` for every
+visitor (so the HTML stays fully cacheable), reading `document.cookie`/`localStorage`
+for `zaad_preferred_language` at runtime — the identical check `LanguageProvider`'s
+restore effect does — and if `"fa"`, synchronously injecting the same three preload
+`<link>` tags into `document.head` during initial HTML parsing, well before React
+hydrates.
+
+**The House pages and `/glance` stopped needing it the same day** — they were switched
+from `force-static` to `force-dynamic` specifically so `generateMetadata()` (and, as a
+side effect, `app/layout.js`'s own `getServerLanguage()` call) reads the real
+`zaad_preferred_language` cookie on every request instead of freezing at build time.
+`initialLanguage` is now correct from the very first byte of HTML on those two routes,
+so the standard server-side preload above already fires correctly and
+`DorsaPreloadScript` was removed from `(house)/layout.js` and `glance/page.js`.
+**`collection/[slug]/page.js` still mounts it** — that route remains genuinely static via
+`generateStaticParams` (a fixed, known set of product pages built once, a different
+mechanism from `force-static` that this project still wants to keep for product pages),
+so it still can't see the real per-request cookie and still needs the client-side
+compensation.
 
 ### `.font-farsi` — opt-in Dorsa for non-heading `.font-serif` text
 `html[lang="fa"] .font-farsi { font-family: "Dorsa", "Tahoma", sans-serif !important; }`
@@ -796,12 +830,14 @@ selector is safe to broaden without a per-instance `.font-latin`/`.font-farsi` j
 that render translated text: e.g. card/box titles in `header/JourneyIndex.jsx`,
 `header/SystemPortals.jsx`, `Materials.jsx`'s material `name`, `glance/GlancePage.jsx`'s rail/chip chapter labels and
 overview statement blockquote, `glance/GlanceChapter.jsx`'s tagline + narrative paragraphs,
-`Story.jsx`'s pull-quotes/stat labels, `header/ControlsFooter.jsx`'s `BRAND_NAME[language]` span
+`Vision.jsx`'s pull-quotes/stat labels, `header/MenuControls.jsx`'s `BRAND_NAME[language]` span
 (the "زاد" transliteration in its edition badge — see `src/components/README.md`'s note on the
-wordmark-vs-incidental-mention distinction), and `productdetailspage/LookbookPoetry.jsx`'s
-large decorative "زمین" watermark `div` — all found the same way (a Farsi string rendering in
+wordmark-vs-incidental-mention distinction), and `house/ChapterPieces.jsx`'s `StatValue`
+count-up stat span — all found the same way (a Farsi string rendering in
 the wrong, Latin-serif face because its tag/class combination fell through every existing
-override). Do **not** add it to the wordmark, or to any field that stays Latin regardless of
+override). (`collection/LookbookPoetry.jsx`'s large decorative "زمین" watermark `div` used to
+be on this list; it was replaced by an SVG-icon watermark that renders no text and needs no
+font class.) Do **not** add it to the wordmark, or to any field that stays Latin regardless of
 locale (see `.font-latin` below) — `header/SpecimenGrid.jsx`'s `item.name` looked similar but is
 the latter case, not this one.
 
@@ -815,25 +851,29 @@ an ancestor's `.font-mono`/`.font-sans` class (or from `body` itself, since the 
 `font-family` of its own). Wrap just the Latin fragment in `<span className="font-latin">`
 — not the whole parent — when it sits inside a larger element that also renders real translated
 text (e.g. `{t("productArchitecturalRecord")} <span className="font-latin">{item.number}</span>`
-in `productdetailspage/ProductMeta.jsx`). Elements that are Latin-only outright (e.g. `SpecimenGrid`'s
+in `collection/CollectionMeta.jsx`). Elements that are Latin-only outright (e.g. `SpecimenGrid`'s
 `item.number` span) can carry `.font-latin` directly instead of nesting a child span. Current call
-sites: `header/SpecimenGrid.jsx`, `productdetailspage/NavBar.jsx`, `productdetailspage/ProductMeta.jsx`
-(the `item.number` span only — see below), `showcase/ProductPanel.jsx`,
+sites: `header/SpecimenGrid.jsx`, `collection/NavBar.jsx`, `collection/CollectionMeta.jsx`
+(the `item.number` span only — see below), `showcase/CollectionPanel.jsx`,
 `shared/Lightbox.jsx` (`archiveNumber`), `glance/GlancePage.jsx` (overview card
 `item.number` eyebrow) and `glance/GlanceChapter.jsx` (header `item.number` — the
-`item.year` beside it stays unwrapped, Farsi digits). `showcase/CollectionTabs.jsx`'s `item.number`/`item.name`
-spans carry neither class — both sit under plain `.font-serif` (no `.font-mono`/`.font-sans`
-ancestor), so they fall under the same exclusion as `item.name` below and need no wrapping.
+`item.year` beside it stays unwrapped, Farsi digits), `concierge/InquiryForm.jsx`'s
+`SEC-COM-{sessionRef}` span, `Materials.jsx`'s per-locale label span (`font-farsi` in
+Farsi, `font-latin` in English), and `ledger/Ledger.jsx`'s session-ID chip.
+`showcase/CollectionTabs.jsx`'s `item.number` span now carries `font-latin` (alongside
+its `font-serif italic`), while its `item.name` span carries neither
+class — it sits under plain `.font-serif` (no `.font-mono`/`.font-sans`
+ancestor), so it falls under the same exclusion as `item.name` below and needs no wrapping.
 `item.name` under plain `.font-serif` (no `.font-mono`/
 `.font-sans` ancestor) needs neither class — `.font-serif` is already excluded from the Farsi
 override. `item.designer` mixes scripts on some collection entries (`"استودیو ZAAD"`) — this is
-correctly handled by `wrapLatinRuns(item.designer, isFarsi)` in `productdetailspage/ProductMeta.jsx`,
+correctly handled by `wrapLatinRuns(item.designer, isFarsi)` in `collection/CollectionMeta.jsx`,
 not a CSS class (mixed-script strings need the runtime scan `wrapLatinRuns` does, not a static
 `.font-latin`/`.font-farsi` pairing).
 
 **`item.year` is no longer part of this trio.** It reads in Farsi-Indic digits in `fa.js`
 (`"۲۰۲۶"`, not `"2026"`) as of the digit-uniformity pass in `src/lib/i18n/README.md` — `.font-latin`
-was removed from both its render sites (`productdetailspage/ProductMeta.jsx`, `showcase/ImageViewer.jsx`)
+was removed from both its render sites (`collection/CollectionMeta.jsx`, `showcase/ImageViewer.jsx`)
 since it would force a Latin font onto Farsi digit glyphs. `item.price` (unused by any component
 today) got the same digit conversion for data consistency, should a consumer render it later.
 
@@ -843,8 +883,8 @@ rule (documented above under `.font-farsi`) is a raw **element** selector — it
 `.font-serif`, `.font-latin`, or any class at all. Two real bugs shipped from forgetting this:
 `Footer.jsx`'s "ZAAD" wordmark was wrapped in `<h3>`, so despite being plain `.font-serif` (which
 is otherwise excluded from the blanket override) it rendered in Dorsa anyway — fixed by changing
-`<h3>` → `<p>` (identical classes), matching how `Header.jsx`'s and `house/HouseFooter.jsx`'s
-wordmarks already avoid heading tags for exactly this reason. `concierge/CuratorChat.jsx`'s
+`<h3>` → `<p>` (identical classes), matching how `Header.jsx`'s
+wordmark already avoids heading tags for exactly this reason. `concierge/CuratorChat.jsx`'s
 `t("zaadDigitalCurator")` = "کیوریتور دیجیتال ZAAD" — real Farsi text with an embedded Latin
 brand token, sitting directly inside an `<h3>` — had the same problem. **Rule of thumb when adding or touching
 an `h1`–`h6`:** if it's ever going to render a Latin brand token (a hardcoded "ZAAD", a collection
@@ -867,17 +907,17 @@ wraps each match in `<span dir="ltr" className="font-serif">` (the `dir="ltr"` a
 same bidi isolation `wrapLatinRuns` provides — no need to pass `isFarsi`, and no need to combine
 the two helpers on the same string). It is a no-op (returns the input unchanged) when no token
 matches, so it is safe to call unconditionally on any string that *might* contain one. Real call
-sites: `Footer.jsx` and `house/HouseFooter.jsx` (`footerCraft`, replacing a per-file
+sites: `Footer.jsx` (`footerCraft`, replacing a per-file
 `.split("Persol Business Solution")` one-off), `Hero.jsx` (`estFlorence`), `Advantages.jsx`
 (`ZAADCertified`), `concierge/CuratorChat.jsx` (`zaadDigitalCurator`, same
-reasoning), `productdetailspage/ProductMeta.jsx` and `showcase/ProductPanel.jsx` (`item.designer`
+reasoning), `collection/CollectionMeta.jsx` and `showcase/CollectionPanel.jsx` (`item.designer`
 /`selectedItem.designer`, `item.specifications.origin`, `productZAAD` — same `wrapLatinRuns`→
 `wrapBrandNames` swap for the same reason).
 
 **Direct-heading-child sites (added 2026-09-03)** — the four sites where a brand token is the
 heading's own unwrapped text child (see "Heading tags force Dorsa unconditionally" above for why
-these specifically need `wrapBrandNames`, not just any brand-adjacent text): `productdetailspage/ProductMeta.jsx`'s
-`<h1>` (`item.name`, e.g. "GÁVV"), `showcase/ProductPanel.jsx`'s `<h3>` (`selectedItem.name`, same
+these specifically need `wrapBrandNames`, not just any brand-adjacent text): `collection/CollectionMeta.jsx`'s
+`<h1>` (`item.name`, e.g. "GÁVV"), `showcase/CollectionPanel.jsx`'s `<h3>` (`selectedItem.name`, same
 field), `Advantages.jsx`'s `<h3>` (`card.title` — one card's title, "The Dorsa Experience"/"تجربه
 Dorsa", contains "Dorsa" as a literal Latin token in **both** `en.js` and `fa.js`, not English-only),
 and `house/HouseDiptychShell.jsx`'s internal `ColumnHeader`'s `<h3>` (`title` prop, fed by
@@ -902,7 +942,8 @@ in those two is standing convention for this project, not something the code str
 **Deliberately left alone** (judgment calls, not oversights): `<option>` elements
 (`InquiryForm.jsx`'s `florenceViewing`, `NavBar.jsx`'s `productZAADArchive` breadcrumb segment)
 can't selectively style a child span in most browsers; sibling-label grids where only one entry
-contains a brand token (`footerMilanZAAD`/`menuHouseOfZAAD` among plain footer/menu links,
+contains a brand token (`menuHouseOfZAAD` among plain menu links — the former footer
+sibling `footerMilanZAAD` now reads "Tehran"/"تهـران" and no longer contains a token,
 `showcaseZAADWeight`/`productZAADWeight` among a spec grid's other labels, `zaadTowerRowScheduling`
 inside a dense technical spec table) were left uniform rather than making one sibling visually
 odd; and long prose paragraphs mentioning a brand token mid-sentence (`aboutSections`, `brandStory`)
@@ -919,11 +960,13 @@ than noise. **Extended to plain-string prose by explicit user request (2026-09-0
 `en.js` key containing a brand token was audited against its render site and, where it was a direct
 string render (not markdown-parsed) and not one of the exceptions above, wrapped:
 `Hero.jsx`'s `heroDesc` and `bespokeObjects`,
-`productdetailspage/TabAppliances.jsx`'s `gaggenauIntegrationSpecifics` eyebrow, `Footer.jsx`'s
-`footerHouseDir` column heading, and `house/ChapterPieces.jsx`'s `CrossLinks` `{s.teaser}` (the
+`collection/TabAppliances.jsx`'s `gaggenauIntegrationSpecifics` eyebrow, and
+`house/ChapterPieces.jsx`'s `CrossLinks` `{s.teaser}` (the
 single shared render site for `crossLinkAbout`/`crossLinkStoryValue`/
 `crossLinkSustainabilityResponsibility`, each a one-sentence cross-link teaser used across all
-three House pages).
+three House pages). (`Footer.jsx`'s former `footerHouseDir` column heading was on this list;
+the key is deleted from both dictionaries and the column heading is now `menuJourneyIndex`
+("OTHER PAGES"), which carries no brand token and needs no wrap.)
 
 ### Farsi text is never italicized — bold (900) instead
 `html[lang="fa"] .italic { font-style: normal !important; font-weight: 900 !important; }`
@@ -952,7 +995,7 @@ relocated (e.g. moved to `src/app/`), this path breaks. It currently works becau
 file lives at `src/styles/`.
 
 ### `--zaad-font-scale` — app-wide text-size accessibility control
-Driven by `src/hooks/useFontScale.js` (the `+`/`−` control in `header/ControlsFooter.jsx`
+Driven by `src/hooks/useFontScale.js` (the `+`/`−` control in `header/MenuControls.jsx`
 and `house/HouseChrome.jsx`). Two mechanisms, both scoped to **font-size only** — neither
 touches `html`'s root font-size, because Tailwind v4's spacing scale (`p-*`, `gap-*`,
 `w-*`, `h-*`, …) is also `rem`-based off the root; scaling root font-size would enlarge
@@ -1009,14 +1052,14 @@ two `@utility` classes defined at the top of `globals.css`. Since 2026-09-05 the
   at `≥48rem` — the standard section rhythm, consumed via the `section-y` class.
 - `--zaad-section-y-break-top` / `--zaad-section-y-break-bottom`: `2rem`/`4.5rem` mobile,
   `3rem`/`7rem` at `≥48rem` — the "act break", consumed via `section-y-break`; used
-  **only** where the narrative pivots (Story's manifesto, Concierge's inquiry). Luxury
+  **only** where the narrative pivots (Vision's manifesto, Concierge's inquiry). Luxury
   rhythm = restraint + a few deliberate pauses, not uniform inflation.
 
 Tuning the whole site's vertical rhythm = editing those two token blocks; nothing else.
 (Before this rebalance the tokens were symmetric — 80/80 and 128/128 desktop — and the
 stacked 160/208px boundaries read as bloat; keep the top lean.) Two fixed-header pages can't
 consume the tokens and instead hard-code the same cadence into header-calibrated calcs —
-`ProductDetailsPage.jsx` (`pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-14 md:pb-20`) and
+`CollectionPage.jsx` (`pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-14 md:pb-20`) and
 `ledger/Ledger.jsx` (same `pt` calcs, `pb-20`) — match their additives/bottoms when retuning
 the tokens (the `61px`/`73px` figures are `Header.jsx`'s rendered heights; see
 `src/components/README.md`).
@@ -1025,21 +1068,21 @@ the tokens (the `61px`/`73px` figures are `Header.jsx`'s rendered heights; see
 
 | File | Now | Was |
 |---|---|---|
-| `Advantages.jsx:29` | `section-y` | `py-24 md:py-36` |
-| `Advantages.jsx:34` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
-| `Story.jsx:67` | `section-y-break` | `py-24 md:py-36` |
-| `Materials.jsx:19` | `section-y` | `py-24 md:py-36` |
-| `Showcase.jsx:23` | `section-y` | `py-24 md:py-36` |
+| `Advantages.jsx:46` | `section-y` | `py-24 md:py-36` |
+| `Advantages.jsx:51` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
+| `Vision.jsx:196` | `section-y-break` | `py-24 md:py-36` |
+| `Materials.jsx:62` | `section-y` | `py-24 md:py-36` |
+| `Showcase.jsx:25` | `section-y` | `py-24 md:py-36` |
 | `Concierge.jsx:16` | `section-y-break` | `py-24 md:py-36` |
-| `concierge/SectionHeader.jsx:8` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
+| `concierge/SectionHeader.jsx:7` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
 | `house/HouseChapterShell.jsx:32` | `section-y` | `py-20 md:py-32` |
 | `house/HouseChapterShell.jsx:44` | `section-y` | `py-20 md:py-24` |
-| `house/HouseDiptychShell.jsx:25` | `section-y` | `py-20 md:py-32` |
-| `house/ChapterPieces.jsx:74` | `section-y` | `py-20 md:py-28` |
+| `house/HouseDiptychShell.jsx:37` | `section-y` | `py-20 md:py-32` |
+| `house/ChapterPieces.jsx:221` | `section-y` | `py-20 md:py-28` |
 | `house/ChapterPieces.jsx` `ChapterHero` section | `pt-24 md:pt-32` | `pt-36 md:pt-44` |
-| `ProductDetailsPage.jsx:24` | `md:pt-[calc(73px+2.5rem)]` | `md:pt-[calc(73px+4rem)]` |
-| `ProductDetailsPage.jsx:27` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
-| `productdetailspage/LookbookPoetry.jsx:10` | *(no outer mb; card keeps its own `py-12 md:py-16`)* | `+ mb-16 md:mb-24` |
+| `CollectionPage.jsx:30` | `pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)]` | `md:pt-[calc(73px+4rem)]` |
+| `CollectionPage.jsx:33` | `mb-12 md:mb-16` | `mb-16 md:mb-24` |
+| `collection/LookbookPoetry.jsx:60` | *(no outer mb; card keeps its own `py-12 md:py-16`)* | `+ mb-16 md:mb-24` |
 
 Deliberately untouched: `Footer` (already modest), `shared/StatusScreen` (full-screen
 centering), Hero's internal `mt-16`, House `CallStrip`'s page-terminal `pb-20`, and all
@@ -1059,17 +1102,17 @@ sweep) is a pure-CSS Farsi override appended to the element's own size utility:
 `text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))]`
 — no JS, no `isFarsi` threading, English rendering untouched. Swept spots: Hero's
 `heroQuote` (12→rtl 14), `InquiryForm`'s appointment hints / `archivalSpecs` /
-`studioReplyStandard` (10/10.5→rtl 12), `ProductPanel`'s `showcaseAirfreight` /
+`studioReplyStandard` (10/10.5→rtl 12), `CollectionPanel`'s `showcaseAirfreight` /
 `showcaseCatalogueText` (10→rtl 12), `TabHeritage`'s `certificateOfProvenance`,
 `shared/Lightbox`'s `zoomHint`, and the `footerCopyright`/`footerCraft` strips in
-`Footer.jsx` + `house/HouseFooter.jsx` (10/11→rtl 12).
+`Footer.jsx` (10/11→rtl 12).
 
 ### Radius language — one 6px radius sitewide (2026-09-03)
 
 Every surface on every route (showroom, House, product) speaks **one** near-sharp
 radius: **6px** — not Tailwind's per-class scale. Interactive surfaces carry
 explicit `rounded-md` classes — nav settings trigger (`ExpandOnHoverPill`, both
-variants), the control rows in `ControlsFooter` + `HouseChrome` (tracks, segment
+variants), the control rows in `MenuControls` + `HouseChrome` (tracks, segment
 buttons, indicator blobs), audio toggle, tooltip, video play/pause + expand
 chips, prev/next arrows, every floating badge/pill over imagery (viewer,
 lightbox, studio gallery), and the CTAs. A single unlayered

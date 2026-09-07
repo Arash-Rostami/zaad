@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const EYEBROW =
     "text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3";
@@ -177,7 +177,7 @@ function GlanceChapter({ item, supplement, labels, number, numberFormatter }) {
                         {numberFormatter.format(number)}
                     </span>
                     <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.3em] uppercase text-muted">
-                        <span className="font-latin">{item.number}</span> · {item.year}
+                        <span className="font-serif font-latin">{item.number}</span> · {item.year}
                     </span>
                 </div>
                 <h3 className="mt-3 text-3xl md:text-5xl font-serif font-light tracking-tight text-ink text-left rtl:text-right">

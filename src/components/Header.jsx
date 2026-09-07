@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X, Sparkles } from "lucide-react";
-import { animateScrollTo, animateScrollToTop } from "@/services/ScrollService";
-import MaisonButton from "./MaisonButton";
-import { useLanguage } from "@/services/TranslationService";
+import { animateScrollToTop } from "@/services/ScrollService";
+import MaisonButton from "./shared/MaisonButton";
+import { useLanguage } from "@/services/LanguageProvider";
 import useTheme from "../hooks/useTheme";
 import MenuPanel from "./header/MenuPanel";
 import NoiseBg from "./shared/NoiseBg";
@@ -170,11 +170,9 @@ export default function Header({
   }, [setActiveTab, onSelectProduct]);
 
   const handleInquiryClick = useCallback(() => {
-    setActiveTab("showroom");
-    onSelectProduct(null);
     setMenuOpen(false);
-    setTimeout(() => animateScrollTo("concierge", 1500), 120);
-  }, [setActiveTab, onSelectProduct]);
+    setTimeout(() => onScrollToSection("concierge"), 120);
+  }, [onScrollToSection]);
 
   return (
       <header
@@ -187,10 +185,11 @@ export default function Header({
                 onClick={toggleMenu}
                 variant="solid"
                 aria-expanded={menuOpen}
+                aria-controls="site-menu-panel"
                 data-touch-slop
                 className="!px-3.5 sm:!px-5 h-8 sm:h-10 shadow-card-sm relative z-50 !text-[length:calc(10px*var(--zaad-font-scale))] sm:!text-[length:calc(11px*var(--zaad-font-scale))] !tracking-[0.15em] sm:!tracking-[0.25em] flex items-center justify-center font-sans overflow-visible!"
             >
-              <div className="relative w-20 h-4 overflow-hidden flex items-center justify-center">
+              <div className="relative h-4 overflow-hidden flex items-center justify-center">
                 <AnimatePresence mode="wait">
                   {menuOpen ? (
                       <motion.span
@@ -199,7 +198,7 @@ export default function Header({
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: -20, opacity: 0 }}
                           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                          className="absolute flex items-center justify-center gap-1.5 whitespace-nowrap"
+                          className="flex items-center justify-center gap-1.5 whitespace-nowrap"
                       >
                         <span>{t("menuClose")}</span>
                         <X className="w-3 h-3 shrink-0 rtl:-scale-x-100" />
@@ -211,7 +210,7 @@ export default function Header({
                           animate={{ y: 0, opacity: 1 }}
                           exit={{ y: 20, opacity: 0 }}
                           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                          className="absolute flex items-center justify-center gap-1.5 whitespace-nowrap"
+                          className="flex items-center justify-center gap-1.5 whitespace-nowrap"
                       >
                         <span>{t("menuBrowse")}</span>
                         <Menu className="w-3 h-3 shrink-0" />

@@ -32,7 +32,7 @@ folder is missing/empty, mirroring `resolveCollectionImages`'s fallback philosop
 Whatever files exist in that folder at request time are picked up automatically —
 adding a 3rd, 10th, or 98th image needs no code change. Called from `src/app/page.js`
 only, which passes the result down as `AppShell`'s `utensilImages` prop — currently
-**dormant**: `Story.jsx`'s gallery is video-driven now, the prop is threaded but
+**dormant**: `Vision.jsx`'s gallery is video-driven now, the prop is threaded but
 unconsumed (see `src/components/README.md`).
 
 ## `localizedYear.js`
@@ -45,26 +45,26 @@ an `Intl.NumberFormat` per call is real work (locale-data lookup), not free.
 `useGrouping` must stay `false`: `Intl.NumberFormat`
 inserts a thousands separator by default, which turns a 4-digit year into `"2,026"`.
 Gregorian year, not a Jalali calendar conversion. Called at render time, not cached in
-state — call sites: `Footer.jsx`, `house/HouseFooter.jsx`, both composing
+state — call site: `Footer.jsx`, composing
 `t("footerCopyright").replace("{year}", localizedYear(isFarsi))` (a single-year string,
-e.g. `© {year} - All Rights Reserved.` — no start-date range). **The two call sites now
-diverge after that point** (2026-09-04): `house/HouseFooter.jsx` passes the composed
-string straight to `wrapLatinRuns`, unchanged; `Footer.jsx` additionally strips the
+e.g. `© {year} - All Rights Reserved.` — no start-date range), then stripping the
 leading `"© "` (`.replace(/^©\s*/, "")`) before `wrapLatinRuns`, since its `©` renders
 separately as the hidden `/ledger` link (see `src/components/README.md`'s "hidden link"
-note) — `house/HouseFooter.jsx` has no such link, so its `©` stays part of the one string.
+note). (The former second call site that skipped the strip, `house/HouseFooter.jsx`,
+was deleted in the 2026-09-06 one-footer pass.)
 
 ## `socialLinks.js` (added 2026-09-04)
 
 Exports `SOCIAL_LINKS` — a frozen 4-entry array (`id`, `href`, `icon` — a `lucide-react`
 component reference, `labelKey`) for Instagram, LinkedIn, Telegram, and WhatsApp. The
 single shared source `shared/SocialLinks.jsx` (see `src/components/README.md`) maps over
-it, so both `Footer.jsx` and `house/HouseFooter.jsx` render the identical row from one
-config instead of duplicating four hrefs/icons/labels twice. **`href` values are
+it, so `Footer.jsx` renders the identical row from one
+config. (The former second consumer, `house/HouseFooter.jsx`, was deleted in the
+2026-09-06 one-footer pass.) **`href` values are
 placeholders** (`https://instagram.com/zaad_placeholder`, etc.) — same unresolved-handle
-gap `services/MetaDataService.js`'s JSON-LD `sameAs` array already has a `// TODO` for.
+gap `services/MetadataService.js`'s JSON-LD `sameAs` array already has a `// TODO` for.
 Replace all four with the real handles before this ships; nothing else needs to change
-(`shared/SocialLinks.jsx` and both footers only ever read from this one file). Telegram
+(`shared/SocialLinks.jsx` and the footer only ever read from this one file). Telegram
 has no dedicated `lucide-react` icon, so `Send` (paper airplane) stands in — it happens to
 already resemble Telegram's own logo shape. WhatsApp has no dedicated icon either;
 `MessageCircle` is the closest generic chat-bubble glyph `lucide-react` offers.
@@ -119,8 +119,8 @@ the same "known brand/partner token → `font-serif`" rule applies via exact-tok
 consequence: `wrapBrandNames` matches only the exact token, not adjacent words merged by a
 single space the way Farsi's run-merge does — `"Dorsa Home"` gets `"Dorsa"` wrapped but
 not `"Home"` (harmless; "Home" isn't a brand token) — whereas the equivalent Farsi string
-would have merged both words into one span. Confirmed live (computed `fontFamily` checked
-via Playwright, both languages) at every call site below, including `Advantages.jsx`'s
+would have merged both words into one span. This parity holds at every call site below,
+including `Advantages.jsx`'s
 `card.desc` (previously wrongly documented in `src/styles/README.md` as a "deliberately
 left alone" exception — it isn't; that note has been corrected).
 
@@ -158,13 +158,15 @@ between Farsi digits, etc.) outside every span so it inherits ordinary RTL mirro
 a string becomes JSX children (e.g. `{wrapLatinRuns(item.description, isFarsi)}`), never
 on a string that still gets `.replace()`/concatenation/template-literal composition
 afterward (`wrapLatinRuns` returns a React node array, not a string, once it's actually
-wrapped something). Current call sites: `Story.jsx`, `Advantages.jsx`, `Materials.jsx`,
-`Footer.jsx`, `house/HouseFooter.jsx`, `concierge/InquiryForm.jsx`,
-`productdetailspage/ProductMeta.jsx`, `productdetailspage/LookbookPoetry.jsx`,
-`productdetailspage/TabArchitecture.jsx` (also its `tower.key`/`listSpecs` entries, not
+wrapped something). Current call sites: `Vision.jsx`, `Advantages.jsx`, `Materials.jsx`,
+`Footer.jsx`, `concierge/InquiryForm.jsx`,
+`collection/CollectionMeta.jsx`, `collection/LookbookPoetry.jsx`,
+`collection/TabArchitecture.jsx` (also its `tower.key`/`listSpecs` entries, not
 just `overview`/bullets — anything rendering a dictionary string with embedded Latin
-needs this call, not just the obvious paragraph fields), `productdetailspage/TabAppliances.jsx`,
-`showcase/ProductPanel.jsx` — every one of these renders dictionary prose (`item.*`
+needs this call, not just the obvious paragraph fields), `collection/TabAppliances.jsx`,
+`showcase/CollectionPanel.jsx`, `glance/GlancePage.jsx`, `glance/GlanceChapter.jsx` (the
+`/glance` lookbook composite), and `ledger/Ledger.jsx` (admin note fields) — every one of
+these renders dictionary prose (`item.*`
 fields, or `t()` strings) that mixes Latin brand names/technical terms into Farsi
 sentences at the data layer; see `src/lib/i18n/README.md` for why the dictionary itself
 isn't restructured to avoid this instead.
@@ -175,8 +177,14 @@ state mixes static seeded strings (`t("curatorWelcome")`, `t("curatorError")`), 
 user-typed input, and dynamic `/api/curate` (Gemini) response text — all plain strings
 with no dictionary-layer control. Wrapping happens once at the message-bubble render,
 covering all three sources uniformly rather than threading it through the hook or the
-API route. `CuratorChat` needed a new `language` prop from `Concierge.jsx` to compute
-`isFarsi` (mirrors the prop `InquiryForm` already received).
+API route. **The `isFarsi` passed in is per-line, not the page's `language`** (changed
+2026-09-07) — `renderCuratorLine` tests each line's own text for actual Farsi characters
+rather than trusting the page locale; see `src/components/README.md`'s `CuratorChat.jsx`
+section for why (a full-English reply on a `fa` page used to defeat this file's
+bold-marker detection below, and a single reply mixing a Farsi line with a fully-English
+line needed per-line rather than per-message detection to get both lines right at once).
+`CuratorChat` no longer takes a `language` prop from `Concierge.jsx` — it was only ever
+used to compute the page-level `isFarsi` this replaced.
 
 **(2026-09-03) That render site now calls `renderChatMarkdown.js`, not `wrapLatinRuns`
 directly** — the AI curator's replies (see `services/CuratorService.js` in
@@ -203,6 +211,17 @@ per line rather than once for the whole message. This is a rendering-layer conce
 `renderChatMarkdown`'s — the helper itself has no opinion on line/paragraph structure,
 only on bold+bidi within a single line of text.
 
+**Markdown headings (`#`/`##`/`###`) are stripped before a line ever reaches
+`renderChatMarkdown` (added 2026-09-07).** `CuratorChat.jsx`'s `renderCuratorLine` matches
+a leading `HEADING = /^\s*#{1,6}\s+(.*)$/` first, strips the marker, and renders the
+remainder as its own `text-accent font-semibold` line — the same visual treatment `**bold**`
+already gets, so a heading reads as brand-consistent emphasis instead of a broken literal
+`###` (the model occasionally emits headings despite `api/curate/route.js`'s system prompt
+now explicitly telling it not to — this is the client-side safety net for when it does
+anyway). This mirrors how `wrapBrandNames`/`renderChatMarkdown` already treat bold as a
+line-level concern, not a `renderChatMarkdown` one — the heading strip happens one layer
+above it, same as the `\n`-split and `LIST_ITEM` regex.
+
 ## `formatCuratorContext.js` (added 2026-09-03)
 
 Server-safe (no `fs`, no hooks — plain data-to-text formatting, though in practice only
@@ -216,19 +235,6 @@ heritage), and a handful of acquisition/consultation strings. Pulled out of
 formatting logic sits alongside `wrapBrandNames.js`/`wrapLatinRuns.js` rather than living
 inside a service class. No caching here — `CuratorService.buildContext` is what memoizes
 the result per language; calling this function directly re-formats every time.
-
-## `studioHours.js` (added 2026-09-06)
-
-Client-safe pure function, no hooks, no fetch. `isStudioOpenNow(date = new Date())`
-returns a boolean: open Sat–Thu 09:00–18:00, closed only Friday, evaluated in
-**`Asia/Tehran`** local time regardless of the visitor's own timezone (via
-`Intl.DateTimeFormat(..., { timeZone: "Asia/Tehran", weekday: "short", hour: "numeric",
-hour12: false })`, not the browser's local clock) — matches the real hours already
-stated in `en.js`/`fa.js`'s `callStudioSub` copy; if that copy's hours ever change, this
-function's `OPEN_HOUR`/`CLOSE_HOUR`/`CLOSED_WEEKDAY` constants must change with it. Only
-call site: `house/ChapterPieces.jsx`'s `CallStrip` (see `src/components/README.md`) —
-called inside a mount-only `useEffect`, never at render time, since `new Date()` would
-otherwise differ between server and client and trip a hydration mismatch.
 
 ## `inquiriesStore.js` (added 2026-09-03)
 

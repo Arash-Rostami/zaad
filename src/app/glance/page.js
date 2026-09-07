@@ -1,9 +1,9 @@
 import { cache } from "react";
-import { MetadataService } from "@/services/MetaDataService";
-import JsonLd from "@/components/JsonLd";
+import { MetadataService } from "@/services/MetadataService";
+import JsonLd from "@/components/shared/JsonLd";
 import GlancePage from "@/components/glance/GlancePage";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 const getGlance = cache(() => MetadataService.forGlance());
 

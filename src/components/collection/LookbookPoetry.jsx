@@ -1,6 +1,50 @@
 import React, { memo, useMemo } from "react";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
+
+const STROKE = { fill: "none", stroke: "currentColor", strokeWidth: 1.2, strokeLinecap: "round" };
+
+const WATERMARK_ICONS = {
+  gavv: (
+    <svg viewBox="0 0 100 100" className="w-36 h-36 md:w-44 md:h-44" {...STROKE}>
+      <path d="M8 30 Q 50 18 92 30" />
+      <path d="M8 48 Q 50 38 92 48" />
+      <path d="M8 66 Q 50 58 92 66" />
+      <path d="M8 84 Q 50 78 92 84" />
+    </svg>
+  ),
+  zivv: (
+    <svg viewBox="0 0 100 100" className="w-36 h-36 md:w-44 md:h-44" {...STROKE}>
+      <path d="M50 12 A 38 38 0 0 1 88 50" />
+      <path d="M50 26 A 24 24 0 0 1 74 50" />
+      <path d="M50 40 A 10 10 0 0 1 60 50" />
+      <path d="M50 5 V 1" />
+      <path d="M95 50 H 99" />
+      <path d="M82 18 L 88 12" />
+      <path d="M50 60 V 96" />
+      <path d="M36 60 L 30 90" />
+      <path d="M64 60 L 70 90" />
+    </svg>
+  ),
+  rakh: (
+    <svg viewBox="0 0 100 100" className="w-36 h-36 md:w-44 md:h-44" {...STROKE}>
+      <path d="M26 20 V 80" />
+      <path d="M38 20 V 80" />
+      <path d="M50 20 V 80" />
+      <path d="M62 20 V 80" />
+      <path d="M74 20 V 80" />
+      <path d="M12 44 H 88" />
+    </svg>
+  ),
+  vaar: (
+    <svg viewBox="0 0 100 100" className="w-36 h-36 md:w-44 md:h-44" {...STROKE}>
+      <path d="M10 24 H 90" />
+      <path d="M10 44 H 66" />
+      <path d="M10 64 H 90" />
+      <path d="M34 84 H 90" />
+    </svg>
+  ),
+};
 
 const LookbookPoetry = memo(function LookbookPoetry({ item, t, isFarsi }) {
   const wrappedHeading = useMemo(
@@ -17,12 +61,14 @@ const LookbookPoetry = memo(function LookbookPoetry({ item, t, isFarsi }) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch py-12 md:py-16 px-6 md:px-10 bg-surface-alt/20 dark:bg-black/15 border border-ink/5 rounded-2xl relative overflow-hidden">
           {isFarsi && (
               <>
-                <div
-                    className="absolute right-6 top-6 opacity-[0.03] select-none text-[6rem] font-serif font-farsi pr-4 leading-none"
-                    dir="rtl"
-                >
-                  زمین
-                </div>
+                {WATERMARK_ICONS[item.id] && (
+                    <div
+                        className="absolute right-6 top-6 opacity-[0.04] select-none pointer-events-none text-ink"
+                        aria-hidden="true"
+                    >
+                      {WATERMARK_ICONS[item.id]}
+                    </div>
+                )}
 
                 <div
                     className="md:col-span-6 border-r-2 border-accent pr-6 flex flex-col justify-center text-right"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import useConcierge from "../hooks/useConcierge";
 import SectionHeader from "./concierge/SectionHeader";
 import InquiryForm from "./concierge/InquiryForm";
@@ -19,7 +19,7 @@ export default function Concierge({ preselectedItem, onClearPreselected }) {
                 <SectionHeader t={t} />
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-18 relative">
                     <InquiryForm concierge={concierge} t={t} language={language} />
-                    <CuratorChat concierge={concierge} t={t} language={language} />
+                    <CuratorChat concierge={concierge} t={t} />
                 </div>
             </div>
         </section>

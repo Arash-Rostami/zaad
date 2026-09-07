@@ -7,12 +7,14 @@ export const en = {
   lightMode: "Chiaroscuro: Light",
   darkMode: "Chiaroscuro: Dark",
   selectLanguage: "Farsi / فارسى",
+  skipToContent: "Skip to main content",
   menuClose: "Close",
   menuBrowse: "Browse",
   menuInquiry: "Inquiry",
+  menuMainPage: "Main Page",
   menuSystemDirectories: "MAIN PAGES",
-  menuHouseOfZAADPortalSub: "Return to the digital showroom",
-  menuZAADCatalogue: "ZAAD Catalogue",
+  menuHouseOfZAADPortalSub: "Our origins, craft & philosophy",
+  menuZAADCatalogue: "Digital Catalogue",
   menuZAADCatalogueSub: "The complete collection, page by page",
   menuJourneyIndex: "OTHER PAGES",
   menuOriginsPhilosophy: "Origins & Philosophy",
@@ -44,7 +46,7 @@ export const en = {
   aboutTitle: "An Atelier of Interior Architecture",
   aboutIntro:
       "ZAAD designs and builds luxury interior spaces, with particular expertise in kitchens, wardrobes and interiors — bringing a considered eye for quality and elegance to the scale of the home. Behind every project stands a 9,000 sqm production facility, 150 skilled specialists, an 8-person team of designers and architects, and a network of specialist partners who carry an idea from concept through to construction.",
-  aboutBackToShowroom: "Back to Showroom",
+  aboutBackToShowroom: "Return to ZAAD Home",
   callStudio: "Call the Atelier",
   callStudioSub: "Tehran studio — Sat–Thu, 09–18 (Iran Standard Time)",
   studioStatusOpen: "Open now",
@@ -112,7 +114,7 @@ export const en = {
   heroTitle_2: "and the quality.",
   heroDesc: "The ZAAD Digital Showroom. Rooted in the land of Dorsa, our four distinct collections seamlessly blend the boldness of modern design with authentic architectural heritage. We craft luxury interior spaces that bring enduring quality, material stewardship, and quiet sophistication to the scale of home.",
   exploreCollection: "Explore the Collections ↓",
-  ourPhilosophy: "Our Heritage & Vision",
+  ourPhilosophy: "Our Vision",
   monograph: "Comprehensive Catalogue",
   heroQuote: "Luxury is not exaggeration or display; it is precision, restraint, and the harmony between form and function that preserves its value over time.",
   estFlorence: "Born in the Land of Dorsa",
@@ -122,7 +124,7 @@ export const en = {
   heroPlayVideo: "Play film",
 
   // ─── STORY / MANIFESTO ─────────────────────────────────────────────────────
-  manifestoBadge: "Our Story",
+  manifestoBadge: "Our Vision",
   storyQuote: "To assemble a space is to curate the silence within it.",
   storyFixturesLabel: "At the heart of",
   storyFixturesText: "the GÁVV, ZIVV, RÁKH, and VAAR collections.",
@@ -189,8 +191,8 @@ export const en = {
   showcaseCuratedDelivery: "Est. Curated Delivery",
   showcasePrimaryMaterials: "Primary Composition Materials",
   showcaseCatalogueText:
-      "Complete technical descriptions, bilingual poetry logs, & Gaggenau appliance details exist in our dedicated master catalogue.",
-  showcaseRevealDossier: "VIEW IN CATALOGUE",
+      "Complete technical descriptions, bilingual poetry logs, & Gaggenau appliance details exist in our dedicated digital catalogue.",
+  showcaseRevealDossier: "VIEW IN DIGITAL CATALOGUE",
   showcaseOpenPiece: "VIEW THE PIECE",
   showcasePrivateInquiry: "Initiate Private Inquiry",
   showcaseAirfreight: "Delivery and installation arranged upon inquiry.",
@@ -223,7 +225,7 @@ export const en = {
   ],
 
   // ─── MATERIALS SECTION ─────────────────────────────────────────────────────
-  materialsBadge: "Material Analysis Core",
+  materialsBadge: "Materials",
   materialsTitle: "Tactile Index & Character Analysis",
   materialsSubtitle:
       "To select a material is to formulate a tactile language. Hover or touch to read the mineral properties curated by the studio.",
@@ -323,8 +325,9 @@ export const en = {
   formChatAlternative: "Prefer to talk it through? You can also share these details directly with our AI Curator in the chat, and our team will follow up.",
   bespokeClientName: "Bespoke Client Name *",
   clientNamePlaceholder: "e.g. Eleanor Vance",
-  secureContactEmail: "Secure Contact Email (Optional)",
-  directTelephone: "Direct Telephone *",
+  contactEmail: "Contact Email",
+  optionalMarker: "(Optional)",
+  mobilePhone: "Mobile Phone *",
   consultationCategory: "Consultation Category",
   privateArchiveAcquisition: "Purchase & Order from the Collection",
   residentialConsultation: "Consultation on the Collection",
@@ -374,7 +377,8 @@ export const en = {
   chatDownload: "Download Transcript",
   chatClient: "CLIENT",
   chatCurator: "ASSISTANT",
-  analyzingParams: "Analyzing composition parameters...",
+  analyzingParams: "Thinking...",
+  analyzingParamsSlow: "Still working — thank you for your patience...",
   chatPlaceholder: "Ask about stone pairings, room spacing, or materials...",
   curatorWelcome:
       "Welcome to ZAAD's Curator Consultation. If you are designing or completing an architectural space, describe its qualities, lighting, and layout, and I will recommend specific material compositions or objects from our vault.",
@@ -382,6 +386,8 @@ export const en = {
       "Welcome back. Since you were just viewing the {name}, I would be glad to discuss it further — or describe your space and I will recommend other compositions from our vault.",
   curatorError:
       "The AI assistant's transmission is temporarily interrupted. Please fill out our Private Inquiry card to coordinate directly with our team.",
+  curatorOffline:
+      "You appear to be offline. Please check your connection and try again.",
   curatorSubmitFailed:
       "I couldn't save that automatically — please use the form below instead, or try again in a moment.",
 
@@ -412,6 +418,7 @@ export const en = {
   tallUnitsLayout: "Tall Cabinets",
   applianceList: "Appliance Specs",
   zoomHint: "[ Touch-drag or hover over image to pan texture detail ]",
+  cycleZoomLabel: "Cycle zoom level",
   resolvingSpecimen: "RESOLVING SPECIMEN DETAIL...",
   lightboxArchiveLabel: "ARCHIVE",
   lightboxInquireLabel: "INQUIRE ACQUISITION",
@@ -429,7 +436,7 @@ export const en = {
   inquireThis: "Inquire About This Curated System",
   closeDossier: "Close Specification Dossier",
   tactileLens: "TACTILE LENS (3.0X)",
-  productReturnShowroom: "RETURN TO COLLAGE SHOWROOM",
+  productReturnShowroom: "RETURN TO SHOWROOM",
   productZAADArchive: "ZAAD ARCHIVE",
   productDirectory: "DIRECTORY",
   productArchitecturalRecord: "ARCHITECTURAL RECORD",
@@ -439,7 +446,8 @@ export const en = {
   productStudioLayoutFallback: "layout",
   showcaseImageAlt: "{name} (Image {index} view)",
   showcaseMacroAlt: "{name} (macro view)",
-  productStudioThumbnailAlt: "Perspective thumbnail {index}",
+  productStudioThumbnailAlt: "{name} (Perspective thumbnail {index})",
+  productEnlargeImageLabel: "Open enlarged view of {name}",
   productCurator: "Curator",
   productZAAD: "ZAAD",
   productRelease: "Release",
@@ -448,7 +456,7 @@ export const en = {
   productFinish: "Aesthetic Casing Finish",
   productLeadTime: "Lead Time Range",
   productInitiateInquiry: "INITIATE PRIVATE CONCIERGE INQUIRY",
-  productReturnGrid: "RETURN TO GRID",
+  productReturnGrid: "RETURN TO SHOWROOM",
 
   // ─── PRODUCT DETAIL TABS / CTA (SpecsTabs, AcquisitionCTA, Tab*) ────────────
   tabArchitectureLabel: "MONOLITHIC ANATOMY",
@@ -524,24 +532,16 @@ export const en = {
   newsletterBtn: "Register",
   rightsReserved:
       "All rights reserved. Styled for quiet luxury. Built in Tehran.",
-  footerShowroomDir: "SHOWROOM DIRECTORY",
-  footerPhilosophy: "Our Philosophy",
-  footerCollection: "The Collection",
-  footerConcierge: "Acquisition Concierge",
-  footerHouseDir: "HOUSE OF ZAAD",
-  footerAboutUs: "About Us",
-  footerStoryBrandValue: "Story & Brand Value",
-  footerSustainabilityResponsibility: "Sustainability & Responsibility",
   footerBlueprintTitle: "STUDIO ARCHIVES",
-  footerFullLookbook: "Full Lookbook",
-  footerMilanZAAD: "ZAAD Atelier — Tehran",
+  footerFullLookbook: "Digital Catalogue",
+  footerMilanZAAD: "Tehran",
   footerConnectWithUs: "Connect With Us",
   footerSocialInstagram: "Follow on Instagram",
   footerSocialLinkedin: "Follow on LinkedIn",
   footerSocialTelegram: "Message on Telegram",
   footerSocialWhatsapp: "Message on WhatsApp",
   footerCopyright: "© {year} - All Rights Reserved.",
-  footerCraft: "Crafted With Love BY Persol Business Solution",
+  footerCraft: "Crafted BY Persol Business Solution",
 
   // ─── STATUS SCREENS (not-found / error) ────────────────────────────────────
   notFoundEyebrow: "404",

@@ -10,10 +10,10 @@ import Footer from "@/components/Footer";
 import ScrollButton from "@/components/shared/ScrollButton";
 import useLenisScroll from "@/hooks/useLenisScroll";
 import useDeferredMedia from "@/hooks/useDeferredMedia";
-import MaisonButton from "../MaisonButton";
-import MaisonReveal from "../MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
 import StatusScreen from "../shared/StatusScreen";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
 const EASE_IN_OUT = Object.freeze([0.16, 1, 0.3, 1]);
@@ -130,10 +130,12 @@ const LedgerGate = memo(function LedgerGate({ unlockAction, t }) {
                                 required
                                 autoComplete="off"
                                 autoFocus
+                                aria-invalid={!!state.error}
+                                aria-describedby={state.error ? "ledger-key-error" : undefined}
                                 className="w-full bg-panel border border-ink/15 focus:border-ink focus:outline-none px-4 py-3 text-base sm:text-sm font-mono rounded-xl placeholder-dim-faint transition-colors"
                             />
                             {state.error && (
-                                <p className="flex items-center gap-1.5 text-danger text-[length:calc(11px*var(--zaad-font-scale))] font-mono mt-1.5">
+                                <p id="ledger-key-error" role="alert" className="flex items-center gap-1.5 text-danger text-[length:calc(11px*var(--zaad-font-scale))] font-mono mt-1.5">
                                     <AlertCircle className="w-3 h-3 shrink-0" />
                                     <span>{t(state.error)}</span>
                                 </p>
@@ -327,7 +329,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                         <motion.div initial={DETAIL_INITIAL} animate={DETAIL_ANIMATE} exit={DETAIL_EXIT}>
                             <div className="px-5 sm:px-7 pb-6 pt-5 border-t border-ink/10">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-8 pb-5">
-                                    <DetailRow label={t("secureContactEmail")}>
+                                    <DetailRow label={t("contactEmail")}>
                                         {inquiry.clientEmail ? (
                                             <a
                                                 href={`mailto:${inquiry.clientEmail}`}
@@ -340,7 +342,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                                             "—"
                                         )}
                                     </DetailRow>
-                                    <DetailRow label={t("directTelephone")}>
+                                    <DetailRow label={t("mobilePhone")}>
                                         {inquiry.clientPhone ? (
                                             <a
                                                 href={`tel:${cleanedPhone}`}
@@ -448,18 +450,6 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
     }, []);
 
     useLenisScroll();
-
-    const setActiveTab = useCallback(
-        (tab) => {
-            if (tab === "pdf") {
-                window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
-                return;
-            }
-            router.push("/");
-        },
-        [router],
-    );
-    const onScrollToSection = useCallback((sectionId) => router.push(`/#${sectionId}`), [router]);
 
     const effectiveInquiries = useMemo(() => {
         if (!Object.keys(viewedOverrides).length) return inquiries;
@@ -649,7 +639,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
         <div className="min-h-screen flex flex-col justify-between selection:bg-selection selection:text-ink">
             <LedgerHeader />
             <main className="flex-1">{body}</main>
-            <Footer onScrollToSection={onScrollToSection} setActiveTab={setActiveTab} />
+            <Footer />
             <ScrollButton />
         </div>
     );

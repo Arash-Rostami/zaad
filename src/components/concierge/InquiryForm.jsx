@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AlertCircle, Calendar, Check, ChevronDown, Clock, Send, RefreshCw } from "lucide-react";
-import MaisonButton from "../MaisonButton";
-import MaisonReveal from "../MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
 const SLOT_KEYS = {
@@ -15,10 +15,10 @@ const SLOT_KEYS = {
 
 const SLOT_ORDER = ["morning-1", "morning-2", "midday", "evening-1", "evening-2"];
 
-function FieldError({ message }) {
+function FieldError({ id, message }) {
     if (!message) return null;
     return (
-        <p className="flex items-center gap-1.5 text-danger text-[length:calc(11px*var(--zaad-font-scale))] font-mono mt-1.5">
+        <p id={id} role="alert" className="flex items-center gap-1.5 text-danger text-[length:calc(11px*var(--zaad-font-scale))] font-mono mt-1.5">
             <AlertCircle className="w-3 h-3 shrink-0" />
             <span>{message}</span>
         </p>
@@ -44,7 +44,7 @@ export default function InquiryForm({ concierge, t, language }) {
     } = concierge;
 
     const slotLabel = appointmentWindow
-        ? `${t(SLOT_KEYS[appointmentWindow].name)} (${t(SLOT_KEYS[appointmentWindow].time)})`
+        ? `${t(SLOT_KEYS[appointmentWindow].name)} (‪${t(SLOT_KEYS[appointmentWindow].time)}‬)`
         : t("appointmentWindowArrangement");
 
     const [cadenceOpen, setCadenceOpen] = useState(false);
@@ -83,6 +83,9 @@ export default function InquiryForm({ concierge, t, language }) {
     const toggleCadenceOpen = useCallback(() => setCadenceOpen((v) => !v), []);
     const closeCadence = useCallback(() => setCadenceOpen(false), []);
 
+    const identityRowAlignsBottom = !(formErrors.clientName || formErrors.clientEmail);
+    const contactRowAlignsBottom = !formErrors.clientPhone;
+
     const handleInquireAnother = useCallback(() => {
         setFormSubmitted(false);
         setFormErrors({});
@@ -115,57 +118,70 @@ export default function InquiryForm({ concierge, t, language }) {
                         exit={{ opacity: 0 }}
                         className="space-y-6"
                     >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
+                        <div className="grid grid-cols-2 gap-4 md:gap-6">
+                            <div className="flex flex-col">
+                                <label htmlFor="inquiry-name" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("bespokeClientName")}
                                 </label>
                                 <input
+                                    id="inquiry-name"
                                     type="text"
                                     required
                                     value={clientName}
                                     onChange={(e) => setClientName(e.target.value)}
                                     placeholder={t("clientNamePlaceholder")}
-                                    className={`w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-sans ${formErrors.clientName ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink"}`}
+                                    aria-invalid={!!formErrors.clientName}
+                                    aria-describedby={formErrors.clientName ? "inquiry-name-error" : undefined}
+                                    className={`${identityRowAlignsBottom ? "mt-auto" : ""} w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-sans ${formErrors.clientName ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink"}`}
                                 />
-                                <FieldError message={formErrors.clientName && t(formErrors.clientName)} />
+                                <FieldError id="inquiry-name-error" message={formErrors.clientName && t(formErrors.clientName)} />
                             </div>
-                            <div>
-                                <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
-                                    {t("secureContactEmail")}
+                            <div className="flex flex-col">
+                                <label htmlFor="inquiry-email" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
+                                    {t("contactEmail")}{" "}
+                                    <span className="text-[length:calc(10.5px*var(--zaad-font-scale))]">
+                                        {t("optionalMarker")}
+                                    </span>
                                 </label>
                                 <input
+                                    id="inquiry-email"
                                     type="email"
                                     value={clientEmail}
                                     onChange={(e) => setClientEmail(e.target.value)}
                                     placeholder="client@zaad.com"
-                                    className={`w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-mono ${formErrors.clientEmail ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink/80"}`}
+                                    aria-invalid={!!formErrors.clientEmail}
+                                    aria-describedby={formErrors.clientEmail ? "inquiry-email-error" : undefined}
+                                    className={`${identityRowAlignsBottom ? "mt-auto" : ""} w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-mono ${formErrors.clientEmail ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink/80"}`}
                                 />
-                                <FieldError message={formErrors.clientEmail && t(formErrors.clientEmail)} />
+                                <FieldError id="inquiry-email-error" message={formErrors.clientEmail && t(formErrors.clientEmail)} />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
-                                    {t("directTelephone")}
+                        <div className="grid grid-cols-2 gap-4 md:gap-6">
+                            <div className="flex flex-col">
+                                <label htmlFor="inquiry-phone" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
+                                    {t("mobilePhone")}
                                 </label>
                                 <input
+                                    id="inquiry-phone"
                                     type="tel"
                                     required
                                     value={clientPhone}
                                     onChange={(e) => setClientPhone(e.target.value)}
                                     placeholder="+98 912 345 6789"
-                                    className={`w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-sans ${formErrors.clientPhone ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink"}`}
+                                    aria-invalid={!!formErrors.clientPhone}
+                                    aria-describedby={formErrors.clientPhone ? "inquiry-phone-error" : undefined}
+                                    className={`${contactRowAlignsBottom ? "mt-auto" : ""} w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-sans ${formErrors.clientPhone ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink"}`}
                                 />
-                                <FieldError message={formErrors.clientPhone && t(formErrors.clientPhone)} />
+                                <FieldError id="inquiry-phone-error" message={formErrors.clientPhone && t(formErrors.clientPhone)} />
                             </div>
-                            <div>
-                                <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
+                            <div className="flex flex-col">
+                                <label htmlFor="inquiry-consultation" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("consultationCategory")}
                                 </label>
-                                <div className="relative">
+                                <div className={`relative ${contactRowAlignsBottom ? "mt-auto" : ""}`}>
                                     <select
+                                        id="inquiry-consultation"
                                         value={desiredConsultation}
                                         onChange={(e) => setDesiredConsultation(e.target.value)}
                                         className="w-full bg-panel border border-ink/15 ps-4 pe-10 py-3 text-base sm:text-sm focus:border-ink focus:outline-none transition-colors rounded-xl block font-sans appearance-none cursor-pointer"
@@ -183,17 +199,20 @@ export default function InquiryForm({ concierge, t, language }) {
                         </div>
 
                         <div>
-                            <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
+                            <label htmlFor="inquiry-note" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
                                 {t("archivalSpecs")}
                             </label>
                             <textarea
+                                id="inquiry-note"
                                 rows={4}
                                 value={additionalNote}
                                 onChange={(e) => setAdditionalNote(e.target.value)}
                                 placeholder={t("spacePlaceholder")}
+                                aria-invalid={!!formErrors.additionalNote}
+                                aria-describedby={formErrors.additionalNote ? "inquiry-note-error" : undefined}
                                 className={`w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl resize-none font-sans ${formErrors.additionalNote ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink"}`}
                             />
-                            <FieldError message={formErrors.additionalNote && t(formErrors.additionalNote)} />
+                            <FieldError id="inquiry-note-error" message={formErrors.additionalNote && t(formErrors.additionalNote)} />
                         </div>
 
                         {/* Appointment — Audience & Cadence */}
@@ -244,12 +263,12 @@ export default function InquiryForm({ concierge, t, language }) {
                                         <span className="flex items-center min-w-0">
                                             <Clock className="w-4 h-4 text-accent mr-2 rtl:mr-0 rtl:ml-2 shrink-0" />
                                             <span className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest uppercase text-ink truncate">
-                                                {activeSlot ? `${activeSlot.name} · ${activeSlot.time}` : t("appointmentWindowArrangement")}
+                                                {activeSlot ? <>{activeSlot.name} · <span dir="ltr">{activeSlot.time}</span></> : t("appointmentWindowArrangement")}
                                             </span>
                                         </span>
                                         <ChevronDown className={`w-3.5 h-3.5 text-muted/70 shrink-0 transition-transform duration-500 ${cadenceOpen ? "rotate-180" : ""}`} />
                                     </button>
-                                    <FieldError message={formErrors.appointmentWindow && t(formErrors.appointmentWindow)} />
+                                    <FieldError id="inquiry-cadence-error" message={formErrors.appointmentWindow && t(formErrors.appointmentWindow)} />
 
                                     <AnimatePresence>
                                         {cadenceOpen && (
@@ -279,7 +298,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                                                     {opt.name}
                                                                 </span>
                                                                 <span className={`text-[length:calc(10px*var(--zaad-font-scale))] font-mono ${active ? "text-accent/80" : "text-muted"}`}>
-                                                                    {opt.time}
+                                                                    <span dir="ltr">{opt.time}</span>
                                                                 </span>
                                                             </button>
                                                         );
@@ -293,7 +312,7 @@ export default function InquiryForm({ concierge, t, language }) {
                         </div>
 
                         {formErrors.form && (
-                            <p className="flex items-center gap-2 text-danger text-xs font-mono bg-danger/5 border border-danger/20 rounded-xl px-4 py-3">
+                            <p role="alert" className="flex items-center gap-2 text-danger text-xs font-mono bg-danger/5 border border-danger/20 rounded-xl px-4 py-3">
                                 <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                                 <span>{t(formErrors.form)}</span>
                             </p>
@@ -319,6 +338,7 @@ export default function InquiryForm({ concierge, t, language }) {
                     </motion.form>
                 ) : (
                     <motion.div
+                        role="status"
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-panel-frost p-8 border border-ink/10 text-center rounded-2xl shadow-card-lg font-sans"

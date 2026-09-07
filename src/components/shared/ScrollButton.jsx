@@ -3,7 +3,7 @@
 import React, { memo, useCallback } from "react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import { animateScrollToTop, animateScrollToBottom } from "@/services/ScrollService";
 import useScrollButton from "@/hooks/useScrollButton";
 import Tooltip from "./Tooltip";

@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import HouseDiptychShell from "./HouseDiptychShell";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 
 const EMPTY_ARRAY = [];
 

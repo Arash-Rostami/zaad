@@ -29,8 +29,7 @@ const PortalCard = memo(function PortalCard({ label, sub, isActive, onClick, fil
 const SystemPortals = memo(function SystemPortals({
     t,
     activeTab,
-    selectedProduct,
-    onShowroom,
+    onHouseOfZaad,
     onBlueprint,
 }) {
     return (
@@ -41,14 +40,14 @@ const SystemPortals = memo(function SystemPortals({
             <PortalCard
                 label={t("menuHouseOfZAAD")}
                 sub={t("menuHouseOfZAADPortalSub")}
-                isActive={activeTab === "showroom" && !selectedProduct}
-                onClick={onShowroom}
+                isActive={false}
+                onClick={onHouseOfZaad}
                 filterId="portalNoiseHouse"
             />
             <PortalCard
                 label={t("menuZAADCatalogue")}
                 sub={t("menuZAADCatalogueSub")}
-                isActive={activeTab === "pdf"}
+                isActive={false}
                 onClick={onBlueprint}
                 filterId="portalNoiseCatalogue"
             />

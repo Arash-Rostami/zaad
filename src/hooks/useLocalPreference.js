@@ -6,7 +6,7 @@ export default function useLocalPreference(key, fallback = null) {
 
     useEffect(() => {
         setValue(getPreference(key, fallback));
-    }, [key]);
+    }, [key, fallback]);
 
     const update = useCallback((next) => {
         setValue(next);

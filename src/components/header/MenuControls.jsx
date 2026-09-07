@@ -58,7 +58,7 @@ const MONTH_YEAR_FORMATTERS = {
   }),
 };
 
-const ControlsFooter = memo(function ControlsFooter({
+const MenuControls = memo(function MenuControls({
   t,
   language,
   setLanguage,
@@ -240,4 +240,4 @@ const ControlsFooter = memo(function ControlsFooter({
     </motion.div>
   );
 });
-export default ControlsFooter;
+export default MenuControls;

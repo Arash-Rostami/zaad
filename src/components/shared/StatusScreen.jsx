@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import MaisonReveal from "../MaisonReveal";
-import MaisonButton from "../MaisonButton";
+import MaisonReveal from "./MaisonReveal";
+import MaisonButton from "./MaisonButton";
 
 function StatusScreen({
                           eyebrow,
@@ -14,7 +14,7 @@ function StatusScreen({
                           onSecondary,
                       }) {
     return (
-        <div className="min-h-screen bg-surface text-ink flex items-center justify-center px-6 sm:px-12 py-24">
+        <div role="status" aria-live="polite" className="min-h-screen bg-surface text-ink flex items-center justify-center px-6 sm:px-12 py-24">
             <div className="max-w-xl w-full text-center">
                 <MaisonReveal variant="unveil" threshold={0.1}>
                     <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-5">

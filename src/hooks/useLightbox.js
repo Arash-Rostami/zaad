@@ -13,10 +13,13 @@ export default function useLightbox(imageCount) {
   const pinchElementRef = useRef(null);
   const panRef = useRef({ x: 50, y: 50 });
   const panRafRef = useRef(null);
+  const pinchRafRef = useRef(null);
+  const pinchPendingRef = useRef(null);
 
   useEffect(
     () => () => {
       if (panRafRef.current) window.cancelAnimationFrame(panRafRef.current);
+      if (pinchRafRef.current) window.cancelAnimationFrame(pinchRafRef.current);
     },
     [],
   );
@@ -25,6 +28,13 @@ export default function useLightbox(imageCount) {
     if (panRafRef.current) {
       window.cancelAnimationFrame(panRafRef.current);
       panRafRef.current = null;
+    }
+  };
+
+  const cancelPendingPinch = () => {
+    if (pinchRafRef.current) {
+      window.cancelAnimationFrame(pinchRafRef.current);
+      pinchRafRef.current = null;
     }
   };
 
@@ -43,9 +53,23 @@ export default function useLightbox(imageCount) {
     setLightboxScale(next);
   };
 
+  const schedulePinchUpdate = (scale, pan) => {
+    pinchPendingRef.current = { scale, pan };
+    if (pinchRafRef.current) return;
+    pinchRafRef.current = window.requestAnimationFrame(() => {
+      pinchRafRef.current = null;
+      const pending = pinchPendingRef.current;
+      if (!pending) return;
+      applyScale(pending.scale);
+      panRef.current = pending.pan;
+      setLightboxPan(pending.pan);
+    });
+  };
+
   useEffect(() => {
     scaleRef.current = 1;
     cancelPendingPan();
+    cancelPendingPinch();
     panRef.current = { x: 50, y: 50 };
     setLightboxScale(1);
     setLightboxPan({ x: 50, y: 50 });
@@ -80,9 +104,8 @@ export default function useLightbox(imageCount) {
     const scale = raw < 1.05 ? 1.0 : raw;
     const rect = e.currentTarget.getBoundingClientRect();
     pinchRef.current = { lastDist: dist, scale };
-    applyScale(scale);
     cancelPendingPan();
-    setLightboxPan({
+    schedulePinchUpdate(scale, {
       x: Math.max(0, Math.min(100, (((first.clientX + second.clientX) / 2 - rect.left) / rect.width) * 100)),
       y: Math.max(0, Math.min(100, (((first.clientY + second.clientY) / 2 - rect.top) / rect.height) * 100)),
     });
@@ -90,11 +113,14 @@ export default function useLightbox(imageCount) {
 
   const handlePinchTouchEnd = (e) => {
     if (!pinchRef.current) return;
+    const finalScale = pinchRef.current.scale;
     pinchRef.current = null;
+    cancelPendingPan();
+    cancelPendingPinch();
+    applyScale(finalScale);
     if (e.touches.length !== 1) return;
     const touch = e.touches[0];
     const rect = e.currentTarget.getBoundingClientRect();
-    cancelPendingPan();
     setLightboxPan({
       x: Math.max(0, Math.min(100, ((touch.clientX - rect.left) / rect.width) * 100)),
       y: Math.max(0, Math.min(100, ((touch.clientY - rect.top) / rect.height) * 100)),

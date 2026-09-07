@@ -7,11 +7,6 @@ export default function useShowroomNav() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const setActiveTab = useCallback((tab) => {
-    if (tab === "pdf") {
-      window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
-      return;
-    }
-
     setActiveTabRaw(tab);
     setSelectedProduct((prev) => (prev ? null : prev));
   }, []);

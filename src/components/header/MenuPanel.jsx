@@ -2,13 +2,12 @@ import React, { useCallback, useMemo } from "react";
 import { motion } from "motion/react";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { animateScrollToTop } from "@/services/ScrollService";
 import useLocalPreference from "@/hooks/useLocalPreference";
 import NoiseBg from "../shared/NoiseBg";
 import SystemPortals from "./SystemPortals";
 import JourneyIndex from "./JourneyIndex";
 import SpecimenGrid from "./SpecimenGrid";
-import ControlsFooter from "./ControlsFooter";
+import MenuControls from "./MenuControls";
 
 export default function MenuPanel(
     {
@@ -56,18 +55,13 @@ export default function MenuPanel(
         [onClose, router]
     );
 
-    const onShowroom = useCallback(() => {
-        setActiveTab("showroom");
-        onSelectProduct(null);
-        onClose();
-        animateScrollToTop(1400);
-    }, [setActiveTab, onSelectProduct, onClose]);
+    const onHouseOfZaad = useCallback(() => navigateTo("/about"), [navigateTo]);
 
     const onBlueprint = useCallback(() => {
-        setActiveTab("pdf");
         onSelectProduct(null);
         onClose();
-    }, [setActiveTab, onSelectProduct, onClose]);
+        window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
+    }, [onSelectProduct, onClose]);
 
     const onSelect = useCallback(
         (item) => {
@@ -104,6 +98,7 @@ export default function MenuPanel(
 
     return (
         <motion.div
+            id="site-menu-panel"
             data-menu-panel="true"
             data-lenis-prevent
             role="dialog"
@@ -143,8 +138,7 @@ export default function MenuPanel(
                         <SystemPortals
                             t={t}
                             activeTab={activeTab}
-                            selectedProduct={selectedProduct}
-                            onShowroom={onShowroom}
+                            onHouseOfZaad={onHouseOfZaad}
                             onBlueprint={onBlueprint}
                         />
                     </div>
@@ -177,7 +171,7 @@ export default function MenuPanel(
                     </div>
                 </motion.div>
 
-                <ControlsFooter
+                <MenuControls
                     t={t}
                     language={language}
                     setLanguage={setLanguage}

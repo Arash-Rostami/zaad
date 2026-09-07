@@ -5,8 +5,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useReducedMotion } from "motion/react";
 import { Pause, Play } from "lucide-react";
-import MaisonReveal from "./MaisonReveal";
-import {useLanguage} from "@/services/TranslationService";
+import MaisonReveal from "./shared/MaisonReveal";
+import {useLanguage} from "@/services/LanguageProvider";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
 if (typeof window !== "undefined") {
@@ -20,11 +20,11 @@ import Image from "next/image";
 // const SLIDE_MS = 7000;
 
 const STORY_VIDEOS = [
-    "/video/story/story-hood.mp4",
-    "/video/story/story-oven.mp4",
-    "/video/story/story-cupboard.mp4",
     "/video/story/story-pan.mp4",
+    "/video/story/story-oven.mp4",
     "/video/story/story-inbuilt.mp4",
+    "/video/story/story-hood.mp4",
+    "/video/story/story-cupboard.mp4",
     "/video/story/story-light.mp4",
 ];
 
@@ -47,7 +47,7 @@ const BACKGROUND_ELEMENTS = (
     </div>
 );
 
-function Story({ utensilImages = [] }) {
+function Vision({ utensilImages = [] }) {
     const {t, language} = useLanguage();
     const isFarsi = language === "fa";
     const reduceMotion = useReducedMotion();
@@ -192,7 +192,7 @@ function Story({ utensilImages = [] }) {
 
     return (
         <section
-            id="story"
+            id="vision"
             className="relative section-y-break bg-surface-overlay px-6 sm:px-12 border-y border-ink/10 overflow-hidden"
         >
             <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tone/30 pointer-events-none"></div>
@@ -335,7 +335,7 @@ function Story({ utensilImages = [] }) {
                                             data-touch-boost
                                             onClick={() => setIsStoryVideoPlaying((playing) => !playing)}
                                             aria-label={t(isStoryVideoPlaying ? "heroPauseVideo" : "heroPlayVideo")}
-                                            className="absolute bottom-5 start-5 z-20 flex items-center justify-center w-8 h-8 rounded-md border border-canvas/30 text-canvas hover:border-canvas/60 hover:text-accent transition-colors duration-500 focus:outline-none focus-visible:border-accent cursor-pointer"
+                                            className="absolute bottom-5 start-5 z-20 flex items-center justify-center w-8 h-8 rounded-md border border-canvas/30 text-canvas hover:border-canvas/60 hover:text-accent transition-colors duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer"
                                         >
                                             {isStoryVideoPlaying ? <Pause className="w-3 h-3"/> : <Play className="w-3 h-3"/>}
                                         </button>
@@ -441,4 +441,4 @@ function Story({ utensilImages = [] }) {
     );
 }
 
-export default React.memo(Story);
+export default React.memo(Vision);

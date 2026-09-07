@@ -1,5 +1,5 @@
 import React from "react";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 import { ChapterHero, EditorialBlock, EditorialSignature, StatGrid, CrossLinks, CallStrip } from "./ChapterPieces";
 
 function HouseChapterShell({

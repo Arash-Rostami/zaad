@@ -9,8 +9,8 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 import { ArrowDown, Sparkles, Pause, Play } from "lucide-react";
-import MaisonButton from "./MaisonButton";
-import { useLanguage } from "@/services/TranslationService";
+import MaisonButton from "./shared/MaisonButton";
+import { useLanguage } from "@/services/LanguageProvider";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 
 const HERO_VIDEOS = [
@@ -21,9 +21,10 @@ const HERO_VIDEOS = [
 ];
 const HERO_VIDEO_RATE = 0.75;
 
-function Hero({ onScrollToCollection, onScrollToStory }) {
+function Hero({ onScrollToCollection, onScrollToVision }) {
   const { t } = useLanguage();
   const [activeVideo, setActiveVideo] = useState(0);
+  const [stageReady, setStageReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [mountedCount, setMountedCount] = useState(2);
   const [nextEager, setNextEager] = useState(false);
@@ -54,12 +55,14 @@ function Hero({ onScrollToCollection, onScrollToStory }) {
       ctaRef.current,
     ].filter(Boolean);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setStageReady(true);
       gsap.set(els, { opacity: 1, y: 0 });
       return;
     }
 
     let ctx;
     const playTimeline = () => {
+      setStageReady(true);
       ctx = gsap.context(() => {
         gsap
             .timeline({ defaults: { ease: "expo.out" } })
@@ -247,7 +250,7 @@ function Hero({ onScrollToCollection, onScrollToStory }) {
                 </MaisonButton>
                 <MaisonButton
                     variant="outline"
-                    onClick={onScrollToStory}
+                    onClick={onScrollToVision}
                     icon={Sparkles}
                 >
                   {t("ourPhilosophy")}
@@ -259,7 +262,9 @@ function Hero({ onScrollToCollection, onScrollToStory }) {
           <div ref={videoWrapRef} className="order-1 lg:order-2">
             <motion.div
                 initial={{ scale: 1.05, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
+                animate={
+                    stageReady ? { scale: 1, opacity: 1 } : { scale: 1.05, opacity: 0 }
+                }
                 transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
                 className="relative w-full aspect-video lg:aspect-auto lg:h-full overflow-hidden mb-10 lg:mb-0 lux-vignette rounded-md"
             >
@@ -296,7 +301,7 @@ function Hero({ onScrollToCollection, onScrollToStory }) {
                     data-touch-boost
                     onClick={() => setIsPlaying((playing) => !playing)}
                     aria-label={t(isPlaying ? "heroPauseVideo" : "heroPlayVideo")}
-                    className="flex items-center justify-center w-8 h-8 rounded-md border border-canvas/30 text-canvas hover:border-canvas/60 hover:text-accent transition-colors duration-500 focus:outline-none focus-visible:border-accent cursor-pointer"
+                    className="flex items-center justify-center w-8 h-8 rounded-md border border-canvas/30 text-canvas hover:border-canvas/60 hover:text-accent transition-colors duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer"
                 >
                   {isPlaying ? (
                       <Pause className="w-3 h-3" />
@@ -317,7 +322,7 @@ function Hero({ onScrollToCollection, onScrollToStory }) {
                           aria-current={index === activeVideo}
                           aria-label={`${t("heroExhibition")} ${index + 1}`}
                           onClick={() => setActiveVideo(index)}
-                          className="group flex items-center justify-center py-1.5 cursor-pointer focus:outline-none"
+                          className="group flex items-center justify-center py-1.5 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded-sm"
                       >
                     <span className="relative block w-6 h-[2px] rounded-full bg-canvas/35 group-hover:bg-canvas/60 overflow-hidden">
                       <span

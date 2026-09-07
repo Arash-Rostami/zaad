@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useMemo } from "react";
 import { Calendar, MapPin, Scale, Sparkles, ArrowLeft } from "lucide-react";
-import MaisonButton from "../MaisonButton";
-import MaisonReveal from "../MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 
-const ProductMeta = memo(function ProductMeta({ item, t, isFarsi, onInquire, onBack }) {
+const CollectionMeta = memo(function CollectionMeta({ item, t, isFarsi, onInquire, onBack }) {
     const wrappedName = useMemo(() => wrapBrandNames(item.name), [item.name]);
     const wrappedDesigner = useMemo(() => wrapBrandNames(item.designer), [item.designer]);
     const wrappedZaad = useMemo(() => wrapBrandNames(t("productZAAD")), [t]);
@@ -25,7 +25,7 @@ const ProductMeta = memo(function ProductMeta({ item, t, isFarsi, onInquire, onB
         <div className="lg:col-span-4 flex flex-col justify-start text-left rtl:text-right">
             <MaisonReveal variant="slide-up-royal" delay={0.55} threshold={0.01}>
                 <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-2">
-                    {t("productArchitecturalRecord")} <span className="font-latin">{item.number}</span>
+                    {t("productArchitecturalRecord")} <span className="font-serif font-latin">{item.number}</span>
                 </span>
                 <h1 className="text-4xl md:text-5xl lg:text-5xl font-serif tracking-tight font-extralight text-headline leading-tight mb-2 text-glow-subtle">
                     {wrappedName}
@@ -94,4 +94,4 @@ const ProductMeta = memo(function ProductMeta({ item, t, isFarsi, onInquire, onB
     );
 });
 
-export default ProductMeta;
+export default CollectionMeta;

@@ -1,8 +1,8 @@
-import { MetadataService } from "@/services/MetaDataService";
-import JsonLd from "@/components/JsonLd";
+import { MetadataService } from "@/services/MetadataService";
+import JsonLd from "@/components/shared/JsonLd";
 import StoryValueChapter from "@/components/house/StoryValueChapter";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
     return (await MetadataService.forStory()).meta;

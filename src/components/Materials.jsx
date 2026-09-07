@@ -3,9 +3,9 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import {AnimatePresence, motion, useReducedMotion} from "motion/react";
 import {ArrowUpRight, Globe, Hammer, Landmark, Sliders} from "lucide-react";
-import MaisonReveal from "./MaisonReveal";
+import MaisonReveal from "./shared/MaisonReveal";
 import NoiseBg from "./shared/NoiseBg";
-import {useLanguage} from "@/services/TranslationService";
+import {useLanguage} from "@/services/LanguageProvider";
 import useActiveSelection from "../hooks/useActiveSelection";
 import useDeferredMedia from "../hooks/useDeferredMedia";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
@@ -45,6 +45,13 @@ function Materials() {
         videoRef.current?.play().catch(() => {});
     }, [reduceMotion]);
 
+    const handleVideoEnded = useCallback(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        video.currentTime = 0;
+        video.play().catch(() => {});
+    }, []);
+
     useEffect(() => {
         if (mediaReady && !reduceMotion) {
             videoRef.current?.load();
@@ -52,7 +59,7 @@ function Materials() {
     }, [mediaReady, reduceMotion, active?.id]);
 
     return (
-        <section className="section-y bg-surface-overlay px-6 sm:px-12 border-b border-ink/10 relative overflow-hidden text-left rtl:text-right">
+        <section id="materials" className="section-y bg-surface-overlay px-6 sm:px-12 border-b border-ink/10 relative overflow-hidden text-left rtl:text-right">
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                     <div className="lg:col-span-6">
@@ -133,8 +140,10 @@ function Materials() {
                                             poster={`/video/material/${MATERIAL_VIDEOS[active.id]}.jpg`}
                                             muted
                                             playsInline
+                                            loop
                                             preload={mediaReady && !reduceMotion ? "auto" : "none"}
                                             onLoadedData={handleVideoLoadedData}
+                                            onEnded={handleVideoEnded}
                                             aria-hidden="true"
                                             className="absolute inset-0 w-full h-full object-contain"
                                         />

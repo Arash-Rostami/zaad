@@ -63,6 +63,7 @@ function ExpandOnHoverPill({
           <button
               type="button"
               onClick={handleTriggerClick}
+              aria-haspopup="true"
               aria-expanded={isExpanded}
               className={`flex items-center justify-center rounded-md select-none cursor-pointer ${className}`}
           >

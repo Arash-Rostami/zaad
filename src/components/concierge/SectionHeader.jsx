@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Phone } from "lucide-react";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const SectionHeader = memo(function SectionHeader({ t }) {
     return (

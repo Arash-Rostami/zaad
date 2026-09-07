@@ -49,6 +49,7 @@ function Lightbox({ item, lightbox, onInquire, isRtl, t }) {
 
     const activeImage = item.images?.[activeImageIndex];
     const showPanHint = lightboxScale > 1;
+    const imageAlt = activeImage?.caption || item.name;
 
     return (
         <SharedLightbox
@@ -56,7 +57,7 @@ function Lightbox({ item, lightbox, onInquire, isRtl, t }) {
             closeLightbox={closeLightbox}
             imageKey={activeImageIndex}
             imageSrc={activeImage?.url}
-            imageAlt={item.name}
+            imageAlt={imageAlt}
             isLightboxLoading={isLightboxLoading}
             markImageLoaded={markImageLoaded}
             lightboxScale={lightboxScale}

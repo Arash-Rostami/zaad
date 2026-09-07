@@ -7,15 +7,15 @@
 
 | Segment | File | Type | Notes |
 |---|---|---|---|
-| `/` | `page.js` | Server (async) | `generateMetadata` via `MetadataService.forHome()`; calls `resolveHomeUtensilImages()` (`src/lib/collectionImages.js`) and renders `<JsonLd/>` + `<AppShell utensilImages={...}/>` (client) — the image list is currently dormant: `Story.jsx`'s gallery is video-driven now, the `utensilImages` prop is threaded but unconsumed |
-| `/about` | `(house)/about/page.js` | Server (async, `force-static`) | `generateMetadata` via `MetadataService.forAbout()`; renders `<JsonLd/>` + `<AboutChapter/>` (single-column `HouseChapterShell`) inside the shared `(house)/layout.js` chrome. |
-| `/story` | `(house)/story/page.js` | Server (async, `force-static`) | `generateMetadata` via `MetadataService.forStory()`; renders `<JsonLd/>` + `<StoryValueChapter/>` — a two-column `HouseDiptychShell` pairing the `story` and `brandValue` `aboutSections` entries. |
-| `/sustainability` | `(house)/sustainability/page.js` | Server (async, `force-static`) | `generateMetadata` via `MetadataService.forSustainability()`; renders `<JsonLd/>` + `<SustainabilityResponsibilityChapter/>` — a two-column `HouseDiptychShell` pairing the `sustainability` and `csr` `aboutSections` entries. |
-| `(house)` shared layout | `(house)/layout.js` | Server | Renders `components/house/HouseSmoothScroll.jsx` (render-null client leaf mounting the shared `useLenisScroll` hook — gives House routes the same Lenis smooth-scroll as the showroom) + `components/house/HouseChrome.jsx` (slim header: back-to-showroom, ZAAD wordmark, the current page's name as a static underlined label — no `layoutId`, no multi-link nav; see CLAUDE.md's Load-bearing contracts — compact language/theme control) + `{children}` + `components/house/HouseFooter.jsx`. Not the showroom `Header`/`Footer`. |
-| `/collection/[slug]` | `collection/[slug]/page.js` | Server (async) | `generateStaticParams` (en ids only), `generateMetadata` via `MetadataService.forCollection(item)`, `notFound()` on miss; renders `<JsonLd/>` + `<ProductPageClient item={item}/>` |
-| `/collection/[slug]` leaf | `collection/[slug]/ProductPageClient.jsx` | Client (`"use client"`) | `onSelectProduct` given to `Header`: `router.push` to `/collection/${id}` for a real product, `router.push("/")` when `product` is `null` — `MenuPanel`'s Showroom/Blueprint portals call `onSelectProduct(null)` as a "clear selection" signal (harmless on the home page, where it's just `setSelectedProduct`); this leaf must not assume a non-null product |
-| `/glance` | `glance/page.js` | Server (async, `force-static`) | "ZAAD at a glance" lookbook route (added 2026-09-05) — `generateMetadata` via `MetadataService.forGlance()` (wrapped in a module-level React `cache()` so the metadata + schema pass builds once, not twice per render); renders `<GlancePage/>` + `<JsonLd/>` **after** the page tree (the user's explicit "SEO tags at bottom" placement). Standalone route on the Ledger precedent (own slim `glance/GlanceHeader.jsx` chrome, `useLenisScroll` called inside the client shell) — deliberately **not** in the `(house)` group. Reached from `Footer.jsx`'s "Studio Archives" column (`Link href="/glance"` labeled `zaadAtAGlance`) and `house/HouseFooter.jsx`'s Showroom Directory column (same key). Closes with `house/HouseFooter` + `shared/ScrollButton`, both mounted inside `GlancePage` since the standalone route gets no `(house)` layout. |
-| `/api/curate` | `api/curate/route.js` | Server route handler | `POST` only — the Gemini chat route (badge reads "AI Assistant"/"دستیار هوش مصنوعی" via `curatorModelBadge`; `chatCurator`/`curatorWelcome`/`curatorError` say "assistant"; the `zaadDigitalCurator` title remains "ZAAD Digital Curator"/"کیوریتور دیجیتال ZAAD") |
+| `/` | `page.js` | Server (async) | `generateMetadata` via `MetadataService.forHome()`; calls `resolveHomeUtensilImages()` (`src/lib/collectionImages.js`) and renders `<JsonLd/>` + `<AppShell utensilImages={...}/>` (client) — the image list is currently dormant: `Vision.jsx`'s gallery is video-driven now, the `utensilImages` prop is threaded but unconsumed |
+| `/about` | `(house)/about/page.js` | Server (async, `force-dynamic`) | `generateMetadata` via `MetadataService.forAbout()`; renders `<JsonLd/>` + `<AboutChapter/>` (single-column `HouseChapterShell`) inside the shared `(house)/layout.js` chrome. |
+| `/story` | `(house)/story/page.js` | Server (async, `force-dynamic`) | `generateMetadata` via `MetadataService.forStory()`; renders `<JsonLd/>` + `<StoryValueChapter/>` — a two-column `HouseDiptychShell` pairing the `story` and `brandValue` `aboutSections` entries. |
+| `/sustainability` | `(house)/sustainability/page.js` | Server (async, `force-dynamic`) | `generateMetadata` via `MetadataService.forSustainability()`; renders `<JsonLd/>` + `<SustainabilityResponsibilityChapter/>` — a two-column `HouseDiptychShell` pairing the `sustainability` and `csr` `aboutSections` entries. |
+| `(house)` shared layout | `(house)/layout.js` | Server | Renders `components/house/HouseSmoothScroll.jsx` (render-null client leaf mounting the shared `useLenisScroll` hook — gives House routes the same Lenis smooth-scroll as the showroom) + `components/house/HouseChrome.jsx` (slim header: back-to-showroom, ZAAD wordmark, the current page's name as a static underlined label — no `layoutId`, no multi-link nav; see CLAUDE.md's Load-bearing contracts — compact language/theme control) + `<main>{children}</main>` + the shared `components/Footer.jsx` (one footer site-wide since 2026-09-06 — mounted prop-less) + `components/shared/ScrollButton.jsx` (mounted prop-less). Not the showroom `Header`/`MenuControls`. **No longer mounts `DorsaPreloadScript` (removed 2026-09-07)** — see the font-preload paragraph below for why it stopped being needed here. |
+| `/collection/[slug]` | `collection/[slug]/page.js` | Server (async) | `generateStaticParams` (en ids only), `generateMetadata` via `MetadataService.forCollection(item)`, `notFound()` on miss; renders `<DorsaPreloadScript/>` + `<JsonLd/>` + `<CollectionPageClient item={item}/>` |
+| `/collection/[slug]` leaf | `collection/[slug]/CollectionPageClient.jsx` | Client (`"use client"`) | `onSelectProduct` given to `Header`: `router.push` to `/collection/${id}` for a real product, `router.push("/")` when `product` is `null` — `MenuPanel`'s Catalogue card (`onBlueprint`) calls `onSelectProduct(null)` as a "clear selection" signal before `window.open("/showcase/index.html")`; the House card (`onHouseOfZaad`) just navigates to `/about` and never touches the selection. Both `header/SystemPortals.jsx` cards render `isActive={false}` — the catalogue is an external page, the House page a different route, never an active tab. This leaf must not assume a non-null product. **`onScrollToSection`/`onInquire` (fixed 2026-09-07)** both funnel through a single `goHome(hash)` helper (`router.push(hash ? '/#${hash}' : "/")`) instead of the ad-hoc `router.push` calls each used to build separately; `onInquire(item)` additionally writes `{id, name, number}` to the `pendingInquiryItem` preference (`src/services/README.md`) before navigating, since crossing a full route boundary to `/` loses this page's own React state — `AppShell.jsx` reads it back on mount to restore the preselected-item chat/form prefill that only ever worked from the homepage's inline product view before this fix. `setActiveTab` here is a no-op (`() => {}`) — the product page has no "tab" concept, and it used to just be a second, redundant `router.push("/")` alongside `onSelectProduct(null)`'s own. |
+| `/glance` | `glance/page.js` | Server (async, `force-dynamic`) | "ZAAD at a glance" lookbook route (added 2026-09-05) — `generateMetadata` via `MetadataService.forGlance()` (wrapped in a module-level React `cache()` so the metadata + schema pass builds once, not twice per render); renders `<GlancePage/>` + `<JsonLd/>` **after** the page tree (the user's explicit "SEO tags at bottom" placement). Standalone route on the Ledger precedent (own slim `glance/GlanceHeader.jsx` chrome, `useLenisScroll` called inside the client shell) — deliberately **not** in the `(house)` group. Changed from `force-static` to `force-dynamic` 2026-09-07 (see the font-preload paragraph below) — no longer mounts `DorsaPreloadScript` either, for the same reason. Reached from `Footer.jsx`'s "Other Pages" column (`menuJourneyIndex` — `Link href="/glance"` is its first item, labeled `zaadAtAGlance`). Closes with the shared `Footer` + `shared/ScrollButton`, both mounted inside `GlancePage` since the standalone route gets no `(house)` layout. |
+| `/api/curate` | `api/curate/route.js` | Server route handler | `POST` only — the Gemini chat route (badge reads "AI Assistant"/"دستیار هوشمند" via `curatorModelBadge`; `chatCurator` is "ASSISTANT"/"کیوریتور"; `curatorWelcome` opens "Welcome to ZAAD's Curator Consultation"; the `zaadDigitalCurator` title is "ZAAD - Digital Curator"/"کیوریتور دیجیتال ZAAD") |
 | `/api/inquiry` | `api/inquiry/route.js` | Server route handler | `POST` only — validates and persists the Concierge inquiry form (see "The `/api/inquiry` route" below) |
 | `/api/health` | `api/health/route.js` | Server route handler | `GET` → `{ status, time }` |
 | `/ledger` | `ledger/page.js` | Server (async, `force-dynamic`) | Private admin register of the inquiry data — key-gated, never cached, noindexed (see "The `/ledger` route" below) |
@@ -44,13 +44,24 @@ The root layout is a **server** component. It runs `getServerLanguage()` (reads 
 ```
 <html lang={initialLanguage} dir={...} suppressHydrationWarning>
   <body className="bg-surface text-ink ...">
+    <a href="#main-content">{dictionary.skipToContent}</a>  // server, sr-only until focused
     <JsonLd schemas={[MetadataService.orgSchema]} />   // SSR
     <InitialLoader />                                    // "use client"
+    <CustomCursor />                                     // "use client"
     <LanguageProvider initialLanguage={initialLanguage}> // "use client"
       <MotionRoot>{children}</MotionRoot>                // "use client"
     </LanguageProvider>
 ```
 
+- **Skip-to-content link (added, a11y pass):** the root layout resolves `dictionary`
+  itself (`initialLanguage === "fa" ? fa : en`, the same two dictionary modules
+  `lib/i18n/server.js`'s `getServerDictionary()` picks between) purely to render this one
+  server-side string before `LanguageProvider` mounts — it's the first focusable element
+  in `<body>`, `sr-only` until `:focus`, then a fixed pill (`focus:not-sr-only focus:fixed`)
+  jumping to `#main-content`. `AppShell.jsx`'s `<main>` carries that id; the House/
+  `collection/[slug]`/`/ledger`/`/glance` routes' own `<main>` elements do not yet — add
+  `id="main-content"` there too whenever those files are next touched, so the link is
+  meaningful sitewide, not just on `/`.
 - `MotionRoot` (`components/shared/MotionRoot.jsx`) is a client leaf wrapping
   `{children}` in a root `MotionConfig reducedMotion="user"` — the one global lever
   that extends reduced-motion grace to the House routes and `collection/[slug]`,
@@ -83,24 +94,62 @@ The root layout is a **server** component. It runs `getServerLanguage()` (reads 
   (400 body/headings, 300 `.font-mono` labels, 900 the `html[lang="fa"] .italic`
   accent rule — Hero's italic title span sits above the fold; **Black, not Heavy**:
   both declare weight 900 and the later `@font-face` declaration wins) — see
-  `src/styles/README.md`'s Dorsa section. On the `force-static` routes the block
-  no-ops (they bake `en`), which is accepted, not a bug.
+  `src/styles/README.md`'s Dorsa section. This server-side preload path can't run at all
+  on a route that always bakes `en` regardless of the visitor's real cookie —
+  `components/shared/DorsaPreloadScript.jsx` (added 2026-09-07) closed that gap
+  client-side for exactly that case: a cookie/localStorage check identical to
+  `LanguageProvider`'s own restore logic, injecting the same three preload `<link>`s
+  during initial HTML parsing when the visitor actually prefers `fa`. **The House pages
+  and `/glance` stopped needing it the same day** — they were switched from
+  `force-static` to `force-dynamic` (see the "Config" section and CLAUDE.md's Known
+  issues) specifically so `generateMetadata()` could read the real per-request cookie
+  instead of freezing at build time; as a side effect, `app/layout.js`'s own
+  `getServerLanguage()` call now also runs per-request for these routes, so
+  `initialLanguage` is correct from the very first byte of HTML and the standard
+  server-side preload above already fires correctly — no client-side compensation
+  needed. `DorsaPreloadScript` is now mounted **only** in `collection/[slug]/page.js`,
+  which is still genuinely statically pre-rendered via `generateStaticParams` (a
+  different mechanism than `force-static` — it pre-builds a fixed, known set of product
+  pages at build time regardless of any per-request cookie, and this project still wants
+  that for product pages specifically, unlike the House/`/glance` case). See
+  `src/styles/README.md`'s Dorsa section for the full before/after and why this was
+  needed in the first place (a real "wrong font" symptom, not just a theoretical flash).
 - The home page's interactive UI (`AppShell`) is a client component, but Next.js still
   server-renders client components into the initial HTML, so `/`'s SSR payload is
   metadata + JSON-LD **plus** the server-rendered `AppShell` markup (interactive state
-  hydrates client-side). The `/* pre-render components SSR */` comment in `page.js`
-  refers to that shell pre-render — it is accurate, not misleading.
+  hydrates client-side).
 
 ## Metadata / SEO / JSON-LD
 
-Delegated to `src/services/MetaDataService.js` (see `src/services/README.md`):
+Delegated to `src/services/MetadataService.js` (see `src/services/README.md`):
 
-- Home: `MetadataService.forHome()` → `WebSite` + `SearchAction` schema.
-- Collection: `MetadataService.forCollection(item)` → `Product` + `BreadcrumbList`
-  schema; canonical `${SITE_URL}/collection/${item.slug ?? item.id}`; description
-  sliced to 155 chars.
-- Layout: `MetadataService.orgSchema` → `Organization` JSON-LD (with placeholder
-  `sameAs`/`contactPoint` — TODOs).
+- Home: `MetadataService.forHome()` → `WebSite` schema (no `SearchAction` — removed
+  2026-09-07, see CLAUDE.md's Known issues).
+- Collection: `MetadataService.forCollection(item)` → `Product` + a 3-level
+  `BreadcrumbList` (Home → Collections → item, the middle crumb pointing at `/glance`);
+  canonical `${SITE_URL}/collection/${item.slug ?? item.id}`; description sliced to 155
+  chars; title is the bare item name only — an intermediate version briefly appended the
+  item's `number` code (`"GÁVV — C°01"`), which doubled the separator against
+  `buildMeta`'s own `" | ZAAD"` suffix; reverted the same day (see
+  `src/services/README.md`).
+- Layout: `MetadataService.orgSchema` → `Organization` JSON-LD, now including a
+  city/country-level `PostalAddress` (Tehran/IR, added 2026-09-07 — still not a full
+  street address, see CLAUDE.md's Production placeholders) alongside the still-placeholder
+  `sameAs`/`contactPoint` TODOs.
+- Every `buildMeta()` call now also sets an explicit `robots`/`googleBot` directive
+  block (added 2026-09-07 alongside a rewrite that also introduced `SITE_CONFIG` — a
+  single object grouping the brand/site-url/social/contact placeholder values that used
+  to be scattered module-level constants) and always resolves an Open Graph/Twitter
+  image via `resolveImageUrl`, which now falls back to a real landscape product photo
+  (`/image/gavv/gavv-06.jpg`, 2200×1556) instead of the small `/logo.png` wordmark
+  whenever a page doesn't supply its own image — `logo.png` stays reserved for
+  `orgSchema.logo` specifically (a brand mark is not a hero photo).
+- `src/app/icon.png` (added 2026-09-07) — a 512×512 transparent-padded square built
+  from `public/logo.png` via `ffmpeg scale=400:-1,pad=512:512:...`, since the source
+  wordmark's own 367×161 aspect can't serve as a favicon directly. Next.js's file-based
+  icon convention auto-detects any `icon.png`/`icon.svg`/`favicon.ico` placed directly
+  in `src/app/` and injects the appropriate `<link rel="icon">` tags — no manual
+  `metadata.icons` config needed.
 
 `JsonLd.jsx` (server component) emits one
 `<script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(schema)}}/>`
@@ -129,12 +178,21 @@ itself only validates the request, assembles the system prompt, and shapes the r
   catalogue, House/brand copy, and acquisition/consultation strings pulled live from
   `lib/i18n/en.js`/`fa.js`, memoized per language). The old hardcoded fictional 3-item
   catalogue has been removed — do not reintroduce invented products/prices here.
+  `BRAND_HERITAGE_PROMPT` also explicitly tells the model to structure replies with only
+  `**bold**` and lists, never markdown headings (added 2026-09-07) — the chat surface has
+  no heading rendering, so a stray `#`/`##`/`###` showed up as a literal, meaningless
+  fragment. `concierge/CuratorChat.jsx`'s `renderCuratorLine` also strips any heading
+  marker it sees anyway (rendering the rest as an accent-styled line, the same treatment
+  `**bold**` gets) as a client-side safety net for whenever the model does it regardless.
 - **AI client:** `CuratorService.generateReply({ contents, systemInstruction })` — routes
   to an OpenAI-compatible `POST {GEMINI_BASE_URL}/chat/completions` gateway (header
   `Authorization: apikey ${GEMINI_GATEWAY_API_KEY}`) when `GEMINI_BASE_URL` is set,
-  otherwise falls back to the native `@google/genai` SDK with `GEMINI_API_KEY` and
-  `GEMINI_MODEL` (default `gemini-2.5-flash`). Swapping provider/model is env-var-only —
-  no code change needed. See `.env.example` for all four vars.
+  retries once against `GEMINI_BASE_URL_FALLBACK`/`GEMINI_MODEL_FALLBACK` if the primary
+  gateway call fails, then falls back to the native `@google/genai` SDK with
+  `GEMINI_API_KEY` and `GEMINI_MODEL` (default `gemini-3.1-flash`) if both gateway
+  attempts fail or no gateway is configured. Swapping provider/model is env-var-only —
+  no code change needed. See `.env.example` for all six vars, and
+  `src/services/README.md`'s CuratorService section for the fallback contract.
 - **Response:** 200 `{ text }` on success; 200 with a graceful fallback message if neither
   `GEMINI_API_KEY` nor `GEMINI_BASE_URL` is set; 500 `{ error }` on caught error.
 - **Anti-hallucination + chat lead-capture (added 2026-09-06):** `BRAND_HERITAGE_PROMPT`
@@ -261,24 +319,35 @@ a CMS-style panel: one gated editorial page in the app's own design language, ba
   under `public/`. Any new remote image host needs a `remotePatterns` entry here.
   `images.formats` is `["image/avif", "image/webp"]` (2026-09-06) — Next serves AVIF to
   browsers that accept it (~20–30% smaller than WebP at the same quality); the first entry
-  is the preferred format, so keep AVIF first.
+  is the preferred format, so keep AVIF first. Also defines `redirects()`: permanent
+  `/brand-value` → `/story` and `/csr` → `/sustainability` (the two retired House
+  sections folded into the diptych routes).
 - **`next.config.js` was a dead duplicate** (only a webpack `IgnorePlugin` for
   README.md) — it has been **deleted**. Do not recreate it; edit `next.config.mjs`.
 - `jsconfig.json`: `baseUrl: "."`, `paths: { "@/*": ["./src/*"] }`.
 - No `revalidate` / `fetchCache` exports anywhere. The curate route is
-  implicitly dynamic (reads `request.json()` + env); home and collection pages are
-  static (collection via `generateStaticParams`); `/ledger` is the one explicit
-  `export const dynamic = "force-dynamic"` route (cookie-gated, must never cache).
+  implicitly dynamic (reads `request.json()` + env); home is dynamic too (renders per
+  request, not statically); `/collection/[slug]` is genuinely static (via
+  `generateStaticParams`, a fixed known set of product pages built once). `/ledger`,
+  `/about`, `/story`, `/sustainability`, and `/glance` all carry an explicit
+  `export const dynamic = "force-dynamic"` — `/ledger` because it's cookie-gated and must
+  never cache; the House routes and `/glance` since 2026-09-07 (changed from
+  `force-static`) so their `generateMetadata()` reads the visitor's real
+  `zaad_preferred_language` cookie per request instead of freezing at build time in
+  English (see the font-preload paragraph above and CLAUDE.md's Known issues for the
+  full story and the trade-off it accepts).
 
 ## Known SEO gaps
 
-- **Home `SearchAction` targets a 404:** `forHome()` emits a `WebSite` schema with a
-  `SearchAction` whose `urlTemplate` is `/collection?q={search_term_string}` — no
-  `/collection` route and no site search exist, so the target 404s. (The sitemap and
-  collection breadcrumb previously had the same class of 404 and have been fixed: the
-  sitemap now lists `/showcase/index.html` — the real static URL that serves 200 — and
-  the breadcrumb is `Home → Item`, dropping the dead `/collection` crumb.)
-- **Hreflang is incorrect:** `MetaDataService.hreflangFor` returns the same URL for
+- **Fixed 2026-09-07 — Home `SearchAction` targeted a 404:** `forHome()` used to emit a
+  `WebSite` schema with a `SearchAction` whose `urlTemplate` was
+  `/collection?q={search_term_string}` — no `/collection` route or site search ever
+  existed, so the target 404d. Removed outright rather than built out (see CLAUDE.md's
+  Known issues). The sitemap and collection breadcrumb had the same class of 404 and
+  were fixed the same way: the sitemap now lists `/showcase/index.html` — the real
+  static URL that serves 200 — and the breadcrumb is `Home → Item`, dropping the dead
+  `/collection` crumb.
+- **Hreflang is incorrect:** `MetadataService.hreflangFor` returns the same URL for
   `x-default`, `en`, and `fa` (no locale-prefixed routing). Declaring `fa` hreflang on
   the identical `en` URL is not a valid alternate-language signal.
 - **Sitemap uses `en.collection` ids only** — currently fine (fa collection has the
@@ -288,16 +357,23 @@ a CMS-style panel: one gated editorial page in the app's own design language, ba
 
 ## Known rendering gap
 
-- **Date-derived text computed at render time on static routes.** `Footer.jsx` /
-  `house/HouseFooter.jsx` (`localizedYear`, via `src/lib/localizedYear.js`) and
-  `header/ControlsFooter.jsx` (`formatTodayLabel`) both call `new Date()` directly in a
-  `"use client"` render, on routes that are statically generated at build (home,
-  `collection/[slug]`, and the three House routes). If the deployed build isn't rebuilt
-  across the boundary the date value crosses (a year rollover for the footer year, a day
-  rollover for `ControlsFooter`'s date), the client's hydration pass can compute a
-  different value than what's baked into the static HTML. The footer year spans carry
-  `suppressHydrationWarning` to silence the resulting console warning; `ControlsFooter`
-  does not yet. Neither is gated behind the mount-effect (`useState(null)` guard, render
+- **Date-derived text computed at render time on `collection/[slug]`.** `Footer.jsx`
+  (`localizedYear`, via `src/lib/localizedYear.js`) and, on the home route only (it's
+  never mounted on the House routes or `/glance`), `header/MenuControls.jsx`'s
+  timestamp strip (`now` — a `useState(() => new Date())` kept fresh by a 15-second
+  interval, formatted into `stripLabel`) both call `new Date()` directly in a
+  `"use client"` render. `collection/[slug]` is the one route still genuinely
+  generated at build (via `generateStaticParams`), so if the deployed build isn't
+  rebuilt across the boundary the date value crosses (a year rollover for the footer
+  year), the client's hydration pass can compute a different value than what's baked
+  into the static HTML. Home, the House routes, and `/glance` are all rendered
+  per-request (see the Config section) — `Footer`'s `localizedYear` there is
+  recomputed on every request, so the gap shrinks to an ordinary
+  server-render-vs-client-hydration timing skew, not build staleness; the House
+  routes stopped being static-route candidates for this note specifically when they
+  switched to `force-dynamic` 2026-09-07. Both carry `suppressHydrationWarning` (the footer's year spans;
+  `MenuControls`'s strip container div) to silence the resulting console warning.
+  Neither is gated behind the mount-effect (`useState(null)` guard, render
   nothing until mounted) idiom `ChapterHero`'s `activeVideo` uses for the same class of
   problem — an intentional, low-risk tradeoff (the mismatch window is narrow and cosmetic),
   not an oversight, but worth revisiting if a stricter hydration-parity bar is ever wanted.

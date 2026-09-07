@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import StatusScreen from "@/components/shared/StatusScreen";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 
 export default function Error({ error, reset }) {
     const router = useRouter();

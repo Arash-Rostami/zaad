@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from "react";
 import { Sparkles, ArrowLeft } from "lucide-react";
-import MaisonButton from "../MaisonButton";
-import MaisonReveal from "../MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const AcquisitionCTA = memo(function AcquisitionCTA({ item, t, onInquire, onBack }) {
     const handleInquire = useCallback(() => onInquire(item), [onInquire, item]);

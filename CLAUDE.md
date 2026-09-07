@@ -12,7 +12,7 @@ small and proportionate to a ~66-file project.
   animation system for scroll-into-view reveals and interactive state
 - **GSAP** (`gsap` + `ScrollTrigger`) — scoped to exactly three spots that need timeline sequencing,
   a scroll-pin, or a scrubbed parallax `motion` can't do natively (`Hero.jsx`'s entrance timeline,
-  `Story.jsx`'s pinned image column, `house/ChapterPieces.jsx`'s `ChapterHero` scrubbed
+  `Vision.jsx`'s pinned image column, `house/ChapterPieces.jsx`'s `ChapterHero` scrubbed
   media-column parallax — a hard pin doesn't work there since the hero's two columns are roughly
   equal height, so it uses a non-pinning `scrub` tween instead), plus one integration-only
   consumer: `useLenisScroll` (see below) drives Lenis's raf through `gsap.ticker`
@@ -21,8 +21,9 @@ small and proportionate to a ~66-file project.
 - **Lenis** — inertial smooth scrolling on the window. Initialized via the shared `src/hooks/useLenisScroll.js`
   hook (dynamic import, gsap-ticker-driven, synced with `ScrollTrigger`), consumed by `AppShell.jsx`
   (showroom), `house/HouseSmoothScroll.jsx` (a render-null leaf mounted in `(house)/layout.js` for the
-  House routes), `collection/[slug]/ProductPageClient.jsx` (product pages), and `ledger/Ledger.jsx`
-  (`/ledger`) — one instance per mounted route, never more than one at a time. `ScrollService`'s three `animate*` exports delegate
+  House routes), `collection/[slug]/CollectionPageClient.jsx` (product pages), `ledger/Ledger.jsx`
+  (`/ledger`), and `glance/GlancePage.jsx` (`/glance`)
+  — one instance per mounted route, never more than one at a time. `ScrollService`'s three `animate*` exports delegate
   to the registered instance. Skipped entirely under `prefers-reduced-motion` (RAF fallback runs
   instead). Inner scrollers must opt out via `data-lenis-prevent`.
 - **lucide-react** icons · **`@google/genai`** for the AI Assistant (Gemini) route
@@ -50,7 +51,7 @@ npm run clean                # rm -rf .next out
 | `src/app/` | `src/app/README.md` | Routes, server/client boundary, metadata/SEO/JSON-LD/sitemap/robots, the `/api/curate` route |
 | `src/components/` | `src/components/README.md` | The flat-orchestrator component pattern, the shared `Lightbox` contract, motion `layoutId`/`key` contracts |
 | `src/hooks/` | `src/hooks/README.md` | The hooks and their contracts |
-| `src/services/` | `src/services/README.md` | `ScrollService`, `MetaDataService`, `TranslationService` (the React i18n context lives here, **not** `src/contexts/` — that folder is empty) |
+| `src/services/` | `src/services/README.md` | `ScrollService`, `MetadataService`, `LanguageProvider` (the React i18n context lives here, **not** `src/contexts/` — that folder is empty) |
 | `src/lib/i18n/` | `src/lib/i18n/README.md` | Locales, dictionaries, the `zaad_preferred_language` cookie transport |
 | `src/styles/` | `src/styles/README.md` | The design system, theme tokens, motion philosophy |
 
@@ -92,10 +93,14 @@ machinery from other projects.
 ## Load-bearing contracts (a future edit breaks these)
 
 - **i18n cookie `zaad_preferred_language`** — written client-side in
-  `TranslationService` (localStorage + cookie), read server-side in
+  `LanguageProvider` (localStorage + cookie), read server-side in
   `lib/i18n/server.js` via `next/headers`, **and** read client-side on
-  `LanguageProvider` mount to restore the locale on static (`force-static`) routes
-  (House pages + `collection/[slug]`, where the server bakes `initialLanguage="en"`).
+  `LanguageProvider` mount to restore the locale on `collection/[slug]` — the one
+  remaining route where the server bakes `initialLanguage="en"` regardless of the real
+  visitor (`generateStaticParams` prebuilds it, so `cookies()` can't see a real request).
+  The House pages no longer need this restore for `initialLanguage` (switched from
+  `force-static` to `force-dynamic` 2026-09-07 — see the Known issues entry below), but
+  the mount-restore code itself still runs there harmlessly as a no-op.
   Renaming any side breaks SSR `lang`/`dir` and the static-route restore. The mount
   restore uses `setLanguageState` (not `setLanguage`) so it doesn't re-write the cookie;
   because state changes after first client render, the `key={language}` cross-fade
@@ -107,19 +112,30 @@ machinery from other projects.
   cross-fade on every locale switch. Editing it changes the whole app's transition.
 - **Four global Motion `layoutId` groups** — each must have exactly one mounted
   element or the indicator flies between sections:
-  `activeLanguageBlobInNavbar` (ControlsFooter), `activeThemeBlobInNavbar`
-  (ControlsFooter), `activeCurationTabLine` (SpecsTabs), `activeArchetypeTabLine`
+  `activeLanguageBlobInNavbar` (MenuControls), `activeThemeBlobInNavbar`
+  (MenuControls), `activeCurationTabLine` (SpecsTabs), `activeArchetypeTabLine`
   (CollectionTabs).
 - **`activeAppointmentBlob`** (concierge `InquiryForm`) — the Audience toggle's
   indicator. Local to the inquiry form (not a cross-section group), but the same
   single-mounted rule applies: only the selected pill renders it, or the blob flies.
 - **`activeLedgerFilterLine`** (`ledger/Ledger.jsx`'s all/unviewed/viewed tabs) — same
   local-scope, single-mounted pattern as `activeAppointmentBlob`, on the `/ledger` route.
+- **Phone numbers and any Farsi value made of space-separated numeric groups always render
+  inside a plain `<span dir="ltr">`** — never bare, never `.font-latin` (it forces a Latin font
+  lacking Persian digit glyphs). The spaces between digit groups are bidi-neutral and visually
+  reorder under an RTL paragraph. `studioPhone` (`+۹۸ ۲۱ ۰۰۰۰ ۰۰۰۰`) is the canonical case,
+  wrapped in `concierge/SectionHeader.jsx`, `house/ChapterPieces.jsx`, and `Footer.jsx`
+  (and the concierge appointment slot times in `InquiryForm.jsx`); when the value is injected
+  into a larger string (a `.replace()` template) a span is impossible — wrap it in the
+  Unicode LRE/PDF pair (U+202A/U+202C) instead. See
+  `src/lib/i18n/README.md`'s "Farsi-digit" section for the full bidi reasoning. Apply
+  automatically to every future phone/number-group rendering — this rule is standing; the user
+  will not re-mention it.
 - **The House top nav shows only the current page, not all 3 links.** `house/HouseChrome.jsx`
   renders `t(currentNavItem.key)` (`NAV.find((item) => item.href === pathname)`) as a static label
   with a static underline bar beneath it (the "ON" look) — no `motion.span`, no `layoutId`, since
   there's nothing to animate between once only one item ever renders. The other two House pages
-  are reachable via `house/HouseFooter.jsx`'s cross-link row instead — deliberately not duplicated
+  are reachable via the shared `Footer.jsx`'s House Directory column instead — deliberately not duplicated
   in both header and footer. This has been implemented, reverted, and reimplemented more than once
   in-session at the user's explicit direction; the current (final) state is "current page only, in
   the header." Don't reintroduce the multi-link nav without direct instruction. (The earlier
@@ -132,19 +148,47 @@ machinery from other projects.
   two-column "diptych" pages; only `about` is single-column. A shared server `layout.js`
   renders `components/house/HouseChrome.jsx` (slim header: back-to-showroom, ZAAD
   wordmark, the current page's name as a static underlined label, compact language/theme
-  control) and `components/house/HouseFooter.jsx`. `about/page.js` renders
+  control) and the shared `components/Footer.jsx` (since 2026-09-06, all routes share the
+  homepage footer by user direction). `about/page.js` renders
   `house/AboutChapter.jsx` on the single-column `house/HouseChapterShell.jsx`;
   `story/page.js` and `sustainability/page.js` render `house/StoryValueChapter.jsx` and
   `house/SustainabilityResponsibilityChapter.jsx` on the two-column
   `house/HouseDiptychShell.jsx` (cinematic hero + twin editorial columns + stat grid(s) +
   cross-link cards + call strip). Do **not** reuse the showroom
-  `Header`/`Footer`/`ControlsFooter` on the house routes — they are wired to
+  `Header`/`MenuControls` on the house routes — they are wired to
   `useShowroomNav` (in-app `setActiveTab` + scroll + the 120ms pre-scroll contracts) and
   to the global `activeLanguageBlobInNavbar`/`activeThemeBlobInNavbar` layoutId groups;
   reusing them cross-route would fly the indicators and break the scroll contracts. The
+  shared `Footer` is the one exception (2026-09-06, explicit user direction: one footer
+  site-wide) — safe cross-route because it renders no `layoutId` and its showroom-directory
+  buttons fall back to `router.push("/#section")` whenever `onScrollToSection` isn't a real
+  in-app scroller. **`collection/[slug]/CollectionPageClient.jsx` also passes
+  `onScrollToSection`/`setActiveTab` to `Header`/`Footer`, not just `AppShell`** (fixed
+  2026-09-07 — this doc previously said "only AppShell passes it," which was already
+  inaccurate and masked a real bug: this route's versions used to call `router.push`
+  directly instead of going through `ScrollService.animateScrollTo`, so a header/footer
+  "jump to Concierge" click from a product page landed on whatever section the homepage's
+  images happened to have pushed into that scroll position by the time Next's own
+  one-shot hash-scroll fired, before Lenis/GSAP/images ever settled). Both routes' props
+  are now real, correctly-behaving cross-route navigators: `CollectionPageClient.jsx`'s
+  `onScrollToSection(sectionId)` does `router.push('/#${sectionId}')`, and `AppShell.jsx`
+  has a mount effect that reads any incoming `location.hash`, waits the same 120ms
+  lead-time as every other pre-scroll call site, then re-runs the correct, Lenis-aware
+  `animateScrollTo` and strips the hash — the one place that actually lands the scroll
+  correctly regardless of which route it was launched from. See `src/services/README.md`'s
+  ScrollService section for the full mechanism, and `src/components/README.md`'s Header
+  section for `handleInquiryClick`'s matching fix. **`Footer.jsx`'s "Main Page" button needed
+  the same fix (found in review, fixed 2026-09-07)** — `handleMainPage` used to assume
+  `onScrollToSection` being truthy meant "mounted inside `AppShell`" and just called
+  `animateScrollToTop`, which on `/collection/[slug]` (where `onScrollToSection` is also
+  truthy, per the note above) only scrolled the outgoing product page to its own top instead
+  of returning home. `Footer` now also takes an `onSelectProduct` prop (from `AppShell.jsx`'s
+  `setSelectedProduct` / `CollectionPageClient.jsx`'s own `onSelectProduct`) and
+  `handleMainPage` calls `onSelectProduct?.(null)` — the same dual-context "go home" recipe
+  `Header.jsx`'s `handleBrandClick` already used. The
   compact control in `HouseChrome` uses plain active styling (no layoutId) on purpose.
 - **Duplicated `imageKey` strings** — `showcase/ImageViewer.jsx` and
-  `showcase/Lightbox.jsx` build identical `${id}-${idx}` / `${id}-macro` keys. Keep
+  `showcase/Lightbox.jsx` build identical `${id}-${idx}` keys. Keep
   them byte-identical or the viewer and lightbox animate out of sync.
 - **Zoom stops `[1.0, 1.8, 3.0]`** are duplicated in `hooks/useLightbox.js`
   (`cycleZoom`) and `components/shared/Lightbox.jsx` (preset array). Change one,
@@ -171,7 +215,7 @@ machinery from other projects.
   conventions.
 - **`.font-farsi` / `.font-latin`** (`src/styles/globals.css`, documented in
   `src/styles/README.md`) — opt-in Dorsa for translated non-heading text vs. opt-out back to
-  Latin for permanently-Latin brand content (collection `number`/`year`/`name`). Picking the
+  Latin for permanently-Latin brand content (collection `number`/`name`). Picking the
   wrong one either leaves real Farsi text in the wrong typeface or forces Dorsa onto Latin
   product codes like "C°01"/"GÁVV".
 - **The `[[SUBMIT_INQUIRY]]`/`[[/SUBMIT_INQUIRY]]` marker tokens** (AI Curator chat
@@ -184,16 +228,65 @@ machinery from other projects.
 
 ## Known issues (documented in folder docs; fix, don't replicate)
 
-- `hreflangFor` returns the same URL for `en` and `fa` (no locale-prefixed routes), and
-  social handles are TODO placeholders. See `src/services/README.md`.
-- The home `WebSite` schema declares a `SearchAction` targeting
-  `/collection?q={search_term_string}` — no such route/search exists (404). The sitemap
-  and collection breadcrumb no longer 404 (sitemap lists `/showcase/index.html`, the real
-  static URL; breadcrumb is `Home → Item`). See `src/app/README.md`.
-- OG/logo assets 404 (found in the 2026-09-06 perf audit): metadata references
-  `/og/home.jpg` and `${SITE_URL}/logo.png`, which don't exist under `public/` — social
-  shares fall back to no image. Needs real brand assets or a reference change; the
-  `images.remotePatterns` allow-list doesn't cover it (these are same-origin paths).
+- `hreflangFor` returns the same URL for `en` and `fa` (no locale-prefixed routes) — inert,
+  not actively harmful; a real fix needs locale-prefixed routing. See `src/services/README.md`.
+- **Fixed 2026-09-07:** Farsi metadata (title/description/OG/JSON-LD) never reached
+  search engines on `/about`, `/story`, `/sustainability`, or `/glance` — those routes
+  were `force-static`, so `generateMetadata()` ran once at build time with no real
+  cookie to read, freezing every visitor's SEO snippet in English regardless of the page
+  content they actually saw. Switched all four to `export const dynamic =
+  "force-dynamic"` so `getServerLanguage()` reads the real per-request cookie; accepted
+  trade-off is losing static-generation speed on these four low-traffic editorial pages
+  (not the product pages or homepage, which already rendered per-request) in exchange
+  for correct Farsi search snippets/social previews. As a side effect,
+  `shared/DorsaPreloadScript.jsx` (see below) is no longer needed on these routes and was
+  removed from `(house)/layout.js`/`glance/page.js` — `initialLanguage` is now correct
+  from the first byte of HTML on them, so the standard font-preload path just works. See
+  `src/app/README.md` and `src/styles/README.md`.
+- **Fixed 2026-09-07:** the home `WebSite` schema's dead `SearchAction` (targeted
+  `/collection?q={search_term_string}`, no such route/search ever existed) was removed
+  outright rather than built out — a real site-search feature is out of scope for a
+  4-item boutique collection (every piece is already visible in one showcase scroll; a
+  search feature would be pure overhead with nothing to search for). The sitemap and
+  collection breadcrumb no longer 404 either (sitemap lists `/showcase/index.html`, the
+  real static URL; breadcrumb is `Home → Item`). See `src/app/README.md`.
+- **Fixed 2026-09-07:** OG/logo assets 404 (found in the 2026-09-06 perf audit) — every
+  `image:` reference in `MetadataService.js`'s `buildMeta` call sites pointed at
+  `/og/home.jpg`, which never existed, and `orgSchema.logo` pointed at a missing
+  `/logo.png`. `public/logo.png` now exists (a 367×161 wordmark PNG) and is used for
+  `orgSchema.logo` only; the OG/Twitter default image (`resolveImageUrl`'s fallback) is
+  `/image/gavv/gavv-06.jpg`, a real 2200×1556 landscape product photo — picked over the
+  wordmark specifically because a 367×161 logo makes a poor 1400×920 social-share card.
+  Swap `SITE_CONFIG.defaultOgImage` in `MetadataService.js` whenever a dedicated OG image
+  exists; nothing else needs to change. See `src/services/README.md`.
+
+### Production placeholders — real values needed before launch (consolidated 2026-09-07)
+
+Every fake/placeholder value left in the codebase, gathered in one place so a future
+session doesn't have to re-discover them by grepping. Each is a real gap the client
+needs to supply, not a code bug — nothing here should be invented.
+
+- **Phone:** `lib/i18n/en.js`/`fa.js`'s `studioPhone` (`"+98 21 0000 0000"`) and
+  `studioPhoneTel` (`"+982100000000"`) are placeholder zeros — real studio number
+  needed. `MetadataService.orgSchema.contactPoint.url` (`https://wa.me/zaad_placeholder`)
+  is a fake WhatsApp deep link built from the same missing number.
+- **Address (partially resolved 2026-09-07):** `MetadataService.orgSchema.address` now
+  has a real city/country `PostalAddress` (`addressLocality: "Tehran"`, `addressCountry:
+  "IR"`) — still missing the actual `streetAddress`, which doesn't exist anywhere in the
+  codebase. `Footer.jsx`/dictionary copy still only ever says "Tehran" generically
+  (`footerMilanZAAD`, `callStudioSub`). Once a real street address exists, add
+  `streetAddress` to `MetadataService.js`'s `SITE_CONFIG.contact` and thread it into
+  `orgSchema.address`, and consider a visible line in `Footer.jsx`'s studio-address
+  column too.
+- **Social media (aligned 2026-09-07, still placeholder):** the two lists used to name
+  *different* platforms (`sameAs` had Instagram/Telegram/X, the visible footer had
+  Instagram/LinkedIn/Telegram/WhatsApp) — `MetadataService.js`'s `SITE_CONFIG.socials`
+  was changed to Instagram/LinkedIn/Telegram, matching `lib/socialLinks.js`'s real footer
+  icon row (WhatsApp stays footer-only + `orgSchema.contactPoint.url`, not `sameAs` —
+  it's a contact channel, not a profile page). All values in both files are still
+  `*_placeholder` TODOs needing the real handles. `MetadataService.js`'s
+  `SITE_CONFIG.twitter.site` (the Twitter/X card handle, a separate mechanism from
+  `sameAs`) also still needs the real handle.
 
 ## Coding conventions
 

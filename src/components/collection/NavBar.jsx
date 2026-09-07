@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { motion } from "motion/react";
 import { ArrowLeft } from "lucide-react";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const NavBar = memo(function NavBar({ item, t, onBack }) {
     return (
@@ -23,7 +23,7 @@ const NavBar = memo(function NavBar({ item, t, onBack }) {
 
             <div className="flex items-center space-x-2 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase">
                 <span className="text-muted opacity-60">{t("productZAADArchive")}</span>
-                <span className="text-accent font-semibold font-latin">{item.number}</span>
+                <span className="text-accent font-semibold font-serif font-latin">{item.number}</span>
                 <span className="text-muted opacity-60">/</span>
                 <span className="text-ink font-medium">
                     <span className="font-latin">{item.name}</span> {t("productDirectory")}

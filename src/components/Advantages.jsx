@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useLanguage } from "@/services/TranslationService";
-import MaisonReveal from "./MaisonReveal";
+import { useLanguage } from "@/services/LanguageProvider";
+import MaisonReveal from "./shared/MaisonReveal";
 import NoiseBg from "./shared/NoiseBg";
 import { Hammer, ShieldCheck, Sparkles } from "lucide-react";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";

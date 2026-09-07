@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, memo } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight, MapPin, Maximize2, Eye, Layers, Pause, Play, RotateCw } from "lucide-react";
-import MaisonButton from "../MaisonButton";
-import MaisonReveal from "../MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const MODE_EDITORIAL = "editorial";
 const MODE_MACRO = "macro";
@@ -131,6 +131,16 @@ function ImageViewer({ selectedItem, showcase, t }) {
 
     const handleImageContainerClick = viewMode === MODE_360 ? undefined : openLightbox;
 
+    const handleContainerKeyDown = useCallback(
+        (e) => {
+            if (viewMode === MODE_360 || !openLightbox) return;
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            openLightbox();
+        },
+        [viewMode, openLightbox],
+    );
+
     const handleSpinToggle = useCallback((e) => {
         e.stopPropagation();
         setIsSpinPlaying((playing) => !playing);
@@ -207,6 +217,8 @@ function ImageViewer({ selectedItem, showcase, t }) {
     const isWide = activeImage?.orientation === ORIENTATION_WIDE;
     const imageTransition = viewMode === MODE_MACRO ? IMAGE_TRANSITION_MACRO : IMAGE_TRANSITION_DEFAULT;
     const containerStyle = CURSOR_STYLES[viewMode] || CURSOR_STYLES[MODE_EDITORIAL];
+    const isContainerOpenable = viewMode !== MODE_360;
+    const openImageLabel = (t("productEnlargeImageLabel") || "").replace("{name}", selectedItem.name);
 
     return (
         <MaisonReveal
@@ -215,7 +227,7 @@ function ImageViewer({ selectedItem, showcase, t }) {
             className="lg:col-span-6 flex flex-col space-y-4 w-full"
         >
             <div
-                className="relative aspect-[4/5] bg-surface-alt border border-ink/10 overflow-hidden shadow-ambient group select-none rounded-md"
+                className="relative aspect-[4/5] bg-surface-alt border border-ink/10 overflow-hidden shadow-ambient group select-none rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 style={containerStyle}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -225,6 +237,10 @@ function ImageViewer({ selectedItem, showcase, t }) {
                 onTouchEnd={handleTouchEndOrCancel}
                 onTouchCancel={handleTouchEndOrCancel}
                 onClick={handleImageContainerClick}
+                onKeyDown={handleContainerKeyDown}
+                role={isContainerOpenable ? "button" : undefined}
+                tabIndex={isContainerOpenable ? 0 : undefined}
+                aria-label={isContainerOpenable ? openImageLabel : undefined}
             >
                 {viewMode === MODE_360 ? (
                     <div className="relative w-full h-full">
@@ -307,7 +323,7 @@ function ImageViewer({ selectedItem, showcase, t }) {
                         onClick={handleSpinToggle}
                         aria-label={t(isSpinPlaying ? "heroPauseVideo" : "heroPlayVideo")}
                         data-touch-boost
-                        className="absolute top-4 right-4 z-20 flex items-center justify-center w-9 h-9 rounded-md bg-panel-frost border border-ink/12 shadow-card-sm text-ink hover:text-accent transition-colors duration-500 focus:outline-none focus-visible:border-accent cursor-pointer"
+                        className="absolute top-4 right-4 z-20 flex items-center justify-center w-9 h-9 rounded-md bg-panel-frost border border-ink/12 shadow-card-sm text-ink hover:text-accent transition-colors duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer"
                     >
                         {isSpinPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                     </button>

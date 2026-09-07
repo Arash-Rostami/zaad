@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, Minus, Plus, SlidersHorizontal } from "lucide-react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import useTheme from "@/hooks/useTheme";
 import useAmbientAudio from "@/hooks/useAmbientAudio";
 import useFontScale from "@/hooks/useFontScale";
@@ -13,9 +13,9 @@ import Tooltip from "../shared/Tooltip";
 import ExpandOnHoverPill from "../shared/ExpandOnHoverPill";
 
 const NAV = [
-  { href: "/about", key: "footerAboutUs" },
-  { href: "/story", key: "footerStoryBrandValue" },
-  { href: "/sustainability", key: "footerSustainabilityResponsibility" },
+  { href: "/about", key: "menuOriginsPhilosophy" },
+  { href: "/story", key: "menuStoryBrandValue" },
+  { href: "/sustainability", key: "menuSustainabilityResponsibility" },
 ];
 
 const LANGS = ["en", "fa"];
@@ -60,7 +60,7 @@ export function HouseControls() {
       isExpanded={isControlsHovered}
       onHoverChange={setIsControlsHovered}
       dropdown
-      className="w-9 h-9 bg-control-bar border border-control shadow-canvas-mid text-muted"
+      className="w-9 h-9 bg-control-bar border border-control shadow-canvas-mid text-muted outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       panelClassName="bg-control-bar border border-control shadow-canvas-lift p-2"
       trigger={<SlidersHorizontal className="w-3.5 h-3.5" />}
     >
@@ -71,7 +71,7 @@ export function HouseControls() {
               onClick={decreaseFontScale}
               disabled={minFontScaleReached}
               aria-label={t("fontScaleDecreaseLabel")}
-              className={`cursor-not-allowed w-6 h-full rounded-md flex items-center justify-center transition-colors ${
+              className={`cursor-not-allowed w-6 h-full rounded-md flex items-center justify-center transition-colors outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                 minFontScaleReached
                   ? "bg-indicator text-on-indicator"
                   : "cursor-pointer text-muted hover:bg-indicator hover:text-on-indicator"
@@ -88,7 +88,7 @@ export function HouseControls() {
               onClick={increaseFontScale}
               disabled={maxFontScaleReached}
               aria-label={t("fontScaleIncreaseLabel")}
-              className={`cursor-not-allowed w-6 h-full rounded-md flex items-center justify-center transition-colors ${
+              className={`cursor-not-allowed w-6 h-full rounded-md flex items-center justify-center transition-colors outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                 maxFontScaleReached
                   ? "bg-indicator text-on-indicator"
                   : "cursor-pointer text-muted hover:bg-indicator hover:text-on-indicator"
@@ -112,7 +112,7 @@ export function HouseControls() {
                 value={lang}
                 onClick={handleLangClick}
                 data-touch-slop
-                className={`cursor-pointer w-full text-center h-full rounded-md transition-colors duration-700 uppercase text-[length:max(9px,calc(8.5px*var(--zaad-font-scale)))] rtl:text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-semibold flex items-center justify-center ${
+                className={`cursor-pointer w-full text-center h-full rounded-md transition-colors duration-700 uppercase text-[length:max(9px,calc(8.5px*var(--zaad-font-scale)))] rtl:text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-semibold flex items-center justify-center outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                   language === lang
                     ? "bg-indicator text-on-indicator font-bold"
                     : "text-muted hover:text-headline"
@@ -143,7 +143,7 @@ export function HouseControls() {
                 value={mode}
                 onClick={handleThemeClick}
                 data-touch-slop
-                className={`cursor-pointer px-2 h-full text-[length:max(9px,calc(8.5px*var(--zaad-font-scale)))] rtl:text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-semibold font-mono tracking-widest rounded-md transition-colors duration-700 flex items-center justify-center ${
+                className={`cursor-pointer px-2 h-full text-[length:max(9px,calc(8.5px*var(--zaad-font-scale)))] rtl:text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-semibold font-mono tracking-widest rounded-md transition-colors duration-700 flex items-center justify-center outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                   themeMode === mode
                     ? "bg-indicator text-on-indicator font-bold"
                     : "text-muted/70 hover:text-headline"
@@ -175,7 +175,7 @@ function HouseChrome() {
             href="/"
             aria-label={t("aboutBackToShowroom")}
             data-touch-boost
-            className="flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500 shrink-0 p-2.5 -m-2.5"
+            className="flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500 shrink-0 p-2.5 -m-2.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <ArrowLeft className="w-4 h-4" />
             <span className="hidden sm:inline">{t("aboutBackToShowroom")}</span>
@@ -194,7 +194,10 @@ function HouseChrome() {
             {currentNavItem && (
               <span className="relative text-xs font-mono tracking-[0.2em] uppercase text-accent font-semibold whitespace-nowrap">
                 {t(currentNavItem.key)}
-                <span className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-accent rounded-md" />
+                <span
+                  aria-hidden="true"
+                  className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-accent rounded-md"
+                />
               </span>
             )}
           </div>

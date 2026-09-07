@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import { HouseControls } from "../house/HouseChrome";
 
 function GlanceHeader() {
@@ -17,7 +17,7 @@ function GlanceHeader() {
                         href="/"
                         aria-label={t("aboutBackToShowroom")}
                         data-touch-boost
-                        className="flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500 shrink-0 p-2.5 -m-2.5"
+                        className="flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500 shrink-0 p-2.5 -m-2.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         <span className="hidden sm:inline">{t("aboutBackToShowroom")}</span>

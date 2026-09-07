@@ -2,8 +2,8 @@ import React, {memo, useCallback, useMemo} from "react";
 import Link from "next/link";
 import {AnimatePresence, motion} from "motion/react";
 import {ArrowUpRight, ShieldCheck, Sparkles} from "lucide-react";
-import MaisonButton from "../MaisonButton";
-import MaisonReveal from "../MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 
@@ -44,7 +44,7 @@ const SPECS_EXIT = Object.freeze({
 
 const EMPTY_ARRAY = Object.freeze([]);
 
-function ProductPanel({
+function CollectionPanel({
                           selectedItem,
                           showcase,
                           t,
@@ -126,7 +126,7 @@ function ProductPanel({
                 <span className="text-xs text-accent font-semibold tracking-widest">
                     {t("showcaseArchiveCollection")}
 
-                    <sup className="font-serif mx-2">{selectedItem.number}</sup>
+                    <sup className="font-serif font-latin mx-2">{selectedItem.number}</sup>
                 </span>
                 <span
                     className="text-xs font-mono text-accent tracking-wider uppercase flex items-center gap-1.5 font-medium">
@@ -159,7 +159,7 @@ function ProductPanel({
                 <button
                     type="button"
                     onClick={toggleSpecs}
-                    className="w-full py-5 flex items-center justify-between group cursor-pointer focus:outline-none"
+                    className="w-full py-5 flex items-center justify-between group cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                     <div className="flex items-center space-x-3 text-left rtl:text-right">
                         <span
@@ -230,7 +230,7 @@ function ProductPanel({
                                         href={catalogueHref}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-[0.2em] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 focus:outline-none cursor-pointer hover:shadow-md"
+                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-[0.2em] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer hover:shadow-md"
                                     >
                                         <span>{t("showcaseRevealDossier")}</span>
                                         <ArrowUpRight className="w-3.5 h-3.5 stroke-[1.8] rtl:-scale-x-100"/>
@@ -261,4 +261,4 @@ function ProductPanel({
     );
 }
 
-export default memo(ProductPanel);
+export default memo(CollectionPanel);

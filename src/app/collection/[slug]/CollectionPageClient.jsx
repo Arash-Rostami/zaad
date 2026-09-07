@@ -4,30 +4,25 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ProductDetailsPage from "@/components/ProductDetailsPage";
+import CollectionPage from "@/components/CollectionPage";
 import ScrollButton from "@/components/shared/ScrollButton";
 import useLenisScroll from "@/hooks/useLenisScroll";
+import { setPreference } from "@/services/PreferenceService";
 
-export default function ProductPageClient({ item }) {
+export default function CollectionPageClient({ item }) {
     useLenisScroll();
     const router = useRouter();
 
-    const setActiveTab = useCallback(
-        (tab) => {
-            if (tab === "pdf") {
-                window.open("/showcase/index.html", "_blank", "noopener,noreferrer");
-                return;
-            }
-            router.push("/");
-        },
+    const goHome = useCallback(
+        (hash) => router.push(hash ? `/#${hash}` : "/"),
         [router]
     );
 
+    const setActiveTab = useCallback(() => {}, []);
+
     const onScrollToSection = useCallback(
-        (sectionId) => {
-            router.push(`/#${sectionId}`);
-        },
-        [router]
+        (sectionId) => goHome(sectionId),
+        [goHome]
     );
 
     const onSelectProduct = useCallback(
@@ -36,7 +31,18 @@ export default function ProductPageClient({ item }) {
     );
 
     const onBack = useCallback(() => router.back(), [router]);
-    const onInquire = useCallback(() => router.push("/#concierge"), [router]);
+
+    const onInquire = useCallback(
+        (inquireItem) => {
+            setPreference("pendingInquiryItem", {
+                id: inquireItem.id,
+                name: inquireItem.name,
+                number: inquireItem.number,
+            });
+            goHome("concierge");
+        },
+        [goHome]
+    );
 
     return (
         <div className="min-h-screen flex flex-col justify-between selection:bg-selection selection:text-ink">
@@ -49,7 +55,7 @@ export default function ProductPageClient({ item }) {
             />
 
             <main className="flex-1">
-                <ProductDetailsPage
+                <CollectionPage
                     item={item}
                     onBack={onBack}
                     onInquire={onInquire}
@@ -59,6 +65,7 @@ export default function ProductPageClient({ item }) {
             <Footer
                 onScrollToSection={onScrollToSection}
                 setActiveTab={setActiveTab}
+                onSelectProduct={onSelectProduct}
             />
 
             <ScrollButton />

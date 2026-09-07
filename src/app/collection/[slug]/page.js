@@ -4,9 +4,10 @@ import {en} from "@/lib/i18n/en";
 import {fa} from "@/lib/i18n/fa";
 import {getServerDictionary} from "@/lib/i18n/server";
 import {resolveCollectionImages} from "@/lib/collectionImages";
-import {MetadataService} from "@/services/MetaDataService";
-import JsonLd from "@/components/JsonLd";
-import ProductPageClient from "./ProductPageClient";
+import {MetadataService} from "@/services/MetadataService";
+import JsonLd from "@/components/shared/JsonLd";
+import DorsaPreloadScript from "@/components/shared/DorsaPreloadScript";
+import CollectionPageClient from "./CollectionPageClient";
 
 export async function generateStaticParams() {
     return en.collection.map((item) => ({slug: item.id}));
@@ -37,8 +38,9 @@ export default async function ProductPage({params}) {
     const {schemas} = await getCollectionMeta(resolvedItem);
     return (
         <>
+            <DorsaPreloadScript/>
             <JsonLd schemas={schemas}/>
-            <ProductPageClient item={resolvedItem}/>
+            <CollectionPageClient item={resolvedItem}/>
         </>
     );
 }

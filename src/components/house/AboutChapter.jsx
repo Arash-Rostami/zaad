@@ -2,7 +2,7 @@
 
 import React, { memo, useMemo } from "react";
 import HouseChapterShell from "./HouseChapterShell";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 
 const STATS_KEY = "aboutStats";
 const SECTION_ID = "about";

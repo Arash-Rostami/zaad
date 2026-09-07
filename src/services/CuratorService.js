@@ -39,6 +39,32 @@ function extractPartText(parts) {
     return text;
 }
 
+async function callGateway(baseUrl, gatewayKey, model, messages) {
+    const res = await fetch(`${baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+            Authorization: `apikey ${gatewayKey}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            model,
+            messages,
+            temperature: TEMPERATURE,
+            max_tokens: MAX_TOKENS,
+        }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+
+    if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        console.error(`Curator gateway error ${res.status}:`, errText);
+        throw new Error(`Curator gateway error ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content ?? "";
+}
+
 export class CuratorService {
     static buildContext(language) {
         const lang = language === "fa" ? "fa" : "en";
@@ -74,29 +100,28 @@ export class CuratorService {
                 };
             }
 
-            const res = await fetch(`${baseUrl}/chat/completions`, {
-                method: "POST",
-                headers: {
-                    Authorization: `apikey ${gatewayKey}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    model,
-                    messages,
-                    temperature: TEMPERATURE,
-                    max_tokens: MAX_TOKENS,
-                }),
-                signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-            });
+            try {
+                const text = await callGateway(baseUrl, gatewayKey, model, messages);
+                console.log(`Curator reply source: primary gateway (${model})`);
+                return text;
+            } catch (err) {
+                console.error("Curator primary gateway failed:", err);
 
-            if (!res.ok) {
-                const errText = await res.text().catch(() => "");
-                console.error(`Curator gateway error ${res.status}:`, errText);
-                throw new Error(`Curator gateway error ${res.status}`);
+                const fallbackUrl = process.env.GEMINI_BASE_URL_FALLBACK;
+                if (fallbackUrl) {
+                    const fallbackModel = process.env.GEMINI_MODEL_FALLBACK || model;
+                    try {
+                        const text = await callGateway(fallbackUrl, gatewayKey, fallbackModel, messages);
+                        console.log(`Curator reply source: fallback gateway (${fallbackModel})`);
+                        return text;
+                    } catch (fallbackErr) {
+                        console.error("Curator fallback gateway failed:", fallbackErr);
+                        if (!process.env.GEMINI_API_KEY) throw fallbackErr;
+                    }
+                } else if (!process.env.GEMINI_API_KEY) {
+                    throw err;
+                }
             }
-
-            const data = await res.json();
-            return data.choices?.[0]?.message?.content ?? "";
         }
 
         const client = getGoogleClient();
@@ -109,6 +134,7 @@ export class CuratorService {
             },
         });
 
+        console.log(`Curator reply source: native SDK (${model})`);
         return response?.text ?? "";
     }
 }

@@ -72,7 +72,7 @@ same cookie-aware lookup), so `item.*` is in the active language there too — c
 with the showcase / menu / concierge paths. `generateStaticParams` emits `en.collection`
 ids only (the URL space); `en` and `fa` collections share the same `id` set, so one URL
 serves both locales (fragile only if the id sets ever diverge). The
-`productdetailspage/` UI chrome (tab labels, section headings, CTAs, the Lookbook
+`collection/` UI chrome (tab labels, section headings, CTAs, the Lookbook
 block) is localized via `t(...)`.
 
 > Note (updated 2026-09-05): the `collection` array in both `en.js` and `fa.js` is now
@@ -89,11 +89,11 @@ block) is localized via `t(...)`.
 
 ## Using it in components
 
-Import `useLanguage()` from `@/services/TranslationService` (the React context lives
+Import `useLanguage()` from `@/services/LanguageProvider` (the React context lives
 in `src/services/`, **not** `src/contexts/` — that folder is empty):
 
 ```js
-import {useLanguage} from "@/services/TranslationService";
+import {useLanguage} from "@/services/LanguageProvider";
 
 const {t, data, language, setLanguage, dir, isFarsi} = useLanguage();
 ```
@@ -103,8 +103,8 @@ const {t, data, language, setLanguage, dir, isFarsi} = useLanguage();
 Returns a translated string. Falls back to English, then to the raw key.
 
 ```js
-t("showcaseTitle")       // "Curated Showcase" | "مجموعه کلکسیون منتخب"
-t("submitInquiry")       // "Submit Secure Inquiry" | "ثبت نهایی درخواست رزرو امن"
+t("showcaseTitle")       // "Curated Showcase" | "مجموعه‌ی منتخب"
+t("submitInquiry")       // "Submit Secure Inquiry" | "ثبت نهایی درخواست"
 ```
 
 ### `data(key)` — structured object or array
@@ -124,7 +124,7 @@ data("brandStory")        // { philosophy, tagline, narrative_1, narrative_2 }
 The chosen locale is carried by a cookie named **`zaad_preferred_language`**
 (this name is load-bearing — renaming either side breaks SSR lang/dir):
 
-- **Client writes it** in `TranslationService` (`setLanguage`): writes the same value
+- **Client writes it** in `LanguageProvider` (`setLanguage`): writes the same value
   to `localStorage` and to a cookie `zaad_preferred_language=…; path=/; max-age=31536000; SameSite=Lax`.
 - **Server reads it** in `server.js` (`getServerLanguage`): reads the cookie via
   `next/headers` `cookies()`; accepts only `"en"`/`"fa"`, else falls back to
@@ -136,7 +136,7 @@ The chosen locale is carried by a cookie named **`zaad_preferred_language`**
   on `<html>` is required for this.
 
 There are **no locale-prefixed routes** — i18n is cookie-only. (This makes the
-`fa` hreflang in `MetaDataService` point at the same URL as `en`; see
+`fa` hreflang in `MetadataService` point at the same URL as `en`; see
 `src/services/ARCHITECTURE.md` for that known SEO limitation.)
 
 ## Adding a new translation key
@@ -166,13 +166,23 @@ Every number in `fa.js` uses **Farsi-Indic digits** (۰–۹) — phone display 
 `dir="ltr"` on its wrapping element** (but *not* `.font-latin` — that forces a Latin font
 that lacks Persian digit glyphs). `studioPhone` (`"+۹۸ ۲۱ ۰۰۰۰ ۰۰۰۰"`) is the example:
 Arabic-script digits are native to RTL text and usually need no help (a single token like
-`year` or a colon-joined range like `appointmentSlotMorning1Time` renders correctly with
+`year`, or a colon-joined clock time like `۰۸:۰۰`, renders correctly with
 no wrapper at all), but once a value is a *sequence* of space-separated numeric groups,
 the spaces between them are bidi-neutral and can visually reorder the groups under the
 surrounding RTL paragraph — the same underlying issue `wrapLatinRuns.js` handles for
 mixed Latin/Farsi runs, just triggered by neutral characters (spaces) instead of Latin
 letters this time. `dir="ltr"` pins the group order without touching the digit glyphs or
 font.
+
+(`appointmentSlotMorning1Time` (`"۰۸:۰۰ – ۱۰:۰۰"`) looks like the safe colon-joined case
+but is not: the spaces around its dash are bidi-neutral group separators, so it belongs to
+the wrapper-required bucket above. `concierge/InquiryForm.jsx` renders it accordingly: the
+summary line and the `cadenceSlots` chips wrap the time in `<span dir="ltr">`, and
+`slotLabel` — the one site the value is injected into a larger string via `.replace()`,
+where a span is impossible — wraps it in the Unicode LRE/PDF pair (U+202A/U+202C, the same
+string-level bidi technique `fa.js` already uses with RLM on `footerCopyright`). When a
+future `{window}`-style string injection can't take a span, LRE/PDF is the sanctioned
+fallback; everywhere else, prefer the plain span.)
 
 **Stays Western/ASCII regardless of locale:** only `studioPhoneTel` (the raw `tel:` URI
 value — Persian digits would break dialing on many devices) and the collection `number`
@@ -186,6 +196,21 @@ run whose direction differs from the rendering paragraph (e.g. `footerCraft`'s t
 append the matching invisible directional mark — U+200E (LRM) for Latin-ending strings,
 U+200F (RLM) for Farsi-ending ones — so the punctuation stays attached to its run
 instead of flinging to the far edge. `fa.js`'s `footerCopyright` carries the RLM.
+
+## Return-to-home link wording (fixed 2026-09-07)
+
+`aboutBackToShowroom` (`house/HouseChrome.jsx`, `glance/GlanceHeader.jsx`) used to read
+"Back to Showroom"/"بازگشت به گالری" — borrowing the product page's "showroom/gallery"
+vocabulary for a link that actually returns to the site root from House/`/glance`, neither
+of which is part of the product showroom. Changed to "Return to ZAAD Home"/"بازگشت به
+صفحه‌ی اصلی زاد", matching `ledgerReturnHome`'s already-correct wording for the identical
+compact-header pattern on `/ledger`. The product page's own two back-to-showroom CTAs
+(`NavBar.jsx`'s `productReturnShowroom`, `CollectionMeta.jsx`/`AcquisitionCTA.jsx`'s
+`productReturnGrid` — both call the same `onBack` prop, i.e. the same destination) were
+unified to the identical "RETURN TO SHOWROOM"/"بازگشت به گالری" wording instead of two
+different phrases for one action; `productReturnShowroom`'s English value also had a typo
+("RETURN TO COLLAGE SHOWROOM") fixed in the same pass. `showroom`/"Showroom" vocabulary is
+still correct and kept as-is everywhere it actually refers to the product showroom/grid.
 
 ## Do not
 

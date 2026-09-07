@@ -48,12 +48,21 @@ Sub-components are **pure presentational** pieces. They:
 ### Import convention
 
 ```js
-import NavBar from "./productdetailspage/NavBar";
+import NavBar from "./collection/NavBar";
 import CollectionTabs from "./showcase/CollectionTabs";
 import SharedLightbox from "../shared/Lightbox";
 ```
 
 Never use barrel files or index re-exports in companion folders — direct path imports only.
+
+---
+
+## Naming conventions (2026-09-06 rename pass — the law for new files)
+
+- **Module per route**: a component lives in the folder of its route — root + `showcase/`/`header/` (showroom `/`), `collection/` (`/collection/[slug]`), `house/` (`(house)`), `glance/` (`/glance`), `ledger/` (`/ledger`), `concierge/` (`#concierge`). Cross-module pieces live in `shared/` only.
+- **Folder = shell name, lowercase** (`CollectionPage.jsx` + `collection/`). No multi-word run-on folders.
+- **Vocabulary registry**: one word per concept in *code identifiers* — **collection** (an item; never "product"), house/chapter, glance, ledger, concierge, Maison (brand primitives). Brand *copy* (UI strings, i18n keys) may still say specimen/piece.
+- **File name = its primary export** (`LanguageProvider.jsx` exports `LanguageProvider`).
 
 ---
 
@@ -63,7 +72,7 @@ These are the only components intentionally designed to be consumed by multiple 
 
 ### `shared/Lightbox.jsx`
 
-The single cinematic lightbox implementation used by **both** `ProductDetailsPage` and `Showcase`. Accepts a flat, explicit prop contract — no knowledge of the calling context.
+The single cinematic lightbox implementation used by **both** `CollectionPage` and `Showcase`. Accepts a flat, explicit prop contract — no knowledge of the calling context.
 
 ```
 Prop contract (required):
@@ -88,7 +97,7 @@ Prop contract (optional):
                              slide-in direction matches the mirrored pill under dir="rtl"
 ```
 
-The thin wrapper files in `productdetailspage/Lightbox.jsx` and `showcase/Lightbox.jsx` exist only to map their local hook state and item shape into this flat contract. They have no visual logic.
+The thin wrapper files in `collection/Lightbox.jsx` and `showcase/Lightbox.jsx` exist only to map their local hook state and item shape into this flat contract. They have no visual logic.
 
 Internal `ZoomController` sub-component lives inside this file — it is not exported separately since it has no use outside the lightbox.
 
@@ -120,7 +129,12 @@ wrapped in a `dir="ltr"` span so Farsi bidi can't reorder `1 OF 3` into `3 OF 1`
 the info row itself carries no `overflow`/`max-w` clipping — an earlier
 `max-w-[55vw] overflow-hidden` pair on the row clipped the counter mid-glyph on
 360–430px phones; any clipping that's genuinely needed belongs to the media pane,
-which has its own.
+which has its own. `ZoomController`'s three icon-only chrome buttons (the rotating
+cycle-zoom dial, the inline prev/next chevrons inside its expanded pill) carry
+`aria-label`s (`t("cycleZoomLabel")`, `t("showcasePrev")`/`t("showcaseNext")` — the
+same strings the main nav arrows already show as visible text) — `ZoomController`
+now takes the wrapper's `t` prop for this (2026-09-07 accessibility pass); previously
+these three had no accessible name at all.
 
 **Touch zoom contract (mobile).** The ZoomController is `pointer-events-none` whenever
 it is `opacity-0` — never invisibly tappable — and is forced visible on coarse pointers
@@ -145,14 +159,14 @@ root layout itself — including `LanguageProvider` — has thrown.
 ### `shared/Tooltip.jsx`
 
 Custom hover/focus popover — not the native `title` attribute, which can't be themed and looks
-inconsistent across browsers. **Scoped exception:** `productdetailspage/StudioGallery.jsx`'s image
-caption and `productdetailspage/TabArchitecture.jsx`'s truncated spec-list entries use a plain
+inconsistent across browsers. **Scoped exception:** `collection/StudioGallery.jsx`'s image
+caption and `collection/TabArchitecture.jsx`'s truncated spec-list entries use a plain
 native `title` instead, deliberately — they reveal a full free-form sentence/spec string, and this
 component's popup (`whitespace-nowrap`, uppercase, tracked mono pill) is sized for short UI labels;
 forcing a long caption through it would render an oversized single-line pill running off-screen, not
 a readable reveal. Don't extend `Tooltip.jsx` itself to accommodate this shape — a native `title` on
 a `truncate`d element is the standard, accessible browser mechanism for exactly this case. A third
-exception: `Footer.jsx` and `house/HouseFooter.jsx`'s `footerCraft` credit line (since 2026-09-06,
+exception: `Footer.jsx`'s `footerCraft` credit line (since 2026-09-06,
 an `<a href="http://www.persolbs.com/" target="_blank" rel="noopener noreferrer">`, not a plain
 `<div>`) carries a static `title={"PBS - A.R.‎"}` — a fixed, non-localized attribution, not
 `t()`-resolved UI copy, so there's no themed-label case to make here either (the string carries a
@@ -169,7 +183,7 @@ tooltip pill — pass e.g. `className="flex-1"` when the trigger needs to fill a
 wrapper span is `inline-flex` by default and won't stretch on its own). Transition is `450ms` with
 the app's `[0.16, 1, 0.3, 1]` ease — intentionally unhurried, matching the brand's "nothing
 snappy" pacing (see `src/styles/README.md`). Currently wired onto the language toggle, theme
-toggle, and `AudioToggle` in `header/ControlsFooter.jsx` and `house/HouseChrome.jsx`'s
+toggle, and `AudioToggle` in `header/MenuControls.jsx` and `house/HouseChrome.jsx`'s
 `HouseControls` — not yet rolled out app-wide; extend deliberately, one control cluster at a time,
 rather than blanket-wrapping every button. `HouseControls` is `export`ed (added 2026-09-04) so
 `ledger/LedgerHeader.jsx` can reuse it directly — a plain named import, not a barrel — rather than
@@ -202,7 +216,7 @@ Pure presentational mute/unmute icon button (`Volume2`/`VolumeX` from `lucide-re
 ambient background track. Takes `isMuted`, `onToggle`, `label` (used as both the visible
 `aria-label` and, by callers, the `Tooltip` label) as props — no hook calls of its own; state comes
 from `useAmbientAudio()` (see `src/hooks/README.md`) at the call site. Used by
-`header/ControlsFooter.jsx` and `house/HouseChrome.jsx`. **The icon turns the site's gold accent
+`header/MenuControls.jsx` and `house/HouseChrome.jsx`. **The icon turns the site's gold accent
 `#C5A059`** while unmuted/playing (2026-09-05, `isMuted ? "text-muted/70 hover:text-headline" :
 "text-[#C5A059] hover:text-[#C5A059]/80"`) — a visible "it's on" state, since a plain
 `Volume2`/`VolumeX` swap alone was easy to miss at this icon size; muted keeps the original
@@ -216,7 +230,7 @@ Reusable "collapsed icon → expands on hover" shell, extracted from `shared/Lig
 modes** — picking the right one matters, see below.
 
 **Current call sites: `house/HouseChrome.jsx` (dropdown mode) and `shared/Lightbox.jsx`'s
-`ZoomController` (horizontal mode).** `header/ControlsFooter.jsx` (the showroom's full slide-out
+`ZoomController` (horizontal mode).** `header/MenuControls.jsx` (the showroom's full slide-out
 menu, shared by the home page and product-detail pages) used to wrap its language/audio/theme
 cluster in this component too, but that hover-to-expand behavior was removed deliberately — the
 cluster now renders as a plain always-visible row (no trigger, no collapse). The hover-expand
@@ -302,14 +316,14 @@ has scrolled past a threshold, then shows `ArrowDown` (scrolls toward the bottom
 `ArrowUp` (scrolls toward the top) depending on scroll position, cross-fading the icon on
 direction change (`AnimatePresence mode="wait"`). Wrapped in its own `<MotionConfig
 reducedMotion="user">` rather than relying on an ancestor providing one — historically
-`AppShell.jsx` wrapped in `MotionConfig` but `collection/[slug]/ProductPageClient.jsx` (the
+`AppShell.jsx` wrapped in `MotionConfig` but `collection/[slug]/CollectionPageClient.jsx` (the
 other call site) did not, so the component guaranteed `prefers-reduced-motion` was
 respected regardless of where it's mounted. Since 2026-09-03 `app/layout.js` wraps all
 routes in `shared/MotionRoot.jsx` (a two-line client `<MotionConfig reducedMotion="user">`
 inside `LanguageProvider`), making this self-wrap redundant — kept deliberately as a
 harmless guarantee for any future call site outside the provider tree. Wrapped in `shared/Tooltip.jsx` for the same
 hover-label affordance as the header's language/theme/audio controls. Mounted in
-`AppShell.jsx`, `collection/[slug]/ProductPageClient.jsx`, and `(house)/layout.js`
+`AppShell.jsx`, `collection/[slug]/CollectionPageClient.jsx`, and `(house)/layout.js`
 (all three routes now share this control).
 
 ### `shared/NoiseBg.jsx`
@@ -318,7 +332,7 @@ Memoised SVG grain texture overlay. Used in:
 - `header/MenuPanel.jsx` (menu panel atmosphere)
 - `shared/Lightbox.jsx` (when `noiseOverlay={true}`)
 - hover-only on card surfaces, via the `revealOnHover` prop: `Advantages.jsx`'s cards,
-  `house/ChapterPieces.jsx`'s `CrossLinks` cards, `productdetailspage/TabAppliances.jsx`'s
+  `house/ChapterPieces.jsx`'s `CrossLinks` cards, `collection/TabAppliances.jsx`'s
   appliance cards, and the menu's nav item cards (`header/SystemPortals.jsx`'s `PortalCard`,
   `header/JourneyIndex.jsx`, `header/SpecimenGrid.jsx`) — the texture fades in over 700ms
   on `group-hover`. The hover variant is a single layer (blend and opacity on the same
@@ -333,25 +347,24 @@ Accepts a `filterId` prop (default: `"noiseBg"`) to avoid SVG filter ID collisio
 ### `shared/SocialLinks.jsx` (added 2026-09-04)
 
 Icon-only Instagram/LinkedIn/Telegram/WhatsApp row, mapped from the shared
-`lib/socialLinks.js` config (`SOCIAL_LINKS`) so `Footer.jsx` and `house/HouseFooter.jsx`
-render the identical four links from one source instead of duplicating them. Takes one
-optional `className` merged onto its root `flex` — both footers pass layout-only classes
-(`Footer.jsx`: none, default start-aligned under its "Connect With Us" label;
-`house/HouseFooter.jsx`: `"justify-end mt-4"`, since that column is right-aligned —
-`justify-end` alone is enough, no `rtl:` companion needed, since Tailwind's `justify-*`
-are logical/writing-mode-aware unlike `text-align`). Carries `rounded-md` — the same
+`lib/socialLinks.js` config (`SOCIAL_LINKS`) so `Footer.jsx` renders the identical four
+links from one source instead of duplicating them. Takes one
+optional `className` merged onto its root `flex` — `Footer.jsx` passes none, default
+start-aligned under its "Connect With Us" label (Tailwind's `justify-*` are
+logical/writing-mode-aware unlike `text-align`, so a right-aligned call site would need
+no `rtl:` companion). Carries `rounded-md` — the same
 6px "Radius language" (`src/styles/README.md`) every other icon-only utility control in
 this codebase uses, `shared/AudioToggle.jsx` included; matters here because it sets the
-corner shape of the `focus-visible` outline ring, not just a visible surface. **Both footers are
-permanently `bg-foundation` surfaces** (see `src/styles/README.md`'s Canvas family-locking rule),
+corner shape of the `focus-visible` outline ring, not just a visible surface. **The footer is a
+permanently `bg-foundation` surface** (see `src/styles/README.md`'s Canvas family-locking rule),
 so the resting icon color is the `canvas` token (`text-canvas/50`) and the focus ring is
 `outline-canvas` — but the **hover** color is a deliberate `hover:text-accent` exception (added
 2026-09-04, by explicit user request), not an oversight of the family-locking rule. This is
 different from the specific bug that rule documents (`Footer.jsx`'s plain-text nav links used to
 hover to `text-accent` unnoticed, which read as a jarring hue-shift-per-theme on body copy that
 was otherwise theme-invisible at rest) — these are brand-mark-adjacent icons, closer in kind to
-the static `text-accent` already used on the `Footer.jsx`/`house/HouseFooter.jsx` "ZAAD" wordmarks
-in these same permanently-dark footers, just triggered on hover instead of shown at rest. Each
+the static `text-accent` already used on `Footer.jsx`'s "ZAAD" wordmark
+in the same permanently-dark footer, just triggered on hover instead of shown at rest. Each
 icon is wrapped in `shared/Tooltip.jsx` (`label={t(labelKey)}` — the same string as the `aria-label`,
 so the visible-on-hover/focus tooltip and the screen-reader label always agree, localized in both
 `en.js`/`fa.js`) — the tooltip's own `bg-panel-frost`/`text-ink` chip floats above the trigger with
@@ -371,7 +384,7 @@ Inertial wheel smoothing, extracted into `hooks/useLenisScroll.js` (see
 easing, `smoothWheel: true`, skipped entirely under `prefers-reduced-motion` (native
 scrolling, and `ScrollService` never gets a registered instance, so its RAF fallback runs).
 The instance is driven by `gsap.ticker` (one RAF for the whole app) and synced with
-`lenis.on("scroll", ScrollTrigger.update)` so the GSAP pins/scrubs (`Hero`/`Story`/`ChapterHero`)
+`lenis.on("scroll", ScrollTrigger.update)` so the GSAP pins/scrubs (`Hero`/`Vision`/`ChapterHero`)
 stay accurate. Cleanup restores GSAP's default `lagSmoothing(500, 33)` and destroys the
 instance — callers may remount (`AppShell` on every locale switch via `key={language}`),
 so init/destroy must stay symmetrical. `ScrollService` receives the instance via
@@ -382,7 +395,7 @@ exports to it (see `src/services/README.md`).
 (a `"use client"` leaf that calls the hook and renders `null`, mounted first by the
 server-component `app/(house)/layout.js` so the House routes stay smooth-scrolled without
 making the layout itself a client component),
-`collection/[slug]/ProductPageClient.jsx` (calls the hook directly — that route is
+`collection/[slug]/CollectionPageClient.jsx` (calls the hook directly — that route is
 already `"use client"`), and `ledger/Ledger.jsx` (calls the hook directly, unconditionally,
 regardless of the gate/list/empty branch it's rendering — one instance for the whole
 `/ledger` route, same as every other caller).
@@ -397,7 +410,8 @@ this is a no-op on first load and on same-page interactions.
 
 **Inner scrollers must opt out** with `data-lenis-prevent` or Lenis hijacks their wheel
 input: `concierge/CuratorChat.jsx`'s message list, `header/MenuPanel.jsx`'s inner panel
-column, and `productdetailspage/SpecsTabs.jsx`'s tab strip — these three are the app's
+column, `collection/SpecsTabs.jsx`'s tab strip, and `glance/GlancePage.jsx`'s sticky mobile
+chapter-chip rail (`overflow-x-auto`) — these four are the app's
 only inner scroll containers; a new `overflow-*-auto` element needs the attribute too.
 **Scroll-locked overlays need it on their root** even though they don't scroll
 themselves: a `body overflow:hidden` lock stops native wheel but NOT Lenis's
@@ -421,12 +435,12 @@ which component happens to use it first.
 | :--- | :--- | :--- |
 | Hero rotation | `public/video/hero/hero-0N.{mp4,jpg}` (N = 01–04) | `Hero.jsx` |
 | House chapter hero | `public/video/house/chapter-{gavv,zivv,rakh,vaar}.{mp4,jpg}` | `house/ChapterPieces.jsx` (`ChapterHero`'s `CHAPTER_HERO_VIDEOS`) |
-| 360° spin | `public/video/spin/spin-{id}-360.{mp4,jpg}` (`id` = collection codename) | `showcase/ImageViewer.jsx`, `productdetailspage/StudioGallery.jsx` |
-| Story gallery | `public/video/story/story-{hood,oven,cupboard,pan,inbuilt,light}.{mp4,jpg}` | `Story.jsx` |
+| 360° spin | `public/video/spin/spin-{id}-360.{mp4,jpg}` (`id` = collection codename) | `showcase/ImageViewer.jsx`, `collection/StudioGallery.jsx` |
+| Story gallery | `public/video/story/story-{hood,oven,cupboard,pan,inbuilt,light}.{mp4,jpg}` | `Vision.jsx` |
 | Material preview | `public/video/material/{eucalyptus,stone,leather}.{mp4,jpg}` — the earlier **portrait** cuts are parked (not deleted) in `public/video/material/fallback/` for future use | `Materials.jsx` |
 | Ambient audio | `public/audio/ambient-loop.m4a` | `hooks/useAmbientAudio.js` |
 | Collection plates | `public/image/{id}/{id}-NN.jpg` — `id`-derived, **not** part of this reorganization, deliberately unchanged | `lib/collectionImages.js`'s `resolveCollectionImages()` (see `src/lib/README.md`) |
-| Home carousel stills | `public/image/home/*` — feeds the dormant, commented-out `Story.jsx` image carousel (see below), not currently rendered | `lib/collectionImages.js`'s `resolveHomeUtensilImages()` |
+| Home carousel stills | `public/image/home/*` — feeds the dormant, commented-out `Vision.jsx` image carousel (see below), not currently rendered | `lib/collectionImages.js`'s `resolveHomeUtensilImages()` |
 
 **Deliberately out of scope:** `public/image/{collection}/` plates (the `id`-derived pipeline
 above — already correct) and `public/showcase/` (the FlipHTML5 lookbook export — a different
@@ -489,7 +503,7 @@ top padding is responsive for the same reason — `pt-[61px] sm:pt-[73px] lg:pt-
 `lg:pt-32` keeps the original generous breathing room once the layout goes two-column.
 
 **This 61px/73px header-height match is a shared constant, not a Hero-only value.**
-`ProductDetailsPage.jsx`'s root wrapper (the `/collection/[slug]` page shell) uses the same
+`CollectionPage.jsx`'s root wrapper (the `/collection/[slug]` page shell) uses the same
 `61px`/`73px` figures in its own `pt-[calc(...)]` top padding, for the same reason — its content
 sits under the same fixed `Header`. Its previous flat `py-10 md:py-16` never accounted for the
 fixed header at all and visibly overlapped `NavBar`/product content on mobile and tablet widths;
@@ -498,7 +512,7 @@ fixed by decomposing into `pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)]`
 standardization pass — see `src/styles/README.md`'s section-rhythm section; the redundant
 `md:` duplicate of the `sm:` rule was dropped) and a separate `pb-14 md:pb-20` (56px mobile /
 80px desktop exit — the standard section-y bottom cadence). If `Header.jsx`'s rendered height
-ever changes, update both this file and `ProductDetailsPage.jsx`.
+ever changes, update both this file and `CollectionPage.jsx`.
 
 **Scrim + caption tokens:** the bottom gradient (`bg-gradient-to-t from-foundation/70 via-foundation/15
 to-transparent`) and the caption text (`text-canvas`) deliberately use the **static** `foundation`/`canvas`
@@ -516,13 +530,15 @@ panel, giving users control over the auto-cycling per WCAG's pause/stop/hide exp
 auto-updating content. The raw `<video>` elements themselves stay `aria-hidden` (decorative,
 muted, no captions); the interactive controls are not.
 
-`Hero`'s two state vars (`activeVideo`, `isPlaying`) and four effects (reduced-motion check on
-mount, `currentTime`/pause management keyed on `activeVideo`, play/pause keyed on
-`[activeVideo, isPlaying]`, and the lg-gated scroll-away scrub — see the Scroll-away duet note
-above) live directly in the shell — see `src/hooks/README.md`'s "no
-`useState`/`useEffect` in components" rule; this is treated as within the documented "trivial local
-UI toggle" exception rather than extracted to a hook, since it's a single self-contained
-media-player concern with no cross-component reuse.
+`Hero`'s five state vars (`activeVideo`, `stageReady`, `isPlaying`, `mountedCount`, `nextEager`)
+and six effects (reduced-motion check on mount, the loader-gated entrance effect that sets
+`stageReady` and runs the GSAP badge→title→desc→CTA timeline, `currentTime`/pause management keyed
+on `activeVideo`, play/pause keyed on `[activeVideo, isPlaying]`, eager-mount bookkeeping, and the
+lg-gated scroll-away scrub — see the Scroll-away duet note above) live directly in the shell — see
+`src/hooks/README.md`'s "no `useState`/`useEffect` in components" rule; this is treated as within the
+documented "trivial local UI toggle" exception rather than extracted to a hook, since it's a single
+self-contained media-player concern with no cross-component reuse. (`stageReady` additionally gates
+the video wrapper's scale/fade entrance — same `zaad:loaderComplete` contract as the timeline.)
 
 ### `house/ChapterPieces.jsx` — `ChapterHero`'s randomized video overlay
 
@@ -534,8 +550,10 @@ top of the file — the three page components (`AboutChapter`, `StoryValueChapte
 `SustainabilityResponsibilityChapter`) pass no video prop and need no changes; the randomization
 lives entirely in `ChapterHero`.
 
-**Hydration-safe randomness:** these House routes are `force-static` (see the project's Load-bearing
-Contracts). Picking `Math.random()` during render would diverge between the static server HTML and
+**Hydration-safe randomness:** these House routes are server-rendered (`force-dynamic` since
+2026-09-07 — see the project's Load-bearing Contracts; this constraint applies regardless of
+static vs. dynamic rendering, since it's about server/client output parity, not caching).
+Picking `Math.random()` during render would diverge between the server-rendered HTML and
 the client's first paint. `activeVideo` starts `null` (so SSR and first client paint both render
 just the `<img>` poster, identical output) and is only rolled inside a `useEffect` — the
 same pattern this project already uses for the `initialLanguage` static-route restore. Since the
@@ -587,14 +605,14 @@ a raw `window.scrollTo` — this makes the hero's scroll-down button/link cooper
 competing native scroll.
 
 **A scoped GSAP usage** (originally authorized as an explicit fourth spot alongside `Hero.jsx`,
-`Story.jsx`, and `Blueprint.jsx`; `Blueprint.jsx` and its pinned nav column were removed
-2026-09-06, so GSAP is back down to three spots — `Hero.jsx`, `Story.jsx`, `ChapterHero` — see
+`Vision.jsx`, and `Blueprint.jsx`; `Blueprint.jsx` and its pinned nav column were removed
+2026-09-06, so GSAP is back down to three spots — `Hero.jsx`, `Vision.jsx`, `ChapterHero` — see
 CLAUDE.md): `ChapterHero`
 runs a scrubbed parallax, not a pin, on its media column. Three refs — `sectionRef` on the hero's root
 `<section>`, `mediaColRef` on the **outer** `lg:col-span-6` media column `div` (never the inner
 `motion.video`-wrapping `motion.div`, which already owns `transform` via Motion's `initial`/
 `animate` scale — GSAP writing `yPercent` to the same node would fight Motion for the `transform`
-style). A third `useEffect` (mount-only, empty deps) mirrors `Story.jsx`'s guarded-registration and
+style). A third `useEffect` (mount-only, empty deps) mirrors `Vision.jsx`'s guarded-registration and
 `gsap.matchMedia()` idiom exactly: bails under `prefers-reduced-motion`, gates the tween behind
 `(min-width: 1024px)`, and `gsap.fromTo`s `mediaColRef.current` from `yPercent: 0` to `yPercent: 12`
 with `scrollTrigger: { trigger: sectionRef.current, start: "top top", end: "bottom top", scrub: 0.85,
@@ -605,7 +623,7 @@ children own their own Motion entrance tweens, so GSAP scrubs the parent only �
 while the media lags down. A scrub, not a pin, was chosen deliberately — this hero's two columns
 are roughly equal height (no meaningful pin distance) and the section clips overflow.
 
-### `productdetailspage/StudioGallery.jsx` — per-item 360° spin tile
+### `collection/StudioGallery.jsx` — per-item 360° spin tile
 
 Unlike `Hero.jsx`'s generic atmosphere clips and `ChapterHero`'s randomized collection clips, this
 video is **deterministic and product-identifying by design** — the whole point is to show the exact
@@ -655,7 +673,7 @@ transition override) instead of a plain fade; the thumbnail strip carries its ow
 `MaisonReveal` (`slide-up-royal`, delay 0.6) nested inside the gallery's root reveal, so the
 entrance score reads pane → strip. The veil is skipped under `prefers-reduced-motion`
 (`useReducedMotion()` — plain opacity crossfade instead), and the caption's view-counter digits
-localize via `Intl.NumberFormat` (`fa-IR`/`en-US`), matching `Story.jsx`'s numeral treatment.
+localize via `Intl.NumberFormat` (`fa-IR`/`en-US`), matching `Vision.jsx`'s numeral treatment.
 
 `StudioGallery`'s three state vars (`show360`, `isPlaying`, `isSpinReady`) and three effects (reset
 on `item.id` change, reset `isSpinReady` on `spin360Src` change, play/pause keyed on
@@ -712,16 +730,28 @@ animates.
 | File | Role |
 |------|------|
 | `header/MenuPanel.jsx` | Animated slide-out overlay; composes all menu sub-sections |
-| `header/SystemPortals.jsx` | "System Directories" column — Showroom + Blueprints portals (`memo`); no other content |
-| `header/JourneyIndex.jsx` | Three journey chapter cards (`memo`) — `MenuPanel.jsx` renders a fourth, small eyebrow-link button directly below this component's `md:col-span-8` column (2026-09-05, not inside `JourneyIndex.jsx` itself, not a new `SystemPortals` card by explicit user request): `onNavigateToConcierge`, same closure pattern as `SpecimenGrid.jsx`'s collection link below, scrolling to `id="concierge"`. Its label reuses `t("zaadDigitalCurator")` — the same string `concierge/CuratorChat.jsx` renders as that section's own on-page title, deliberately not `footerConcierge`/`conciergeBadge` ("Acquisition Concierge"), so the menu link and the section it jumps to read as the same destination. Unlike `SpecimenGrid.jsx`'s matching link, separation from the three cards above is a `border-t border-[#C5A059]/40` **on the button itself** (self-width, not a full-width divider element) — by explicit user preference for one top-side rule scoped to the link, not a separate full-bleed divider div. This column also fills the height gap left by `SystemPortals.jsx`'s two stacked cards (`md:col-span-4`) being taller than this row's single-row three-card grid, so the two columns' bottoms land closer to level |
+| `header/SystemPortals.jsx` | "System Directories" column — House of ZAAD + Digital Catalogue portal cards (`memo`); no other content. 2026-09-07: the Catalogue card's click (built as `MenuPanel.jsx`'s `onBlueprint`, passed in here) was rewired from the long-dead `setActiveTab("pdf")` to `window.open("/showcase/index.html", "_blank", "noopener,noreferrer")` — the card finally goes somewhere: the same static lookbook the footer's Digital Catalogue link and the showcase panel's "VIEW IN DIGITAL CATALOGUE" button open. Same day: the first card (label `t("menuHouseOfZAAD")` = "HOUSE OF ZAAD") was ALSO found going nowhere near its name — its `onClick` (`MenuPanel.jsx`'s old `onShowroom`) just cleared the selected product and returned to the general showroom view, while "House of ZAAD" independently labels the actual `/about`/`/story`/`/sustainability` brand pages elsewhere (their shared `heroBadge` eyebrow) — a real destination collision, not a wording nuance. Rewired to `MenuPanel.jsx`'s new `onHouseOfZaad` (`navigateTo("/about")`, the same `router.push`+close pattern `JourneyIndex.jsx`'s links already use), and `menuHouseOfZAADPortalSub` changed from "Return to the digital showroom" to copy describing the House content it now actually opens. Both cards' `isActive` is `false` — neither corresponds to a state this menu can itself be open while true (the House pages don't render this menu at all, and the Catalogue opens in a new tab), so the `PortalCard` "active" halo never applies to either. |
+| `header/JourneyIndex.jsx` | Three journey chapter cards (`memo`) — `MenuPanel.jsx` renders a fourth, small eyebrow-link button directly below this component's `md:col-span-8` column (2026-09-05, not inside `JourneyIndex.jsx` itself, not a new `SystemPortals` card by explicit user request): `onNavigateToConcierge`, same closure pattern as `SpecimenGrid.jsx`'s collection link below, scrolling to `id="concierge"`. Its label reuses `t("zaadDigitalCurator")` — the same string `concierge/CuratorChat.jsx` renders as that section's own on-page title, deliberately not `footerConcierge`/`conciergeBadge` ("Acquisition Concierge"), so the menu link and the section it jumps to read as the same destination. Like `SpecimenGrid.jsx`'s matching link, it carries no top or bottom rule — by explicit user preference, both links' classNames are byte-identical (see the `SpecimenGrid.jsx` row below); separation from the three cards above comes from the column's own `space-y-2` gap. This column also fills the height gap left by `SystemPortals.jsx`'s two stacked cards (`md:col-span-4`) being taller than this row's single-row three-card grid, so the two columns' bottoms land closer to level |
 | `header/SpecimenGrid.jsx` | Collection item cards grid (`memo`) — its section-label badge is a clickable nav button (`onNavigateToCollection`, threaded down from `Header.jsx` via `MenuPanel.jsx`) that closes the menu and scrolls to the showroom's `id="collection"` section. A conditional "Continue Browsing" link renders **below the four cards** (moved here 2026-09-06, was briefly under `SystemPortals.jsx`'s two portal cards) when `useLocalPreference("lastViewedItem")` (`MenuPanel.jsx`) has a value — styled to match `JourneyIndex`'s sibling "AI Curator" link exactly, borderless (no top or bottom rule, by explicit user preference — this and the curator link intentionally carry a stray, inert `hover:border-[#C5A059]` with no base border-width utility, which is a no-op, not a bug: keep both links' classNames byte-identical rather than "fixing" one). Clicking it resolves the stored id against the current-language `collection` prop (so the displayed name/click target are never stale after a language switch) and reuses the same same-page `onSelectProduct` swap the grid's own cards use — a stale/deleted id that no longer matches `collection` just no-ops silently. A hover-revealed `×` dismiss button sits beside it (2026-09-06, `lucide-react`'s `X`, `opacity-0 group-hover/continue:opacity-100 focus-visible:opacity-100` on a `group/continue` wrapper so it doesn't clutter the row at rest) — calls `onClearLastViewed` (`MenuPanel.jsx`, `setLastViewedItem(null)` via `useLocalPreference`'s setter), letting a visitor who doesn't want to be reminded of an item clear just that one preference without a settings page |
-| `header/ControlsFooter.jsx` | Copyright/edition strip + language, audio, font-scale, and theme toggles footer (`memo`) — controls render plain/always-visible, no hover-expand (see `shared/ExpandOnHoverPill.jsx` above). The font-scale Minus/Plus buttons carry `hover:bg-indicator hover:text-on-indicator` — the same token pair the language/theme options use for their *selected* state, reused here on `:hover`. Since 2026-09-03 the bound-reached button instead takes the full *selected-chip* look (`bg-indicator text-on-indicator`, still `disabled` + `cursor-not-allowed`): at min scale the − chip fills, at max the + chip fills, so the stepper reads as a segmented control where the exhausted direction is lit, not dimmed |
+| `header/MenuControls.jsx` | Copyright/edition strip + language, audio, font-scale, and theme toggles footer (`memo`) — controls render plain/always-visible, no hover-expand (see `shared/ExpandOnHoverPill.jsx` above). The font-scale Minus/Plus buttons carry `hover:bg-indicator hover:text-on-indicator` — the same token pair the language/theme options use for their *selected* state, reused here on `:hover`. Since 2026-09-03 the bound-reached button instead takes the full *selected-chip* look (`bg-indicator text-on-indicator`, still `disabled` + `cursor-not-allowed`): at min scale the − chip fills, at max the + chip fills, so the stepper reads as a segmented control where the exhausted direction is lit, not dimmed |
 
-**Keyboard, focus, and scroll-lock contract (owned by `Header.jsx`, mirrors `shared/Lightbox.jsx`'s self-contained pattern).** While `menuOpen`, a single effect in `Header.jsx`: locks both `document.body` and `document.documentElement` overflow (the latter guards iOS Safari, which can scroll the root element even with the body locked — restored on cleanup, both of them, or the whole page stays permanently unscrollable once the menu has opened once); blocks background `touchmove` via a `{ passive: false }` listener, except inside whatever carries `data-menu-scroll-panel` (`MenuPanel.jsx`'s own scrollable content div, which also carries `overscroll-contain` so edge-swipes at its scroll bounds rubber-band in place rather than dragging the page behind) — omitting that attribute there makes the menu's own content unscrollable on touch; traps `Tab`/`Shift+Tab` within whatever carries `data-menu-panel` (`MenuPanel.jsx`'s root `motion.div`, which also carries `role="dialog" aria-modal="true"`); roves focus with `ArrowDown`/`ArrowUp` (wrapping) plus `Home`/`End`; closes on `Escape`; and restores focus on close to `document.activeElement` as captured when the menu opened. `ArrowLeft`/`ArrowRight` **adjust the focused segmented control** instead of moving focus: `ControlsFooter.jsx`'s three setting clusters carry `data-menu-language` / `data-menu-theme` / `data-menu-font` wrappers (the font buttons additionally `data-font-increase` / `data-font-decrease`), and the handler `.click()`s the adjacent option's real button — zero prop plumbing, bounds respected because `.click()` on a disabled button is a native no-op — then focuses it; "forward" (the arrow that advances in reading order) flips under `dir="rtl"` exactly like platform radiogroups, so physical arrows keep pointing at the option they select in both languages. Note the language case closes the menu by the global `key={language}` cross-fade remount (see the project CLAUDE.md contract) — that's existing behavior, not this handler's. All menu interactives (`header/` cards, `ControlsFooter` pills, `AudioToggle`) share the app-standard visible focus ring (`outline-none focus-visible:outline-2 outline-offset-2 outline-accent`), without which the arrow roving was invisible. On touch, a **downward swipe > 80px** on the `data-menu-scroll-panel` div dismisses the menu (listeners are passive, fire only when the panel is at scroll-top, and are cleaned up with the effect). `Escape` is **layered**: a visible `Tooltip` consumes it first (`nativeEvent.stopImmediatePropagation()` in its `onKeyDown` — Next's App Router hydrates into `document` itself, so React's delegated keydown listener and this effect's native `document.addEventListener("keydown")` sit on the *same node*, where `stopPropagation` cannot suppress a sibling listener; `stopImmediatePropagation` works because React's listener is registered at hydration, before the menu's); the next press closes the menu. `MenuPanel.jsx` itself has no keyboard logic of its own — unlike Lightbox, ownership stays in the shell because `Header.jsx` already owns `menuOpen` state and the toggle button's focus is naturally where restore-focus should land in the common case.
+**Keyboard, focus, and scroll-lock contract (owned by `Header.jsx`, mirrors `shared/Lightbox.jsx`'s self-contained pattern).** While `menuOpen`, a single effect in `Header.jsx`: locks both `document.body` and `document.documentElement` overflow (the latter guards iOS Safari, which can scroll the root element even with the body locked — restored on cleanup, both of them, or the whole page stays permanently unscrollable once the menu has opened once); blocks background `touchmove` via a `{ passive: false }` listener, except inside whatever carries `data-menu-scroll-panel` (`MenuPanel.jsx`'s own scrollable content div, which also carries `overscroll-contain` so edge-swipes at its scroll bounds rubber-band in place rather than dragging the page behind) — omitting that attribute there makes the menu's own content unscrollable on touch; traps `Tab`/`Shift+Tab` within whatever carries `data-menu-panel` (`MenuPanel.jsx`'s root `motion.div`, which also carries `role="dialog" aria-modal="true"`); roves focus with `ArrowDown`/`ArrowUp` (wrapping) plus `Home`/`End`; closes on `Escape`; and restores focus on close to `document.activeElement` as captured when the menu opened. `ArrowLeft`/`ArrowRight` **adjust the focused segmented control** instead of moving focus: `MenuControls.jsx`'s three setting clusters carry `data-menu-language` / `data-menu-theme` / `data-menu-font` wrappers (the font buttons additionally `data-font-increase` / `data-font-decrease`), and the handler `.click()`s the adjacent option's real button — zero prop plumbing, bounds respected because `.click()` on a disabled button is a native no-op — then focuses it; "forward" (the arrow that advances in reading order) flips under `dir="rtl"` exactly like platform radiogroups, so physical arrows keep pointing at the option they select in both languages. Note the language case closes the menu by the global `key={language}` cross-fade remount (see the project CLAUDE.md contract) — that's existing behavior, not this handler's. All menu interactives (`header/` cards, `MenuControls` pills, `AudioToggle`) share the app-standard visible focus ring (`outline-none focus-visible:outline-2 outline-offset-2 outline-accent`), without which the arrow roving was invisible. On touch, a **downward swipe > 80px** on the `data-menu-scroll-panel` div dismisses the menu (listeners are passive, fire only when the panel is at scroll-top, and are cleaned up with the effect). `Escape` is **layered**: a visible `Tooltip` consumes it first (`nativeEvent.stopImmediatePropagation()` in its `onKeyDown` — Next's App Router hydrates into `document` itself, so React's delegated keydown listener and this effect's native `document.addEventListener("keydown")` sit on the *same node*, where `stopPropagation` cannot suppress a sibling listener; `stopImmediatePropagation` works because React's listener is registered at hydration, before the menu's); the next press closes the menu. `MenuPanel.jsx` itself has no keyboard logic of its own — unlike Lightbox, ownership stays in the shell because `Header.jsx` already owns `menuOpen` state and the toggle button's focus is naturally where restore-focus should land in the common case.
 
-Navigation actions (`animateScrollTo`, `animateScrollToTop`) are resolved in **both** the shell (`Header.jsx` — logo scroll-to-top, inquiry scroll) and `MenuPanel`, via named exports from `ScrollService` (also home to `animateScrollToBottom` — see `shared/ScrollButton.jsx` above).
+Navigation actions (`animateScrollTo`, `animateScrollToTop`) are resolved in **both** the shell (`Header.jsx` — logo scroll-to-top calls `animateScrollToTop` directly) and `MenuPanel`, via named exports from `ScrollService` (also home to `animateScrollToBottom` — see `shared/ScrollButton.jsx` above). **`Header.jsx`'s Inquiry button no longer calls `animateScrollTo` directly (fixed 2026-09-07)** — `handleInquiryClick` used to hardcode `animateScrollTo("concierge", 1500)`, which works when `Header` is mounted inside `AppShell` (the `#concierge` element exists on that page) but silently failed/retried-then-bailed when `Header` is mounted from `collection/[slug]/CollectionPageClient.jsx` (no such element exists on the product page at all). It now calls the `onScrollToSection` prop instead — the same prop `Footer.jsx` already correctly branches on — so it delegates to whichever implementation is actually correct for the current route: `AppShell`'s real in-app scroller, or `CollectionPageClient.jsx`'s `router.push('/#concierge')`, picked up by `AppShell.jsx`'s own mount-time hash handler once the navigation lands (see `src/services/README.md`'s ScrollService section). The redundant `setActiveTab("showroom")`/`onSelectProduct(null)` calls this handler used to make before scrolling were dropped too — both are now no-ops-or-worse on the product-page route (a second, redundant `router.push("/")`) and were already handled internally by `onScrollToSection` on the `AppShell` route.
 
-**`ControlsFooter.jsx`'s edition strip is dynamic, not static text.** It renders
+**`Header.jsx`'s Browse/Close toggle label window is content-hugging, not fixed-width (2026-09-06).**
+The toggle's label box is a `h-4 overflow-hidden` flex whose single mounted `motion.span` sits
+in flow (`AnimatePresence mode="wait"` guarantees exactly one at a time). It was previously
+`w-20` with `absolute` spans: at `sm` sizes "BROWSE" + the menu icon measures ~78px against the
+80px window, so any `--zaad-font-scale` above 1 — including the residue of Farsi's ×1.05
+multiplier when switching fa→en — clipped the centered label's first/last letters (reported as
+"BROWSE" losing its "B"). With the window sized by its in-flow content the clip is impossible
+at any scale in either language; the `h-4` + `overflow-hidden` vertical mask for the y-slide
+label swap is unaffected. Button width now varies with the label ("منو" renders narrower than
+"BROWSE") — content-fit is the intent, not drift. Same sizing family as `MaisonButton`'s
+`w-max` label-row fix (above): never put a fixed width on a `whitespace-nowrap` text box.
+
+**`MenuControls.jsx`'s edition strip is dynamic, not static text.** It renders
 `{brand} {t("editionVersion")}` then a live date-time label assembled from per-locale
 `Intl.DateTimeFormat` pieces as `` `${time} (${weekday}), ${date}` `` (since 2026-09-03) —
 `"20:17 (Thu), September 3, 2026"` for `en` (short English weekday abbreviation), the
@@ -731,11 +761,11 @@ Persian-calendar equivalent with the **full un-abbreviated weekday** for `fa`
 Farsi is the one place in the app that intentionally uses the Persian calendar; everywhere else
 (`item.year`, "C°01"-style codes) stays Gregorian by brand design (see `.font-latin` in
 `src/styles/README.md`). Both labels re-render on a 15s `setInterval` state tick — the interval
-lives inside `ControlsFooter`, which only mounts while the menu is open, so it never ticks in the
-background. `house/HouseChrome.jsx` has no equivalent strip — only `ControlsFooter.jsx` renders one.
+lives inside `MenuControls`, which only mounts while the menu is open, so it never ticks in the
+background. `house/HouseChrome.jsx` has no equivalent strip — only `MenuControls.jsx` renders one.
 
 **`ZAAD` transliterates to `زاد` for incidental brand mentions in Farsi, unlike the wordmark.**
-`ControlsFooter.jsx` composes the brand name from a local `BRAND_NAME = { en: "ZAAD", fa: "زاد" }`
+`MenuControls.jsx` composes the brand name from a local `BRAND_NAME = { en: "ZAAD", fa: "زاد" }`
 map rather than hardcoding "ZAAD". This is the opposite rule from the logotype: the *wordmark*
 (`Header.jsx`'s clickable "ZAAD", `HouseChrome.jsx`'s, `Footer.jsx`'s) is always Latin in both
 languages by deliberate brand-identity choice — but incidental mentions of the brand name in body
@@ -747,7 +777,7 @@ inside otherwise-RTL Farsi prose, wrap it in `<span dir="ltr" className="font-la
 `dir="ltr"` adds explicit Unicode bidi isolation on top of the font-family override, which matters
 once more than one direction-mixed fragment sits on the same line (adjacent LTR/RTL runs can
 reorder unpredictably without it). Not needed when a whole line is uniformly one script, as
-`ControlsFooter.jsx`'s edition strip currently is.
+`MenuControls.jsx`'s edition strip currently is.
 
 **`Header.jsx`'s wordmark hover is a staggered letter color cascade (2026-09-03)** — the
 letters are individual `<span>`s (`BRAND_LETTERS`), each with `transitionDelay: index * 60ms`
@@ -769,10 +799,10 @@ in a `dir="ltr"` + `aria-hidden` wrapper with the word carried by the button's `
 |------|------|
 | `showcase/CollectionTabs.jsx` | Horizontal item selector with animated underline |
 | `showcase/ImageViewer.jsx` | Left column — editorial/macro/360° image frame, prev/next, view mode switcher (see the `StudioGallery` section below for the shared 360° pattern; Macro no longer has its own placeholder image — see below) |
-| `showcase/ProductPanel.jsx` | Right column — name, story, specs accordion, CTA buttons. The action row pairs the solid `showcasePrivateInquiry` CTA with an outline `showcaseOpenPiece` button that calls `onViewDetails(selectedItem)` → the in-app `ProductDetailsPage` swap in `AppShell` (smooth AnimatePresence cross-fade — not a route navigation; restored 2026-09-05 after a `router.push` attempt felt abrupt). The `showcaseRevealDossier` link inside the specs drawer is a separate exit: it opens the static page-flip catalogue at the selected collection's anchor (`CATALOGUE_PAGES`: gavv `#p=4`, zivv `#p=26`, rakh `#p=50`, vaar `#p=62`) in a new tab, labelled «مشاهده در کاتالوگ» — deliberately two different destinations, do not unify them |
+| `showcase/CollectionPanel.jsx` | Right column — name, story, specs accordion, CTA buttons. The action row pairs the solid `showcasePrivateInquiry` CTA with an outline `showcaseOpenPiece` button that calls `onViewDetails(selectedItem)` → the in-app `CollectionPage` swap in `AppShell` (smooth AnimatePresence cross-fade — not a route navigation; restored 2026-09-05 after a `router.push` attempt felt abrupt). The `showcaseRevealDossier` link inside the specs drawer is a separate exit: it opens the static page-flip catalogue at the selected collection's anchor (`CATALOGUE_PAGES`: gavv `#p=4`, zivv `#p=26`, rakh `#p=50`, vaar `#p=62`) in a new tab, labelled «مشاهده در کاتالوگ دیجیتال» — deliberately two different destinations, do not unify them |
 | `showcase/Lightbox.jsx` | Thin wrapper → `shared/Lightbox` with Showcase-specific prop mapping |
 
-**Item localization:** `ProductPanel` reads item fields directly (`selectedItem.name`,
+**Item localization:** `CollectionPanel` reads item fields directly (`selectedItem.name`,
 `selectedItem.description`, `selectedItem.story`, `selectedItem.materials`, …). The
 selected item comes from `data("collection")` in `Showcase.jsx`, which is already
 localized — there is no per-item override layer. (A previous `getItemTranslations(id)`
@@ -781,22 +811,24 @@ reintroduce it. See `src/lib/i18n/README.md`.)
 
 ---
 
-### `ProductDetailsPage.jsx` + `productdetailspage/`
+### `CollectionPage.jsx` + `collection/`
 
 **Shell responsibilities:** reads `useLanguage`, calls `useLightbox(item.images.length)`, holds `activeTab` state, scrolls to top on `item.id` change. Passes the entire `lightbox` object as a single prop to children.
 
 | File | Role |
 |------|------|
-| `productdetailspage/NavBar.jsx` | Breadcrumb + animated back button (`memo`) |
-| `productdetailspage/StudioGallery.jsx` | Left column — main image with prev/next nav, thumbnail strip + a 4th "360° View" tile that swaps the main pane to that item's own looping turntable clip (see below). Main pane + thumbnails render via `next/image` (`fill`, crossfade on a `motion.div` wrapper inside `AnimatePresence mode="wait"`); the main pane's `<Image>` is `priority` (above-fold LCP, 2026-09-06); the 360° cover still stays raw (opacity-animated `motion.img`, cached URL) |
-| `productdetailspage/ProductMeta.jsx` | Right column — title, specs grid, CTA pair (`memo`) |
-| `productdetailspage/LookbookPoetry.jsx` | Story/monograph section (`memo`, no-op if `item.farsiStory` absent); Farsi poetry column + زمین watermark render in Farsi mode only — English mode shows the full-width English monograph column |
-| `productdetailspage/SpecsTabs.jsx` | Tab bar orchestrator + `AnimatePresence` panel switcher; content via `useMemo` |
-| `productdetailspage/TabArchitecture.jsx` | Island + tall-unit specs panels |
-| `productdetailspage/TabAppliances.jsx` | Gaggenau + Kesseböhmer integration grid |
-| `productdetailspage/TabHeritage.jsx` | Static craft integrity panel (`memo`) |
-| `productdetailspage/AcquisitionCTA.jsx` | Footer CTA with shimmer animation (`memo`) |
-| `productdetailspage/Lightbox.jsx` | Thin wrapper → `shared/Lightbox` with PDP-specific prop mapping |
+| `collection/NavBar.jsx` | Breadcrumb + animated back button (`memo`) |
+| `collection/StudioGallery.jsx` | Left column — main image with prev/next nav, thumbnail strip + a 4th "360° View" tile that swaps the main pane to that item's own looping turntable clip (see below). Main pane + thumbnails render via `next/image` (`fill`, crossfade on a `motion.div` wrapper inside `AnimatePresence mode="wait"`); the main pane's `<Image>` is `priority` (above-fold LCP, 2026-09-06); the 360° cover still stays raw (opacity-animated `motion.img`, cached URL) |
+| `collection/CollectionMeta.jsx` | Right column — title, specs grid, CTA pair (`memo`) |
+| `collection/LookbookPoetry.jsx` | Vision/monograph section (`memo`, no-op if `item.farsiStory` absent); Farsi poetry column + a per-collection line-art SVG watermark render in Farsi mode only — the watermark is a module-level `WATERMARK_ICONS` map keyed by `item.id` (gavv layered earth-strata curves, zivv radiance arcs, rakh slatted-screen verticals, vaar architectural horizontals), stroke-based via a shared `STROKE` const, absolute `right-6 top-6`, `opacity-[0.04]`, `aria-hidden` + `pointer-events-none`; English mode shows the full-width English monograph column |
+| `collection/SpecsTabs.jsx` | Tab bar orchestrator + `AnimatePresence` panel switcher; content via `memo(TabContent)` inside the switch |
+| `collection/TabArchitecture.jsx` | Island + tall-unit specs panels |
+| `collection/TabAppliances.jsx` | Gaggenau + Kesseböhmer integration grid |
+| `collection/TabHeritage.jsx` | Static craft integrity panel (`memo`) |
+| `collection/AcquisitionCTA.jsx` | Footer CTA with shimmer animation (`memo`) |
+| `collection/Lightbox.jsx` | Thin wrapper → `shared/Lightbox` with PDP-specific prop mapping |
+
+**Accessibility (2026-09-07 pass).** `StudioGallery.jsx`'s main image pane carries `role="button"`/`tabIndex={0}`/`onKeyDown` (Enter/Space, mirroring the existing click-to-zoom `onClick`) only while it's actually clickable (`!show360` — no click handler exists in 360 mode, so no keyboard affordance is added then either); `aria-label` is `t("productEnlargeImageLabel")` with `{name}` filled from `item.name`. `showcase/ImageViewer.jsx`'s main image pane got the identical treatment in a follow-up fix (same day): `role="button"`/`tabIndex={0}`/`onKeyDown` gated on `viewMode !== "360"` (its 360 mode has no click handler either, mirroring `StudioGallery`'s `!show360` gate), same `productEnlargeImageLabel` key for `aria-label`. Both gallery-open triggers in this component tree are now keyboard-reachable. The prev/next chevrons and every thumbnail/360-tile button in this file now carry the standard `focus-visible:outline` ring plus (for the icon-only chevrons) an `aria-label` from the existing `showcasePrev`/`showcaseNext` keys. `collection/Lightbox.jsx`'s `imageAlt` now prefers the active image's own `caption` over the bare item name, matching `shared/Lightbox.jsx`'s existing keyboard/focus-trap/focus-restore contract (documented above) — that contract itself needed no changes, it was already complete. `collection/SpecsTabs.jsx`'s tablist now implements the standard roving-tabindex pattern (`tabIndex={isActive ? 0 : -1}` per `SpecTabButton`, `ArrowLeft`/`ArrowRight`/`Home`/`End` on the `role="tablist"` wrapper, RTL-aware exactly like `header/MenuControls.jsx`'s font-scale arrow-adjust) — `document.getElementById(`tab-${id}`)?.focus()` is the same "resolve the real DOM node by id and act on it" idiom `MenuControls` already uses, not a new mechanism. The `activeCurationTabLine` `layoutId` itself is untouched.
 
 ---
 
@@ -807,7 +839,7 @@ reintroduce it. See `src/lib/i18n/README.md`.)
 | File | Role |
 |------|------|
 | `concierge/SectionHeader.jsx` | Start-aligned intro block (de-centered 2026-09-05 — reading-start `text-left rtl:text-right`, matching the other four home eyebrows) — per-element `MaisonReveal` stagger (eyebrow → `lines`-variant h2 → subtitle → click-to-call pill) (`memo`) |
-| `concierge/InquiryForm.jsx` | Bespoke acquisition form + appointment (Audience/Cadence) + inline server-validation errors + animated success confirmation state. Its one native `<select>` (consultation category) is `appearance-none` with an absolutely-positioned `ChevronDown` (`end-3`, `pointer-events-none`) inside a `relative` wrapper and `pe-10` on the select — the browser's default arrow hugs the border and padding can't move it (2026-09-06, user request); `ps-4`/`pe-10` split instead of `px-4` so text never runs under the chevron. RTL lands free via `end-3`/`pe-*` logical properties. The Cadence button's own `ChevronDown` (custom dropdown, not a native select) already sits `px-3` inside its pill — no change needed there. Submit button's `Send` icon: see the `MaisonButton` `iconClassName` bullet |
+| `concierge/InquiryForm.jsx` | Bespoke acquisition form + appointment (Audience/Cadence) + inline server-validation errors + animated success confirmation state. Its one native `<select>` (consultation category) is `appearance-none` with an absolutely-positioned `ChevronDown` (`end-3`, `pointer-events-none`) inside a `relative` wrapper and `pe-10` on the select — the browser's default arrow hugs the border and padding can't move it (2026-09-06, user request); `ps-4`/`pe-10` split instead of `px-4` so text never runs under the chevron. RTL lands free via `end-3`/`pe-*` logical properties. The Cadence button's own `ChevronDown` (custom dropdown, not a native select) already sits `px-3` inside its pill — no change needed there. Since 2026-09-06 the name/email and phone/category rows pair at all viewport sizes (`grid-cols-2 gap-4 md:gap-6`, was `grid-cols-1 md:grid-cols-2`): each column is `flex flex-col` with a **conditional** `mt-auto` on the input (`identityRowAlignsBottom`/`contactRowAlignsBottom` — true only while the pair is error-free, so a wrapped label bottom-aligns its input with its pair; dropped when either column shows a `FieldError`, since the error-free column's `mt-auto` would otherwise push its input ~20px below the errored one) and `leading-snug` on the label. The Audience/Cadence row deliberately keeps `grid-cols-1 sm:grid-cols-2` — the long Farsi toggle labels ("دریافت تماس اختصاصی") cannot fit half-width pills below `sm`. The email label renders as `t("contactEmail")` + a one-step-smaller `t("optionalMarker")` suffix span ("Secure" dropped, per user request); `ledger/Ledger.jsx`'s email and phone `DetailRow`s reuse `contactEmail`/`mobilePhone` without the marker. Submit button's `Send` icon: see the `MaisonButton` `iconClassName` bullet |
 | `concierge/CuratorChat.jsx` | AI chat panel — message list, loading indicator, send form, download-transcript button. Its send chip's `Send` icon: see the `MaisonButton` `iconClassName` bullet (kept in sync with the form's) |
 
 **`InquiryForm.jsx`'s validation is server-side, not client-side** (2026-09-03) — see
@@ -831,7 +863,44 @@ and Persian digits) gets its own marker column instead of flowing inline; every 
 still goes through `renderChatMarkdown` (see `src/lib/README.md`) for bold/bidi handling.
 This exists because `rtl:text-justify` on one giant blob stretched non-final lines (e.g.
 a mid-list item) into uneven, broken-looking spacing — justify only ever safely applies
-within a single-line block, never across a whole multi-line reply. The download button
+within a single-line block, never across a whole multi-line reply.
+
+**`ChatMessage`/`renderCuratorLine` detect script per line, not the page's `language`**
+(added 2026-09-07) — `FARSI_CHAR` (`/[؀-ۿ]/`, the same Arabic-script block
+`wrapLatinRuns.js` tests) is tested against each line's own text inside
+`renderCuratorLine`, and the per-line result sets both (a) an explicit
+`dir="rtl"`/`dir="ltr"` on that line's own wrapping `<div>` and (b) the `isFarsi` flag
+passed into `renderChatMarkdown`. `ChatMessage` separately computes the same test once
+against the whole `msg.content` (`msgIsFarsi`) purely as the bubble container's own
+default `dir` — the per-line `dir` on each child always wins for that line's own bidi
+context regardless of the container's. This replaces what used to be the page-level
+`isFarsi` (`language === "fa"`) passed down from `Concierge.jsx`. This fixes two bugs
+that were really one root cause: a full-English reply rendered on a `fa` page used to
+pass `isFarsi=true` into `wrapLatinRuns` for text containing zero Farsi characters, which
+collapses the whole string into one merged Latin run (see `wrapLatinRuns`'s single-space
+run-merge in `src/lib/README.md`) — the literal `**` markers inside that merged run never
+reach `renderChatMarkdown`'s bold-toggle split, so they leaked through unstyled instead
+of becoming `text-accent` spans. Per-line detection also means a reply written in the
+"other" language than the page now reads in its own natural direction instead of
+inheriting the page's, **including a single reply that mixes a Farsi line and a fully-
+English line** (per-line, not per-message, was needed for that case specifically — an
+earlier per-message-only version of this fix left it as a known gap, since one shared
+flag for the whole message can't get both lines right at once). The bubble's own
+placement (`items-end`/`items-start` on the outer `motion.div`, based on `msg.role`, not
+content language) is untouched. Known minor gap: the inner div's `rtl:rounded-tr-2xl`/
+`rtl:text-justify` utility classes don't actually flip off under a local `dir="ltr"`
+override on a `fa` page — Tailwind's `rtl:` variant is `:where(:dir(rtl), [dir="rtl"],
+[dir="rtl"] *)`, and the `[dir="rtl"] *` clause still matches via the `<html dir="rtl">`
+ancestor regardless of a closer override — so an English line's bubble-tail corner and
+justify stay in their `fa`-page rounding/alignment even though the text itself correctly
+reads LTR (native `dir` always governs actual bidi text flow, independent of that
+utility-class quirk). Cosmetic only; revisit if it's ever worth chasing. `CuratorChat`
+and `Concierge.jsx` no longer thread a `language` prop into `CuratorChat` for this
+purpose — it was dead once `ChatMessage` stopped needing the page-level flag. **An error
+bubble (`msg.isError`, added 2026-09-07) renders a `t("errorRetry")` text button beneath
+its content**, wired to `useConcierge.js`'s `retryLastExchange` — reuses the same
+`errorRetry` key `error.js`/`not-found.js` already use for their own "Try Again" CTA
+rather than adding a new one. The download button
 next to `curatorModelBadge` builds a plain-text transcript client-side (`Blob` +
 temporary `<a download>`, no server round-trip) from `chatMessages` as they stand at
 click time. Its styling matches `shared/AudioToggle.jsx`'s small-utility-icon-button
@@ -847,6 +916,25 @@ height and grows with its own content, so a hardcoded chat height could mismatch
 `min-h-[520px]` is a floor so it doesn't collapse on narrower/stacked layouts where the
 two no longer share a row.
 
+**The chat's message list is a capped inner scroller (2026-09-06), not a page-growth area.**
+The mechanism is two nested divs: an outer `flex-1 min-h-0 relative` flex child and an
+inner `absolute inset-0 overflow-y-auto overscroll-contain` scroller (the one carrying
+`data-lenis-prevent`, `scrollbar-sleek`, and the bg/border/padding). The nesting is
+load-bearing, not decorative: `Concierge.jsx`'s grid row is sized intrinsically
+(max-content) before stretch, so a flat `flex-1 min-h-0 overflow-y-auto` list still
+contributes its full scrollable height to the row's max-content and the page elongates
+with every message — empirically verified, `min-h-0` alone does **not** cap here (the
+parent never gets a definite height for it to resolve against). Making the scroller
+absolutely positioned removes it from intrinsic sizing entirely: the row's max-content is
+then driven only by the sibling `InquiryForm` column and the root's `min-h-[520px]`
+floor, the wrapper receives a definite bounded height, and the list scrolls inside it.
+The bar is `scrollbar-sleek` (see `src/styles/README.md`'s Scrollbar section) — thin,
+theme-adaptive, gold on hover — and the scroller keeps `data-lenis-prevent` (one of the
+app's three inner scrollers) plus `overscroll-contain` so chat edge-swipes can't chain to
+the page behind (same as `MenuPanel.jsx`'s scroll panel). `useConcierge`'s auto-scroll
+targets `scrollRef.current.parentElement` — the sentinel's parent must remain the
+scrolling div, i.e. the sentinel stays a direct child of the abspos scroller.
+
 ### House-of-ZAAD routes — `house/` (shared by `/about`, `/story`, `/sustainability`)
 
 The three House routes share a slim chrome (rendered once by the route-group layout,
@@ -857,8 +945,7 @@ two of the five `aboutSections` data entries (`story`+`brandValue`,
 
 | File | Role |
 |------|------|
-| `house/HouseChrome.jsx` | Shared slim header: back-to-showroom, ZAAD wordmark, the **current** House page's name as a static underlined label (`NAV.find((item) => item.href === pathname)` — current-page-only, no `layoutId`), compact language/theme control (`memo`). Its own font-scale Minus/Plus buttons carry the same treatment as `header/ControlsFooter.jsx`'s copy — `hover:bg-indicator hover:text-on-indicator` off-bound, and since 2026-09-03 the selected-chip look (`bg-indicator text-on-indicator`) when their bound is reached — kept in sync deliberately even though the two controls don't share code (see the House-routes contract in the root CLAUDE.md) |
-| `house/HouseFooter.jsx` | Shared slim footer: House-of-ZAAD cross-link row (active page styled, others `next/link`) + a Showroom Directory column (`SHOWROOM_LINKS`: `/#story`/`/#collection`/`/#concierge`/`/glance`, plain links since House pages sit outside the showroom's `activeTab` tree) + copyright (`memo`) |
+| `house/HouseChrome.jsx` | Shared slim header: back-to-showroom, ZAAD wordmark, the **current** House page's name as a static underlined label (`NAV.find((item) => item.href === pathname)` — current-page-only, no `layoutId`), compact language/theme control (`memo`). Its own font-scale Minus/Plus buttons carry the same treatment as `header/MenuControls.jsx`'s copy — `hover:bg-indicator hover:text-on-indicator` off-bound, and since 2026-09-03 the selected-chip look (`bg-indicator text-on-indicator`) when their bound is reached — kept in sync deliberately even though the two controls don't share code (see the House-routes contract in the root CLAUDE.md) |
 | `house/HouseChapterShell.jsx` | Single-column chapter composer (used only by `/about`): ambient bg + cinematic hero (eyebrow/title/intro + Unsplash image, randomized collection-video overlay — see `ChapterHero` below) + centered `<h2>` + centered editorial block (`EditorialBlock` called with `align="center"` — parses the `### I. …` headings from `aboutSections[].content`) + `EditorialSignature` horizontal divider (`className="mx-auto"`, single-column's decorative echo of the diptych's `&` medallion — see `ChapterPieces` below) + stat grid (renders nothing when `stats` is empty) + sibling cross-link cards + `tel:` call strip (`memo`) |
 | `house/HouseDiptychShell.jsx` | Two-column chapter composer (used by `/story` and `/sustainability`): cinematic hero (same `ChapterHero`, so the same randomized video overlay) + a `left`/`right` pair of editorial columns (each with its own eyebrow/title/intro/content and optional stat grid, `EditorialBlock` called at its default `align="start"`), joined by a centered `&` divider — its hairline draws downward via Motion `whileInView` on entry (`scaleY`, `origin-top`, 1.6s; the whole spine is `hidden lg:block`, so desktop-only) with the medallion blooming 0.9s in as the line passes center — + sibling cross-link cards + call strip (`memo`) |
 | `house/ChapterPieces.jsx` | Shared pieces (`ChapterHero`, `EditorialBlock`, `EditorialSignature`, `StatGrid`, `CrossLinks`, `CallStrip`) consumed by both shells. `EditorialBlock` takes an optional `align` prop (`"start"` default — `text-left rtl:text-right`, used by `HouseDiptychShell`'s columns; `"center"` — heading/eyebrow centered, prose `<p>` re-asserts `text-left rtl:text-right max-w-2xl mx-auto` so long-form body copy never centers, only the heading/label above it — used only by `HouseChapterShell`). `EditorialSignature` (single-column only, rendered by `HouseChapterShell`, takes an optional `className` merged onto its `MaisonReveal`) is a horizontal `accent/40` gradient rule with a centered `w-11 h-11` `bg-panel`/`border-accent/30`/`shadow-card-sm` circle holding a serif-italic "Z" seal — same visual family as `HouseDiptychShell`'s `&` medallion, but the mark differs deliberately: "&" joins two columns, "Z" seals one continuous narrative. Since 2026-09-03 its gradient rule draws via `scaleX` on entry (`origin-left rtl:origin-right`, 1.6s) with the seal blooming 0.8s in — matching the diptych spine's new draw language. `StatGrid` values count up on entry (`StatValue`: 2.6s eased 0→target, `fa-IR`/`en-US` digits, raw-string fallback, no count under reduced motion). `StatGrid` is always `grid-cols-3` (2026-09-06, user request: three stats in one line on mobile — the old `grid-cols-2` left the third stat alone on a second row) with `gap-4 md:gap-8`, and the per-cell alignment centers below `md` (`text-center md:text-left rtl:md:text-right` when `align="start"`; `align="center"` stays centered at all sizes) — desktop's start-aligned look is unchanged. A `StatGrid` with more than three stats would wrap to a second row; all current pages pass exactly 3 (or none). `ChapterHero`'s media frame carries `lux-vignette` and its fallback still `lux-ken-burns` (see `src/styles/README.md` cinematic utilities). `CallStrip` (2026-09-06) shows a live open/closed dot next to "Call the Atelier" — `[isOpen, setIsOpen] = useState(null)` populated in a mount-only effect from `lib/studioHours.js`'s `isStudioOpenNow()` (`Intl.DateTimeFormat` against `Asia/Tehran`, matching the real Sat–Thu 09:00–18:00 hours already stated in `callStudioSub`'s copy — Friday is the only closed day); `null` renders nothing extra, so SSR and first paint match. Dot color is `bg-accent`/`bg-muted/50`, not a new hardcoded hex |
@@ -866,12 +953,15 @@ two of the five `aboutSections` data entries (`story`+`brandValue`,
 | `house/StoryValueChapter.jsx` | `/story` chapter, on `HouseDiptychShell` — pairs the Land of Dorsa brand story (`story`, no stats) with brand values (`brandValue`, no stats), cross-links to About and Sustainability (`memo`) |
 | `house/SustainabilityResponsibilityChapter.jsx` | `/sustainability` chapter, on `HouseDiptychShell` — pairs considered materials/sustainability (`sustainability`, `sustainabilityStats`) with CSR (`csr`, `csrStats`), cross-links to About and Story (`memo`) |
 | `glance/GlanceHeader.jsx` | `/glance` slim fixed header — the `LedgerHeader` idiom (back-to-showroom `Link`, centered ZAAD wordmark, accent-underlined page label) reusing `HouseControls` from `house/HouseChrome` — the compact control has no `layoutId`, so it's safe outside the house routes (`memo`) |
-| `glance/GlancePage.jsx` | `/glance` client orchestrator — `useLenisScroll` (called here, Ledger precedent: standalone route, not the `(house)` group), IntersectionObserver scroll-spy (`rootMargin: "-25% 0px -65% 0px"`) driving the two chapter rails (desktop rail items are link cards with `p-5` padding and `space-y-4` gap — per user direction 2026-09-05 — with the glance hover stack kept on top of that sizing: `NoiseBg` reveal + accent gradient wash + underline fill + warmed border, active `bg-panel` + `border-accent/50` + `shadow-card-sm` + full underline draw; the list enters via a `MaisonReveal` `unveil` wrapped **inside** the sticky nav so the sticky geometry is untouched), `animateScrollTo(\`glance-${id}\`)` navigation, `ChapterHero` (reused from `house/ChapterPieces.jsx` — its GSAP scrub is one of the three authorized spots, reused not extended) with `scrollTargetId="glance-body"` and `withVideo={false}` (2026-09-06, user request — the lookbook runs poster-only, zero clip bytes; see the `withVideo` note in the ChapterHero section), the overview chapter, the master matrix table, `CallStrip` close. Sticky-rail gotcha: the desktop rail is a grid child of the single-row 12-col grid (stretches tall → sticky works); the mobile chip rail must stay **outside** the grid container (a sticky grid child is trapped in its own short row) — `scrollbar-none`, not `no-scrollbar`. The rail carries `id="glance-rail-mobile"` and `handleNavigate` passes its live `offsetHeight` as `animateScrollTo`'s `extraOffset` (0 on `lg:`, where the rail is `display:none`), so chapter targets clear both the header and the rail (see `src/services/README.md`'s ScrollService section). The overview collection cards reuse the `CrossLinks` card grammar verbatim (`NoiseBg` revealOnHover + accent gradient wash + underline draw + mono eyebrow `item.number` + `wrapBrandNames` serif title + `crossLinkReadMore` footer with RTL-flipped `ArrowUpRight`) — click scrolls to that chapter. Rail/chip label spans and the statement blockquote carry `font-farsi` (translated serif text); labels drop tracking on Farsi (see `src/styles/README.md`). Since 2026-09-05 the page also closes with `house/HouseFooter` (the house-routes footer, mounted directly — `/glance` is standalone so no `(house)` layout renders it for us; no House link is active on this pathname, and the footer's own `/glance` showroom self-link stays a plain link there) and the self-contained `shared/ScrollButton` (`memo`) |
+| `glance/GlancePage.jsx` | `/glance` client orchestrator — `useLenisScroll` (called here, Ledger precedent: standalone route, not the `(house)` group), IntersectionObserver scroll-spy (`rootMargin: "-25% 0px -65% 0px"`) driving the two chapter rails (desktop rail items are link cards with `p-5` padding and `space-y-4` gap — per user direction 2026-09-05 — with the glance hover stack kept on top of that sizing: `NoiseBg` reveal + accent gradient wash + underline fill + warmed border, active `bg-panel` + `border-accent/50` + `shadow-card-sm` + full underline draw; the list enters via a `MaisonReveal` `unveil` wrapped **inside** the sticky nav so the sticky geometry is untouched), `animateScrollTo(\`glance-${id}\`)` navigation, `ChapterHero` (reused from `house/ChapterPieces.jsx` — its GSAP scrub is one of the three authorized spots, reused not extended) with `scrollTargetId="glance-body"` and `withVideo={false}` (2026-09-06, user request — the lookbook runs poster-only, zero clip bytes; see the `withVideo` note in the ChapterHero section), the overview chapter, the master matrix table, `CallStrip` close. Sticky-rail gotcha: the desktop rail is a grid child of the single-row 12-col grid (stretches tall → sticky works); the mobile chip rail must stay **outside** the grid container (a sticky grid child is trapped in its own short row) — `scrollbar-none`, not `no-scrollbar`. The rail carries `id="glance-rail-mobile"` and `handleNavigate` passes its live `offsetHeight` as `animateScrollTo`'s `extraOffset` (0 on `lg:`, where the rail is `display:none`), so chapter targets clear both the header and the rail (see `src/services/README.md`'s ScrollService section). The overview collection cards reuse the `CrossLinks` card grammar verbatim (`NoiseBg` revealOnHover + accent gradient wash + underline draw + mono eyebrow `item.number` + `wrapBrandNames` serif title + `crossLinkReadMore` footer with RTL-flipped `ArrowUpRight`) — click scrolls to that chapter. Rail/chip label spans and the statement blockquote carry `font-farsi` (translated serif text); labels drop tracking on Farsi (see `src/styles/README.md`). The page also closes with the shared `Footer` (mounted prop-less, the 2026-09-06 one-footer-site-wide pass — same footer as every other route) and the self-contained `shared/ScrollButton` (`memo`) |
 | `glance/GlanceChapter.jsx` | Per-collection chapter — narrative blockquote (`\n`-split, `font-farsi` serif paragraphs), italic serif `tagline` (also `font-farsi`), partners `dl`, and a generic `SpecGroup` over the **heterogeneous** `islandSpecs`/`tallUnits` shapes (gavv: `partA`+`partB`+`parts`+`adjacentA`/`adjacentB`; zivv/rakh: `partA`+`adjacentA`(/`adjacentB`); vaar: `listSpecs` only — all keys optional), `SpecTable` for the supplements' `materialTable`, dimensions `dl`, `SpecCards` for `appliancesDetail` (gavv/zivv only) + `fittings`/`furniture` (static info cards — deliberately **no** accent underline or hover layers; the underline draw is an interactive/hover idiom, not decoration), layouts `ol` (`memo`) |
 
 The house routes render their **own** chrome and do **not** reuse the showroom
-`Header`/`Footer`/`ControlsFooter` (wired to `useShowroomNav` and the global navbar
-`layoutId` groups). There is no House-nav `layoutId` group at all — the chrome shows only
+`Header`/`MenuControls` (wired to `useShowroomNav` and the global navbar
+`layoutId` groups). Since 2026-09-06 they share the showroom `Footer` — one footer
+site-wide, per user direction; it mounts prop-less on every non-home route, so its
+showroom-directory buttons take the internal `router.push("/#section")` fallback
+(Footer renders no `layoutId`, so nothing flies cross-route). There is no House-nav `layoutId` group at all — the chrome shows only
 the current page's name (see the `HouseChrome` row). `LanguageProvider` (root layout) covers all three routes, so the
 `key={language}` full-app crossfade applies on locale switch.
 
@@ -912,8 +1002,9 @@ the same `HouseControls` cluster House pages use (now `export`ed from `HouseChro
 reuse). This deliberately drops the showroom `Header`'s nav tabs/collection controls/mobile menu
 and the global `activeLanguageBlobInNavbar`/`activeThemeBlobInNavbar` layoutId groups from this
 route — a direct instruction, not a rediscovery of the House-routes prohibition (that CLAUDE.md
-rule still targets the House routes specifically). The showroom `Footer` stays mounted unchanged
-(`onScrollToSection`/`setActiveTab` still routed through `router.push`), alongside `ScrollButton`
+rule still targets the House routes specifically). The showroom `Footer` stays mounted — since
+the 2026-09-06 one-footer pass, prop-less like every other non-home route (Footer's own
+`router.push("/#section")` fallback), alongside `ScrollButton`
 and `useLenisScroll`, so the page still reads as the same site below the fold.
 
 Entries paginate at `PAGE_SIZE = 10` (newest first — the server pre-sorts) over
@@ -936,7 +1027,7 @@ later pages would otherwise all sit at the 0.8s delay cap and lose the cascade.
 (defaulted `false` on write — see `/api/inquiry` in `src/app/README.md`). The three filter tabs
 ("All"/"Unviewed"/"Viewed", `filterTabs` array with live parenthesized counts, e.g. `(3)`) sit on
 a local-only Motion `layoutId="activeLedgerFilterLine"` tab-underline — modeled on
-`productdetailspage/SpecsTabs.jsx`'s `activeCurationTabLine` pattern but a distinct id, since it
+`collection/SpecsTabs.jsx`'s `activeCurationTabLine` pattern but a distinct id, since it
 mounts only on this route and must not collide with the four global groups. The tab row carries
 the same persistent `border-b border-ink/10` hairline `SpecsTabs`/`showcase/CollectionTabs.jsx`
 use under their own tab bars (not conditionally dropped above mobile), each `role="tab"` links to
@@ -997,7 +1088,7 @@ visitor), consultation/appointment labels resolve through the existing concierge
 dictionary keys (`privateArchiveAcquisition`/`residentialConsultation`/`florenceViewing`,
 `appointmentMode*`, `appointmentSlot*`, `appointmentWindowArrangement`) — the ledger adds
 only `ledger*` chrome strings, no new data vocabulary. The unfold is the
-`showcase/ProductPanel.jsx` accordion clip-path idiom (0.8s `[0.16,1,0.3,1]` animate /
+`showcase/CollectionPanel.jsx` accordion clip-path idiom (0.8s `[0.16,1,0.3,1]` animate /
 0.6s `[0.7,0,0.84,0]` exit) — inside the interactive 300–800ms range, deliberately not
 that accordion's 1.1s documented exception. `Intl` stamp formatters are module-cached per
 locale (`stampFor`). User-entered visitor data (names, notes) renders in
@@ -1012,10 +1103,10 @@ notes go through `wrapLatinRuns`.
 ### `React.memo`
 Applied to components whose output is fully determined by stable props or no props. Prevents re-renders when parent state (e.g., `activeTab`, `menuOpen`, `formSubmitted`) changes but the component's own inputs have not.
 
-**Memoised sub-components / shared:** `NavBar`, `ProductMeta`, `LookbookPoetry`, `TabHeritage`, `AcquisitionCTA`, `SectionHeader`, `SystemPortals`, `JourneyIndex`, `SpecimenGrid`, `ControlsFooter`, `NoiseBg`. The top-level shells (`Hero`, `Advantages`, `Story`, `Materials`, `HouseChrome`, `HouseFooter`, `HouseChapterShell`, `HouseDiptychShell`, `AboutChapter`, `StoryValueChapter`, `SustainabilityResponsibilityChapter`, `MaisonButton`, `MaisonReveal`, `InitialLoader`, `Footer`) are also `memo`-wrapped.
+**Memoised sub-components / shared:** `NavBar`, `CollectionMeta`, `LookbookPoetry`, `TabHeritage`, `AcquisitionCTA`, `SectionHeader`, `SystemPortals`, `JourneyIndex`, `SpecimenGrid`, `MenuControls`, `NoiseBg`. The top-level shells (`Hero`, `Advantages`, `Vision`, `Materials`, `HouseChrome`, `HouseChapterShell`, `HouseDiptychShell`, `AboutChapter`, `StoryValueChapter`, `SustainabilityResponsibilityChapter`, `MaisonButton`, `MaisonReveal`, `InitialLoader`, `Footer`) are also `memo`-wrapped.
 
-### `useMemo` for tab content
-`SpecsTabs` wraps the active tab panel in `useMemo([activeTab, item])`. Tab panels like `TabHeritage` are static JSX — this avoids re-creating their element trees on every parent render.
+### `memo` for tab content
+`SpecsTabs` renders the active tab panel through `MemoizedTabContent` (`memo(TabContent)`) inside its `AnimatePresence` switch. Tab panels like `TabHeritage` are static JSX — memoizing the component avoids re-rendering their element trees on every parent render.
 
 ### Prop object grouping
 `useLightbox` returns ~16 values. Rather than threading each individually through multiple layers, the shell stores the entire return as `const lightbox = useLightbox(n)` and passes it as a single prop. Same for `useShowcase` → `showcase` prop and `useConcierge` → `concierge` prop.
@@ -1031,7 +1122,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
 ## Conventions
 
 - **Section eyebrows are plain content-descriptors, one shared type style (2026-09-05).**
-  Every home section renders an eyebrow naming what's actually inside it — Story
+  Every home section renders an eyebrow naming what's actually inside it — Vision
   `manifestoBadge`, Showcase `showcaseBadge`, Advantages `advantagesBadge`, Materials
   `materialArchaeology`, Concierge's `SectionHeader` `acquisitionsServices` — never poetic
   vagueness ("نما", "باستان‌شناسی متریال" and "اعتبار متمایز" were removed for this
@@ -1053,6 +1144,18 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   Hindi-Farsi digits, never Latin. The active card keeps the drawn underline +
   `border-accent/50 shadow-ambient`. The old `MaisonButton material-choice` variant is gone;
   `hexaSample` is "مشاهده‌ی نمونه"/"View Sample" with no arrow inside the string.
+- **Every custom interactive element needs a visible `focus-visible` ring — never a bare
+  `focus:outline-none`.** The sitewide convention (already on most buttons/links) is
+  `outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+  focus-visible:outline-accent`; on the permanently-dark `Footer.jsx` surface (see the Canvas
+  family-locking rule in `src/styles/README.md`) swap the last class for
+  `focus-visible:outline-canvas`, matching `shared/SocialLinks.jsx`. A 2026-09-07 a11y pass
+  found and fixed several plain `focus:outline-none`/`focus:outline-none focus-visible:border-accent`
+  stragglers with no visible replacement at all (`Footer.jsx`'s nav lists,
+  `showcase/CollectionTabs.jsx`'s `TabButton`, `showcase/CollectionPanel.jsx`'s specs toggle
+  and catalogue link, `Hero.jsx`/`Vision.jsx`/`showcase/ImageViewer.jsx`'s video play/pause
+  and dash-selector chips) — check any new icon/text button against this pattern before
+  shipping it.
 - **Hover-only reveals need a persistent touch fallback.** Any cue styled with only a
   `group-hover:`/`hover:` variant is invisible on phones. Apply the same styles under the
   `[@media(hover:none)]:` arbitrary variant (e.g. `[@media(hover:none)]:opacity-100
@@ -1062,7 +1165,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   (`header/SpecimenGrid.jsx`, `header/JourneyIndex.jsx`, `header/SystemPortals.jsx`), the
   `house/ChapterPieces.jsx` `CrossLinks` sibling cards (same gradient-wash + underline-draw
   language, shared by all 3 House pages), and the Maximize2 lightbox cues
-  (`showcase/ImageViewer.jsx`, `productdetailspage/StudioGallery.jsx` —
+  (`showcase/ImageViewer.jsx`, `collection/StudioGallery.jsx` —
   both are class-driven off the pane's `group`, not inline `style`, because inline styles beat any
   media-variant class). Tappable tiles pair this with `active:scale-[0.98]` press feedback.
 - **`CrossLinks` deliberately has no whole-card or text `translate-y` on hover** — an earlier
@@ -1075,8 +1178,8 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   coarse pointers via the `data-touch-boost` attribute (must be flex-centered); `data-touch-slop`
   is the invisible ±8px hit-ring alternative where growth would break layout — used for the
   header's Browse/Inquiry buttons (growing them would shift the 61px mobile header height that
-  `Hero.jsx`'s and `ProductDetailsPage.jsx`'s top paddings are calibrated to) and the fixed `h-7`
-  language/theme pill tracks and font-scale +/− buttons in `header/ControlsFooter.jsx` and
+  `Hero.jsx`'s and `CollectionPage.jsx`'s top paddings are calibrated to) and the fixed `h-7`
+  language/theme pill tracks and font-scale +/− buttons in `header/MenuControls.jsx` and
   `house/HouseChrome.jsx`'s pills, where 44px
   targets would explode the 28px track (both attributes defined in `src/styles/globals.css`). Two
   gotchas: the slop ring is a `::before`, so it is clipped by `overflow-hidden` — the header call
@@ -1092,7 +1195,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   the whole score fires together on section entry instead of piecemeal; keep the default
   threshold for long stacked lists (mobile editorial columns) so blocks don't reveal far
   off-screen. Interactive areas that remount on user action (Showcase's `ImageViewer` 0.4s /
-  `ProductPanel` 0.6s) stay at tighter delays — a click that re-reveals must feel responsive, not
+  `CollectionPanel` 0.6s) stay at tighter delays — a click that re-reveals must feel responsive, not
   sluggish. The two heroes are exempt from `MaisonReveal`: home `Hero.jsx` runs its own GSAP
   badge→title→desc→CTA timeline (gated on the loader event), and `ChapterPieces.jsx`'s
   `ChapterHero` runs the Motion equivalent (0 → 0.1 → 0.3 → 0.5 + 1.8s media settle).
@@ -1101,7 +1204,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
 - **No comments** unless the logic would genuinely surprise a reader.
 - **Translation keys** via `t("key")` from `useLanguage()`. Never inline English strings in components.
 - **Display stills use `next/image`; zoom masters stay raw.** Editorial/atmosphere stills
-  (`ChapterHero`'s fallback, `Story.jsx`'s video-gallery
+  (`ChapterHero`'s fallback, `Vision.jsx`'s video-gallery
   pre-mount poster (see below), `StudioGallery`'s main pane + thumbnails) render via
   `next/image` `fill` + `sizes` inside their existing
   relative frames — automatic AVIF/WebP + responsive srcset directly from the local
@@ -1114,7 +1217,8 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `shared/Lightbox.jsx`) and the 360° spin cover deliberately stay raw `<img>`/`motion.img`:
   they need the full-resolution master (srcset downscaling would blur at zoom stops) and
   drive transforms by the percentage-based pan contracts — don't "modernize" them.
-- **`Materials.jsx`'s macro preview is a play-once video, not a still** (2026-09-05) — one
+- **`Materials.jsx`'s macro preview is a looping video, not a still** (2026-09-05; `loop`
+  added 2026-09-06 by user request) — one
   landscape clip per material sample (`public/video/material/{eucalyptus,stone,leather}.mp4`,
   mapped from the active sample's `id` via a small `MATERIAL_VIDEOS` lookup; re-encoded via
   ffmpeg, audio stripped, faststart, ~0.9–1.6MB each). The frame is `aspect-[1168/784]`
@@ -1124,9 +1228,15 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `object-contain` never letterboxes/pillarboxes or crops). The whole detail panel already
   unmounts/remounts per material via the parent `AnimatePresence mode="wait"` +
   `key={active.id}` (a pre-existing pattern, unchanged) — so each selection mounts a brand
-  new `<video muted playsInline>` element that plays once from the start; no `loop`
-  attribute and no manual currentTime/replay logic, since a browser's default end-of-video
-  behavior (hold the last frame, don't restart) *is* the desired "graceful, not abrupt" stop.
+  new `<video muted playsInline loop>` element that plays from the start. **The native
+  `loop` attribute alone proved unreliable in practice (added 2026-09-07)** — it stayed
+  in place, but in real playback the clip was observed freezing on its last frame instead
+  of restarting (the exact "frozen still" regression `loop` was originally added to
+  prevent), so an explicit `onEnded` handler (`video.currentTime = 0; video.play()`) is
+  now the actual mechanism that restarts it; `loop` stays as a harmless native-first
+  attempt for browsers where it does work correctly (per spec, `ended` never fires when
+  `loop` is honored, so the handler is a no-op there) and a guaranteed fallback where it
+  doesn't. The muted+playsInline convention keeps every restart silent either way.
   Since the 2026-09-06 media pass the panel's loading is gated by `hooks/useDeferredMedia.js`
   (default in-view mode, ref on the aspect container): the `<video>` mounts with
   `preload="none"` (poster renders, zero clip bytes — the section is below the fold), raises
@@ -1136,8 +1246,9 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   page load. Playback stays gated on `!useReducedMotion()`, same convention as every other
   autoplaying video in this codebase, and reduced-motion visitors also keep
   `preload="none"` — the poster (each clip's own ffmpeg-extracted first frame) is the
-  permanent end state instead of a blank element.
-- **`Story.jsx`'s stat strip (specialists / made-in-Iran / collections)** is its own inline
+  permanent end state instead of a blank element; the `loop` attribute is inert for them
+  since playback never starts.
+- **`Vision.jsx`'s stat strip (specialists / made-in-Iran / collections)** is its own inline
   `grid-cols-3` (2026-09-06, user request — was `grid-cols-2 md:grid-cols-3`, leaving the
   third stat alone on a second row on mobile), `gap-4 md:gap-6`, with `text-center
   md:text-start` on the grid container so all three sit centered on one line below `md`
@@ -1145,17 +1256,18 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `house/ChapterPieces.jsx` `StatGrid`** (which got the same layout fix the same day for the
   house pages) — it renders plain `t(...)` strings, no count-up; keep the two layouts in sync
   if either changes again.
-- **`Story.jsx`'s original image carousel is commented out (2026-09-05), not deleted** — its
+- **`Vision.jsx`'s original image carousel is commented out (2026-09-05), not deleted** — its
   `next/image`/`AnimatePresence` JSX, state (`utensilIndex`/`slideCount`/`slide`/`slideFits`),
   and derived memos (`numberFormatter`/`frameLabels`/`currentFrameNumber`/`totalFrameNumber`)
   are all preserved as a single commented block in place, alongside a comment listing the
-  imports/consts (`next/image`'s `Image`, `AnimatePresence`, `SILK_ENTER`/`SILK_EXIT`/`SLIDE_MS`)
-  it needs restored to compile again. `lib/collectionImages.js`'s `resolveHomeUtensilImages()`
-  and the `utensilImages` prop chain (`page.js` → `AppShell.jsx` → `Story.jsx`) are untouched and
+  imports/consts (`motion`/`AnimatePresence`, `SILK_ENTER`/`SILK_EXIT`/`SLIDE_MS`) it needs
+  restored to compile again — `next/image`'s `Image` import stays live above it (the static
+  poster `<Image>` in the video gallery's not-yet-mounted fallback branch consumes it). `lib/collectionImages.js`'s `resolveHomeUtensilImages()`
+  and the `utensilImages` prop chain (`page.js` → `AppShell.jsx` → `Vision.jsx`) are untouched and
   still wired, just unconsumed while the carousel is dormant — see `src/lib/README.md`. It was
   superseded in the same frame slot by an autoplaying video gallery (see below), by explicit user
   request to keep rather than remove the old implementation.
-- **`Story.jsx`'s video gallery** (added 2026-09-05, replacing the image carousel above in the
+- **`Vision.jsx`'s video gallery** (added 2026-09-05, replacing the image carousel above in the
   same `aspect-[3/4] w-full max-w-[420px]` frame) cycles six clips from `public/video/story/`
   (`story-hood`/`story-oven`/`story-cupboard`/`story-pan`/`story-inbuilt`/`story-light` — mixed portrait/landscape; re-encoded via
   ffmpeg to ~100KB–1MB each, audio stripped, `faststart`, scaled to fit the display frame) via
@@ -1169,9 +1281,9 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `<video>` elements out of the DOM entirely until the section actually reaches the viewport edge —
   a `<video>` starts fetching the instant it mounts regardless of `preload`, the same reasoning
   documented below for `showcase/ImageViewer.jsx`'s `canMountSpin` gate. `rootMargin` is
-  deliberately `0px`, not a few-hundred-px anticipatory lead: `Story` sits immediately below
+  deliberately `0px`, not a few-hundred-px anticipatory lead: `Vision` sits immediately below
   `Hero.jsx`'s `min-h-screen` section with zero gap, so any positive bottom margin makes the
-  observer's expanded zone cover Story's top edge at `scrollY: 0` — firing on initial paint,
+  observer's expanded zone cover Vision's top edge at `scrollY: 0` — firing on initial paint,
   before the user has scrolled at all, and eagerly fetching all six clips on every page load
   regardless of whether the visitor ever reaches this section. `0px` requires genuine scroll
   progress past the fold before the gate opens. Until then, a `next/image` `fill` + `sizes` of the
@@ -1194,7 +1306,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   frame sits static, matching `Hero.jsx`). Play/pause reuses `Hero.jsx`'s `heroPauseVideo`/
   `heroPlayVideo` i18n keys and its static `canvas`/`foundation` token pair (legible over
   unpredictable footage regardless of theme) — no new translation keys added.
-- **`Story.jsx`'s carousel is a fill-driven cinematic sequence, not a timed crossfade** (describes
+- **`Vision.jsx`'s carousel is a fill-driven cinematic sequence, not a timed crossfade** (describes
   the commented-out block above, kept for when/if it's restored) —
   per slide, two nested Motion wrappers split the transform work: the outer "silk veil" enters
   from `clipPath: inset(30% 12% 30% 12% round 18px)` + `scale: 0.94` + `opacity: 0` to full
@@ -1226,11 +1338,11 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   keyframe family; that CSS class itself still has no live call site. If a future component
   wants this same "silk unveil" feel without needing an exit phase, reach for the CSS class
   directly rather than re-deriving the values a third time.
-- **`Story.jsx`'s section entrance is a single choreographed score, not per-block reveals.** The
+- **`Vision.jsx`'s section entrance is a single choreographed score, not per-block reveals.** The
   text column has no wrapper reveal — each block carries its own `MaisonReveal` with
   `threshold={0.01}` so the whole score fires together the moment the section enters view
-  (right after the hero): title (`variant="lines"`, 0.1s) → image column
-  (`scale-down-unveil`, 0.3s) → quote (0.5s) → divider (0.65s) → paragraphs (0.75s) → stat
+  (right after the hero): eyebrow (`unveil`, 0.1s) → title (`variant="lines"`, 0.3s) → image
+  column (`scale-down-unveil`, 0.3s) → quote (0.5s) → divider (0.65s) → paragraphs (0.75s) → stat
   cells (0.9/1.05/1.2s) → caption card (`slide-up-royal`, 1.3s); the numeral/rail mid-score
   entries (0.55s/0.7s) belonged to the now-commented-out carousel above — the video gallery's
   play/pause control has no reveal delay of its own, it renders inline once the section's
@@ -1244,19 +1356,28 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   removed by explicit user request, not a bug fix. If a similar always-current, client-only,
   no-hydration-surface display is needed again, the `useState(null)` mount-guard idiom it used is
   still the right shape — see `ChapterHero`'s `activeVideo` for the same idiom elsewhere.)
-- **Footer route/link audit (2026-09-05)** — `Footer.jsx`'s third column (heading key
-  `footerBlueprintTitle`, "Studio Archives"/"آرشیو فنی استودیو") gained a `footerFullLookbook`
-  link to `/showcase/index.html` (new tab). `house/HouseFooter.jsx`'s new Showroom Directory
-  column (see its table row above) deliberately reuses the exact same `footerPhilosophy`/
+- **Footer route/link audit (2026-09-05)** — `Footer.jsx`'s Blueprints column (heading key
+  `footerBlueprintTitle`, "Studio Archives"/"آرشیو" — the fa value was shortened from
+  "آرشیو فنی استودیو" on 2026-09-07 by user request, en untouched; first column since the
+  2026-09-06 reorder to Blueprints → House → Showroom → Connect, per user request — was third
+  before; demoted back to third on 2026-09-07 when the menu-mirror reorder made the column order
+  Main Page → Other Pages → Archives → Connect — see the menu-mirror bullet below) gained a
+  `footerFullLookbook`
+  link to `/showcase/index.html` (new tab). (The since-deleted `house/HouseFooter.jsx`'s
+  Showroom Directory column had reused the exact same `footerPhilosophy`/
   `footerCollection`/`footerConcierge`/`zaadAtAGlance` keys, in the same order, as
-  `Footer.jsx`'s own Showroom Directory column — this keeps cross-footer and en/fa ordering
-  structural rather than a manual-discipline convention. The machine `sitemap.js` was audited
+  `Footer.jsx`'s own — the key-sharing convention survives its deletion in the 2026-09-06
+  one-footer pass.) The machine `sitemap.js` was audited
   in the same pass and already lists every real route correctly (including `/glance`,
   `/showcase/index.html`, and all dynamic `/collection/{id}` routes) — no changes needed there.
   (This same pass briefly restored a `setActiveTab("blueprint")` button in this column, since
   `Blueprint.jsx` had zero reachable entry points anywhere in the app; the button and the page
-  itself were both removed the next day — see below — so this column is back to `zaadAtAGlance`
-  + `footerFullLookbook` + the static `footerMilanZAAD` line.)
+  itself were both removed the next day — see below — so this column was back to `zaadAtAGlance`
+  + `footerFullLookbook` (later 2026-09-07: `zaadAtAGlance` moved to the Other Pages column as its
+  first entry by user request — see the menu-mirror bullet — leaving this column
+  `footerFullLookbook` ("Digital Catalogue") + the four collection-name links). The static
+  `footerMilanZAAD` atelier line that used to close this column
+  moved to the brand column on 2026-09-07 — see the sync bullet below.)
 - **`Blueprint.jsx` and its footer entry point were removed (2026-09-06), by explicit user
   request** — the page (`t("zaadBlueprint")`, a GSAP-pinned nav column + article panel reading
   from the now-deleted `blueprintSections` dictionary array), its `AppShell.jsx` tab branch, and
@@ -1264,8 +1385,101 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `blueprintIntroText`, `exploreBriefingFiles`, `chapterFile`, `statusCompliant`,
   `blueprintSystemTags`, and `glanceTeaser` (the removed page's only consumer) were removed from
   `en.js`/`fa.js` alongside it, since none had any other caller. GSAP is back down to three
-  authorized spots (`Hero.jsx`, `Story.jsx`, `ChapterHero`) — see the GSAP note below and
+  authorized spots (`Hero.jsx`, `Vision.jsx`, `ChapterHero`) — see the GSAP note below and
   CLAUDE.md. Don't reintroduce any of this without direct instruction.
+- **Footer words mirror the header menu (2026-09-07, user request — revised twice same day; this
+  is the final state).** Column order is now Main Page → Other Pages → Studio Archives → brand:
+  the first column's heading IS the Main Page link — a `button` styled like the other columns'
+  h4s (later same day: user collapsed the duplicated "Main Page" heading + first list item into
+  one clickable title) running `handleMainPage` (branches on the same `onScrollToSection`
+  truthiness guard as `handleSection`: when present, `setActiveTab("showroom")` +
+  `onSelectProduct?.(null)` + `animateScrollToTop(1400)` behind the same 100ms lead-time as
+  `handleSection`; routes that pass neither prop, i.e. the House layout, fall back to
+  `router.push("/")` directly). **`onSelectProduct` (fixed 2026-09-07)** is a third prop now
+  threaded into `Footer` from both `AppShell.jsx` (`setSelectedProduct`) and
+  `collection/[slug]/CollectionPageClient.jsx` (its own `onSelectProduct`, which
+  `router.push`es to `/collection/{id}` or `/`) — the same dual-context "go home" recipe
+  `Header.jsx`'s `handleBrandClick` already used (clears the in-app product view on `AppShell`,
+  navigates to `/` on the product-page route). Before this fix `handleMainPage` only ever called
+  `animateScrollToTop`, which on `/collection/[slug]` (where `onScrollToSection` is a real,
+  truthy `router.push`-based function per the note above) just scrolled the outgoing product
+  page to its own top instead of returning to the homepage — the button silently did nothing.
+  With the list below reading, in homepage order, Our Vision
+  (`manifestoBadge`) → `#vision` (2026-09-07: the Story section was renamed Vision — see the
+  rename bullet below; `manifestoBadge` now reads "Our Vision"/"نگاه ما"), CURATED COLLECTION
+  (`menuCuratedSpecimens`) → `#collection`, Advantages (`advantagesBadge`) → `#advantages`, and
+  ZAAD - Digital Curator (`zaadDigitalCurator`, wrapped in `wrapLatinRuns(...)` for the Latin
+  "ZAAD" run inside the Farsi label) → `#concierge`. The second column's heading is
+  `menuJourneyIndex` ("OTHER PAGES"/"سایر صفحات") over `zaadAtAGlance` → `/glance` (moved here
+  as the column's first entry from the Archives column, 2026-09-07, user request) followed by
+  the menu's three journey labels
+  (`menuOriginsPhilosophy`/`menuStoryBrandValue`/`menuSustainabilityResponsibility`) — and
+  since 2026-09-07 (later same day, user request) `house/HouseChrome.jsx`'s NAV array uses those
+  same three keys too, so the House header's current-page label reads identically to menu +
+  footer; `footerAboutUs`/`footerStoryBrandValue`/`footerSustainabilityResponsibility` were
+  deleted from `en.js`/`fa.js` (HouseChrome was their last caller). `footerPhilosophy`/
+  `footerCollection`/`footerConcierge`/`footerHouseDir`/`footerShowroomDir` are all deleted
+  (Footer was their only caller). The static `footerMilanZAAD` atelier line (since 2026-09-07 a
+  single word: "Tehran"/"تهـران" — earlier "Materials"/"متریال", before that "ZAAD Atelier —
+  Tehran"/"کارگاه متریال — تهران") lives in the brand column directly under the ZAAD wordmark
+  and ABOVE the social block, as the first of two separate `<p>` rows (each `text-xs font-mono
+  tracking-widest uppercase text-canvas/40 block select-none mb-4` — the `mb-4` provides the
+  gap; explicit classes since they no longer inherit the archives ul's styling), each led by a
+  custom glyph `<sup>`: `𖡡` before the label row, `🕻` before the phone row. The social block
+  below renders no visible "Connect With Us" label — only a `⌕` glyph `<sup>` whose `title`
+  tooltip carries `t("footerConnectWithUs")`,
+  directly above `SocialLinks`. Same day (2026-09-07), three additions from the
+  footer audit: (1) the phone placeholder row directly below the atelier label —
+  `<sup> 🕻 </sup> <span dir="ltr">{t("studioPhone")}</span>` (the `dir="ltr"` wrapper
+  is mandatory for space-separated digit groups under RTL — see the standing rule in
+  CLAUDE.md and `src/lib/i18n/README.md`; no `.font-latin`, it lacks Persian digit glyphs),
+  reusing the shared placeholder number key (swap
+  `studioPhone` once the real number exists; fa renders Hindi-Farsi digits); (2) the Main Page
+  column gained a Materials entry (`materialsBadge`, shortened same day from
+  "Material Analysis Core"/"هسته‌ی تحلیل متریال" to just "Materials"/"متریال" by explicit user
+  demand — don't re-embellish it) after Advantages — first as a
+  `ADVANTAGES | MATERIALS` single line, then reverted same day to one entry per line by user
+  request — Materials needed a new `id="materials"` on its `<section>` (it was the
+  only homepage section with no anchor, unreachable from any nav); (3) the Archives column's
+  `footerFullLookbook` value was renamed to "Digital Catalogue"/"کاتالوگ دیجیتال"
+  (user request, same key) and
+  all four collection names follow it, each on its own line (revised same day from a
+  `|`-separated single line the user found ugly), each a
+  `<Link href={/collection/${item.id}}>` rendering `wrapLatinRuns(item.name, isFarsi)` (codes
+  stay Latin in Farsi) at one font level smaller than the column's other links
+  (`text-[length:calc(11px*var(--zaad-font-scale))]`, rtl `13px`) — the data comes from
+  `useLanguage().data("collection")` via the same
+  `useMemo` + module-level `EMPTY_ARRAY` pattern as `Showcase.jsx`. The footer must stay
+  layoutId-free — it renders on all 5 host routes.
+- **The homepage Story section is now Vision (2026-09-07, user request — full rename, names stay
+  consistent at every level).** The section was `Story.jsx` with `id="story"`, eyebrow
+  `manifestoBadge` = "Our Story"/"داستان ما", and a Hero CTA (`ourPhilosophy` = "Our Heritage &
+  Vision"/"میراث و نگاه ما") scrolling to it — three names for one destination. Final state: file
+  `Vision.jsx` (internal `function Vision` + `React.memo(Vision)` — file name = primary export),
+  `id="vision"`, eyebrow `manifestoBadge` = "Our Vision"/"نگاه ما", Hero CTA `ourPhilosophy` =
+  "Our Vision"/"نگاه ما" (key name unchanged — hero CTA and section eyebrow are legitimately
+  separate keys), `AppShell.jsx`'s `handleScrollToVision` + `onScrollToVision` prop chain,
+  `Footer.jsx`'s `handleSection("vision")`. The internal data keys (`storyTitle`, `storyQuote2`,
+  …) keep their names — they're content, not navigation (`storyQuote`, the section's original
+  quote key, now sits dead in both dictionaries with no caller). **The House `/story` route is a
+  different destination ("Story & Brand Value") and was deliberately NOT renamed** — its
+  `aboutSections` data id `"story"` and `menuStoryBrandValue` are the House chapter, untouched.
+  GSAP spot #2 moved with the file: it's `Vision.jsx`'s pinned image column now (CLAUDE.md and
+  the styles/app/hooks/lib READMEs were all swept in the same pass).
+- **"Digital Catalogue" is the single name for the static lookbook (2026-09-07, user decision).**
+  Every catalogue-named surface reads "Digital Catalogue"/"کاتالوگ دیجیتال": the menu card
+  (`menuZAADCatalogue`, en was "ZAAD Catalogue"), the footer Archives link
+  (`footerFullLookbook`, en was "Full Lookbook" then briefly "Catalogue"), the showcase specs
+  drawer's link button (`showcaseRevealDossier`, was "VIEW IN CATALOGUE") and its side sentence
+  (`showcaseCatalogueText`, "master catalogue" → "digital catalogue"). The menu card was also
+  rewired to actually open `/showcase/index.html` — see the `SystemPortals.jsx` row above; the
+  hook's `"pdf"` tab special-case is gone (`useShowroomNav` accepts `"showroom"` only again).
+  The one remaining "Catalogue" word in English copy is `monograph` ("Comprehensive
+  Catalogue", the Hero bottom-bar button that scrolls to `#collection`) — deliberately left:
+  it names a different destination (the in-app collection section, and its fa value is
+  "مجموعه‌ی منتخب", no catalogue word at all); renaming it to "Digital Catalogue" would
+  misdescribe what it does. The menu card was kept per explicit user instruction after being
+  flagged dead in the 2026-09-07 audit.
 - **The `©` at the start of the copyright line is a deliberate hidden link to `/ledger`**
   (added 2026-09-03 as a separate trailing `·` character; moved onto the `©` glyph itself
   2026-09-04, dropping the extra `·` entirely) — `Footer.jsx` splits `footerCopyright`'s
@@ -1342,7 +1556,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   (block-level), preserving the stack. Both rows also carry `mx-auto`: for a default/auto-width
   button the ancestor chain is itself shrink-to-fit, so the row already sits flush with no spare
   space and `mx-auto` is a no-op — but for a caller that puts `w-full`/`flex-1` on the button
-  itself (`showcase/ProductPanel.jsx`'s Private Inquiry CTA, `productdetailspage/ProductMeta.jsx`'s
+  itself (`showcase/CollectionPanel.jsx`'s Private Inquiry CTA, `collection/CollectionMeta.jsx`'s
   and `concierge/InquiryForm.jsx`'s submit buttons, `showcase/ImageViewer.jsx`'s mode pills), the
   button's width becomes definite and its `width:auto` block-level ancestors (the two wrapping
   spans) resolve to fill 100% of it — leaving the now-`w-max` row narrower than its parent with
@@ -1355,7 +1569,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   directional icon with no paired counterpart on screen: a left-pointing icon (`ArrowLeft` "back")
   stays unrotated; a right-pointing one (`ChevronRight` "continue", `ArrowUpRight`) gets
   `rtl:rotate-180` (straight left/right icons) or `rtl:-scale-x-100` (diagonal icons, e.g.
-  `ArrowUpRight` in `MaisonButton.jsx`, `house/ChapterPieces.jsx`, `showcase/ProductPanel.jsx`,
+  `ArrowUpRight` in `MaisonButton.jsx`, `house/ChapterPieces.jsx`, `showcase/CollectionPanel.jsx`,
   `Send` in `concierge/CuratorChat.jsx`'s chat send button — a
   diagonal needs a mirror, not a 180° spin). `MaisonButton.jsx` renders its label/icon pair
   **twice** (default + hover-revealed accent copy, both always mounted); both copies need the RTL
@@ -1365,7 +1579,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   semantic icons.
 - **A prev/next PAIR is the opposite case — neither chevron rotates, in either language.**
   `ChevronLeft`/`ChevronRight` carousel buttons (`shared/Lightbox.jsx`'s main nav arrows and its
-  `ZoomController`'s inline pair, `showcase/ImageViewer.jsx`, `productdetailspage/StudioGallery.jsx`)
+  `ZoomController`'s inline pair, `showcase/ImageViewer.jsx`, `collection/StudioGallery.jsx`)
   sit at fixed physical `left-*`/`right-*` positions that never reposition under `dir="rtl"` (only
   logical `start-*`/`end-*` would move them, and these deliberately don't — the left button is
   always "go back", the right button always "go forward", regardless of language). An earlier
@@ -1375,6 +1589,25 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   above. Each button's icon direction is now constant across both languages, matching its constant
   physical position — don't reintroduce the mirror on a paired chevron even though the single-icon
   rule above still applies to unpaired ones.
+
+  **A second, subtler way to break this rule: a plain `flex` row's main axis is itself
+  direction-relative, independent of any explicit `rtl:` class (found and fixed 2026-09-07).**
+  `shared/Lightbox.jsx`'s `ZoomController` renders its inline prev/zoom-preset/next cluster as a
+  plain `<div className="flex items-center space-x-4">` — CSS's `flex-direction: row` (the
+  default) resolves against the inline/writing direction, so under `dir="rtl"` the browser
+  itself visually reverses which end is "first," with zero explicit RTL styling needed to
+  cause it. Unlike the physically-absolute-positioned pairs above (immune to this because
+  `position: absolute` + physical `left-*`/`right-*` don't consult `dir` at all), this inline
+  toolbar's prev/next buttons swapped screen sides under Farsi — while each icon still pointed
+  its original, un-rotated direction — reproducing the exact "left arrow points right, right
+  arrow points left" symptom this whole rule exists to prevent, just via a different mechanism
+  (container reversal instead of icon rotation). Fix: `dir="ltr"` on that specific inner row
+  (`shared/Lightbox.jsx`), pinning its physical layout regardless of page direction — the
+  outer wrapper (with its logical `ps-3`/`pe-2`/`border-s`/`me-1` padding, which should keep
+  mirroring to stay aligned with `ExpandOnHoverPill`'s own `isRtl`-driven expand direction) is
+  untouched. Any other prev/next pair sharing one flex-row parent (not just two independently,
+  physically positioned buttons) needs the same `dir="ltr"` pin — check for this shape
+  specifically, since it produces no lint warning and no explicit `rtl:` class to grep for.
 - **`wrapLatinRuns(text, isFarsi)`** (`src/lib/README.md`) — auto-wraps Latin runs embedded
   inside otherwise-Farsi prose (`item.description`, `item.story`, material/appliance names, …)
   in a `dir="ltr" className="font-serif"` span — bidi isolation plus the site's brand-identity
@@ -1387,13 +1620,22 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   one a given field needs before styling new Farsi-adjacent text — most bugs here come from
   assuming an ancestor's `.font-mono`/`.font-sans` class is harmless when the child is actually
   permanently-Latin brand content.
+- **Collection `number` codes ("C°01"–"C°04") always render as `font-serif font-latin`**
+  (2026-09-07, user request — standing rule, applies automatically to every future rendering
+  site, the user will not re-mention it). Several sites had them inheriting a mono context;
+  all were normalized to the `SpecimenGrid.jsx` pattern. Current render sites:
+  `header/SpecimenGrid.jsx`, `showcase/CollectionTabs.jsx` (also gained the missing
+  `font-latin` — the code was falling into the Farsi font), `showcase/CollectionPanel.jsx`'s
+  `<sup>`, `showcase/Lightbox.jsx` + `collection/Lightbox.jsx` (both via
+  `shared/Lightbox.jsx`'s `archiveNumber` span), `collection/CollectionMeta.jsx`,
+  `collection/NavBar.jsx`, `glance/GlanceChapter.jsx`, `glance/GlancePage.jsx`.
 - **Tailwind v4's `space-x-*`/`space-y-*` compile to logical properties** (`margin-inline-start`/`end`
   on `> :not(:last-child)`), so they already auto-mirror under `dir="rtl"` — never pair them with
   `rtl:space-x-reverse`. That's a v3-era idiom; under v4 it flips the margin back to the *wrong* side,
   producing a missing gap plus a spurious edge margin in Farsi only. If a gap looks wrong in RTL,
   the fix is almost always something else (a hardcoded `left-*`/`right-*`, `pl-*`/`pr-*`, or `ml-*`/
   `mr-*` nearby) — check for those before touching `space-x-*`.
-- **`header/ControlsFooter.jsx`'s `md:rtl:flex-row-reverse`** — Tailwind's default RTL behavior
+- **`header/MenuControls.jsx`'s `md:rtl:flex-row-reverse`** — Tailwind's default RTL behavior
   already mirrors a `flex-row`'s child order (first DOM child moves to the physical right). This
   component explicitly cancels that so the language/theme control pills stay physically on the
   right and the copyright/edition text stays physically on the left in both languages — a
@@ -1407,7 +1649,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `motion` elements — gated behind the `zaad:loaderComplete` event / `zaad_loader_complete`
   sessionStorage flag (see the `InitialLoader.jsx` note below) so it plays *after* the loader clears,
   not invisibly underneath it (plus, since 2026-09-03, its scrubbed scroll-away duet — see the
-  Scroll-away duet note in Hero's section); `Story.jsx` pins its image column (`ScrollTrigger.create({ pin: ... })`)
+  Scroll-away duet note in Hero's section); `Vision.jsx` pins its image column (`ScrollTrigger.create({ pin: ... })`)
   while the taller text column scrolls past it (since 2026-09-05, the same `matchMedia` block also
   scrubs a subtle `scale: 1 → 1.06` zoom, `scrub: 0.6`, on the video gallery's frame div via a second
   `gsap.fromTo` sharing the pin's trigger/start/end — an additional tween inside this existing
@@ -1415,7 +1657,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `motion.video` child animates, so GSAP and Motion never fight over one `transform`); and
   `house/ChapterPieces.jsx`'s `ChapterHero` runs a scrubbed (non-pinned) parallax on its media column
   via `gsap.fromTo` + `scrollTrigger: { scrub }` — see the `ChapterHero` section above for the exact
-  refs/tween. (`Blueprint.jsx` pinned its section-nav column the same way `Story.jsx` does; the page
+  refs/tween. (`Blueprint.jsx` pinned its section-nav column the same way `Vision.jsx` does; the page
   and its footer entry point were removed 2026-09-06 by explicit user request — don't reintroduce
   without direct instruction.) All these usages: guard
   on `prefers-reduced-motion` locally (same pattern as `shared/CustomCursor.jsx`, not the app-wide
@@ -1423,7 +1665,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   layout differs from the stacked mobile one, and clean up on unmount (`ctx.revert()` /
   `trigger.kill()` inside the `useEffect` return). Do not reach for `gsap` for a plain fade/slide
   reveal — that is what `MaisonReveal` variants are for; only add a new `gsap` usage for a genuine
-  timeline-sequencing or scroll-pin need `motion` cannot express. `Story.jsx`'s pinned column and its
+  timeline-sequencing or scroll-pin need `motion` cannot express. `Vision.jsx`'s pinned column and its
   sibling scrolling column both carry an explicit `lg:col-start-*` (not
   just `lg:col-span-*`) — when `ScrollTrigger` pins a grid item with `pinSpacing: false`, the browser
   sets `position: fixed` on it directly (no spacer element), which per the CSS Grid spec removes it
@@ -1434,7 +1676,12 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   (`#zaad-loader`, `z-[9999]`) shows on a user's first load this session (tracked via the
   `zaad_initial_loaded` sessionStorage flag, which is set the instant the loader *starts*, not when
   it finishes — do not use it to detect completion). Its duration is readiness-based, not a fixed
-  5s: it exits once BOTH a minimum 2400ms brand time has elapsed AND a readiness promise resolves —
+  5s: it exits once BOTH a minimum brand time has elapsed AND a readiness promise resolves — the
+  minimum is **derived from the entrance variants themselves** (`ENTRANCE_DONE_MS`, the max of the
+  letters' staggered end and the accent line's `delay + duration` ≈ 3.7s — changed 2026-09-07 from a
+  hardcoded 2400ms that cut the line's draw mid-stroke; deriving it keeps the exit auto-synced with
+  any future variant edit), so the loader's own animation is always complete before the veil
+  dissolves. The readiness promise is a
   `Promise.all` of `document.fonts.ready` (skipped when `document.readyState === "complete"` on
   mount, since the load/fonts have already settled), the **`window` `"load"` event** (added
   2026-09-06, user request "make timing perfectly sync": the loader now holds until the page's
@@ -1443,26 +1690,24 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `preload="none"` never blocked it anyway), and a double `requestAnimationFrame`. The old hard
   5000ms cap was **removed** for that sync — `window.load` itself is the terminal condition
   (it fires even when resources error out; only a genuinely hanging request can delay it, and
-  the browser's own stall timeout ends that); `prefers-reduced-motion: reduce`
+  the browser's own stall timeout ends that) — **but that removal proved fragile in practice
+  (2026-09-07: a hanging/slow load event — it waits for every subresource incl. the hero's
+  `preload="auto"` clips — left the opaque veil up indefinitely = white page until refresh), so the
+  load-wait is now raced against `LOAD_WAIT_CAP_MS` (`ENTRANCE_DONE_MS + 2000`, ≈ 5.7s): a fast
+  `load` still gates the exit (the 2026-09-06 sync intent), a slow one can extend the veil past
+  the entrance but never hang it.** A second, pre-JS backstop lives in the loader's inline script:
+  10s after HTML parse, if `zaad_loader_complete` is still unset (dev chunk timeout → hydration
+  never ran, or any other dead-JS stall — the SSR veil renders opaque with its letters at
+  `opacity: 0`, i.e. a blank screen), it adds the existing `skip-loader` class to `<html>` so the
+  CSS kill-switch (`display:none`) drops the veil without touching the DOM — hydration, if it
+  arrives later, simply runs the loader hidden and hands off normally, no mismatch.
+  `prefers-reduced-motion: reduce`
   skips the minimum brand time (exit as soon as ready). All timers are guarded by a done-flag so
   completion fires exactly once and is fully cleaned on unmount. On completion it sets a **separate**
   `zaad_loader_complete` flag and dispatches a `window` `"zaad:loaderComplete"` event. Any entrance
-  animation that must not run invisibly underneath the loader (currently `Hero.jsx`'s GSAP timeline)
+  animation that must not run invisibly underneath the loader (currently `Hero.jsx`'s GSAP text
+  timeline **and** its video wrapper's scale/fade, both driven by the same `stageReady`/`playTimeline`
+  gate — added 2026-09-07 so the video assembles as the veil lifts instead of its entrance being spent
+  under the opaque overlay; `showcase/ImageViewer.jsx`'s `canMountSpin` follows the identical pattern)
   should check `zaad_loader_complete` synchronously on mount (repeat loads within the session skip
   the loader, so the flag is already true) and otherwise listen for `"zaad:loaderComplete"` once.
-
-
-# Optimizations to evaluate — apply only if the gain is real:
-
-For emphasis, I reiterate:
-Reformatting the file in a clean and elegant with right indentation and spaces
-React.memo — wrap the component if its output is fully determined by stable props and it re-renders due to unrelated parent state changes (tab switches, form input, open/close toggles, etc.). Skip if props change frequently anyway.
-useMemo for element trees — if the component builds a large static sub-tree that doesn't depend on frequently-changing state, wrap it: useMemo(() => <HeavyPanel />, [stableDep]). Skip for small or cheap trees.
-Prop object grouping — if a hook returns 10+ values that are threaded through multiple layers unchanged, store the whole return as one object and pass it as a single prop. Unpack only at the leaf that needs it.
-useCallback / useMemo for handlers — only if a stable function reference is needed to prevent a memoised child from breaking. Not as a general habit.
-"use client" placement — flag if it appears on a sub-component that inherits the boundary from its parent shell. It belongs only on the shell.
-Your response format:
-
-Verdict per technique — checked it, applied / skipped / not applicable, one line each
-Optimized code — complete file, not a diff
-What was intentionally left alone and why

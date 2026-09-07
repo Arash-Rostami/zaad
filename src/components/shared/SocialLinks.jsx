@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import SOCIAL_LINKS from "@/lib/socialLinks";
 import Tooltip from "./Tooltip";
 

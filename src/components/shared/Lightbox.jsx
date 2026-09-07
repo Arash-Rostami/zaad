@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
-import MaisonButton from "../MaisonButton";
+import MaisonButton from "./MaisonButton";
 import NoiseBg from "./NoiseBg";
 import ExpandOnHoverPill from "./ExpandOnHoverPill";
 
@@ -16,6 +16,7 @@ const ZoomController = React.memo(function ZoomController({
                                                               onPrev,
                                                               onNext,
                                                               isRtl,
+                                                              t,
                                                           }) {
     const stop = useCallback((e) => e.stopPropagation(), []);
     const handleCycle = useCallback((e) => { e.stopPropagation(); cycleZoom(); }, [cycleZoom]);
@@ -35,6 +36,7 @@ const ZoomController = React.memo(function ZoomController({
                 trigger={
                     <motion.button
                         onClick={handleCycle}
+                        aria-label={t("cycleZoomLabel")}
                         className="w-8 h-8 rounded-md border border-ink/10 relative overflow-hidden flex items-center justify-center cursor-pointer shrink-0 z-10 bg-transparent"
                         animate={{
                             rotate:
@@ -53,9 +55,9 @@ const ZoomController = React.memo(function ZoomController({
                 }
             >
                 <div className="flex items-center ps-3 pe-2 border-s border-ink/10 me-1 shrink-0">
-                    <div className="flex items-center space-x-4">
+                    <div dir="ltr" className="flex items-center space-x-4">
                         {onPrev ? (
-                            <button data-touch-slop data-touch-boost onClick={handlePrev} className="flex items-center justify-center text-ink/60 hover:text-headline p-1 transition-colors cursor-pointer">
+                            <button data-touch-slop data-touch-boost onClick={handlePrev} aria-label={t("showcasePrev")} className="flex items-center justify-center text-ink/60 hover:text-headline p-1 transition-colors cursor-pointer">
                                 <ChevronLeft className="w-4 h-4 stroke-[1.5]" />
                             </button>
                         ) : <div className="w-6" />}
@@ -78,7 +80,7 @@ const ZoomController = React.memo(function ZoomController({
                         </div>
 
                         {onNext ? (
-                            <button data-touch-slop data-touch-boost onClick={handleNext} className="flex items-center justify-center text-ink/60 hover:text-headline p-1 transition-colors cursor-pointer">
+                            <button data-touch-slop data-touch-boost onClick={handleNext} aria-label={t("showcaseNext")} className="flex items-center justify-center text-ink/60 hover:text-headline p-1 transition-colors cursor-pointer">
                                 <ChevronRight className="w-4 h-4 stroke-[1.5]" />
                             </button>
                         ) : <div className="w-6" />}
@@ -225,7 +227,7 @@ export default function Lightbox({
                         className="absolute top-6 left-6 md:left-12 flex items-center space-x-4 pointer-events-none select-none"
                     >
                         <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.3em] font-semibold text-accent uppercase shrink-0">
-                            <span className="font-latin">{archiveNumber}</span> {t("lightboxArchiveLabel")}
+                            <span className="font-serif font-latin">{archiveNumber}</span> {t("lightboxArchiveLabel")}
                         </span>
                         <span className="hidden sm:inline text-[var(--text-secondary)] opacity-30">•</span>
                         <span className="hidden sm:inline font-serif italic text-xs text-[var(--text-primary)] select-none truncate">{itemName}</span>
@@ -337,6 +339,7 @@ export default function Lightbox({
                         onPrev={onPrev}
                         onNext={onNext}
                         isRtl={isRtl}
+                        t={t}
                     />
 
                     {showPanHint && (

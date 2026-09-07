@@ -11,11 +11,11 @@ import { animate, motion, useInView } from "motion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight, Pause, Phone, Play } from "lucide-react";
-import MaisonReveal from "../MaisonReveal";
-import MaisonButton from "../MaisonButton";
+import MaisonReveal from "../shared/MaisonReveal";
+import MaisonButton from "../shared/MaisonButton";
 import NoiseBg from "../shared/NoiseBg";
 import useDeferredMedia from "@/hooks/useDeferredMedia";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import { animateScrollTo } from "@/services/ScrollService";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 import { isStudioOpenNow } from "@/lib/studioHours";
@@ -162,6 +162,7 @@ export function EditorialSignature({ className = "" }) {
       className={`relative py-2 max-w-3xl mt-10 md:mt-12 ${className}`}
     >
       <motion.div
+        aria-hidden="true"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -169,6 +170,7 @@ export function EditorialSignature({ className = "" }) {
         className="h-px w-full bg-gradient-to-r from-transparent via-accent/40 to-transparent origin-left rtl:origin-right"
       />
       <motion.div
+        aria-hidden="true"
         initial={{ opacity: 0, scale: 0.6 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
@@ -235,7 +237,7 @@ export function CrossLinks({ siblings }) {
             >
               <Link
                 href={s.href}
-                className="group relative block overflow-hidden bg-panel border border-ink/10 rounded-2xl p-8 md:p-10 transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent/40 hover:shadow-ambient text-left rtl:text-right"
+                className="group relative block overflow-hidden bg-panel border border-ink/10 rounded-2xl p-8 md:p-10 transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent/40 hover:shadow-ambient text-left rtl:text-right outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 <NoiseBg filterId={`crossLinkNoise-${i}`} revealOnHover />
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -291,7 +293,7 @@ export function CallStrip() {
             </div>
             <a
               href={`tel:${t("studioPhoneTel")}`}
-              className="group inline-flex items-center gap-3 bg-ink text-on-indicator px-6 py-3.5 rounded-md text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase transition-all duration-700 hover:bg-accent hover:text-on-indicator cursor-pointer"
+              className="group inline-flex items-center gap-3 bg-ink text-on-indicator px-6 py-3.5 rounded-md text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase transition-all duration-700 hover:bg-accent hover:text-on-indicator cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <Phone className="w-4 h-4 group-hover:rotate-12 transition-transform duration-500" />
               <span dir="ltr">{t("studioPhone")}</span>
@@ -535,7 +537,7 @@ export function ChapterHero({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 1 }}
-        className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono uppercase tracking-[0.2em] text-muted hover:text-ink transition-colors duration-700 z-10"
+        className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono uppercase tracking-[0.2em] text-muted hover:text-ink transition-colors duration-700 z-10 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <ArrowDown className="w-3.5 h-3.5" />
       </motion.button>

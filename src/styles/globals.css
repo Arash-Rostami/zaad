@@ -648,6 +648,28 @@ html[lang="fa"],
         display: none;
     }
 
+    .scrollbar-sleek {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-muted) transparent;
+    }
+
+    .scrollbar-sleek::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .scrollbar-sleek::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-sleek::-webkit-scrollbar-thumb {
+        background: var(--color-muted);
+        border-radius: 9999px;
+    }
+
+    .scrollbar-sleek::-webkit-scrollbar-thumb:hover {
+        background: var(--color-accent);
+    }
+
     [data-touch-slop] {
         position: relative;
     }

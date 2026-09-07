@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { motion } from "motion/react";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 
 const TAB_LINE_TRANSITION = Object.freeze({
     type: "spring",
@@ -13,7 +13,7 @@ const TabButton = memo(function TabButton({ item, isActive, onSelect }) {
         onSelect?.(item);
     }, [onSelect, item]);
 
-    const numberClassName = `text-xs md:text-sm font-serif italic tracking-wider mb-2 transition-all duration-300 ${
+    const numberClassName = `text-xs md:text-sm font-serif font-latin italic tracking-wider mb-2 transition-all duration-300 ${
         isActive
             ? "text-accent font-semibold scale-110"
             : "text-muted/40 text-headline/30 group-hover:text-accent"
@@ -29,7 +29,7 @@ const TabButton = memo(function TabButton({ item, isActive, onSelect }) {
         <button
             type="button"
             onClick={handleClick}
-            className="group relative pb-5 flex flex-col items-center text-center transition-all duration-300 cursor-pointer focus:outline-none shrink-0"
+            className="group relative pb-5 flex flex-col items-center text-center transition-all duration-300 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shrink-0"
         >
             <span className={numberClassName}>
                 {item?.number}

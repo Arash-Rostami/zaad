@@ -1,6 +1,6 @@
-import {MetadataService} from "@/services/MetaDataService";
+import {MetadataService} from "@/services/MetadataService";
 import {resolveHomeUtensilImages} from "@/lib/collectionImages";
-import JsonLd from "@/components/JsonLd";
+import JsonLd from "@/components/shared/JsonLd";
 import AppShell from "@/components/AppShell";
 
 export async function generateMetadata() {

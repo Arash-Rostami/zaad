@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "motion/react";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 import {
   ChapterHero,
   EditorialBlock,
@@ -18,9 +18,9 @@ function ColumnHeader({ eyebrow, title, intro }) {
       <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
         {eyebrow}
       </span>
-      <h3 className="text-2xl md:text-3xl font-serif font-light tracking-tight leading-[1.2] text-ink">
+      <h2 className="text-2xl md:text-3xl font-serif font-light tracking-tight leading-[1.2] text-ink">
         {wrappedTitle}
-      </h3>
+      </h2>
       {intro && (
         <p className="mt-4 text-sm text-muted font-light leading-relaxed max-w-md rtl:text-justify">
           {intro}
@@ -38,7 +38,10 @@ function TwinChapter({ left, right }) {
     >
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-0 relative">
-          <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px pointer-events-none z-10">
+          <div
+            aria-hidden="true"
+            className="hidden lg:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px pointer-events-none z-10"
+          >
             <motion.div
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}

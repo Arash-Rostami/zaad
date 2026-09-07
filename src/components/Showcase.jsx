@@ -2,11 +2,11 @@
 
 import React, { useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import useShowcase from "../hooks/useShowcase";
 import CollectionTabs from "./showcase/CollectionTabs";
 import ImageViewer from "./showcase/ImageViewer";
-import ProductPanel from "./showcase/ProductPanel";
+import CollectionPanel from "./showcase/CollectionPanel";
 import ShowcaseLightbox from "./showcase/Lightbox";
 
 const EMPTY_ARRAY = Object.freeze([]);
@@ -41,7 +41,7 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                     className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-18 items-start"
                 >
                     <ImageViewer selectedItem={selectedItem} showcase={showcase} t={t} />
-                    <ProductPanel
+                    <CollectionPanel
                         selectedItem={selectedItem}
                         showcase={showcase}
                         t={t}

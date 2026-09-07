@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useLanguage } from "@/services/TranslationService";
+import { useLanguage } from "@/services/LanguageProvider";
 import { animateScrollTo } from "@/services/ScrollService";
 import useLenisScroll from "@/hooks/useLenisScroll";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
-import MaisonReveal from "../MaisonReveal";
+import MaisonReveal from "../shared/MaisonReveal";
 import NoiseBg from "../shared/NoiseBg";
 import { ArrowUpRight } from "lucide-react";
 import { ChapterHero, CallStrip } from "../house/ChapterPieces";
-import HouseFooter from "../house/HouseFooter";
+import Footer from "../Footer";
 import GlanceChapter from "./GlanceChapter";
 import GlanceHeader from "./GlanceHeader";
 import ScrollButton from "../shared/ScrollButton";
@@ -226,7 +226,7 @@ function GlancePage() {
                                                 <span className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-700 pointer-events-none" />
                                                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-accent origin-left rtl:origin-right scale-x-0 group-hover:scale-x-100 [@media(hover:none)]:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" />
                                                 <span className="relative z-10 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent uppercase block mb-4">
-                                                    <span className="font-latin">{item?.number}</span>
+                                                    <span className="font-serif font-latin">{item?.number}</span>
                                                 </span>
                                                 <h3 className="relative z-10 text-2xl md:text-3xl font-serif font-light text-ink leading-tight">
                                                     {wrapBrandNames(item?.name ?? entry.id)}
@@ -333,7 +333,7 @@ function GlancePage() {
             </div>
 
             <CallStrip />
-            <HouseFooter />
+            <Footer />
             <ScrollButton />
         </div>
     );

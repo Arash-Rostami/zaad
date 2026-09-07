@@ -20,12 +20,12 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
   const preselectedItemRef = useRef(preselectedItem);
   preselectedItemRef.current = preselectedItem;
 
-  const buildWelcomeContent = () => {
+  const buildWelcomeContent = useCallback(() => {
     const lastViewedItem = !preselectedItemRef.current ? getPreference("lastViewedItem") : null;
     return lastViewedItem
         ? t("curatorWelcomeWithItem").replace("{name}", lastViewedItem.name)
         : t("curatorWelcome");
-  };
+  }, [t]);
 
   const [chatMessages, setChatMessages] = useState(() => [
     {
@@ -35,11 +35,17 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
       timestamp: "",
     },
   ]);
+  const chatMessagesRef = useRef(chatMessages);
+  chatMessagesRef.current = chatMessages;
   const [userQuery, setUserQuery] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
+  const [chatLoadingSlow, setChatLoadingSlow] = useState(false);
   const scrollRef = useRef(null);
+  const requestInFlightRef = useRef(false);
+  const nearBottomRef = useRef(true);
 
   useEffect(() => {
+    if (requestInFlightRef.current) return;
     setChatMessages([
       {
         id: "curator-welcome",
@@ -48,7 +54,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);
-  }, [language, t]);
+  }, [language, buildWelcomeContent]);
 
   const submitChatInquiry = useCallback(
       async (fields) => {
@@ -103,7 +109,10 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
 
   const triggerCuratorResponse = useCallback(
       async (history) => {
+        if (requestInFlightRef.current) return;
+        requestInFlightRef.current = true;
         setChatLoading(true);
+        const slowTimer = window.setTimeout(() => setChatLoadingSlow(true), 9000);
         try {
           const payload = history
               .filter((m) => m.id !== "curator-welcome")
@@ -115,33 +124,49 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
           });
           if (!res.ok) throw new Error("API call failed");
           const data = await res.json();
-          const content = await resolveCuratorReply(data.text ?? "");
+          const rawContent = await resolveCuratorReply(data.text ?? "");
+          const isEmpty = !rawContent.trim();
           setChatMessages((prev) => [
             ...prev,
             {
               id: `curator-reply-${Date.now()}`,
               role: "assistant",
-              content,
+              content: isEmpty ? t("curatorError") : rawContent,
               timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              isError: isEmpty,
             },
           ]);
         } catch (err) {
           console.error("AI Curator error:", err);
+          const offline = typeof navigator !== "undefined" && navigator.onLine === false;
           setChatMessages((prev) => [
             ...prev,
             {
               id: `curator-reply-error-${Date.now()}`,
               role: "assistant",
-              content: t("curatorError"),
+              content: offline ? t("curatorOffline") : t("curatorError"),
               timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              isError: true,
             },
           ]);
         } finally {
+          window.clearTimeout(slowTimer);
+          setChatLoadingSlow(false);
+          requestInFlightRef.current = false;
           setChatLoading(false);
         }
       },
       [language, resolveCuratorReply, t]
   );
+
+  const retryLastExchange = useCallback(() => {
+    const current = chatMessagesRef.current;
+    const last = current[current.length - 1];
+    if (!last?.isError) return;
+    const withoutError = current.slice(0, -1);
+    setChatMessages(withoutError);
+    triggerCuratorResponse(withoutError);
+  }, [triggerCuratorResponse]);
 
   useEffect(() => {
     if (!preselectedItem) {
@@ -155,7 +180,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
     const number = preselectedItem.number;
     setAdditionalNote(
         language === "fa"
-            ? `من مایل به تملک اثر ${name} (${number}) برای فضای خود هستم. لطفا موجودی مادی فعلی و زمان تحویل آن را بفرمایید.`
+            ? `دوست دارم اثر ${name} (${number}) رو برای فضای خودم داشته باشم. لطفاً موجودی فعلی و زمان تحویلش رو بفرمایید.`
             : `I am looking to acquire the ${preselectedItem.name} (${preselectedItem.number}) for my space. Please provide current physical availability and white-glove shipping timeline.`
     );
     const inquiryMessage = {
@@ -163,15 +188,15 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
       role: "user",
       content:
           language === "fa"
-              ? `من به تملک اثر ${name} علاقه‌مندم. ممکن است درباره سنگ تشکیل‌دهنده و چیدمان بهینه آن بگویید؟`
+              ? `به اثر ${name} علاقه‌مندم. می‌شه درباره جنس سنگش و بهترین حالت چیدمانش برام بگید؟`
               : `I am interested in acquiring the ${preselectedItem.name}. Can you tell me more about its materials and how to style it in a room?`,
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
-    const updatedHistory = [...chatMessages, inquiryMessage];
+    const updatedHistory = [...chatMessagesRef.current, inquiryMessage];
     setChatMessages(updatedHistory);
     triggerCuratorResponse(updatedHistory);
     onClearPreselected();
-  }, [preselectedItem, language]);
+  }, [preselectedItem, language, onClearPreselected, triggerCuratorResponse]);
 
   useEffect(() => {
     if (userTouchedMode.current) return;
@@ -179,11 +204,21 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
   }, [desiredConsultation]);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      const container = scrollRef.current.parentElement;
-      if (container) {
-        container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
-      }
+    const container = scrollRef.current?.parentElement;
+    if (!container) return;
+    const handleScroll = () => {
+      const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+      nearBottomRef.current = distanceFromBottom < 120;
+    };
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!nearBottomRef.current) return;
+    const container = scrollRef.current?.parentElement;
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
     }
   }, [chatMessages, chatLoading]);
 
@@ -256,7 +291,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
   const handleSendMessage = useCallback(
       (e) => {
         e.preventDefault();
-        if (!userQuery.trim() || chatLoading) return;
+        if (!userQuery.trim() || chatLoading || requestInFlightRef.current) return;
         const userMsg = {
           id: `user-query-${Date.now()}`,
           role: "user",
@@ -287,8 +322,10 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
     chatMessages,
     userQuery, setUserQuery,
     chatLoading,
+    chatLoadingSlow,
     scrollRef,
     handleInquirySubmit,
     handleSendMessage,
+    retryLastExchange,
   };
 }

@@ -54,6 +54,18 @@ const LINE_VARIANTS = {
 
 const BRAND_NAME = "ZAAD".split("");
 
+const ENTRANCE_DONE_MS =
+    Math.max(
+        CONTAINER_VARIANTS.visible.transition.delayChildren +
+            (BRAND_NAME.length - 1) *
+                CONTAINER_VARIANTS.visible.transition.staggerChildren +
+            LETTER_VARIANTS.visible.transition.duration,
+        LINE_VARIANTS.visible.transition.delay +
+            LINE_VARIANTS.visible.transition.duration,
+    ) * 1000;
+
+const LOAD_WAIT_CAP_MS = ENTRANCE_DONE_MS + 2000;
+
 function InitialLoader() {
     const [isLoading, setIsLoading] = useState(true);
 
@@ -78,7 +90,7 @@ function InitialLoader() {
             window.dispatchEvent(new Event("zaad:loaderComplete"));
         };
 
-        const minBrandTime = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 2400;
+        const minBrandTime = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : ENTRANCE_DONE_MS;
         const startedAt = performance.now();
         const fontsSettled =
             document.readyState === "complete" || !document.fonts
@@ -87,9 +99,12 @@ function InitialLoader() {
         const windowLoaded =
             document.readyState === "complete"
                 ? Promise.resolve()
-                : new Promise((resolve) => {
-                      window.addEventListener("load", resolve, { once: true });
-                  });
+                : Promise.race([
+                      new Promise((resolve) => {
+                          window.addEventListener("load", resolve, { once: true });
+                      }),
+                      new Promise((resolve) => setTimeout(resolve, LOAD_WAIT_CAP_MS)),
+                  ]);
         const doubleFrame = new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         Promise.all([fontsSettled, windowLoaded, doubleFrame]).then(() => {
@@ -109,8 +124,16 @@ function InitialLoader() {
             <script
                 dangerouslySetInnerHTML={{
                     __html: `
-                        if (typeof window !== 'undefined' && window.sessionStorage.getItem('zaad_initial_loaded')) {
-                            document.documentElement.classList.add('skip-loader');
+                        if (typeof window !== 'undefined') {
+                            if (window.sessionStorage.getItem('zaad_initial_loaded')) {
+                                document.documentElement.classList.add('skip-loader');
+                            } else {
+                                setTimeout(function () {
+                                    if (!window.sessionStorage.getItem('zaad_loader_complete')) {
+                                        document.documentElement.classList.add('skip-loader');
+                                    }
+                                }, 10000);
+                            }
                         }
                     `
                 }}
@@ -119,6 +142,7 @@ function InitialLoader() {
                 {isLoading && (
                     <motion.div
                         id="zaad-loader"
+                        aria-hidden="true"
                         className="fixed inset-0 z-[9999] bg-surface flex flex-col items-center justify-center pointer-events-none"
                         dir="ltr"
                         initial="hidden"
