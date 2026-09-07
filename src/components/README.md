@@ -186,8 +186,11 @@ snappy" pacing (see `src/styles/README.md`). Currently wired onto the language t
 toggle, and `AudioToggle` in `header/MenuControls.jsx` and `house/HouseChrome.jsx`'s
 `HouseControls` — not yet rolled out app-wide; extend deliberately, one control cluster at a time,
 rather than blanket-wrapping every button. `HouseControls` is `export`ed (added 2026-09-04) so
-`ledger/LedgerHeader.jsx` can reuse it directly — a plain named import, not a barrel — rather than
-duplicating the language/theme/font-scale/audio cluster a second time.
+`ledger/LedgerHeader.jsx`, `glance/GlanceHeader.jsx`, and (since 2026-09-07) `app/credits/page.js`
+can each reuse it directly — a plain named import, not a barrel — rather than duplicating the
+language/theme/font-scale/audio cluster a third and fourth time. Safe outside the House routes
+because it carries no `layoutId` and no House-specific coupling (no `usePathname()`, no `NAV`
+lookup) — it only reads the global `useLanguage`/`useTheme`/`useAmbientAudio`/`useFontScale` hooks.
 
 **Touch contract.** On coarse pointers the tooltip is tap-driven, not hover-driven: the wrapper
 toggles visibility on `pointerdown` (`pointerType === "touch"` only), and while visible a
@@ -277,16 +280,19 @@ separate from `className`, which styles only the collapsed trigger). This is the
 (behind a single `SlidersHorizontal` trigger) — it's the fix for the sibling-shift/dead-space
 problem above, and should be the default choice for any future expand-on-hover control that sits
 among other flex siblings. The trigger renders as a real `<button>` with an `onClick` toggle
-(`onHoverChange(!isExpanded)`). The `onMouseEnter`/`onMouseLeave` pair is attached **only when
-the pointer is hover-capable** (`matchMedia("(hover: hover) and (pointer: fine)")`, established
-in a mount-only effect — never during render, so SSR/first paint match) — otherwise the handlers
-are `undefined`. That gating is what makes the control usable on touch: a tap's synthetic
-`mouseenter` hits a no-op handler instead of pre-setting expanded, so the click toggle opens the
-panel and it stays open (without it, the synthetic enter + click toggle cancelled each other and
-the panel could never open on phones). While a dropdown is open it also closes on outside-tap
-(`pointerdown` outside the wrapper's ref) and on `Escape`; the opening tap can't self-close
-because the listener attaches only after the open state lands. On hover-capable pointers the
-hover flows behave exactly as before.
+(`onHoverChange(!isExpanded)`) — **click-only, no hover-open/hover-close of any kind** (changed
+2026-09-07 at explicit user direction). Earlier this mode *also* opened/closed on
+`mouseenter`/`mouseleave` whenever the pointer was hover-capable — on a header-mounted settings
+cluster (House pages, `ledger/LedgerHeader.jsx`, `glance/GlanceHeader.jsx`,
+`app/credits/page.js`, all reusing this same trigger via `HouseControls`) that meant the panel
+could collapse from a stray mouse movement seconds after a deliberate click, which read as
+flaky/fading rather than a stable toggle. The dropdown branch no longer attaches
+`onMouseEnter`/`onMouseLeave` at all, so the panel opens only on a real click and stays open
+until the visitor clicks the trigger again, clicks outside (`pointerdown` outside the wrapper's
+ref), or presses `Escape` — identical behavior on mouse and touch, with nothing to gate by
+`hoverCapable`. The horizontal-grow mode below (`ZoomController`) is unaffected — it's a
+genuinely hover-driven toolbar reveal, not a settings panel, and keeps its original
+hover-capable-gated `onMouseEnter`/`onMouseLeave` pair.
 
 Also relevant re: `scaleX` — earlier versions of this component (and, further back, an uncommitted
 regression in `ZoomController` itself) used `scaleX` to fake the collapse. Don't: `scaleX` is a
@@ -1349,6 +1355,19 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `IntersectionObserver` gate fires. All reveals are transform/opacity-only, so the
   GSAP pin's `offsetHeight` math is unaffected. Keep delays in reading order when editing —
   the deliberate ~1.3s unfold is the point ("must not load fast, with grace").
+- **`variant="lines"` gotcha (found 2026-09-07 on `app/credits/page.js`'s `<h1>`): it can render as
+  empty space, not just a color problem.** `MaisonReveal`'s `LinesReveal` wraps each measured line
+  in `<span className="block overflow-hidden">` around a `motion.span` that animates from
+  `initial={{ y: "115%" }}` to `whileInView={{ y: "0%" }}` — if that `whileInView` intersection
+  trigger never fires for some reason, the text stays translated below the `overflow-hidden` mask,
+  invisible, while the rest of the layout (size, spacing) looks completely normal. This is easy to
+  misdiagnose as a color/contrast bug (an `!important` color override does nothing, since the text
+  was never invisible-by-color to begin with) — the real tell is that forcing the color still
+  leaves an empty gap where the text should be. Fixed on the credits page by switching that one
+  heading to `variant="unveil"` (plain opacity/y/blur fade, no per-line masking), matching every
+  other element in that hero block. `variant="lines"` itself is not deprecated — `Vision.jsx`'s
+  title and `Advantages.jsx`'s title both use it successfully — but treat it as needing a proven,
+  reliably-in-view mount context, not a reflexive default for every heading.
 - **`Footer.jsx`'s directory grid and legal strip each arrive via their own `MaisonReveal`**
   (`unveil`, 0.1/0.35, `threshold={0.01}`) since 2026-09-03, when it was the only section on any
   route with no entrance score. (A live Florence-studio-hours clock — `atelierClock*` i18n keys,

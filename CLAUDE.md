@@ -10,14 +10,15 @@ small and proportionate to a ~66-file project.
 - **Tailwind CSS v4** (CSS-first `@theme`, PostCSS plugin — no `tailwind.config.js`)
 - **Motion** (the `motion` package; client components import from `motion/react`) — the app's
   animation system for scroll-into-view reveals and interactive state
-- **GSAP** (`gsap` + `ScrollTrigger`) — scoped to exactly three spots that need timeline sequencing,
-  a scroll-pin, or a scrubbed parallax `motion` can't do natively (`Hero.jsx`'s entrance timeline,
+- **GSAP** (`gsap` + `ScrollTrigger`) — scoped to four spots that need timeline sequencing,
+  a scroll-pin, or a scrubbed effect `motion` can't do natively (`Hero.jsx`'s entrance timeline,
   `Vision.jsx`'s pinned image column, `house/ChapterPieces.jsx`'s `ChapterHero` scrubbed
   media-column parallax — a hard pin doesn't work there since the hero's two columns are roughly
-  equal height, so it uses a non-pinning `scrub` tween instead), plus one integration-only
-  consumer: `useLenisScroll` (see below) drives Lenis's raf through `gsap.ticker`
-  and syncs `ScrollTrigger.update` — no timelines, no pins. Not a `motion` replacement — see
-  `src/components/README.md`'s Conventions section before adding a fifth usage.
+  equal height, so it uses a non-pinning `scrub` tween instead, and `app/credits/page.js`'s
+  scroll-scrubbed reading-progress bar under the fixed header, added 2026-09-07 at explicit user
+  direction), plus one integration-only consumer: `useLenisScroll` (see below) drives Lenis's raf
+  through `gsap.ticker` and syncs `ScrollTrigger.update` — no timelines, no pins. Not a `motion`
+  replacement — see `src/components/README.md`'s Conventions section before adding a fifth usage.
 - **Lenis** — inertial smooth scrolling on the window. Initialized via the shared `src/hooks/useLenisScroll.js`
   hook (dynamic import, gsap-ticker-driven, synced with `ScrollTrigger`), consumed by `AppShell.jsx`
   (showroom), `house/HouseSmoothScroll.jsx` (a render-null leaf mounted in `(house)/layout.js` for the
@@ -65,6 +66,12 @@ first. If the doc contradicts the code, **trust the code** — then fix the doc 
 When you establish, confirm, or change a reusable pattern, a load-bearing contract,
 or a convention, update the relevant folder doc **in the same change**. Do not let the
 docs drift from the code. Stale docs are worse than no docs.
+
+`src/app/credits/page.js` (added 2026-09-07) is a client-facing summary of every page and
+capability on the site, by explicit user direction, and is held to this same rule: any turn
+that adds, removes, or materially changes a page or a smart feature must update this page's
+content (and its `en.js`/`fa.js` copy) in the same change, exactly like a folder doc. Treat a
+stale credits page as a doc-honesty violation, not a cosmetic gap.
 
 ### 3. Review before calling work done
 Before considering any non-trivial change complete, run a rigorous multi-agent review

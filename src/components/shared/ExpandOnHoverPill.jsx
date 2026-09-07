@@ -54,12 +54,7 @@ function ExpandOnHoverPill({
 
   if (dropdown) {
     return (
-        <div
-            ref={rootRef}
-            className="relative inline-flex"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+        <div ref={rootRef} className="relative inline-flex">
           <button
               type="button"
               onClick={handleTriggerClick}
