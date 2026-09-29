@@ -45,14 +45,14 @@ const SpecCard = memo(function SpecCard({
             <div>
                 <div className="flex items-center space-x-2 mb-4">
                     <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-[0.25em] text-accent uppercase font-semibold">
+                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono text-accent uppercase font-semibold">
                         {title}
                     </span>
                 </div>
-                <h4 className="font-serif text-lg font-light text-headline mb-3">
+                <h4 className="font-serif text-lg font-light text-ink mb-3">
                     {heading}
                 </h4>
-                <p className="text-xs text-muted leading-relaxed font-light mb-6 rtl:text-justify">
+                <p className="text-xs text-muted leading-relaxed font-light mb-6">
                     {wrappedOverview}
                 </p>
                 <div className="space-y-4">
@@ -61,8 +61,8 @@ const SpecCard = memo(function SpecCard({
                             key={part.title || i}
                             className="bg-surface-alt/30 p-4 rounded-xl"
                         >
-                            <h5 className="font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-bold text-accent uppercase mb-1.5">
-                                {part.title}
+                            <h5 className="font-serif text-lg font-light text-ink uppercase mb-1.5">
+                                {wrapLatinRuns(part.title ?? "", isFarsi)}
                             </h5>
                             <ul className="list-disc list-inside space-y-1 text-xs text-muted leading-relaxed font-light">
                                 {part.wrappedBullets.map((wrapped, bIdx) => (
@@ -78,7 +78,7 @@ const SpecCard = memo(function SpecCard({
 
             {hasSpecs && (
                 <div className="mt-8 border-t border-ink/10 pt-6">
-                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-widest text-muted block uppercase mb-3">
+                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono text-muted block uppercase mb-3">
                         {listLabel}
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[length:calc(11px*var(--zaad-font-scale))] font-mono">
@@ -130,7 +130,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                 bullets: Array.isArray(adjacentA.bullets)
                     ? adjacentA.bullets.map((b) => wrapLatinRuns(b ?? "", isFarsi))
                     : EMPTY_ARRAY,
-                label: t("ergonomicsPlanA"),
+                label: wrapLatinRuns(t("ergonomicsPlanA"), isFarsi),
                 reason: wrapLatinRuns(adjacentA.reason ?? "", isFarsi),
             });
         }
@@ -140,7 +140,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                 bullets: Array.isArray(adjacentB.bullets)
                     ? adjacentB.bullets.map((b) => wrapLatinRuns(b ?? "", isFarsi))
                     : EMPTY_ARRAY,
-                label: t("ergonomicsPlanB"),
+                label: wrapLatinRuns(t("ergonomicsPlanB"), isFarsi),
                 reason: wrapLatinRuns(adjacentB.reason ?? "", isFarsi),
             });
         }
@@ -156,20 +156,20 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
             <div>
                 <div className="flex items-center space-x-2 mb-4">
                     <span className="w-1.5 h-1.5 bg-accent rounded-full" />
-                    <span className="text-[length:max(9px,calc(10.5px*var(--zaad-font-scale)))] font-mono tracking-[0.25em] text-accent uppercase font-semibold">
+                    <span className="text-[length:max(9px,calc(10.5px*var(--zaad-font-scale)))] font-mono text-accent uppercase font-semibold">
                         {t("tallCoreArchitectures")}
                     </span>
                 </div>
-                <h4 className="font-serif text-lg font-light text-headline mb-3">
+                <h4 className="font-serif text-lg font-light text-ink mb-3">
                     {t("symmetricHousingWall")}
                 </h4>
-                <p className="text-xs text-muted leading-relaxed font-light mb-6 rtl:text-justify">
+                <p className="text-xs text-muted leading-relaxed font-light mb-6">
                     {wrappedOverview}
                 </p>
 
                 {hasParts && (
                     <div className="space-y-2 mb-6 text-[length:calc(11px*var(--zaad-font-scale))]">
-                        <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-widest text-muted uppercase block mb-1">
+                        <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono text-muted uppercase block mb-1">
                             {t("zaadTowerRowScheduling")}
                         </span>
                         <div className="grid grid-cols-1 gap-1.5 font-mono">
@@ -196,10 +196,10 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                             key={key}
                             className="bg-surface-alt/30 p-4 rounded-xl"
                         >
-                            <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-widest text-accent block mb-1.5 uppercase">
+                            <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] text-accent block mb-1.5 uppercase">
                                 {label}
                             </span>
-                            <p className="text-[length:calc(11px*var(--zaad-font-scale))] text-muted italic mb-2">
+                            <p className="text-[length:calc(11px*var(--zaad-font-scale))] text-muted mb-2">
                                 {reason}
                             </p>
                             <ul className="list-disc list-inside space-y-1 text-xs text-muted leading-relaxed font-light">
@@ -216,7 +216,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
 
             {hasSpecs && (
                 <div className="mt-8 border-t border-ink/10 pt-6">
-                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono tracking-widest text-muted block uppercase mb-3">
+                    <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono text-muted block uppercase mb-3">
                         {t("housingStructuralComponents")}
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[length:calc(11px*var(--zaad-font-scale))] font-mono">
@@ -227,7 +227,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                             >
                                 <span className="text-accent">▪</span>
                                 <span title={s} className="truncate">
-                                    {s}
+                                    {wrapLatinRuns(s, isFarsi)}
                                 </span>
                             </div>
                         ))}

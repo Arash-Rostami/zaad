@@ -31,9 +31,9 @@ const STORY_VIDEOS = [
 const BACKGROUND_ELEMENTS = (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
         <div
-            className="absolute left-1/3 top-1/10 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-accent/0 via-accent/10 to-accent/0 dark:via-accent/20 mix-blend-screen transition-opacity duration-1000"/>
+            className="absolute left-1/3 top-1/10 w-[700px] h-[700px] clip-triangle bg-gradient-to-tr from-accent/0 via-accent/4 to-accent/0 dark:via-accent/3 mix-blend-screen transition-opacity duration-1000"/>
         <div
-            className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] rounded-full bg-accent/5 dark:bg-accent/15 mix-blend-screen"/>
+            className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] clip-triangle bg-accent/2 dark:bg-accent/3 mix-blend-screen"/>
         <div
             className="absolute top-0 left-1/4 w-[240px] h-[220%] bg-gradient-to-r from-transparent via-white/[0.05] dark:via-white/[0.18] to-transparent sunbeam-signature-glare pointer-events-none mix-blend-overlay"
             style={{animationDuration: "26s"}}
@@ -43,7 +43,7 @@ const BACKGROUND_ELEMENTS = (
             style={{animationDelay: "-8s", animationDuration: "35s"}}
         />
         <div
-            className="absolute left-[50%] top-[40%] -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gradient-to-r from-transparent via-accent/5 to-transparent dark:via-accent/15 mix-blend-screen pointer-events-none"/>
+            className="absolute left-[50%] top-[40%] -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] clip-triangle bg-gradient-to-r from-transparent via-accent/2 to-transparent dark:via-accent/3 mix-blend-screen pointer-events-none"/>
     </div>
 );
 
@@ -141,7 +141,6 @@ function Vision({ utensilImages = [] }) {
     // );
     // const totalFrameNumber = useMemo(() => numberFormatter.format(slideCount), [numberFormatter, slideCount]);
 
-    const storyFixturesText = useMemo(() => wrapLatinRuns(t("storyFixturesText"), isFarsi), [t, isFarsi]);
     const storyP1 = useMemo(() => wrapLatinRuns(t("storyP1"), isFarsi), [t, isFarsi]);
 
     useEffect(() => {
@@ -195,7 +194,7 @@ function Vision({ utensilImages = [] }) {
             id="vision"
             className="relative section-y-break bg-surface-overlay px-6 sm:px-12 border-y border-ink/10 overflow-hidden"
         >
-            <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-tone/30 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 clip-triangle bg-tone/10 pointer-events-none"></div>
 
             {BACKGROUND_ELEMENTS}
 
@@ -353,37 +352,23 @@ function Vision({ utensilImages = [] }) {
                                 )}
                             </div>
                         </MaisonReveal>
-
-                        <MaisonReveal
-                            variant="slide-up-royal"
-                            delay={1.3}
-                            threshold={0.01}
-                            className="absolute bottom-4 end-4 bg-panel-frost border border-ink/10 p-4 sm:p-5 shadow-card-md max-w-[160px] sm:max-w-[220px] rounded-xl z-20 text-left rtl:text-right"
-                        >
-                            <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-accent block mb-1">
-                                {t("storyFixturesLabel")}
-                            </span>
-                            <p className="text-[length:calc(12px*var(--zaad-font-scale))] text-ink font-serif font-farsi leading-relaxed font-medium">
-                                {storyFixturesText}
-                            </p>
-                        </MaisonReveal>
                     </div>
 
                     <div className="lg:col-span-7 lg:col-start-6 flex flex-col justify-center text-left rtl:text-right">
                         <div ref={textColRef}>
                             <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-                                <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                                <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
                                     {t("manifestoBadge")}
                                 </span>
                             </MaisonReveal>
                             <MaisonReveal variant="lines" delay={0.3} threshold={0.01}>
-                                <h2 className="text-3xl md:text-5xl font-serif font-light tracking-tight leading-[1.15] text-[var(--text-primary)] text-glow-subtle">
+                                <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle">
                                     {t("storyTitle")}
                                 </h2>
                             </MaisonReveal>
 
                             <MaisonReveal variant="unveil" delay={0.5} threshold={0.01}>
-                                <p className="text-lg md:text-xl font-serif font-farsi font-light text-[var(--text-bronze)] mt-6 italic leading-relaxed">
+                                <p className="text-lg md:text-xl font-serif font-farsi font-light text-[var(--text-bronze)] mt-3 leading-relaxed">
                                     "{t("storyQuote2")}"
                                 </p>
                             </MaisonReveal>
@@ -394,7 +379,7 @@ function Vision({ utensilImages = [] }) {
 
                             <MaisonReveal variant="unveil" delay={0.75} threshold={0.01}>
                                 <div
-                                    className="space-y-6 text-[var(--text-secondary)] text-sm md:text-base leading-relaxed font-light rtl:text-justify">
+                                    className="space-y-6 text-[var(--text-secondary)] text-sm md:text-base leading-relaxed font-light">
                                     <p>{storyP1}</p>
                                     <p>{t("storyP2")}</p>
                                 </div>
@@ -404,30 +389,30 @@ function Vision({ utensilImages = [] }) {
                                 className="grid grid-cols-3 gap-4 md:gap-6 pt-10 border-t border-[var(--border-color-15)] mt-10 text-center md:text-start">
                                 <MaisonReveal variant="unveil" delay={0.9} threshold={0.01}>
                                     <div>
-                                        <span className="font-serif font-farsi italic text-2xl text-[var(--text-primary)] font-light">
+                                        <span className="font-serif font-farsi text-2xl text-[var(--text-primary)] font-light">
                                             {t("storySpecialistsCount")}
                                         </span>
-                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
+                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-[var(--text-secondary)] uppercase mt-1">
                                             {t("storySpecialistsLabel")}
                                         </p>
                                     </div>
                                 </MaisonReveal>
                                 <MaisonReveal variant="unveil" delay={1.05} threshold={0.01}>
                                     <div>
-                                        <span className="font-serif font-farsi italic text-2xl text-[var(--text-primary)] font-light">
+                                        <span className="font-serif font-farsi text-2xl text-[var(--text-primary)] font-light">
                                             {t("storyOriginValue")}
                                         </span>
-                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
+                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-[var(--text-secondary)] uppercase mt-1">
                                             {t("storyOriginLabel")}
                                         </p>
                                     </div>
                                 </MaisonReveal>
                                 <MaisonReveal variant="unveil" delay={1.2} threshold={0.01}>
                                     <div>
-                                        <span className="font-serif font-farsi italic text-2xl text-[var(--text-primary)] font-light">
+                                        <span className="font-serif font-farsi text-2xl text-[var(--text-primary)] font-light">
                                             {t("collectionsCount")}
                                         </span>
-                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-[var(--text-secondary)] uppercase mt-1">
+                                        <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-[var(--text-secondary)] uppercase mt-1">
                                             {t("collectionsLabel")}
                                         </p>
                                     </div>

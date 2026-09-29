@@ -1,21 +1,31 @@
 "use client";
 
-import React, { useMemo } from "react";
-import HouseDiptychShell from "./HouseDiptychShell";
+import React, { memo, useMemo } from "react";
+import HouseChapterShell from "./HouseChapterShell";
 import { useLanguage } from "@/services/LanguageProvider";
 
-const EMPTY_ARRAY = [];
+const SECTIONS_KEY = "aboutSections";
+const SECTION_ID = "brandValue";
+const EMPTY_ARRAY = Object.freeze([]);
+const HERO_IMAGE_URL = "/video/house/chapter-gavv.jpg";
 
 function StoryValueChapter() {
     const { t, data } = useLanguage();
 
-    const sections = useMemo(() => data("aboutSections") || EMPTY_ARRAY, [data]);
-    const story = useMemo(() => sections.find((s) => s.id === "story"), [sections]);
-    const brandValue = useMemo(() => sections.find((s) => s.id === "brandValue"), [sections]);
+    const editorialContent = useMemo(() => {
+        const sections = data(SECTIONS_KEY);
+        if (!Array.isArray(sections)) return "";
+        return sections.find((s) => s?.id === SECTION_ID)?.content ?? "";
+    }, [data]);
 
     const siblings = useMemo(
         () => [
-            { href: "/about", eyebrow: t("menuAboutUs"), label: t("aboutTitle"), teaser: t("crossLinkAbout") },
+            {
+                href: "/about",
+                eyebrow: t("menuAboutUs"),
+                label: t("aboutTitle"),
+                teaser: t("crossLinkAbout"),
+            },
             {
                 href: "/sustainability",
                 eyebrow: t("menuSustainabilityResponsibility"),
@@ -26,42 +36,17 @@ function StoryValueChapter() {
         [t]
     );
 
-    const left = useMemo(
-        () => ({
-            eyebrow: t("storyHeroEyebrow"),
-            title: t("storyHeroTitle"),
-            intro: t("storyHeroIntro"),
-            content: story?.content ?? "",
-            stats: EMPTY_ARRAY,
-        }),
-        [t, story]
-    );
-
-    const right = useMemo(
-        () => ({
-            eyebrow: t("brandValueHeroEyebrow"),
-            title: t("brandValueHeroTitle"),
-            intro: t("brandValueHeroIntro"),
-            content: brandValue?.content ?? "",
-            stats: EMPTY_ARRAY,
-        }),
-        [t, brandValue]
-    );
-
     return (
-        <HouseDiptychShell
-            heroEyebrow={t("storyValueHeroEyebrow")}
+        <HouseChapterShell
             heroTitle={t("storyValueHeroTitle")}
-            heroIntro={t("storyValueHeroIntro")}
-            heroImage="/video/house/chapter-gavv.jpg"
+            heroIntro={t("brandValueHeroIntro")}
+            heroImage={HERO_IMAGE_URL}
             heroImageAlt={t("storyValueHeroAlt")}
-            heroBadge={t("menuHouseOfZAAD")}
-            heroBadgeLabel={t("storyValueHeroEyebrow")}
-            left={left}
-            right={right}
+            editorialContent={editorialContent}
+            stats={EMPTY_ARRAY}
             siblings={siblings}
         />
     );
 }
 
-export default React.memo(StoryValueChapter);
+export default memo(StoryValueChapter);

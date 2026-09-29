@@ -71,7 +71,7 @@ const ZoomController = React.memo(function ZoomController({
                                         data-touch-slop
                                         data-touch-boost
                                         onClick={(e) => { e.stopPropagation(); setLightboxScale(preset); }}
-                                        className={`flex items-center justify-center px-2.5 py-0.5 font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] tracking-[0.1em] rounded-md transition-all cursor-pointer ${isActive ? "bg-accent text-on-indicator font-semibold shadow-sm" : "text-ink/60 dark:text-muted hover:text-headline"}`}
+                                        className={`flex items-center justify-center px-2.5 py-0.5 font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] rounded-md transition-all cursor-pointer ${isActive ? "bg-accent text-on-indicator font-semibold shadow-sm" : "text-ink/60 dark:text-muted hover:text-headline"}`}
                                     >
                                         {preset.toFixed(1)}X
                                     </button>
@@ -114,7 +114,6 @@ export default function Lightbox({
                                      onNext,
                                      archiveNumber,
                                      itemName,
-                                     counterLabel,
                                      footerTitle,
                                      footerPerspective,
                                      footerSubtitle,
@@ -226,17 +225,11 @@ export default function Lightbox({
                         transition={{ delay: reduceMotion ? 0 : 0.35, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                         className="absolute top-6 left-6 md:left-12 flex items-center space-x-4 pointer-events-none select-none"
                     >
-                        <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.3em] font-semibold text-accent uppercase shrink-0">
+                        <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] font-semibold text-accent uppercase shrink-0">
                             <span className="font-serif font-latin">{archiveNumber}</span> {t("lightboxArchiveLabel")}
                         </span>
                         <span className="hidden sm:inline text-[var(--text-secondary)] opacity-30">•</span>
-                        <span className="hidden sm:inline font-serif italic text-xs text-[var(--text-primary)] select-none truncate">{itemName}</span>
-                        {counterLabel && (
-                            <>
-                                <span className="text-[var(--text-secondary)] opacity-30">•</span>
-                                <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-widest text-accent shrink-0"><span dir="ltr">{counterLabel}</span></span>
-                            </>
-                        )}
+                        <span className="hidden sm:inline font-serif text-xs text-[var(--text-primary)] select-none truncate">{itemName}</span>
                     </motion.div>
 
                     <motion.button
@@ -247,7 +240,7 @@ export default function Lightbox({
                         initial={reduceMotion ? false : { opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: reduceMotion ? 0 : 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                        className="absolute top-6 right-6 md:right-12 group flex items-center space-x-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-secondary)] hover:bg-[var(--bg-primary)] border border-[var(--border-color-15)] px-4 py-2 rounded-md font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase transition-all duration-300 z-50 cursor-pointer"
+                        className="absolute top-6 right-6 md:right-12 group flex items-center space-x-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-secondary)] hover:bg-[var(--bg-primary)] border border-[var(--border-color-15)] px-4 py-2 rounded-md font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase transition-all duration-300 z-50 cursor-pointer"
                     >
                         <span className="hidden sm:inline">{t("menuClose")}</span>
                         <X className="w-3.5 h-3.5 stroke-[1.25] transition-transform group-hover:rotate-90 duration-300" />
@@ -272,7 +265,7 @@ export default function Lightbox({
                             >
                                 <div className="flex items-center space-x-2 bg-[var(--bg-secondary)] hover:bg-[var(--bg-primary)] border border-[var(--border-color-15)] py-2 px-3.5 rounded-md transition-all duration-300 transform group-hover:-translate-x-1 shadow-md">
                                     <ChevronLeft className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[1.2]" />
-                                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-[var(--text-secondary)] select-none">{t("showcasePrev")}</span>
+                                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-[var(--text-secondary)] select-none">{t("showcasePrev")}</span>
                                 </div>
                             </motion.button>
                         )}
@@ -286,7 +279,7 @@ export default function Lightbox({
                                 className="absolute -right-2 md:-right-24 top-1/2 group flex items-center text-[var(--text-primary)] cursor-pointer z-50 select-none py-4 px-2"
                             >
                                 <div className="flex items-center space-x-2 bg-[var(--bg-secondary)] hover:bg-[var(--bg-primary)] border border-[var(--border-color-15)] py-2 px-3.5 rounded-md transition-all duration-300 transform group-hover:translate-x-1 shadow-md">
-                                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-[var(--text-secondary)] select-none">{t("showcaseNext")}</span>
+                                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-[var(--text-secondary)] select-none">{t("showcaseNext")}</span>
                                     <ChevronRight className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[1.2]" />
                                 </div>
                             </motion.button>
@@ -298,7 +291,7 @@ export default function Lightbox({
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: [0.35, 0.7, 0.35] }}
                                     transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                                    className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.4em] text-accent bg-[var(--bg-card-95)] px-4 py-2 rounded-sm border border-[var(--border-color-10)]"
+                                    className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-accent bg-[var(--bg-card-95)] px-4 py-2 rounded-sm border border-[var(--border-color-10)]"
                                 >
                                     {t("resolvingSpecimen")}
                                 </motion.div>
@@ -343,7 +336,7 @@ export default function Lightbox({
                     />
 
                     {showPanHint && (
-                        <span className="absolute bottom-20 left-1/2 -translate-x-1/2 text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] tracking-[0.2em] font-mono text-accent/95 font-medium uppercase select-none pointer-events-none whitespace-nowrap z-50">
+                        <span className="absolute bottom-20 left-1/2 -translate-x-1/2 text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-accent/95 font-medium uppercase select-none pointer-events-none whitespace-nowrap z-50">
                             {t("zoomHint")}
                         </span>
                     )}
@@ -357,18 +350,18 @@ export default function Lightbox({
                     >
                         <div className="flex flex-col items-center md:items-start text-center md:text-left rtl:md:text-right">
                             <div className="flex items-center space-x-2.5">
-                                <span className="font-serif text-[length:calc(15px*var(--zaad-font-scale))] italic text-[var(--text-primary)] font-light">{footerTitle}</span>
+                                <span className="font-serif text-[length:calc(15px*var(--zaad-font-scale))] text-[var(--text-primary)] font-light">{footerTitle}</span>
                                 <span className="text-[var(--text-secondary)] opacity-30">•</span>
-                                <span className="text-[var(--text-secondary)] opacity-80 text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase">
+                                <span className="text-[var(--text-secondary)] opacity-80 text-[length:calc(10px*var(--zaad-font-scale))] font-mono uppercase">
                                     {footerPerspective}
                                 </span>
                             </div>
-                            <p className="text-[length:calc(10.5px*var(--zaad-font-scale))] text-[var(--text-secondary)] opacity-55 font-mono mt-0.5 tracking-[0.1em] uppercase">
+                            <p className="text-[length:calc(10.5px*var(--zaad-font-scale))] text-[var(--text-secondary)] opacity-55 font-mono mt-0.5 uppercase">
                                 {footerSubtitle}
                             </p>
                         </div>
                         <div className="flex items-center space-x-6 w-full md:w-auto justify-between md:justify-end">
-                            <span className="text-accent font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase flex items-center gap-1.5 font-medium select-none">
+                            <span className="text-accent font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase flex items-center gap-1.5 font-medium select-none">
                                 <span className="w-1.5 h-1.5 bg-accent rounded-full" />
                                 {footerBadge}
                             </span>
@@ -376,7 +369,7 @@ export default function Lightbox({
                                 variant="outline"
                                 onClick={onCta}
                                 icon={Sparkles}
-                                className="!px-4 !py-1.5 !text-[length:calc(10px*var(--zaad-font-scale))] !tracking-[0.25em] !bg-transparent border-[var(--border-color-15)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] shadow-sm"
+                                className="!px-4 !py-1.5 !text-[length:calc(10px*var(--zaad-font-scale))] !bg-transparent border-[var(--border-color-15)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] shadow-sm"
                             >
                                 {t("lightboxInquireLabel")}
                             </MaisonButton>

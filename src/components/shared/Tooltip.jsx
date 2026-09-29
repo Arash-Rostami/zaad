@@ -75,7 +75,7 @@ function Tooltip({ label, children, side = "top", className = "" }) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: side === "bottom" ? -4 : 4, scale: 0.97 }}
                         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                        className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-panel-frost backdrop-blur-[6px] border border-ink-mild shadow-canvas-lift text-ink text-[length:calc(9px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase px-3.5 py-1.5 ${sideClasses}`}
+                        className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-panel-frost backdrop-blur-[6px] border border-ink-mild shadow-canvas-lift text-ink text-[length:calc(9px*var(--zaad-font-scale))] font-mono uppercase px-3.5 py-1.5 ${sideClasses}`}
                     >
                         {label}
                     </motion.span>

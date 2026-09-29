@@ -21,6 +21,16 @@ const getResolvedItem = cache(async (slug) => {
     return {...item, images: resolveCollectionImages(item, lang)};
 });
 
+const getResolvedItemPair = cache((slug) => {
+    const enItem = en.collection.find((i) => i.id === slug);
+    const faItem = fa.collection.find((i) => i.id === slug);
+    if (!enItem || !faItem) return null;
+    return {
+        en: {...enItem, images: resolveCollectionImages(enItem, "en")},
+        fa: {...faItem, images: resolveCollectionImages(faItem, "fa")},
+    };
+});
+
 const getCollectionMeta = cache((resolvedItem) => MetadataService.forCollection(resolvedItem));
 
 export async function generateMetadata({params}) {
@@ -35,12 +45,13 @@ export default async function ProductPage({params}) {
     const resolvedItem = await getResolvedItem(slug);
     if (!resolvedItem) notFound();
 
+    const itemPair = getResolvedItemPair(slug);
     const {schemas} = await getCollectionMeta(resolvedItem);
     return (
         <>
             <DorsaPreloadScript/>
             <JsonLd schemas={schemas}/>
-            <CollectionPageClient item={resolvedItem}/>
+            <CollectionPageClient items={itemPair}/>
         </>
     );
 }

@@ -8,10 +8,13 @@ import CollectionPage from "@/components/CollectionPage";
 import ScrollButton from "@/components/shared/ScrollButton";
 import useLenisScroll from "@/hooks/useLenisScroll";
 import { setPreference } from "@/services/PreferenceService";
+import { useLanguage } from "@/services/LanguageProvider";
 
-export default function CollectionPageClient({ item }) {
+export default function CollectionPageClient({ items }) {
     useLenisScroll();
     const router = useRouter();
+    const { isFarsi } = useLanguage();
+    const item = isFarsi ? items.fa : items.en;
 
     const goHome = useCallback(
         (hash) => router.push(hash ? `/#${hash}` : "/"),
@@ -30,7 +33,7 @@ export default function CollectionPageClient({ item }) {
         [router]
     );
 
-    const onBack = useCallback(() => router.back(), [router]);
+    const onBack = useCallback(() => goHome("collection"), [goHome]);
 
     const onInquire = useCallback(
         (inquireItem) => {

@@ -1,23 +1,31 @@
 "use client";
 
-import React, { useMemo } from "react";
-import HouseDiptychShell from "./HouseDiptychShell";
+import React, { memo, useMemo } from "react";
+import HouseChapterShell from "./HouseChapterShell";
 import { useLanguage } from "@/services/LanguageProvider";
 
-const EMPTY_ARRAY = [];
+const SECTIONS_KEY = "aboutSections";
+const SECTION_ID = "sustainability";
+const EMPTY_ARRAY = Object.freeze([]);
+const HERO_IMAGE_URL = "/video/material/stone.jpg";
 
 function SustainabilityResponsibilityChapter() {
     const { t, data } = useLanguage();
 
-    const sections = data("aboutSections") || EMPTY_ARRAY;
-    const sustainability = useMemo(() => sections.find((s) => s.id === "sustainability"), [sections]);
-    const csr = useMemo(() => sections.find((s) => s.id === "csr"), [sections]);
-    const sustainabilityStats = data("sustainabilityStats") || EMPTY_ARRAY;
-    const csrStats = data("csrStats") || EMPTY_ARRAY;
+    const editorialContent = useMemo(() => {
+        const sections = data(SECTIONS_KEY);
+        if (!Array.isArray(sections)) return "";
+        return sections.find((s) => s?.id === SECTION_ID)?.content ?? "";
+    }, [data]);
 
     const siblings = useMemo(
         () => [
-            { href: "/about", eyebrow: t("menuAboutUs"), label: t("aboutTitle"), teaser: t("crossLinkAbout") },
+            {
+                href: "/about",
+                eyebrow: t("menuAboutUs"),
+                label: t("aboutTitle"),
+                teaser: t("crossLinkAbout"),
+            },
             {
                 href: "/story",
                 eyebrow: t("menuStoryBrandValue"),
@@ -28,42 +36,17 @@ function SustainabilityResponsibilityChapter() {
         [t]
     );
 
-    const left = useMemo(
-        () => ({
-            eyebrow: t("sustainabilityHeroEyebrow"),
-            title: t("sustainabilityHeroTitle"),
-            intro: t("sustainabilityHeroIntro"),
-            content: sustainability?.content ?? "",
-            stats: sustainabilityStats,
-        }),
-        [t, sustainability, sustainabilityStats]
-    );
-
-    const right = useMemo(
-        () => ({
-            eyebrow: t("csrHeroEyebrow"),
-            title: t("csrHeroTitle"),
-            intro: t("csrHeroIntro"),
-            content: csr?.content ?? "",
-            stats: csrStats,
-        }),
-        [t, csr, csrStats]
-    );
-
     return (
-        <HouseDiptychShell
-            heroEyebrow={t("sustainabilityResponsibilityHeroEyebrow")}
+        <HouseChapterShell
             heroTitle={t("sustainabilityResponsibilityHeroTitle")}
             heroIntro={t("sustainabilityResponsibilityHeroIntro")}
-            heroImage="/video/material/stone.jpg"
+            heroImage={HERO_IMAGE_URL}
             heroImageAlt={t("sustainabilityResponsibilityHeroAlt")}
-            heroBadge={t("menuHouseOfZAAD")}
-            heroBadgeLabel={t("sustainabilityResponsibilityHeroEyebrow")}
-            left={left}
-            right={right}
+            editorialContent={editorialContent}
+            stats={EMPTY_ARRAY}
             siblings={siblings}
         />
     );
 }
 
-export default React.memo(SustainabilityResponsibilityChapter);
+export default memo(SustainabilityResponsibilityChapter);

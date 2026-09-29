@@ -44,7 +44,7 @@ function GlanceRailDesktop({ chapters, active, numberFormatter, onNavigate, aria
                                         <NoiseBg filterId={`glanceRailNoise-${index}`} revealOnHover />
                                         <span className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-700 pointer-events-none" />
                                         <span className="relative z-10 flex items-baseline gap-3">
-                                        <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] text-accent tabular-nums">
+                                        <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-accent tabular-nums">
                                             {numberFormatter.format(index + 1)}
                                         </span>
                                         <span
@@ -87,7 +87,7 @@ function GlanceRailMobile({ chapters, active, numberFormatter, onNavigate, ariaL
                             type="button"
                             onClick={() => onNavigate(chapter.id)}
                             aria-current={isActive ? "true" : undefined}
-                            className={`shrink-0 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.15em] uppercase transition-colors duration-700 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                            className={`shrink-0 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase transition-colors duration-700 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                                 isActive
                                     ? "border-accent/60 text-accent"
                                     : "border-ink/15 text-muted hover:text-ink hover:border-ink/30"
@@ -162,11 +162,9 @@ function GlancePage() {
                 heroEyebrow={glance.eyebrow}
                 heroTitle={glance.heroTitle}
                 heroTitleAccent={glance.heroTitleAccent}
-                heroIntro={glance.heroIntro}
+                heroIntro={wrapBrandNames(glance.heroIntro)}
                 heroImage={glance.heroImage}
                 heroImageAlt={glance.heroImageAlt}
-                heroBadge={glance.heroBadge}
-                heroBadgeLabel={glance.heroBadgeLabel}
                 scrollTargetId="glance-body"
                 withVideo={false}
             />
@@ -193,7 +191,7 @@ function GlancePage() {
                         <div className="lg:col-span-9 lg:col-start-4">
                             <section id="glance-overview" className="section-y border-t border-ink/10">
                                 <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-                                    <h2 className="text-2xl md:text-4xl font-serif font-light tracking-tight text-ink text-left rtl:text-right">
+                                    <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle text-left rtl:text-right">
                                         {wrapBrandNames(glance.overview.heading)}
                                     </h2>
                                 </MaisonReveal>
@@ -205,7 +203,7 @@ function GlancePage() {
                                     </blockquote>
                                 </MaisonReveal>
                                 <MaisonReveal variant="unveil" delay={0.45} threshold={0.01}>
-                                    <p className="mt-10 text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase text-left rtl:text-right">
+                                    <p className="mt-10 text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase text-left rtl:text-right">
                                         {glance.overview.intro}
                                     </p>
                                 </MaisonReveal>
@@ -225,16 +223,16 @@ function GlancePage() {
                                                 <NoiseBg filterId={`glanceCardNoise-${index}`} revealOnHover />
                                                 <span className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-700 pointer-events-none" />
                                                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-accent origin-left rtl:origin-right scale-x-0 group-hover:scale-x-100 [@media(hover:none)]:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" />
-                                                <span className="relative z-10 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent uppercase block mb-4">
+                                                <span className="relative z-10 text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-accent uppercase block mb-4">
                                                     <span className="font-serif font-latin">{item?.number}</span>
                                                 </span>
-                                                <h3 className="relative z-10 text-2xl md:text-3xl font-serif font-light text-ink leading-tight">
+                                                <h3 className="relative z-10 text-xl md:text-2xl font-serif font-light text-ink leading-tight">
                                                     {wrapBrandNames(item?.name ?? entry.id)}
                                                 </h3>
-                                                <p className="relative z-10 text-sm text-muted font-light leading-relaxed mt-4 max-w-md rtl:text-justify">
+                                                <p className="relative z-10 text-sm text-muted font-light leading-relaxed mt-4 max-w-md">
                                                     {wrapLatinRuns(entry.blurb, isFarsi)}
                                                 </p>
-                                                <span className="relative z-10 inline-flex items-center gap-2 mt-8 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase text-ink group-hover:text-accent transition-colors duration-700">
+                                                <span className="relative z-10 inline-flex items-center gap-2 mt-8 text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase text-ink group-hover:text-accent transition-colors duration-700">
                                                     {t("crossLinkReadMore")}
                                                     <ArrowUpRight className="w-3.5 h-3.5 rtl:-scale-x-100 transition-transform duration-700 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
                                                 </span>
@@ -257,7 +255,7 @@ function GlancePage() {
 
                             <section id="glance-matrix" className="section-y border-t border-ink/10">
                                 <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-                                    <h2 className="text-2xl md:text-4xl font-serif font-light tracking-tight text-ink text-left rtl:text-right">
+                                    <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle text-left rtl:text-right">
                                         {wrapBrandNames(glance.matrix.heading)}
                                     </h2>
                                 </MaisonReveal>
@@ -269,7 +267,7 @@ function GlancePage() {
                                                 {glance.matrix.table.head.map((headCell, cellIndex) => (
                                                     <th
                                                         key={cellIndex}
-                                                        className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-accent font-semibold border-b border-ink/20 py-3 pe-4"
+                                                        className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-accent font-semibold border-b border-ink/20 py-3 pe-4"
                                                     >
                                                         {wrapBrandNames(headCell)}
                                                     </th>
@@ -298,7 +296,7 @@ function GlancePage() {
                                     </div>
                                 </MaisonReveal>
                                 <MaisonReveal variant="unveil" delay={0.45} threshold={0.01}>
-                                    <p className="mt-14 text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase text-left rtl:text-right">
+                                    <p className="mt-14 text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase text-left rtl:text-right">
                                         {glance.sections.directory}
                                     </p>
                                 </MaisonReveal>
@@ -312,14 +310,14 @@ function GlancePage() {
                                         >
                                             <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-8 border-b border-ink/10 py-5 text-left rtl:text-right">
                                                 <div>
-                                                    <span className="font-serif text-base tracking-wider text-ink">
+                                                    <span className="font-serif text-base text-ink">
                                                         {wrapBrandNames(partner.brand)}
                                                     </span>
-                                                    <span className="block mt-1 font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.15em] uppercase text-muted">
+                                                    <span className="block mt-1 font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-muted">
                                                         {wrapLatinRuns(partner.role, isFarsi)}
                                                     </span>
                                                 </div>
-                                                <p className="text-sm text-muted font-light leading-relaxed rtl:text-justify">
+                                                <p className="text-sm text-muted font-light leading-relaxed">
                                                     {wrapLatinRuns(partner.products, isFarsi)}
                                                 </p>
                                             </div>

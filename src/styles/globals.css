@@ -1,9 +1,6 @@
 @font-face { font-family: "Dorsa"; font-weight: 300; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Light.otf") format("opentype"); }
 @font-face { font-family: "Dorsa"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Regular.otf") format("opentype"); }
 @font-face { font-family: "Dorsa"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Bold.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 800; font-style: normal; font-display: block; src: url("/fonts/Dorsa-ExtraBold.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Heavy.otf") format("opentype"); }
-@font-face { font-family: "Dorsa"; font-weight: 900; font-style: normal; font-display: block; src: url("/fonts/Dorsa-Black.otf") format("opentype"); }
 
 html.skip-loader #zaad-loader {
     display: none !important;
@@ -15,17 +12,17 @@ html.skip-loader #zaad-loader {
 
 :root {
     --zaad-section-y-top: 2rem;
-    --zaad-section-y-bottom: 3.5rem;
+    --zaad-section-y-bottom: 3rem;
     --zaad-section-y-break-top: 2rem;
-    --zaad-section-y-break-bottom: 4.5rem;
+    --zaad-section-y-break-bottom: 4rem;
 }
 
 @media (min-width: 48rem) {
     :root {
         --zaad-section-y-top: 3rem;
-        --zaad-section-y-bottom: 5rem;
+        --zaad-section-y-bottom: 4rem;
         --zaad-section-y-break-top: 3rem;
-        --zaad-section-y-break-bottom: 7rem;
+        --zaad-section-y-break-bottom: 5.5rem;
     }
 }
 
@@ -41,7 +38,7 @@ html.skip-loader #zaad-loader {
 
 :root {
     --zaad-user-scale: 1;
-    --zaad-font-scale: var(--zaad-user-scale);
+    --zaad-font-scale: calc(var(--zaad-user-scale) * 1.15);
     --text-xs: calc(0.75rem * var(--zaad-font-scale));
     --text-sm: calc(0.875rem * var(--zaad-font-scale));
     --text-base: calc(1rem * var(--zaad-font-scale));
@@ -59,7 +56,7 @@ html.skip-loader #zaad-loader {
 
 html[lang="fa"],
 .farsi-mode {
-    --zaad-font-scale: calc(var(--zaad-user-scale) * 1.05);
+    --zaad-font-scale: calc(var(--zaad-user-scale) * 1.05 * 1.15);
     --leading-tight: 1.19;
     --leading-snug: 1.31;
     --leading-normal: 1.43;
@@ -123,43 +120,43 @@ html[lang="fa"],
 }
 
 .mid {
-    --bg-primary: #1F242C;
-    --bg-secondary: #161A20;
-    --bg-secondary-40: rgba(22, 26, 32, 0.46);
-    --bg-secondary-60: rgba(22, 26, 32, 0.66);
-    --bg-card: #282E38;
-    --bg-card-trans: rgba(40, 46, 56, 0.82);
-    --bg-card-95: rgba(38, 44, 54, 0.97);
+    --bg-primary: #262626;
+    --bg-secondary: #1B1B1B;
+    --bg-secondary-40: rgba(27, 27, 27, 0.46);
+    --bg-secondary-60: rgba(27, 27, 27, 0.66);
+    --bg-card: #303030;
+    --bg-card-trans: rgba(48, 48, 48, 0.82);
+    --bg-card-95: rgba(46, 46, 46, 0.97);
 
-    --text-primary: #EBEFF5;
-    --text-secondary: #97A5B8;
-    --text-dim: #97A5B8;
-    --text-headline: #EBEFF5;
-    --text-bronze: #F2D299;
+    --text-primary: #F0F0F0;
+    --text-secondary: #A8A8A8;
+    --text-dim: #A8A8A8;
+    --text-headline: #F0F0F0;
+    --text-bronze: #FFC211;
     --text-danger: #E8927C;
 
-    --border-color-5: rgba(235, 239, 245, 0.06);
-    --border-color-10: rgba(235, 239, 245, 0.12);
-    --border-color-15: rgba(235, 239, 245, 0.18);
+    --border-color-5: rgba(240, 240, 240, 0.06);
+    --border-color-10: rgba(240, 240, 240, 0.12);
+    --border-color-15: rgba(240, 240, 240, 0.18);
 
-    --bg-foundation: #0C0F15;
-    --text-canvas: #EBEFF5;
+    --bg-foundation: #111111;
+    --text-canvas: #F0F0F0;
 
     --shadow-color: rgba(10, 12, 16, 0.40);
 
-    --bg-indicator: #F2D299;
-    --text-on-indicator: #1F242C;
+    --bg-indicator: #FFC211;
+    --text-on-indicator: #262626;
     --bg-toggle-track: rgba(0, 0, 0, 0.40);
-    --bg-overlay-panel: #0C0F15;
+    --bg-overlay-panel: #111111;
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
 
-    --color-selection: rgba(242, 210, 153, 0.30);
+    --color-selection: rgba(255, 194, 17, 0.30);
 
     --noise-blend: screen;
     --noise-opacity: 0.22;
 
-    --gold-specular: radial-gradient(circle closest-side, rgba(242, 210, 153, 0.30) 0%, rgba(242, 210, 153, 0.14) 34%, rgba(242, 210, 153, 0.03) 65%, transparent 100%);
+    --gold-specular: radial-gradient(circle closest-side, rgba(255, 194, 17, 0.30) 0%, rgba(255, 194, 17, 0.14) 34%, rgba(255, 194, 17, 0.03) 65%, transparent 100%);
 }
 
 .dark {
@@ -175,7 +172,7 @@ html[lang="fa"],
     --text-secondary: #9C9588;
     --text-dim: #9C9588;
     --text-headline: #FFFFFF;
-    --text-bronze: #CBB9A7;
+    --text-bronze: #FFC211;
     --text-danger: #D48B78;
 
     --border-color-5: rgba(237, 236, 232, 0.06);
@@ -187,26 +184,25 @@ html[lang="fa"],
 
     --shadow-color: rgba(0, 0, 0, 0.45);
 
-    --bg-indicator: #EDECE8;
+    --bg-indicator: #FFC211;
     --text-on-indicator: #111110;
     --bg-toggle-track: rgba(255, 255, 255, 0.10);
     --bg-overlay-panel: #0A0A0A;
     --bg-control-bar: rgba(0, 0, 0, 0.40);
     --border-control: rgba(255, 255, 255, 0.15);
 
-    --color-selection: rgba(203, 185, 167, 0.32);
+    --color-selection: rgba(255, 194, 17, 0.32);
 
     --noise-blend: screen;
     --noise-opacity: 0.18;
 
-    --gold-specular: radial-gradient(circle closest-side, rgba(203, 185, 167, 0.32) 0%, rgba(203, 185, 167, 0.15) 34%, rgba(203, 185, 167, 0.04) 65%, transparent 100%);
+    --gold-specular: radial-gradient(circle closest-side, rgba(255, 194, 17, 0.32) 0%, rgba(255, 194, 17, 0.15) 34%, rgba(255, 194, 17, 0.04) 65%, transparent 100%);
 }
 
 @theme {
-    --font-serif: var(--font-playfair), Georgia, serif;
-    --font-serif-luxury: var(--font-playfair-italic), Georgia, serif;
-    --font-sans: var(--font-inter), sans-serif;
-    --font-mono: var(--font-jetbrains), monospace;
+    --font-serif: var(--font-fractulalt), Georgia, serif;
+    --font-sans: var(--font-fractulalt), sans-serif;
+    --font-mono: var(--font-fractulalt), monospace;
 
     --color-surface: var(--bg-primary);
     --color-surface-alt: var(--bg-secondary);
@@ -271,10 +267,6 @@ html[lang="fa"],
         border-color: var(--border-color-5);
     }
 
-    .border-ink-subtle {
-        border-color: var(--border-color-10);
-    }
-
     .border-ink-mild {
         border-color: var(--border-color-15);
     }
@@ -307,18 +299,6 @@ html[lang="fa"],
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
     }
 
-    .shadow-couture-glow {
-        box-shadow: 0 25px 60px -15px color-mix(in srgb, var(--text-bronze) 28%, transparent), 0 0 35px 2px color-mix(in srgb, var(--text-bronze) 14%, transparent);
-    }
-
-    .shadow-faux-blur {
-        box-shadow:
-                0 0 0 1px var(--border-color-10),
-                0 8px 24px -4px color-mix(in srgb, var(--text-bronze) 12%, transparent),
-                0 24px 60px -8px color-mix(in srgb, var(--text-bronze) 18%, transparent),
-                0 45px 95px -12px color-mix(in srgb, var(--text-bronze) 10%, transparent);
-    }
-
     .placeholder-dim::placeholder {
         color: var(--text-dim);
     }
@@ -329,275 +309,6 @@ html[lang="fa"],
 
     .text-glow-subtle {
         text-shadow: 0 0 12px rgba(142, 122, 98, 0.15);
-    }
-
-    .text-glow-opulent {
-        text-shadow: 0 0 24px color-mix(in srgb, var(--text-bronze) 60%, transparent), 0 0 48px color-mix(in srgb, var(--text-bronze) 30%, transparent);
-    }
-
-    .animate-haute-float {
-        animation: hauteCoutureFloat 9s ease-in-out infinite;
-        will-change: transform;
-    }
-
-    .animate-haute-float-delayed {
-        animation: hauteCoutureFloat 11s ease-in-out 2.5s infinite;
-        will-change: transform;
-    }
-
-    .animate-silk-reveal {
-        animation: silkUnfurl 1.7s var(--couture-ease) forwards;
-        will-change: transform, opacity, clip-path;
-    }
-
-    .animate-text-curtain {
-        animation: textCurtainLift 1.35s var(--couture-ease) forwards;
-        will-change: transform, opacity, clip-path;
-    }
-
-    .animate-golden-sheen {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .animate-golden-sheen::after {
-        content: '';
-        position: absolute;
-        inset: -150%;
-        background: linear-gradient(
-                115deg,
-                transparent 35%,
-                color-mix(in srgb, var(--text-bronze) 8%, rgba(255, 255, 255, 0.15)) 48%,
-                color-mix(in srgb, var(--text-bronze) 30%, rgba(255, 255, 255, 0.4)) 50%,
-                color-mix(in srgb, var(--text-bronze) 8%, rgba(255, 255, 255, 0.15)) 52%,
-                transparent 65%
-        );
-        transform: translate3d(-100%, -100%, 0) rotate(25deg);
-        animation: liquidGoldSweep 8s var(--couture-ease) infinite;
-        pointer-events: none;
-    }
-
-    .animate-atelier-aura {
-        position: relative;
-        isolation: isolate;
-    }
-
-    .animate-atelier-aura::before {
-        content: '';
-        position: absolute;
-        inset: -25%;
-        background: radial-gradient(
-                ellipse at center,
-                color-mix(in srgb, var(--text-bronze) 30%, transparent) 0%,
-                color-mix(in srgb, var(--text-bronze) 14%, transparent) 38%,
-                color-mix(in srgb, var(--text-bronze) 4%, transparent) 64%,
-                transparent 80%
-        );
-        border-radius: inherit;
-        z-index: -1;
-        animation: atelierRadiance 8.5s ease-in-out infinite alternate;
-        pointer-events: none;
-        will-change: transform, opacity;
-    }
-
-    .lux-shimmer-text {
-        background: linear-gradient(
-                120deg,
-                var(--text-primary) 0%,
-                var(--text-primary) 35%,
-                var(--text-bronze) 50%,
-                var(--text-primary) 65%,
-                var(--text-primary) 100%
-        );
-        background-size: 250% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: textSheenFlow 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-
-    .lux-magnetic-card {
-        position: relative;
-        isolation: isolate;
-        transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
-        transform-origin: center bottom;
-        transition:
-                transform 800ms var(--couture-ease),
-                box-shadow 800ms var(--couture-ease),
-                border-color 800ms var(--couture-ease);
-        will-change: transform, box-shadow;
-    }
-
-    .lux-magnetic-card::after {
-        content: '';
-        position: absolute;
-        inset: -20px;
-        background: radial-gradient(
-                circle closest-side,
-                color-mix(in srgb, var(--text-bronze) 26%, transparent) 0%,
-                color-mix(in srgb, var(--text-bronze) 8%, transparent) 50%,
-                transparent 100%
-        );
-        border-radius: inherit;
-        opacity: 0;
-        transform: scale3d(0.88, 0.88, 1);
-        transition:
-                opacity 800ms var(--couture-ease),
-                transform 800ms var(--couture-ease);
-        pointer-events: none;
-        z-index: -1;
-        will-change: transform, opacity;
-    }
-
-    .lux-magnetic-card:hover {
-        transform: translate3d(0, -12px, 0) scale3d(1.02, 1.02, 1);
-        border-color: color-mix(in srgb, var(--text-bronze) 45%, transparent);
-        box-shadow:
-                0 1px 2px color-mix(in srgb, var(--text-bronze) 15%, transparent),
-                0 15px 35px -5px color-mix(in srgb, var(--text-bronze) 20%, transparent),
-                0 40px 80px -15px rgba(0, 0, 0, 0.28);
-    }
-
-    .lux-magnetic-card:hover::after {
-        opacity: 1;
-        transform: scale3d(1.06, 1.06, 1);
-    }
-
-    .lux-image-portrait {
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-    }
-
-    .lux-image-portrait img {
-        transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
-        transition: transform 1200ms var(--couture-ease);
-        will-change: transform;
-    }
-
-    .lux-image-portrait:hover img {
-        transform: scale3d(1.065, 1.065, 1) translate3d(0, -3px, 0);
-    }
-
-    .lux-image-portrait::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-                to top,
-                rgba(17, 17, 16, 0.55) 0%,
-                rgba(17, 17, 16, 0.15) 35%,
-                transparent 65%
-        );
-        opacity: 0.6;
-        transition: opacity 900ms var(--silk-ease);
-        pointer-events: none;
-    }
-
-    .lux-image-portrait:hover::after {
-        opacity: 0.25;
-    }
-
-    .lux-button-atelier {
-        position: relative;
-        isolation: isolate;
-        overflow: hidden;
-        transform: translate3d(0, 0, 0);
-        transition:
-                transform 650ms var(--couture-ease),
-                letter-spacing 650ms var(--couture-ease),
-                box-shadow 650ms var(--couture-ease),
-                border-color 650ms var(--couture-ease),
-                color 650ms var(--couture-ease);
-        will-change: transform, letter-spacing;
-    }
-
-    .lux-button-atelier::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-                135deg,
-                color-mix(in srgb, var(--text-bronze) 28%, transparent),
-                color-mix(in srgb, var(--text-bronze) 6%, transparent)
-        );
-        opacity: 0;
-        transform: scale3d(0.85, 0.85, 1);
-        transition:
-                opacity 650ms var(--couture-ease),
-                transform 650ms var(--couture-ease);
-        z-index: -1;
-    }
-
-    .lux-button-atelier:hover {
-        transform: translate3d(0, -3px, 0);
-        letter-spacing: 0.24em;
-        border-color: var(--text-bronze);
-        box-shadow:
-                0 12px 30px -6px color-mix(in srgb, var(--text-bronze) 38%, transparent),
-                0 0 20px 1px color-mix(in srgb, var(--text-bronze) 18%, transparent);
-    }
-
-    .lux-button-atelier:active {
-        transform: translate3d(0, -1px, 0) scale3d(0.985, 0.985, 1);
-        transition-duration: 200ms;
-    }
-
-    .lux-button-atelier:hover::before {
-        opacity: 1;
-        transform: scale3d(1, 1, 1);
-    }
-
-    .lux-border-trace {
-        position: relative;
-        border-color: transparent !important;
-    }
-
-    .lux-border-trace::before {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        padding: 1px;
-        background: conic-gradient(from var(--border-angle, 0deg), transparent 55%, color-mix(in srgb, var(--text-bronze) 25%, transparent) 75%, var(--text-bronze) 88%, transparent 100%);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        animation: borderTraceRotate 7.5s linear infinite;
-        pointer-events: none;
-    }
-
-    .lux-ambient-spotlight {
-        position: relative;
-        isolation: isolate;
-    }
-
-    .lux-ambient-spotlight::before {
-        content: '';
-        position: absolute;
-        inset: -35%;
-        background: var(--gold-specular);
-        opacity: 0;
-        transform: scale3d(0.85, 0.85, 1);
-        transition:
-                opacity 950ms var(--couture-ease),
-                transform 950ms var(--couture-ease);
-        pointer-events: none;
-        z-index: -1;
-        will-change: transform, opacity;
-    }
-
-    .lux-ambient-spotlight:hover::before {
-        opacity: 1;
-        transform: scale3d(1.08, 1.08, 1);
-    }
-
-    .lux-reveal-curtain {
-        clip-path: inset(0 0 0 0 round 0);
-        transform: translate3d(0, 0, 0);
-        transition:
-                clip-path 1100ms var(--couture-ease),
-                transform 1100ms var(--couture-ease);
     }
 
     .lux-vignette {
@@ -686,91 +397,15 @@ html[lang="fa"],
             min-width: 44px;
         }
     }
-}
 
-@property --border-angle {
-    syntax: '<angle>';
-    inherits: false;
-    initial-value: 0deg;
-}
+    .clip-triangle {
+        clip-path: polygon(50% 13.397%, 0% 100%, 100% 100%);
+    }
 
-@keyframes borderTraceRotate {
-    0% {
-        --border-angle: 0deg;
-    }
-    100% {
-        --border-angle: 360deg;
-    }
-}
-
-@keyframes hauteCoutureFloat {
-    0%, 100% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
-    }
-    33% {
-        transform: translate3d(0, -14px, 0) rotate(0.4deg);
-    }
-    66% {
-        transform: translate3d(0, -6px, 0) rotate(-0.3deg);
-    }
-}
-
-@keyframes liquidGoldSweep {
-    0% {
-        transform: translate3d(-120%, -120%, 0) rotate(25deg);
-    }
-    35%, 100% {
-        transform: translate3d(140%, 140%, 0) rotate(25deg);
-    }
-}
-
-@keyframes textSheenFlow {
-    0% {
-        background-position: 150% center;
-    }
-    50%, 100% {
-        background-position: -50% center;
-    }
-}
-
-@keyframes silkUnfurl {
-    0% {
-        opacity: 0;
-        transform: translate3d(0, 36px, 0) scale3d(0.965, 0.965, 1);
-        clip-path: inset(14% 0 14% 0 round 6px);
-    }
-    100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
-        clip-path: inset(0 0 0 0 round 0px);
-    }
-}
-
-@keyframes textCurtainLift {
-    0% {
-        opacity: 0;
-        transform: translate3d(0, 100%, 0) skewY(2.5deg);
-        clip-path: inset(0 0 100% 0);
-    }
-    100% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) skewY(0deg);
-        clip-path: inset(0 0 0 0);
-    }
-}
-
-@keyframes atelierRadiance {
-    0% {
-        opacity: 0.35;
-        transform: scale3d(0.92, 0.92, 1) rotate(0deg);
-    }
-    50% {
-        opacity: 0.85;
-        transform: scale3d(1.12, 1.08, 1) rotate(3deg);
-    }
-    100% {
-        opacity: 0.35;
-        transform: scale3d(0.92, 0.92, 1) rotate(0deg);
+    .pattern-diamond-grid {
+        background-image: url("/patterns/zaad-diamond-grid.svg");
+        background-repeat: repeat;
+        background-size: 200px 212px;
     }
 }
 
@@ -800,6 +435,50 @@ html[lang="fa"],
 
 .sunbeam-signature-glare {
     animation: delicateGlowSweep 28s infinite ease-in-out;
+}
+
+@keyframes ribbonWordmarkGlide {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+.ribbon-wordmark-glide {
+    animation: ribbonWordmarkGlide 38s linear infinite;
+    will-change: transform;
+}
+
+html[dir="rtl"] .ribbon-wordmark-glide {
+    animation-direction: reverse;
+}
+
+html[dir="rtl"] .pattern-diamond-drift {
+    animation-direction: reverse;
+}
+
+.ribbon-neutral-in-light img {
+    transition: filter 700ms ease;
+}
+
+html.light .ribbon-neutral-in-light img {
+    filter: grayscale(1);
+}
+
+@keyframes diamondGridDrift {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+.pattern-diamond-drift {
+    animation: diamondGridDrift 32s linear infinite;
+    will-change: background-position;
 }
 
 @keyframes shimmer {
@@ -895,7 +574,16 @@ html[lang="fa"] h6 {
     font-family: "Dorsa", "Tahoma", sans-serif !important;
     font-weight: 400;
     letter-spacing: 0 !important;
-    line-height: 1.48 !important;
+    line-height: 1.25 !important;
+}
+
+html[lang="fa"] h1.font-bold,
+html[lang="fa"] h2.font-bold,
+html[lang="fa"] h3.font-bold,
+html[lang="fa"] h4.font-bold,
+html[lang="fa"] h5.font-bold,
+html[lang="fa"] h6.font-bold {
+    font-weight: 700;
 }
 
 html[lang="fa"] .font-mono,
@@ -913,29 +601,9 @@ html[lang="fa"] .font-farsi {
     font-family: "Dorsa", "Tahoma", sans-serif !important;
 }
 
-html[lang="fa"] .font-serif-luxury {
-    font-family: "Dorsa", "Tahoma", sans-serif !important;
-}
-
 html[lang="fa"] .font-latin {
-    font-family: var(--font-jetbrains), var(--font-inter), monospace !important;
+    font-family: var(--font-fractulalt), monospace !important;
     letter-spacing: inherit !important;
-}
-
-html[lang="fa"] .tracking-\[0\.3em\],
-html[lang="fa"] .tracking-\[0\.4em\],
-html[lang="fa"] .tracking-widest,
-html[lang="fa"] .tracking-wider {
-    letter-spacing: 0.05em !important;
-}
-
-html[lang="fa"] .rtl-mirror {
-    transform: scaleX(-1);
-}
-
-html[lang="fa"] .italic {
-    font-style: normal !important;
-    font-weight: 900 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

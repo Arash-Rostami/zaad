@@ -57,23 +57,16 @@ function CollectionPanel({
     const catalogueHref = cataloguePage ? `/showcase/index.html#p=${cataloguePage}` : null;
 
     const name = selectedItem?.name;
-    const designer = selectedItem?.designer;
     const description = selectedItem?.description;
-    const story = selectedItem?.story;
     const dimensions = selectedItem?.dimensions;
     const finish = selectedItem?.specifications?.finish;
     const weight = selectedItem?.specifications?.weight;
     const leadTime = selectedItem?.specifications?.leadTime;
 
     const wrappedName = useMemo(() => wrapBrandNames(name ?? ""), [name]);
-    const wrappedDesigner = useMemo(() => wrapBrandNames(designer ?? ""), [designer]);
     const wrappedDescription = useMemo(
         () => wrapLatinRuns(description ?? "", isFarsi),
         [description, isFarsi]
-    );
-    const wrappedStory = useMemo(
-        () => wrapLatinRuns(story ?? "", isFarsi),
-        [story, isFarsi]
     );
 
     const specs = useMemo(() => {
@@ -120,40 +113,15 @@ function CollectionPanel({
         <MaisonReveal
             variant="slide-up-royal"
             delay={0.6}
-            className="lg:col-span-6 flex flex-col w-full text-left rtl:text-right"
+            className="lg:col-span-6 flex flex-col h-full w-full text-left rtl:text-right"
         >
-            <div className="flex items-center justify-between mb-4 border-b border-ink/10 pb-4">
-                <span className="text-xs text-accent font-semibold tracking-widest">
-                    {t("showcaseArchiveCollection")}
-
-                    <sup className="font-serif font-latin mx-2">{selectedItem.number}</sup>
-                </span>
-                <span
-                    className="text-xs font-mono text-accent tracking-wider uppercase flex items-center gap-1.5 font-medium">
-                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"/>
-                    {t("showcaseBespokeCommission")}
-                </span>
-            </div>
-
-            <h3 className="text-3xl md:text-5xl font-serif font-light tracking-tight text-ink mb-2 leading-tight text-glow-subtle">
+            <h3 className="text-4xl sm:text-5xl font-serif font-light tracking-tight text-ink mb-2 leading-tight text-glow-subtle">
                 {wrappedName}
             </h3>
-            <p className="text-xs font-mono tracking-widest text-muted uppercase mb-6">
-                {t("showcaseDesigner")}: {wrappedDesigner}
-            </p>
 
-            <p className="text-sm sm:text-base text-ink font-light leading-relaxed mb-6 rtl:text-justify">
+            <p className="text-sm sm:text-base text-ink font-light leading-relaxed mb-6">
                 {wrappedDescription}
             </p>
-
-            <div className="bg-surface-frosted p-6 border border-ink/10 mb-8 rounded-xl">
-                <h4 className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase text-accent mb-2">
-                    {t("showcaseMaterialMonograph")}
-                </h4>
-                <p className="text-xs sm:text-sm text-muted font-light leading-relaxed rtl:text-justify">
-                    {wrappedStory}
-                </p>
-            </div>
 
             <div className="border-t border-b border-ink/10 mb-8 overflow-hidden">
                 <button
@@ -163,7 +131,7 @@ function CollectionPanel({
                 >
                     <div className="flex items-center space-x-3 text-left rtl:text-right">
                         <span
-                            className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.2em] text-accent font-semibold uppercase">
+                            className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase">
                             {t("showcaseStudioLookbook")}
                         </span>
                         <span
@@ -188,32 +156,35 @@ function CollectionPanel({
                             animate={SPECS_ANIMATE}
                             exit={SPECS_EXIT}
                         >
-                            <div className="pt-2 pb-6 border-t border-ink/10 mt-1">
-                                <div className="grid grid-cols-2 gap-y-5 gap-x-8 text-xs pb-4">
+                            <div className="pt-2 pb-6 border-t border-ink/10 mt-1 space-y-6">
+                                <div className="grid grid-cols-2 gap-y-5 gap-x-8 text-xs">
                                     {specs.map(({label, value}) => (
                                         <div key={label} className="space-y-1">
                                             <span
-                                                className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-muted block uppercase">
+                                                className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono text-muted block uppercase">
                                                 {label}
                                             </span>
                                             <span
-                                                className="text-ink font-light text-xs sm:text-sm block leading-relaxed">
+                                                className="text-ink font-light text-[length:calc(11px*var(--zaad-font-scale))] block leading-relaxed">
                                                 {value}
                                             </span>
                                         </div>
                                     ))}
-                                    <div className="col-span-2 pt-2">
+                                    <div className="col-span-2">
                                         <span
-                                            className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-muted block uppercase mb-2">
+                                            className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono text-muted block uppercase mb-2">
                                             {t("showcasePrimaryMaterials")}
                                         </span>
-                                        <div className="flex flex-wrap gap-1.5">
+                                        <div
+                                            className="flex flex-row gap-1.5 overflow-x-auto scrollbar-none"
+                                            data-lenis-prevent
+                                        >
                                             {materials.map((mat, i) => (
                                                 <span
                                                     key={mat || i}
-                                                    className="text-[length:calc(9px*var(--zaad-font-scale))] bg-panel-glass dark:bg-panel/5 border border-ink/10 px-3 py-1 text-ink uppercase font-mono tracking-wide rounded-md"
+                                                    className="shrink-0 whitespace-nowrap text-[length:calc(9px*var(--zaad-font-scale))] bg-panel-glass dark:bg-panel/5 border border-ink/10 px-3 py-1 text-ink uppercase font-mono rounded-md"
                                                 >
-                                                    {mat}
+                                                    {wrapLatinRuns(mat, isFarsi)}
                                                 </span>
                                             ))}
                                         </div>
@@ -221,16 +192,16 @@ function CollectionPanel({
                                 </div>
 
                                 <div
-                                    className="mt-6 pt-4 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    className="pt-4 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                                     <span
                                         className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted leading-relaxed max-w-sm uppercase text-left rtl:text-right">
-                                        {t("showcaseCatalogueText")}
+                                        {wrapLatinRuns(t("showcaseCatalogueText"), isFarsi)}
                                     </span>
                                     <Link
                                         href={catalogueHref}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-[0.2em] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer hover:shadow-md"
+                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer hover:shadow-md"
                                     >
                                         <span>{t("showcaseRevealDossier")}</span>
                                         <ArrowUpRight className="w-3.5 h-3.5 stroke-[1.8] rtl:-scale-x-100"/>
@@ -242,20 +213,21 @@ function CollectionPanel({
                 </AnimatePresence>
             </div>
 
-            <div
-                className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <MaisonButton variant="solid" onClick={handleInquire} icon={Sparkles} className="w-full">
-                    {t("showcasePrivateInquiry")}
-                </MaisonButton>
-                <MaisonButton variant="outline" onClick={handleViewDetails} icon={ArrowUpRight} className="w-full">
-                    {t("showcaseOpenPiece")}
-                </MaisonButton>
-            </div>
+            <div className="mt-auto">
+                <div
+                    className="flex items-center gap-2 mb-4 text-muted/70 text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono justify-start">
+                    <ShieldCheck className="w-3.5 h-3.5 text-accent"/>
+                    <span>{t("showcaseAirfreight")}</span>
+                </div>
 
-            <div
-                className="flex items-center space-x-2 mt-4 text-muted/70 text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-wider justify-center sm:justify-start">
-                <ShieldCheck className="w-3.5 h-3.5 text-accent"/>
-                <span>{t("showcaseAirfreight")}</span>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                    <MaisonButton variant="solid" onClick={handleInquire} icon={Sparkles} className="w-full">
+                        {t("showcasePrivateInquiry")}
+                    </MaisonButton>
+                    <MaisonButton variant="outline" onClick={handleViewDetails} icon={ArrowUpRight} className="w-full">
+                        {t("showcaseOpenPiece")}
+                    </MaisonButton>
+                </div>
             </div>
         </MaisonReveal>
     );

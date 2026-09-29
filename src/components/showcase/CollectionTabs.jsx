@@ -13,13 +13,7 @@ const TabButton = memo(function TabButton({ item, isActive, onSelect }) {
         onSelect?.(item);
     }, [onSelect, item]);
 
-    const numberClassName = `text-xs md:text-sm font-serif font-latin italic tracking-wider mb-2 transition-all duration-300 ${
-        isActive
-            ? "text-accent font-semibold scale-110"
-            : "text-muted/40 text-headline/30 group-hover:text-accent"
-    }`;
-
-    const nameClassName = `text-base sm:text-lg md:text-xl font-serif tracking-[0.3em] uppercase transition-colors duration-300 ${
+    const nameClassName = `text-base sm:text-lg md:text-xl font-serif uppercase transition-colors duration-300 ${
         isActive
             ? "text-ink font-semibold"
             : "text-muted/50 dark:text-muted/50 group-hover:text-ink dark:group-hover:text-white"
@@ -31,9 +25,6 @@ const TabButton = memo(function TabButton({ item, isActive, onSelect }) {
             onClick={handleClick}
             className="group relative pb-5 flex flex-col items-center text-center transition-all duration-300 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shrink-0"
         >
-            <span className={numberClassName}>
-                {item?.number}
-            </span>
             <span className={nameClassName}>
                 {item?.name}
             </span>
@@ -54,19 +45,19 @@ function CollectionTabs({ collection, selectedItem, selectItem, t }) {
     return (
         <>
             <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-ink/10">
-                    <div>
-                        <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
-                            {t("showcaseBadge")}
-                        </span>
-                        <h2 className="text-3xl md:text-5xl font-serif text-ink tracking-tight font-light text-glow-subtle">
-                            {t("showcaseTitle")}
-                        </h2>
-                    </div>
-                    <p className="text-xs font-mono text-muted max-w-xs mt-4 md:mt-0 leading-relaxed uppercase opacity-85 rtl:text-justify">
-                        {t("showcaseCatalogueDesc")}
-                    </p>
-                </div>
+                <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
+                    {t("collectionsLabel")}
+                </span>
+            </MaisonReveal>
+            <MaisonReveal variant="lines" delay={0.3} threshold={0.01}>
+                <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light mb-1 text-glow-subtle">
+                    {t("showcaseTitle")}
+                </h2>
+            </MaisonReveal>
+            <MaisonReveal variant="unveil" delay={0.5} threshold={0.01}>
+                <p className="text-sm md:text-base text-muted font-light leading-relaxed max-w-xl mb-6 md:mb-8">
+                    {t("showcaseCatalogueDesc")}
+                </p>
             </MaisonReveal>
 
             <MaisonReveal variant="unveil" delay={0.45} threshold={0.01}>

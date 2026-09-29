@@ -1,8 +1,11 @@
 "use client";
 
+const FACES = `@font-face{font-family:"FractulAlt";font-weight:300;font-style:normal;font-display:swap;src:url("/fonts/FractulAlt-Light.woff2") format("woff2")}@font-face{font-family:"FractulAlt";font-weight:400;font-style:normal;font-display:swap;src:url("/fonts/FractulAlt-Regular.woff2") format("woff2")}`;
+
 export default function GlobalError({ reset }) {
     return (
         <html lang="en">
+            <style>{FACES}</style>
             <body
                 style={{
                     margin: 0,
@@ -12,7 +15,7 @@ export default function GlobalError({ reset }) {
                     justifyContent: "center",
                     backgroundColor: "#F4F1ED",
                     color: "#1C1C1C",
-                    fontFamily: "Georgia, 'Times New Roman', serif",
+                    fontFamily: '"FractulAlt", Georgia, "Times New Roman", serif',
                     textAlign: "center",
                     padding: "24px",
                 }}
@@ -25,7 +28,6 @@ export default function GlobalError({ reset }) {
                             textTransform: "uppercase",
                             color: "#8C7355",
                             marginBottom: 20,
-                            fontFamily: "monospace",
                         }}
                     >
                         ZAAD

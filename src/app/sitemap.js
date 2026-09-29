@@ -1,6 +1,6 @@
 import { en } from "@/lib/i18n/en";
 
-const SITE_URL = "https://zaad.com";
+const SITE_URL = "https://zaaddesign.com";
 
 function entry(path, changeFrequency, priority) {
     const url = `${SITE_URL}${path}`;

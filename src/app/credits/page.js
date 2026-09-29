@@ -16,12 +16,12 @@ import {
     SearchCheck,
     ShieldCheck,
     Gauge,
+    History,
     Radar,
     CheckCircle2,
     ZoomIn,
     Type,
     Volume2,
-    History,
     CalendarClock,
     Wand2,
     BookOpen,
@@ -43,7 +43,7 @@ const COMPANY_URL = "http://www.persolbs.com/";
 const PAGES = [
     { id: "home", route: "/", titleKey: "creditsPageHomeTitle", descKey: "creditsPageHomeDesc" },
     { id: "glance", route: "/glance", titleKey: "creditsPageGlanceTitle", descKey: "creditsPageGlanceDesc" },
-    { id: "collection", route: "/collection", titleKey: "creditsPageCollectionTitle", descKey: "creditsPageCollectionDesc" },
+    { id: "collection", route: "/collection/{id}", titleKey: "creditsPageCollectionTitle", descKey: "creditsPageCollectionDesc" },
     { id: "about", route: "/about", titleKey: "creditsPageAboutTitle", descKey: "creditsPageAboutDesc" },
     { id: "story", route: "/story", titleKey: "creditsPageStoryTitle", descKey: "creditsPageStoryDesc" },
     { id: "sustainability", route: "/sustainability", titleKey: "creditsPageSustainabilityTitle", descKey: "creditsPageSustainabilityDesc" },
@@ -62,11 +62,11 @@ const FEATURES = [
     { id: "lightbox", icon: ZoomIn, titleKey: "creditsFeatureLightboxTitle", descKey: "creditsFeatureLightboxDesc" },
     { id: "fontScale", icon: Type, titleKey: "creditsFeatureFontScaleTitle", descKey: "creditsFeatureFontScaleDesc" },
     { id: "audio", icon: Volume2, titleKey: "creditsFeatureAudioTitle", descKey: "creditsFeatureAudioDesc" },
-    { id: "memory", icon: History, titleKey: "creditsFeatureMemoryTitle", descKey: "creditsFeatureMemoryDesc" },
     { id: "scheduling", icon: CalendarClock, titleKey: "creditsFeatureSchedulingTitle", descKey: "creditsFeatureSchedulingDesc" },
     { id: "autofill", icon: Wand2, titleKey: "creditsFeatureAutofillTitle", descKey: "creditsFeatureAutofillDesc" },
     { id: "catalogue", icon: BookOpen, titleKey: "creditsFeatureCatalogueTitle", descKey: "creditsFeatureCatalogueDesc" },
     { id: "cursorScroll", icon: MousePointer2, titleKey: "creditsFeatureCursorScrollTitle", descKey: "creditsFeatureCursorScrollDesc" },
+    { id: "continue", icon: History, titleKey: "creditsFeatureContinueTitle", descKey: "creditsFeatureContinueDesc" },
 ];
 
 const CARE = [
@@ -77,18 +77,15 @@ const CARE = [
 ];
 
 const CHECKLIST = [
-    { id: "phone", titleKey: "creditsChecklistPhoneTitle", descKey: "creditsChecklistPhoneDesc" },
-    { id: "address", titleKey: "creditsChecklistAddressTitle", descKey: "creditsChecklistAddressDesc" },
     { id: "social", titleKey: "creditsChecklistSocialTitle", descKey: "creditsChecklistSocialDesc" },
     { id: "whatsapp", titleKey: "creditsChecklistWhatsappTitle", descKey: "creditsChecklistWhatsappDesc" },
-    { id: "twitter", titleKey: "creditsChecklistTwitterTitle", descKey: "creditsChecklistTwitterDesc" },
 ];
 
 function SectionHeading({ title, note }) {
     return (
         <div className="max-w-2xl mb-6 md:mb-7">
             <MaisonReveal variant="unveil" threshold={0.05}>
-                <h2 className="italic font-normal font-serif-luxury text-xl md:text-2xl text-ink text-balance">
+                <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle text-balance">
                     {title}
                 </h2>
             </MaisonReveal>
@@ -105,11 +102,11 @@ function RouteRow({ route, title, desc, delay }) {
     return (
         <MaisonReveal variant="unveil" delay={delay} threshold={0.05}>
             <div className="grid grid-cols-1 sm:grid-cols-[7rem_1fr] gap-1 sm:gap-6 py-5 border-b border-ink/10 last:border-b-0">
-                <span dir="ltr" className="font-mono text-xs tracking-wide text-accent pt-0.5">
+                <span dir="ltr" className="font-mono font-latin text-xs text-accent pt-0.5">
                     {route}
                 </span>
                 <div>
-                    <h3 className="text-sm font-medium text-ink mb-1">{title}</h3>
+                    <h3 className="font-serif text-lg font-light text-ink mb-1">{title}</h3>
                     <p className="text-sm text-muted font-light leading-relaxed">{desc}</p>
                 </div>
             </div>
@@ -123,7 +120,7 @@ function FeatureCell({ icon: Icon, title, desc, delay }) {
             <div className="h-full bg-surface p-6">
                 <div className="flex items-center gap-2.5 mb-2.5">
                     {Icon && <Icon className="w-4 h-4 text-accent shrink-0" strokeWidth={1.5} />}
-                    <h3 className="text-sm font-medium text-ink">{title}</h3>
+                    <h3 className="font-serif text-lg font-light text-ink">{title}</h3>
                 </div>
                 <p className="text-xs text-muted font-light leading-relaxed">{desc}</p>
             </div>
@@ -191,7 +188,7 @@ export default function CreditsPage() {
                         href="/"
                         aria-label={t("aboutBackToShowroom")}
                         data-touch-boost
-                        className="flex items-center gap-2 text-xs font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500 shrink-0 p-2.5 -m-2.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                        className="flex items-center gap-2 text-xs font-mono uppercase text-muted hover:text-ink transition-colors duration-500 shrink-0 p-2.5 -m-2.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         <span className="hidden sm:inline">{t("aboutBackToShowroom")}</span>
@@ -210,12 +207,12 @@ export default function CreditsPage() {
             <main id="main-content" ref={mainRef} className="min-h-screen bg-surface text-ink">
                 <section className="max-w-2xl mx-auto px-6 sm:px-12 pt-24 pb-10">
                     <MaisonReveal variant="unveil" threshold={0.1}>
-                        <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-2">
+                        <span className="text-[length:calc(10px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-2">
                             {t("creditsEyebrow")}
                         </span>
                     </MaisonReveal>
                     <MaisonReveal variant="unveil" delay={0.15} threshold={0.1}>
-                        <h4 className="text-xl sm:text-2xl md:text-[2rem] font-serif tracking-tight leading-[1.15] text-ink font-light text-balance mb-2">
+                        <h4 className="text-4xl sm:text-5xl font-serif tracking-tight leading-[1.15] text-ink font-light text-balance mb-2">
                             {t("creditsHeading")}
                         </h4>
                     </MaisonReveal>
@@ -229,21 +226,21 @@ export default function CreditsPage() {
                 <section className="max-w-2xl mx-auto px-6 sm:px-12 py-10 border-t border-ink/10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                         <div>
-                            <span className="font-mono text-xs tracking-widest text-accent font-semibold uppercase block mb-5">
+                            <span className="font-mono text-xs text-accent font-semibold uppercase block mb-5">
                                 {t("creditsScopeProvidedLabel")}
                             </span>
                             <ul>
-                                {[t("creditsScopeProvided1"), t("creditsScopeProvided2"), t("creditsScopeProvided3")].map((item, i) => (
+                                {[t("creditsScopeProvided1"), t("creditsScopeProvided2"), t("creditsScopeProvided3"), t("creditsScopeProvided4"), t("creditsScopeProvided5"), t("creditsScopeProvided6")].map((item, i) => (
                                     <MaisonReveal key={i} variant="unveil" delay={0.06 * i} threshold={0.05}>
                                         <li className="text-sm text-muted font-light py-2.5 border-b border-ink/10 last:border-b-0">
-                                            {item}
+                                            {wrapLatinRuns(item, isFarsi)}
                                         </li>
                                     </MaisonReveal>
                                 ))}
                             </ul>
                         </div>
                         <div>
-                            <span className="font-mono text-xs tracking-widest text-accent font-semibold uppercase block mb-5">
+                            <span className="font-mono text-xs text-accent font-semibold uppercase block mb-5">
                                 {t("creditsScopeBuiltLabel")}
                             </span>
                             <ul>
@@ -273,7 +270,7 @@ export default function CreditsPage() {
                                 key={page.id}
                                 route={page.route}
                                 title={t(page.titleKey)}
-                                desc={t(page.descKey)}
+                                desc={wrapLatinRuns(t(page.descKey), isFarsi)}
                                 delay={0.05 * i}
                             />
                         ))}
@@ -288,7 +285,7 @@ export default function CreditsPage() {
                                 key={feature.id}
                                 icon={feature.icon}
                                 title={t(feature.titleKey)}
-                                desc={t(feature.descKey)}
+                                desc={wrapLatinRuns(t(feature.descKey), isFarsi)}
                                 delay={0.04 * i}
                             />
                         ))}
@@ -313,10 +310,10 @@ export default function CreditsPage() {
                 <section className="max-w-2xl mx-auto px-6 sm:px-12 py-10 border-t border-ink/10">
                     <MaisonReveal variant="unveil" threshold={0.1}>
                         <div className="border border-ink/10 p-7 md:p-8">
-                            <span className="font-mono text-xs tracking-widest text-accent font-semibold uppercase block mb-3">
+                            <span className="font-mono text-xs text-accent font-semibold uppercase block mb-3">
                                 {t("creditsLedgerLabel")}
                             </span>
-                            <h2 className="italic font-normal font-serif-luxury text-xl text-ink mb-3">{t("creditsLedgerTitle")}</h2>
+                            <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle mb-3">{t("creditsLedgerTitle")}</h2>
                             <p className="text-sm text-muted font-light leading-relaxed">{t("creditsLedgerNote")}</p>
                         </div>
                     </MaisonReveal>
@@ -341,14 +338,14 @@ export default function CreditsPage() {
 
                 <footer className="max-w-2xl mx-auto px-6 sm:px-12 pt-6 pb-10 border-t border-ink/10 text-center">
                     <MaisonReveal variant="unveil" threshold={0.1}>
-                        <p className="font-mono text-[0.66rem] tracking-[0.08em] uppercase text-muted">
+                        <p className="font-mono text-[0.66rem] uppercase text-muted">
                             {beforeCompany}
                             <a
                                 href={COMPANY_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 dir="ltr"
-                                className="text-muted underline decoration-ink/15 underline-offset-2 hover:text-accent hover:decoration-accent/60 transition-colors duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                                className="text-muted font-serif underline decoration-ink/15 underline-offset-2 hover:text-accent hover:decoration-accent/60 transition-colors duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                             >
                                 {COMPANY_NAME}
                             </a>

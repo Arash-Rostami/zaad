@@ -38,7 +38,7 @@ export default function Showcase({ onInquireItem, onViewDetails }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -30 }}
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-18 items-start"
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-18 items-stretch"
                 >
                     <ImageViewer selectedItem={selectedItem} showcase={showcase} t={t} />
                     <CollectionPanel

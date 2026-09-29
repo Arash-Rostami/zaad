@@ -105,10 +105,10 @@ const LedgerGate = memo(function LedgerGate({ unlockAction, t }) {
     }, [reduceMotion]);
 
     return (
-        <div className="min-h-screen bg-surface text-ink flex items-center justify-center px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-20">
+        <div className="min-h-screen bg-surface text-ink flex items-center justify-center px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-16">
             <div className="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
                 <MaisonReveal variant="unveil" className="max-w-md w-full mx-auto text-center">
-                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
                         {t("ledgerEyebrow")}
                     </span>
                     <h1 className="text-4xl sm:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light text-glow-subtle mb-6">
@@ -119,7 +119,7 @@ const LedgerGate = memo(function LedgerGate({ unlockAction, t }) {
                         <div>
                             <label
                                 htmlFor="ledger-key"
-                                className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium"
+                                className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium"
                             >
                                 {t("ledgerKeyLabel")}
                             </label>
@@ -154,7 +154,7 @@ const LedgerGate = memo(function LedgerGate({ unlockAction, t }) {
                     <div className="mt-8 flex justify-center">
                         <Link
                             href="/"
-                            className="flex items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors duration-500"
+                            className="flex items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono uppercase text-muted hover:text-ink transition-colors duration-500"
                         >
                             <ArrowLeft className="w-3.5 h-3.5" />
                             {t("ledgerReturnHome")}
@@ -195,7 +195,7 @@ const LedgerGate = memo(function LedgerGate({ unlockAction, t }) {
 const DetailRow = memo(function DetailRow({ label, children }) {
     return (
         <div className="space-y-1">
-            <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-muted block uppercase">
+            <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono text-muted block uppercase">
                 {label}
             </span>
             <span className="text-ink font-light text-xs sm:text-sm block leading-relaxed">{children}</span>
@@ -217,14 +217,14 @@ const LedgerFilterTab = memo(function LedgerFilterTab({ tab, isActive, onSelect,
             className="group relative pb-3 sm:pb-4 flex items-center gap-2 transition-colors duration-300 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shrink-0"
         >
             <span
-                className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.15em] uppercase transition-colors ${
+                className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase transition-colors ${
                     isActive ? "text-ink font-semibold" : "text-muted/60 group-hover:text-ink"
                 }`}
             >
                 {t(tab.labelKey)}
             </span>
             <span
-                className={`font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-widest transition-colors ${
+                className={`font-mono text-[length:calc(10px*var(--zaad-font-scale))] transition-colors ${
                     isActive ? "text-accent" : "text-muted/40"
                 }`}
             >
@@ -297,7 +297,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-x-3 gap-y-1 flex-wrap">
                             <span
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[length:calc(9px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase shrink-0 ${
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[length:calc(9px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase shrink-0 ${
                                     inquiry.viewed ? "border-ink/10 text-muted/60" : "border-accent/40 text-accent bg-accent/5"
                                 }`}
                             >
@@ -308,15 +308,15 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                                 )}
                                 {inquiry.viewed ? t("ledgerTabViewed") : t("ledgerTabUnviewed")}
                             </span>
-                            <span dir="ltr" className="font-latin font-mono text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest text-accent shrink-0">
+                            <span dir="ltr" className="font-latin font-mono text-[length:calc(11px*var(--zaad-font-scale))] text-accent shrink-0">
                                 SEC-COM-{inquiry.sessionRef}
                             </span>
                             <span className="text-lg font-light text-ink truncate">{inquiry.clientName}</span>
-                            <span className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest uppercase text-muted">
+                            <span className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono uppercase text-muted">
                                 {consultationLabel}
                             </span>
                         </div>
-                        <p className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted/70 mt-1.5 tracking-wide">
+                        <p className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted/70 mt-1.5">
                             {stamp} · {inquiry.language === "fa" ? "FA" : "EN"} · {inquiry.source === "chat" ? t("ledgerSourceChat") : t("ledgerSourceForm")}
                         </p>
                     </div>
@@ -360,10 +360,10 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                                 </div>
                                 {inquiry.additionalNote && (
                                     <div className="space-y-1.5 border-t border-ink/10 pt-4">
-                                        <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-muted block uppercase">
+                                        <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono text-muted block uppercase">
                                             {t("archivalSpecs")}
                                         </span>
-                                        <p className="text-sm text-ink/90 font-light leading-relaxed rtl:text-justify">
+                                        <p className="text-sm text-ink/90 font-light leading-relaxed">
                                             {wrapLatinRuns(inquiry.additionalNote, isFarsi)}
                                         </p>
                                     </div>
@@ -373,7 +373,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                                         type="button"
                                         onClick={handleToggleViewed}
                                         disabled={pending}
-                                        className={`flex items-center gap-1.5 font-mono uppercase tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 text-muted/70 hover:text-accent ${
+                                        className={`flex items-center gap-1.5 font-mono uppercase text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 text-muted/70 hover:text-accent ${
                                             pending ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
                                         }`}
                                     >
@@ -384,7 +384,7 @@ const LedgerEntry = memo(function LedgerEntry({ inquiry, entryKey, open, stagger
                                         type="button"
                                         onClick={handleDelete}
                                         disabled={pending}
-                                        className={`flex items-center gap-1.5 font-mono uppercase tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
+                                        className={`flex items-center gap-1.5 font-mono uppercase text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
                                             confirming ? "text-danger" : "text-muted/70 hover:text-danger"
                                         } ${pending ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
                                     >
@@ -513,21 +513,21 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
             onPrimary={handleLock}
         />
     ) : (
-        <div className="min-h-screen bg-surface text-ink px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-20">
+        <div className="min-h-screen bg-surface text-ink px-6 sm:px-12 pt-[calc(61px+3rem)] sm:pt-[calc(73px+3rem)] pb-16">
             <div className="max-w-3xl mx-auto">
                 <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="mb-12 md:mb-16">
-                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3">
+                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
                         {t("ledgerEyebrow")}
                     </span>
                     <div className="flex items-end justify-between gap-6 flex-wrap">
-                        <h1 className="text-3xl sm:text-4xl font-serif tracking-tight font-light text-ink text-glow-subtle">
+                        <h1 className="text-4xl sm:text-5xl font-serif tracking-tight font-light text-ink text-glow-subtle">
                             {t("ledgerTitle")}
                         </h1>
                         <MaisonButton variant="ghost" onClick={handleLock} icon={LogOut}>
                             {t("ledgerLogout")}
                         </MaisonButton>
                     </div>
-                    <p className="mt-4 font-mono text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest uppercase text-muted">
+                    <p className="mt-4 font-mono text-[length:calc(11px*var(--zaad-font-scale))] uppercase text-muted">
                         {countLabel} {t("ledgerEntryCount")}
                         {unviewedCount > 0 && (
                             <>
@@ -606,7 +606,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                             type="button"
                             disabled={safePage === 0}
                             onClick={() => goToPage(safePage - 1)}
-                            className={`font-mono uppercase tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
+                            className={`font-mono uppercase text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
                                 safePage === 0 ? "text-muted/40 cursor-not-allowed" : "text-muted hover:text-ink cursor-pointer"
                             }`}
                         >
@@ -614,7 +614,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                         </button>
                         <span
                             dir="ltr"
-                            className="font-mono tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] text-muted"
+                            className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-muted"
                         >
                             {countFor(safePage + 1, language)} / {countFor(pageCount, language)}
                         </span>
@@ -622,7 +622,7 @@ function Ledger({ unlocked, inquiries, unlockAction, lockAction, deleteAction, s
                             type="button"
                             disabled={safePage === pageCount - 1}
                             onClick={() => goToPage(safePage + 1)}
-                            className={`font-mono uppercase tracking-widest text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
+                            className={`font-mono uppercase text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] transition-colors duration-700 ${
                                 safePage === pageCount - 1 ? "text-muted/40 cursor-not-allowed" : "text-muted hover:text-ink cursor-pointer"
                             }`}
                         >

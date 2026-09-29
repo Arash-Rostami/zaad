@@ -31,20 +31,20 @@ const getRelevantIcon = (label) => {
 const getVariantStyles = (variant) => {
   switch (variant) {
     case "solid":
-      return "bg-ink text-on-indicator border border-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.2em] font-semibold uppercase px-8 py-4 shadow-card-sm";
+      return "bg-ink text-on-indicator border border-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] font-semibold uppercase px-8 py-4 shadow-card-sm";
     case "outline":
-      return "border border-ink/20 text-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.2em] font-semibold uppercase px-8 py-4 bg-transparent";
+      return "border border-ink/20 text-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] font-semibold uppercase px-8 py-4 bg-transparent";
     case "pill-dark":
-      return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.18em] font-semibold uppercase px-6 py-3 shadow-card-sm";
+      return "bg-ink text-on-indicator border border-ink/10 rounded-full text-[length:calc(11px*var(--zaad-font-scale))] font-semibold uppercase px-6 py-3 shadow-card-sm";
     case "pill-light":
-      return "border border-ink/20 text-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] tracking-[0.2em] font-semibold uppercase px-6 py-3 bg-transparent";
+      return "border border-ink/20 text-ink rounded-full text-[length:calc(11px*var(--zaad-font-scale))] font-semibold uppercase px-6 py-3 bg-transparent";
     case "ghost":
-      return "text-muted hover:text-ink text-[length:calc(11px*var(--zaad-font-scale))] tracking-widest font-mono uppercase bg-transparent py-1";
+      return "text-muted hover:text-ink text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase bg-transparent py-1";
     case "tab":
-      return "text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest uppercase pb-1 bg-transparent transition-colors";
+      return "text-[length:calc(12px*var(--zaad-font-scale))] font-mono uppercase pb-1 bg-transparent transition-colors";
     case "text":
     default:
-      return "text-xs font-semibold tracking-[0.2em] text-ink uppercase hover:opacity-80 transition-opacity";
+      return "text-xs font-semibold text-ink uppercase hover:opacity-80 transition-opacity";
   }
 };
 
@@ -126,13 +126,13 @@ function MaisonButton({
               style={{ transform: isHovered ? "translateY(-50%)" : "translateY(0%)" }}
           >
             <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap px-1 w-max mx-auto">
-              <span className={`font-semibold tracking-inherit ${labelClassName}`}>{label}</span>
+              <span className={`font-semibold ${labelClassName}`}>{label}</span>
               {!hideIcon && (
                   <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass} ${iconClassName}`} style={{ opacity: 0.65 }} />
               )}
             </span>
             <span className="flex items-center justify-center space-x-2 h-6 leading-6 whitespace-nowrap text-accent px-1 w-max mx-auto">
-              <span className={`font-semibold tracking-inherit ${labelClassName}`}>{label}</span>
+              <span className={`font-semibold ${labelClassName}`}>{label}</span>
               {!hideIcon && (
                   <IconComponent className={`w-3.5 h-3.5 stroke-[1.25] pointer-events-none shrink-0 ${iconRtlClass} ${iconClassName}`} />
               )}

@@ -17,7 +17,7 @@ function renderCuratorLine(line, key) {
 
     if (headingMatch) {
         return (
-            <div key={key} dir={dir} className="text-accent font-semibold rtl:text-justify">
+            <div key={key} dir={dir} className="text-accent font-semibold">
                 {renderChatMarkdown(content, lineIsFarsi)}
             </div>
         );
@@ -29,11 +29,11 @@ function renderCuratorLine(line, key) {
         return (
             <div key={key} dir={dir} className="flex items-baseline gap-2">
                 <span className="text-accent font-mono shrink-0">{marker ? `${marker}.` : "–"}</span>
-                <span className="rtl:text-justify">{renderChatMarkdown(rest, lineIsFarsi)}</span>
+                <span>{renderChatMarkdown(rest, lineIsFarsi)}</span>
             </div>
         );
     }
-    return <div key={key} dir={dir} className="rtl:text-justify">{renderChatMarkdown(content, lineIsFarsi)}</div>;
+    return <div key={key} dir={dir}>{renderChatMarkdown(content, lineIsFarsi)}</div>;
 }
 
 const ChatMessage = memo(function ChatMessage({ msg, t, onRetry }) {
@@ -68,13 +68,13 @@ const ChatMessage = memo(function ChatMessage({ msg, t, onRetry }) {
                     <button
                         type="button"
                         onClick={onRetry}
-                        className="mt-2 text-accent font-mono text-[length:max(9px,calc(9px*var(--zaad-font-scale)))] tracking-widest uppercase underline underline-offset-2 hover:text-headline transition-colors duration-500 cursor-pointer"
+                        className="mt-2 text-accent font-mono text-[length:max(9px,calc(9px*var(--zaad-font-scale)))] uppercase underline underline-offset-2 hover:text-headline transition-colors duration-500 cursor-pointer"
                     >
                         {t("errorRetry")}
                     </button>
                 )}
             </div>
-            <span className="text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] font-mono text-muted/70 mt-1 uppercase tracking-widest">
+            <span className="text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] font-mono text-muted/70 mt-1 uppercase">
                 {msg.role === "user" ? t("chatClient") : t("chatCurator")} • {msg.timestamp}
             </span>
         </motion.div>
@@ -136,9 +136,6 @@ function CuratorChat({ concierge, t }) {
                     >
                         <Download className="w-3.5 h-3.5" />
                     </button>
-                    <span className="text-[length:max(9px,calc(9px*var(--zaad-font-scale)))] font-mono text-ink tracking-widest bg-panel border border-ink/10 px-3 py-1 rounded-full">
-                        {t("curatorModelBadge")}
-                    </span>
                 </div>
             </div>
 
@@ -159,7 +156,7 @@ function CuratorChat({ concierge, t }) {
                             <motion.div
                                 animate={{ opacity: [0.4, 0.9, 0.4] }}
                                 transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
-                                className="bg-panel text-ink/70 border border-ink/10 max-w-[85%] p-4 text-xs font-mono tracking-wider rounded-full"
+                                className="bg-panel text-ink/70 border border-ink/10 max-w-[85%] p-4 text-xs font-mono rounded-full"
                             >
                                 {t(chatLoadingSlow ? "analyzingParamsSlow" : "analyzingParams")}
                             </motion.div>

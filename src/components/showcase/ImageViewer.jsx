@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState, memo } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ChevronLeft, ChevronRight, MapPin, Maximize2, Eye, Layers, Pause, Play, RotateCw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Eye, Layers, Pause, Play, RotateCw } from "lucide-react";
 import MaisonButton from "../shared/MaisonButton";
 import MaisonReveal from "../shared/MaisonReveal";
 
@@ -213,7 +213,6 @@ function ImageViewer({ selectedItem, showcase, t }) {
     const images = selectedItem.images ?? [];
     const activeImage = images[activeImageIndex];
     const firstImage = images[0];
-    const imagesCount = images.length;
     const isWide = activeImage?.orientation === ORIENTATION_WIDE;
     const imageTransition = viewMode === MODE_MACRO ? IMAGE_TRANSITION_MACRO : IMAGE_TRANSITION_DEFAULT;
     const containerStyle = CURSOR_STYLES[viewMode] || CURSOR_STYLES[MODE_EDITORIAL];
@@ -224,7 +223,7 @@ function ImageViewer({ selectedItem, showcase, t }) {
         <MaisonReveal
             variant="scale-down-unveil"
             delay={0.4}
-            className="lg:col-span-6 flex flex-col space-y-4 w-full"
+            className="lg:col-span-6 flex flex-col h-full w-full gap-4"
         >
             <div
                 className="relative aspect-[4/5] bg-surface-alt border border-ink/10 overflow-hidden shadow-ambient group select-none rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -297,7 +296,7 @@ function ImageViewer({ selectedItem, showcase, t }) {
                         >
                             <div className="flex items-center space-x-2 bg-panel/70 border border-ink/5 py-2 px-3 rounded-md translate-x-1 group-hover/prev-btn:translate-x-0 transition-all duration-300">
                                 <ChevronLeft className="w-3.5 h-3.5 stroke-[1]" />
-                                <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-[0.2em] uppercase text-muted opacity-85 select-none">
+                                <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] uppercase text-muted opacity-85 select-none">
                                     {t("showcasePrev")}
                                 </span>
                             </div>
@@ -308,7 +307,7 @@ function ImageViewer({ selectedItem, showcase, t }) {
                             className="absolute right-0 top-0 bottom-0 w-1/5 flex items-center justify-end pr-4 md:pr-6 text-headline transition-all duration-500 cursor-pointer z-20 group/next-btn"
                         >
                             <div className="flex items-center space-x-2 bg-panel/70 border border-ink/5 py-2 px-3 rounded-md -translate-x-1 group-hover/next-btn:translate-x-0 transition-all duration-300">
-                                <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-[0.2em] uppercase text-muted opacity-85 select-none">
+                                <span className="font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] uppercase text-muted opacity-85 select-none">
                                     {t("showcaseNext")}
                                 </span>
                                 <ChevronRight className="w-3.5 h-3.5 stroke-[1]" />
@@ -335,39 +334,28 @@ function ImageViewer({ selectedItem, showcase, t }) {
                     </div>
                 )}
 
-                <div className="absolute top-6 left-6 bg-panel-frost border border-ink/10 px-4 py-2 font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] tracking-widest text-ink rounded-md z-10 uppercase">
-                    {t("showcaseYear")}: <span>{selectedItem.year}</span>
-                </div>
-
                 {viewMode === MODE_EDITORIAL && (
-                    <div className="absolute bottom-6 right-6 flex items-center space-x-1.5 bg-panel-frost border border-ink/10 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-wider text-ink z-10 uppercase">
-                        <span>{activeImageIndex + 1} / {imagesCount}</span>
-                        <span className="text-accent">•</span>
+                    <div className="absolute bottom-6 right-6 flex items-center space-x-1.5 bg-panel-frost border border-ink/10 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] text-ink z-10 uppercase">
                         <span>{isWide ? t("showcaseLandscape") : t("showcasePortrait")}</span>
                     </div>
                 )}
 
                 {viewMode === MODE_MACRO && (
-                    <div className="absolute bottom-6 right-6 flex items-center space-x-2 bg-accent border border-accent/20 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-widest text-on-indicator z-10 uppercase shadow-card-md select-none">
+                    <div className="absolute bottom-6 right-6 flex items-center space-x-2 bg-accent border border-accent/20 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] text-on-indicator z-10 uppercase shadow-card-md select-none">
                         <span className="w-1.5 h-1.5 bg-panel rounded-full animate-pulse" />
                         <span>{t("showcaseTactileLens")}</span>
                     </div>
                 )}
 
                 {viewMode === MODE_360 && (
-                    <div className="absolute bottom-6 right-6 flex items-center space-x-1.5 bg-panel-frost border border-ink/10 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-wider text-ink z-10 uppercase">
+                    <div className="absolute bottom-6 right-6 flex items-center space-x-1.5 bg-panel-frost border border-ink/10 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] text-ink z-10 uppercase">
                         <RotateCw className="w-3 h-3 text-accent" />
                         <span>{t("productSpin360Label")}</span>
                     </div>
                 )}
-
-                <div className="absolute bottom-6 left-6 flex items-center space-x-2 bg-panel-frost border border-ink/10 px-3 py-1.5 rounded-md font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-wider text-ink z-10">
-                    <MapPin className="w-2.5 h-2.5 text-accent" />
-                    <span>{selectedItem.specifications?.origin}</span>
-                </div>
             </div>
 
-            <div className="flex items-center justify-end gap-4 border-t border-ink/10 pt-4">
+            <div className="flex items-center justify-end gap-4 border-t border-ink/10 pt-4 mt-auto">
                 <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
                     <MaisonButton
                         variant={viewMode === MODE_EDITORIAL ? "pill-dark" : "pill-light"}

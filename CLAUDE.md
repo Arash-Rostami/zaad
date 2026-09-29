@@ -105,6 +105,12 @@ machinery from other projects.
   `LanguageProvider` mount to restore the locale on `collection/[slug]` — the one
   remaining route where the server bakes `initialLanguage="en"` regardless of the real
   visitor (`generateStaticParams` prebuilds it, so `cookies()` can't see a real request).
+  Since 2026-09-29 the product page's **item content** no longer depends on that restore at
+  all: `collection/[slug]/page.js` ships both fully-resolved variants
+  (`getResolvedItemPair` → `{en, fa}`, captions included) and `CollectionPageClient` picks
+  `items[isFarsi ? "fa" : "en"]` — before, the single cookie-resolved `item` prop meant a
+  client language toggle left all item content (description, specs, image captions) in the
+  server-baked language. The restore still matters for SSR `lang`/`dir` and first-paint text.
   The House pages no longer need this restore for `initialLanguage` (switched from
   `force-static` to `force-dynamic` 2026-09-07 — see the Known issues entry below), but
   the mount-restore code itself still runs there harmlessly as a no-op.
@@ -150,18 +156,24 @@ machinery from other projects.
   same reason: the underline stopped being meaningful once there was nothing to differentiate.)
 - **The House routes are a route group, not showroom tabs** — `src/app/(house)/`
   holds `about`, `story`, `sustainability` (3 routes, not 5). The `aboutSections` data
-  still has 5 entries (`about`, `story`, `brandValue`, `sustainability`, `csr`) — `story`
-  pairs `story`+`brandValue` and `sustainability` pairs `sustainability`+`csr` into
-  two-column "diptych" pages; only `about` is single-column. A shared server `layout.js`
+  has 4 entries (`about`, `story`, `brandValue`, `sustainability`) — since 2026-09-29
+  (owner-directed restructure, and the fabricated `csr` entry + made-up stat grids were
+  removed outright — "made up and false"; don't reintroduce CSR copy without
+  owner-supplied content): `/about` is the one two-column page — a `HouseDiptychShell`
+  diptych pairing `story` (left) with `about` + `aboutStats` (right); `/story` and
+  `/sustainability` are single-column `HouseChapterShell` pages reading only the
+  `brandValue` and `sustainability` entries respectively, with no stat grids and no
+  closing signature (the `EditorialSignature` Z-medallion piece was deleted entirely —
+  nothing renders it anymore). A shared server `layout.js`
   renders `components/house/HouseChrome.jsx` (slim header: back-to-showroom, ZAAD
   wordmark, the current page's name as a static underlined label, compact language/theme
   control) and the shared `components/Footer.jsx` (since 2026-09-06, all routes share the
   homepage footer by user direction). `about/page.js` renders
-  `house/AboutChapter.jsx` on the single-column `house/HouseChapterShell.jsx`;
-  `story/page.js` and `sustainability/page.js` render `house/StoryValueChapter.jsx` and
-  `house/SustainabilityResponsibilityChapter.jsx` on the two-column
-  `house/HouseDiptychShell.jsx` (cinematic hero + twin editorial columns + stat grid(s) +
-  cross-link cards + call strip). Do **not** reuse the showroom
+  `house/AboutChapter.jsx` on the two-column `house/HouseDiptychShell.jsx`;
+  `story/page.js` and `sustainability/page.js` render
+  `house/StoryValueChapter.jsx` and `house/SustainabilityResponsibilityChapter.jsx` on
+  the single-column `house/HouseChapterShell.jsx` (cinematic hero + editorial block(s) +
+  optional stat grid + cross-link cards + call strip). Do **not** reuse the showroom
   `Header`/`MenuControls` on the house routes — they are wired to
   `useShowroomNav` (in-app `setActiveTab` + scroll + the 120ms pre-scroll contracts) and
   to the global `activeLanguageBlobInNavbar`/`activeThemeBlobInNavbar` layoutId groups;
@@ -220,6 +232,15 @@ machinery from other projects.
   always pass one; its English-substring-matching fallback (`getRelevantIcon`) silently breaks
   on Farsi labels. See `src/components/README.md` for the full icon-direction and icon-choice
   conventions.
+- **Index numbers lead at the right edge in Farsi** (standing rule, 2026-09-29) — any paired
+  number+label row must render the number first in reading order (rightmost in RTL), never
+  trailing at the far-left edge. Two correct idioms: DOM-number-first for natural flow rows
+  (`glance/GlancePage.jsx`'s rails, `glance/GlanceChapter.jsx`'s spec lists — no class needed,
+  RTL flips them correctly), and `rtl:order-first` on the number span when English needs the
+  number elsewhere (`Materials.jsx`'s tab cards additionally use `rtl:justify-start` so the
+  number sits adjacent to the label instead of pinned to the opposite edge by
+  `justify-between`). The broken anti-pattern was a `justify-between` row with DOM
+  name-first, which put the number at the far-left edge in Farsi.
 - **`.font-farsi` / `.font-latin`** (`src/styles/globals.css`, documented in
   `src/styles/README.md`) — opt-in Dorsa for translated non-heading text vs. opt-out back to
   Latin for permanently-Latin brand content (collection `number`/`name`). Picking the
@@ -273,27 +294,82 @@ Every fake/placeholder value left in the codebase, gathered in one place so a fu
 session doesn't have to re-discover them by grepping. Each is a real gap the client
 needs to supply, not a code bug — nothing here should be invented.
 
-- **Phone:** `lib/i18n/en.js`/`fa.js`'s `studioPhone` (`"+98 21 0000 0000"`) and
-  `studioPhoneTel` (`"+982100000000"`) are placeholder zeros — real studio number
-  needed. `MetadataService.orgSchema.contactPoint.url` (`https://wa.me/zaad_placeholder`)
-  is a fake WhatsApp deep link built from the same missing number.
-- **Address (partially resolved 2026-09-07):** `MetadataService.orgSchema.address` now
-  has a real city/country `PostalAddress` (`addressLocality: "Tehran"`, `addressCountry:
-  "IR"`) — still missing the actual `streetAddress`, which doesn't exist anywhere in the
-  codebase. `Footer.jsx`/dictionary copy still only ever says "Tehran" generically
-  (`footerMilanZAAD`, `callStudioSub`). Once a real street address exists, add
-  `streetAddress` to `MetadataService.js`'s `SITE_CONFIG.contact` and thread it into
-  `orgSchema.address`, and consider a visible line in `Footer.jsx`'s studio-address
-  column too.
-- **Social media (aligned 2026-09-07, still placeholder):** the two lists used to name
-  *different* platforms (`sameAs` had Instagram/Telegram/X, the visible footer had
-  Instagram/LinkedIn/Telegram/WhatsApp) — `MetadataService.js`'s `SITE_CONFIG.socials`
-  was changed to Instagram/LinkedIn/Telegram, matching `lib/socialLinks.js`'s real footer
-  icon row (WhatsApp stays footer-only + `orgSchema.contactPoint.url`, not `sameAs` —
-  it's a contact channel, not a profile page). All values in both files are still
-  `*_placeholder` TODOs needing the real handles. `MetadataService.js`'s
-  `SITE_CONFIG.twitter.site` (the Twitter/X card handle, a separate mechanism from
-  `sameAs`) also still needs the real handle.
+- **Phone (resolved 2026-09-27):** `lib/i18n/en.js`/`fa.js`'s `studioPhone` is now the
+  real studio number from the client's letterhead — `"+98 21 75982"` (en) /
+  `"+۹۸ ۲۱ ۷۵۹۸۲"` (fa, Hindi-Farsi digits, same `dir="ltr"` wrapping as before,
+  untouched). `studioPhoneTel` is `"+982175982;ext=157"` — the RFC 3966 `;ext=` tel-URI
+  parameter carries the letterhead's "Ext. 157", since neither call site
+  (`concierge/SectionHeader.jsx`, `house/ChapterPieces.jsx`) needed any change beyond the
+  dictionary value (both just interpolate `tel:${t("studioPhoneTel")}`).
+  **WhatsApp deep link hidden 2026-09-29 at owner direction**: the real number is a
+  landline-style extension line, not confirmed WhatsApp-reachable, so
+  `SITE_CONFIG.contact.whatsappUrl` and `orgSchema.contactPoint`'s `url:` line are
+  commented out in source — uncomment with a real deep link when one is confirmed.
+- **Address (resolved 2026-09-27; visible footer line added 2026-09-29):**
+  `MetadataService.orgSchema.address` has the full real `PostalAddress` — `streetAddress:
+  "Unit 13, 4th Floor, No. 1489, North Shariati St"`, `addressLocality: "Tehran"`,
+  `addressCountry: "IR"`, `postalCode: "1941913415"` — and since 2026-09-29 the visible
+  footer shows the full one-line address too (`footerStudioAddress` key in both dictionaries —
+  Tehran prepended into the street address by owner direction, the former separate
+  `footerMilanZAAD` "Tehran" row deleted); the phone line was already in the
+  footer brand column.
+- **Social media (Instagram real; the rest hidden 2026-09-29 at owner direction):**
+  `SITE_CONFIG.socials.instagram` and `lib/socialLinks.js`'s Instagram entry point at
+  the real handle, `zaaddesignofficial` — the only handle the client supplied. LinkedIn,
+  Telegram, WhatsApp, and `SITE_CONFIG.twitter.site` (the X card handle) are placeholders
+  that now ship **nowhere**: commented out of `SITE_CONFIG` metadata (LinkedIn/Telegram
+  dropped from `sameAs`, WhatsApp from `contactPoint`, X from the Twitter card) and
+  rendered disabled/unclickable in the footer (`disabled: true` in `lib/socialLinks.js` →
+  `shared/SocialLinks.jsx` renders a dimmed `aria-disabled` span). Restore each by
+  uncommenting its line and dropping its `disabled` flag once a real handle exists.
+- **Production domain (resolved 2026-09-29):** owner chose the letterhead's real domain —
+  `https://zaaddesign.com` now drives `app/layout.js`'s `metadataBase`,
+  `MetadataService.js`'s `SITE_CONFIG.siteUrl`, `app/sitemap.js`/`app/robots.js`'s
+  `SITE_URL`, all eight dictionary `imageUrl` values, and the InquiryForm email
+  placeholder (`client@zaaddesign.com`). No `zaad.com` reference remains in `src/`.
+
+### Open points from the 2026-09-27 redesign session — awaiting owner input
+
+Surfaced mid-session, deliberately not actioned without an explicit go-ahead. Check this
+list before assuming a related item is finished.
+
+- **"Ribbon" yellow wordmark — resolved 2026-09-29 (owner decision: footer strip).** The
+  brand-book `ZAAD Logo 02.svg` lives at `public/logo-ribbon.svg` (since 2026-09-27) and is now
+  used as a decorative scrolling band at two call sites via `shared/RibbonScroll.jsx`:
+  `Hero.jsx`'s bottom transitional strip and `Footer.jsx`'s full-bleed closing strip —
+  never as a logo mark replacement (all logo call sites still use the single dark `Logo 01.svg`).
+  Direction follows reading direction (`html[dir="rtl"]` CSS reversal; the marquee viewport is
+  `dir="ltr"` so the track can't slide off-screen in Farsi), and the footer band goes grayscale
+  in the light theme only (`ribbon-neutral-in-light`). See `src/components/README.md`'s
+  `shared/RibbonScroll.jsx` section.
+- **WhatsApp deep link — resolved 2026-09-29 (hidden, not built):** same decision as the
+  Social media bullet above — `SITE_CONFIG.contact.whatsappUrl` and `contactPoint`'s `url:`
+  are commented out; the footer WhatsApp icon renders disabled. Uncomment with a real
+  deep link once the landline (`+98 21 75982 ext. 157`) is confirmed WhatsApp-reachable.
+- **LinkedIn / Telegram / X handles — resolved 2026-09-29 (hidden, not built):** same
+  decision as the Social media bullet above — placeholders are commented out of metadata
+  and rendered disabled in the footer; restore each once a real handle is supplied.
+
+**Resolved 2026-09-28 (the copy-replacement pass):** the final site copy replacement from
+`modification/لیست حذفیات زاد.docx` was actioned end-to-end (renames, content blocks, and
+blank-field removals applied to `fa.js`/`en.js` in parity; the Material Monograph box — the
+section the client's earlier document ordered removed — was among the removals, along with the
+Hero badge/quote strip, archive numbers, continue-browsing feature, spec-grid label rows, and
+the menu/footer "Other Pages" heading). Brand spelling is `زااد` sitewide for incidental Farsi
+mentions (was `زاد`). Two low-confidence docx lines were deliberately **not** actioned and need
+an owner call, since resolved: (a) docx lines 178–183 list the product page's `AcquisitionCTA`
+strings (`acquisitionPrivileges`/`acquisitionHeading`/`acquisitionDesc`) twice — once blanked,
+once with no pipe. The owner confirmed 2026-09-28 that **no mark also means delete** (the same
+rule as blank), so the "keep" reading was wrong: the CTA box's whole text block was removed from
+`AcquisitionCTA.jsx` and all three keys deleted from both dictionaries (the box keeps only its
+CTA pair); (b) docx line 44's bare
+"خرید یا مشاوره" (blank = remove) — resolved later on 2026-09-28 by the owner's confirmation:
+the parenthetical was erased from the inquiry form heading, `acquisitionCard` is now
+"فرم درخواست"/"Request Form". The "نمای ژورنالی" (Journal View) CTA item from the earlier
+redesign doc was also resolved 2026-09-28 by the owner's clarification: it meant aligning the
+`درخواست مشاوره` + `مشاهده مجموعه` CTA pair with the three view-mode buttons (journal/macro/
+360°) under the collection image — already implemented; its remaining ask (the Materials
+accordion defaulting open/uncollapsed) was applied the same day.
 
 ## Coding conventions
 

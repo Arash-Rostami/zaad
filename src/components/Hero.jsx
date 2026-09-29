@@ -8,8 +8,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-import { ArrowDown, Sparkles, Pause, Play } from "lucide-react";
+import { ArrowDown, Pause, Play } from "lucide-react";
 import MaisonButton from "./shared/MaisonButton";
+import RibbonScroll from "./shared/RibbonScroll";
 import { useLanguage } from "@/services/LanguageProvider";
 import wrapBrandNames from "@/lib/wrapBrandNames";
 
@@ -21,15 +22,15 @@ const HERO_VIDEOS = [
 ];
 const HERO_VIDEO_RATE = 0.75;
 
-function Hero({ onScrollToCollection, onScrollToVision }) {
+function Hero({ onScrollToCollection }) {
   const { t } = useLanguage();
   const [activeVideo, setActiveVideo] = useState(0);
   const [stageReady, setStageReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [mountedCount, setMountedCount] = useState(2);
   const [nextEager, setNextEager] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const videoRefs = useRef([]);
-  const badgeRef = useRef(null);
   const titleRef = useRef(null);
   const descRef = useRef(null);
   const ctaRef = useRef(null);
@@ -37,19 +38,17 @@ function Hero({ onScrollToCollection, onScrollToVision }) {
   const textColRef = useRef(null);
   const videoWrapRef = useRef(null);
 
-  const wrappedBespokeObjects = useMemo(() => wrapBrandNames(t("bespokeObjects")), [t]);
   const wrappedHeroDesc = useMemo(() => wrapBrandNames(t("heroDesc")), [t]);
-  const wrappedEstFlorence = useMemo(() => wrapBrandNames(t("estFlorence")), [t]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setIsPlaying(false);
+      setPrefersReducedMotion(true);
     }
   }, []);
 
   useEffect(() => {
     const els = [
-      badgeRef.current,
       titleRef.current,
       descRef.current,
       ctaRef.current,
@@ -66,11 +65,6 @@ function Hero({ onScrollToCollection, onScrollToVision }) {
       ctx = gsap.context(() => {
         gsap
             .timeline({ defaults: { ease: "expo.out" } })
-            .fromTo(
-                badgeRef.current,
-                { opacity: 0, y: 26 },
-                { opacity: 1, y: 0, duration: 0.7 },
-            )
             .fromTo(
                 titleRef.current,
                 { opacity: 0, y: 64 },
@@ -210,20 +204,14 @@ function Hero({ onScrollToCollection, onScrollToVision }) {
               ref={textColRef}
               className="order-2 lg:order-1 flex flex-col px-6 sm:px-12 lg:ps-12 lg:pe-10 xl:ps-20"
           >
-            <div className="w-full max-w-xl text-left rtl:text-right z-20">
-              <div ref={badgeRef} className="mb-4" style={{ opacity: 0 }}>
-              <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-2">
-                {wrappedBespokeObjects}
-              </span>
-              </div>
-
+            <div className="w-full max-w-xl rtl:max-w-2xl text-left rtl:text-right z-20">
               <h1
                   ref={titleRef}
                   style={{ opacity: 0 }}
-                  className="whitespace-nowrap text-4xl sm:text-5xl md:text-5xl lg:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light text-glow-subtle"
+                  className="text-3xl sm:text-4xl md:text-5xl font-serif tracking-tight leading-[1.05] text-ink font-bold text-glow-subtle"
               >
                 {t("heroTitle_1")} <br />
-                <span className="italic font-normal font-serif-luxury text-accent">
+                <span>
                 {t("heroTitle_italic")} {t("heroTitle_2")}
               </span>
               </h1>
@@ -231,7 +219,7 @@ function Hero({ onScrollToCollection, onScrollToVision }) {
               <p
                   ref={descRef}
                   style={{ opacity: 0 }}
-                  className="mt-8 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg leading-relaxed rtl:!text-justify"
+                  className="mt-10 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg rtl:max-w-2xl leading-relaxed"
               >
                 {wrappedHeroDesc}
               </p>
@@ -239,21 +227,16 @@ function Hero({ onScrollToCollection, onScrollToVision }) {
               <div
                   ref={ctaRef}
                   style={{ opacity: 0 }}
-                  className="mt-12 flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full sm:w-auto"
+                  className="mt-14 flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full sm:w-auto"
               >
                 <MaisonButton
                     variant="solid"
                     onClick={onScrollToCollection}
                     icon={ArrowDown}
+                    className="px-9 py-4 sm:px-10 sm:py-5"
+                    iconClassName="w-4 h-4"
                 >
                   {t("exploreCollection")}
-                </MaisonButton>
-                <MaisonButton
-                    variant="outline"
-                    onClick={onScrollToVision}
-                    icon={Sparkles}
-                >
-                  {t("ourPhilosophy")}
                 </MaisonButton>
               </div>
             </div>
@@ -335,38 +318,18 @@ function Hero({ onScrollToCollection, onScrollToVision }) {
                   ))}
                 </div>
               </div>
-
-              <div className="absolute bottom-6 end-6 max-w-[200px] text-left rtl:text-right">
-              <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-accent block mb-1 uppercase">
-                {t("heroExhibition")}
-              </span>
-                <p className="text-[length:calc(12px*var(--zaad-font-scale))] font-medium tracking-wider text-canvas uppercase font-sans">
-                  {t("heroTravertineBase")}
-                </p>
-              </div>
             </motion.div>
           </div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 sm:px-12 grid grid-cols-1 md:grid-cols-12 gap-6 items-end border-t border-ink/10 pt-8 mt-16 text-muted">
-          <div className="md:col-span-4 flex items-center space-x-4">
-            <button
-                onClick={onScrollToCollection}
-                className="flex items-center space-x-3 text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase tracking-[0.2em] hover:text-ink transition-colors group"
-            >
-            <span className="p-2 border border-ink/10 rounded-md group-hover:bg-ink/5 transition-all">
-              <ArrowDown className="w-3.5 h-3.5" />
-            </span>
-              <span>{t("monograph")}</span>
-            </button>
-          </div>
-
-          <div className="md:col-span-4 text-left rtl:text-justify md:text-center rtl:md:text-justify text-[length:calc(12px*var(--zaad-font-scale))] rtl:text-[length:calc(14px*var(--zaad-font-scale))] font-light leading-relaxed max-w-xs mx-auto">
-            "{t("heroQuote")}"
-          </div>
-
-          <div className="md:col-span-4 text-left rtl:text-right md:text-right md:rtl:text-left text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest">
-            {wrappedEstFlorence}
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 sm:px-12 border-t border-ink/10 pt-8 mt-16">
+          <RibbonScroll />
+          <div aria-hidden="true" className="relative h-12 sm:h-14 overflow-hidden">
+            <div
+                className={`pattern-diamond-grid absolute inset-0 z-0 opacity-[0.35] dark:opacity-[0.45] pointer-events-none${
+                  prefersReducedMotion ? "" : " pattern-diamond-drift"
+                }`}
+            />
           </div>
         </div>
       </section>

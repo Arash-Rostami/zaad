@@ -31,15 +31,12 @@ const CHAPTER_HERO_VIDEOS = [
   "/video/house/chapter-vaar.mp4",
 ];
 
-export const AMBIENT = (
+const AMBIENT = (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
-    <div className="absolute left-1/3 top-1/10 w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-accent/0 via-accent/10 to-accent/0 dark:via-accent/20 mix-blend-screen transition-opacity duration-1000" />
-    <div className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] rounded-full bg-accent/5 dark:bg-accent/15 mix-blend-screen" />
     <div
       className="absolute top-0 left-1/4 w-[240px] h-[220%] bg-gradient-to-r from-transparent via-white/[0.05] dark:via-white/[0.18] to-transparent sunbeam-signature-glare pointer-events-none mix-blend-overlay"
       style={{ animationDuration: "26s" }}
     />
-    <div className="absolute left-[50%] top-[40%] -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gradient-to-r from-transparent via-accent/5 to-transparent dark:via-accent/15 mix-blend-screen pointer-events-none" />
   </div>
 );
 
@@ -74,12 +71,12 @@ export function EditorialBlock({ content, align = "start" }) {
           <article
             className={centered ? "text-center" : "text-left rtl:text-right"}
           >
-            <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent uppercase block mb-3">
+            <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
               {blk.heading}
             </span>
             <p
-              className={`text-base md:text-lg text-muted font-light leading-relaxed whitespace-pre-line rtl:text-justify ${
-                centered ? "text-left max-w-2xl mx-auto" : ""
+              className={`text-base md:text-lg text-muted font-light leading-relaxed whitespace-pre-line ${
+                centered ? "text-left rtl:text-right max-w-2xl mx-auto" : ""
               }`}
             >
               {blk.body}
@@ -144,7 +141,7 @@ function StatValue({ value }) {
   return (
     <span
       ref={ref}
-      className="font-serif font-farsi italic text-3xl md:text-4xl text-ink font-light block"
+      className="font-serif font-farsi text-3xl md:text-4xl text-ink font-light block"
     >
       {target === null
         ? value
@@ -153,43 +150,15 @@ function StatValue({ value }) {
   );
 }
 
-export function EditorialSignature({ className = "" }) {
-  return (
-    <MaisonReveal
-      variant="unveil"
-      delay={0.15}
-      threshold={0.1}
-      className={`relative py-2 max-w-3xl mt-10 md:mt-12 ${className}`}
-    >
-      <motion.div
-        aria-hidden="true"
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-        className="h-px w-full bg-gradient-to-r from-transparent via-accent/40 to-transparent origin-left rtl:origin-right"
-      />
-      <motion.div
-        aria-hidden="true"
-        initial={{ opacity: 0, scale: 0.6 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-panel border border-accent/30 shadow-card-sm flex items-center justify-center"
-      >
-        <span className="font-serif italic text-accent text-lg leading-none">
-          Z
-        </span>
-      </motion.div>
-    </MaisonReveal>
-  );
-}
-
 export function StatGrid({ stats, align = "start" }) {
   if (!stats || !stats.length) return null;
   const centered = align === "center";
   return (
-    <div className="grid grid-cols-3 gap-4 md:gap-8 border-t border-ink/10">
+    <div
+      className={`grid grid-cols-3 gap-4 md:gap-8 ${
+        centered ? "" : "border-t border-ink/10"
+      }`}
+    >
       {stats.map((s, i) => (
         <MaisonReveal
           key={i}
@@ -203,7 +172,7 @@ export function StatGrid({ stats, align = "start" }) {
           }
         >
           <StatValue value={s.value} />
-          <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase mt-2">
+          <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-muted uppercase mt-2">
             {s.label}
           </p>
         </MaisonReveal>
@@ -223,7 +192,7 @@ export function CrossLinks({ siblings }) {
     <section className="relative px-6 sm:px-12 section-y border-t border-ink/10">
       <div className="max-w-7xl mx-auto">
         <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-          <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3 text-center">
+          <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1 text-center">
             {t("crossLinkHeading")}
           </span>
         </MaisonReveal>
@@ -242,16 +211,16 @@ export function CrossLinks({ siblings }) {
                 <NoiseBg filterId={`crossLinkNoise-${i}`} revealOnHover />
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-accent origin-left rtl:origin-right scale-x-0 group-hover:scale-x-100 [@media(hover:none)]:scale-x-100 transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" />
-                <span className="relative z-10 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent uppercase block mb-4">
+                <span className="relative z-10 text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-accent uppercase block mb-4">
                   {s.eyebrow}
                 </span>
-                <h3 className="relative z-10 text-2xl md:text-3xl font-serif font-light text-ink leading-tight">
+                <h3 className="relative z-10 text-xl md:text-2xl font-serif font-light text-ink leading-tight">
                   {s.label}
                 </h3>
-                <p className="relative z-10 text-sm text-muted font-light leading-relaxed mt-4 max-w-md rtl:text-justify">
+                <p className="relative z-10 text-sm text-muted font-light leading-relaxed mt-4 max-w-md rtl:max-w-lg">
                   {teasers[i]}
                 </p>
-                <span className="relative z-10 inline-flex items-center gap-2 mt-8 text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase text-ink group-hover:text-accent transition-colors duration-700">
+                <span className="relative z-10 inline-flex items-center gap-2 mt-8 text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase text-ink group-hover:text-accent transition-colors duration-700">
                   {t("crossLinkReadMore")}
                   <ArrowUpRight className="w-3.5 h-3.5 rtl:-scale-x-100 transition-transform duration-700 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
                 </span>
@@ -278,22 +247,22 @@ export function CallStrip() {
         <MaisonReveal variant="slide-up-royal" delay={0.2} threshold={0.1}>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-panel border border-ink/10 rounded-2xl p-6 sm:p-8 shadow-ambient">
             <div className="text-left rtl:text-right">
-              <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-semibold uppercase mb-1.5 flex items-center gap-2">
+              <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-accent font-semibold uppercase mb-1.5 flex items-center gap-2">
                 {t("callStudio")}
                 {isOpen !== null && (
-                  <span className="inline-flex items-center gap-1.5 text-[length:calc(9px*var(--zaad-font-scale))] font-mono tracking-widest normal-case text-muted">
+                  <span className="inline-flex items-center gap-1.5 text-[length:calc(9px*var(--zaad-font-scale))] font-mono normal-case text-muted">
                     <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-accent" : "bg-muted/50"}`} />
                     {isOpen ? t("studioStatusOpen") : t("studioStatusClosed")}
                   </span>
                 )}
               </span>
-              <p className="text-xs text-muted font-light leading-relaxed rtl:text-justify">
+              <p className="text-xs text-muted font-light leading-relaxed">
                 {t("callStudioSub")}
               </p>
             </div>
             <a
               href={`tel:${t("studioPhoneTel")}`}
-              className="group inline-flex items-center gap-3 bg-ink text-on-indicator px-6 py-3.5 rounded-md text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase transition-all duration-700 hover:bg-accent hover:text-on-indicator cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="group inline-flex items-center gap-3 bg-ink text-on-indicator px-6 py-3.5 rounded-md text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase transition-all duration-700 hover:bg-accent hover:text-on-indicator cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <Phone className="w-4 h-4 group-hover:rotate-12 transition-transform duration-500" />
               <span dir="ltr">{t("studioPhone")}</span>
@@ -312,8 +281,6 @@ export function ChapterHero({
   heroIntro,
   heroImage,
   heroImageAlt,
-  heroBadge,
-  heroBadgeLabel,
   scrollTargetId = "house-editorial",
   withVideo = true,
 }) {
@@ -416,14 +383,16 @@ export function ChapterHero({
           ref={textColRef}
           className="lg:col-span-6 flex flex-col items-start text-left rtl:text-right z-20"
         >
-          <motion.span
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-5"
-          >
-            {heroEyebrow}
-          </motion.span>
+          {heroEyebrow && (
+            <motion.span
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-5"
+            >
+              {heroEyebrow}
+            </motion.span>
+          )}
 
           <motion.h1
             initial={{ opacity: 0, y: 36 }}
@@ -433,20 +402,22 @@ export function ChapterHero({
           >
             {heroTitle}{" "}
             {heroTitleAccent && (
-              <span className="italic font-normal font-serif-luxury text-accent">
+              <span className="font-normal font-serif text-accent">
                 {heroTitleAccent}
               </span>
             )}
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="mt-8 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg leading-relaxed rtl:text-justify"
-          >
-            {heroIntro}
-          </motion.p>
+          {heroIntro && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+              className="mt-8 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg rtl:max-w-xl leading-relaxed"
+            >
+              {heroIntro}
+            </motion.p>
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -517,16 +488,6 @@ export function ChapterHero({
                 )}
               </button>
             )}
-            {heroBadge && (
-              <div className="absolute bottom-6 end-6 bg-panel/90 p-4 border border-ink/10 max-w-[220px] shadow-card-md text-left rtl:text-right">
-                <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-accent block mb-1 uppercase">
-                  {heroBadge}
-                </span>
-                <p className="text-[length:calc(12px*var(--zaad-font-scale))] font-medium tracking-wider text-ink uppercase font-sans">
-                  {heroBadgeLabel}
-                </p>
-              </div>
-            )}
           </motion.div>
         </div>
       </div>
@@ -537,7 +498,7 @@ export function ChapterHero({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 1 }}
-        className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono uppercase tracking-[0.2em] text-muted hover:text-ink transition-colors duration-700 z-10 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 items-center gap-2 text-[length:calc(10px*var(--zaad-font-scale))] font-mono uppercase text-muted hover:text-ink transition-colors duration-700 z-10 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <ArrowDown className="w-3.5 h-3.5" />
       </motion.button>

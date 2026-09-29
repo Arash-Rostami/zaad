@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useMemo } from "react";
 import SharedLightbox from "../shared/Lightbox";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
 const EDITORIAL_VIEW_MODE = "editorial";
 const MATERIAL_SEPARATOR = "   //   ";
@@ -33,14 +34,10 @@ function ShowcaseLightbox({ selectedItem, showcase, onInquireItem, isRtl, t }) {
 
     const materials = selectedItem?.materials;
     const footerSubtitle = useMemo(() => {
-        return Array.isArray(materials) ? materials.join(MATERIAL_SEPARATOR) : "";
-    }, [materials]);
-
-    const imagesCount = selectedItem?.images?.length ?? 0;
-    const counterLabel = useMemo(() => {
-        if (!isEditorial || imagesCount === 0) return null;
-        return `${activeImageIndex + 1} ${t("lightboxCounterOf")} ${imagesCount}`;
-    }, [isEditorial, activeImageIndex, t, imagesCount]);
+        return Array.isArray(materials)
+            ? wrapLatinRuns(materials.join(MATERIAL_SEPARATOR), isRtl)
+            : "";
+    }, [materials, isRtl]);
 
     const footerPerspective = useMemo(() => {
         return isEditorial
@@ -81,7 +78,6 @@ function ShowcaseLightbox({ selectedItem, showcase, onInquireItem, isRtl, t }) {
             onNext={onNext}
             archiveNumber={selectedItem.number}
             itemName={selectedItem.name}
-            counterLabel={counterLabel}
             footerTitle={selectedItem.name}
             footerPerspective={footerPerspective}
             footerSubtitle={footerSubtitle}

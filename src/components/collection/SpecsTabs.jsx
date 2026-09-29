@@ -5,6 +5,7 @@ import TabArchitecture from "./TabArchitecture";
 import TabAppliances from "./TabAppliances";
 import TabHeritage from "./TabHeritage";
 import MaisonReveal from "../shared/MaisonReveal";
+import wrapBrandNames from "@/lib/wrapBrandNames";
 
 const EASE_CUBIC = Object.freeze([0.16, 1, 0.3, 1]);
 
@@ -36,7 +37,7 @@ const SpecTabButton = memo(function SpecTabButton({ tab, isActive, onSelect, t }
         isActive ? "text-accent" : "text-muted/50 group-hover:text-accent"
     }`;
 
-    const labelClassName = `text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-[0.2em] uppercase transition-colors ${
+    const labelClassName = `text-[length:calc(12px*var(--zaad-font-scale))] font-mono uppercase transition-colors ${
         isActive
             ? "text-ink font-semibold"
             : "text-muted/50 dark:text-muted/50 group-hover:text-ink dark:group-hover:text-white"
@@ -55,7 +56,7 @@ const SpecTabButton = memo(function SpecTabButton({ tab, isActive, onSelect, t }
         >
             <Icon className={iconClassName} />
             <span className={labelClassName}>
-                {t(tab.labelKey)}
+                {wrapBrandNames(t(tab.labelKey))}
             </span>
             {isActive && (
                 <motion.div

@@ -6,7 +6,6 @@ import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Vision from "../components/Vision";
 import Showcase from "../components/Showcase";
-import Advantages from "../components/Advantages";
 import Materials from "../components/Materials";
 import Concierge from "../components/Concierge";
 import Footer from "../components/Footer";
@@ -19,7 +18,6 @@ import useLenisScroll from "@/hooks/useLenisScroll";
 
 export default function AppShell({ utensilImages }) {
     const {
-        activeTab,
         setActiveTab,
         preselectedItem,
         setPreselectedItem,
@@ -60,18 +58,12 @@ export default function AppShell({ utensilImages }) {
         [handleScrollToSection]
     );
 
-    const handleScrollToVision = useCallback(
-        () => handleScrollToSection("vision"),
-        [handleScrollToSection]
-    );
-
     const handleClearPreselected = useCallback(() => setPreselectedItem(null), [setPreselectedItem]);
 
     return (
         <MotionConfig reducedMotion="user">
             <div className="min-h-screen flex flex-col justify-between selection:bg-selection selection:text-ink">
                 <Header
-                    activeTab={activeTab}
                     setActiveTab={setActiveTab}
                     selectedProduct={selectedProduct}
                     onSelectProduct={setSelectedProduct}
@@ -104,14 +96,12 @@ export default function AppShell({ utensilImages }) {
                             >
                                 <Hero
                                     onScrollToCollection={handleScrollToCollection}
-                                    onScrollToVision={handleScrollToVision}
                                 />
                                 <Vision utensilImages={utensilImages} />
                                 <Showcase
                                     onInquireItem={handleInquireItem}
                                     onViewDetails={setSelectedProduct}
                                 />
-                                <Advantages />
                                 <Materials />
                                 <Concierge
                                     preselectedItem={preselectedItem}

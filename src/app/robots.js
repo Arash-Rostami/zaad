@@ -1,5 +1,5 @@
 export default function robots() {
-    const SITE_URL = "https://zaad.com";
+    const SITE_URL = "https://zaaddesign.com";
 
     return {
         rules: {

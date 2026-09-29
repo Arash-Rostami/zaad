@@ -106,9 +106,6 @@ export default function InquiryForm({ concierge, t, language }) {
                 <Calendar className="w-5 h-5 mr-3 rtl:mr-0 rtl:ml-3 text-accent shrink-0" />
                 {t("acquisitionCard")}
             </h3>
-            <p className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-muted mb-8 leading-relaxed">
-                {t("formChatAlternative")}
-            </p>
 
             <AnimatePresence mode="wait">
                 {!formSubmitted ? (
@@ -120,7 +117,7 @@ export default function InquiryForm({ concierge, t, language }) {
                     >
                         <div className="grid grid-cols-2 gap-4 md:gap-6">
                             <div className="flex flex-col">
-                                <label htmlFor="inquiry-name" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
+                                <label htmlFor="inquiry-name" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("bespokeClientName")}
                                 </label>
                                 <input
@@ -137,7 +134,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                 <FieldError id="inquiry-name-error" message={formErrors.clientName && t(formErrors.clientName)} />
                             </div>
                             <div className="flex flex-col">
-                                <label htmlFor="inquiry-email" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
+                                <label htmlFor="inquiry-email" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("contactEmail")}{" "}
                                     <span className="text-[length:calc(10.5px*var(--zaad-font-scale))]">
                                         {t("optionalMarker")}
@@ -148,7 +145,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                     type="email"
                                     value={clientEmail}
                                     onChange={(e) => setClientEmail(e.target.value)}
-                                    placeholder="client@zaad.com"
+                                    placeholder="client@zaaddesign.com"
                                     aria-invalid={!!formErrors.clientEmail}
                                     aria-describedby={formErrors.clientEmail ? "inquiry-email-error" : undefined}
                                     className={`${identityRowAlignsBottom ? "mt-auto" : ""} w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-mono ${formErrors.clientEmail ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink/80"}`}
@@ -159,7 +156,7 @@ export default function InquiryForm({ concierge, t, language }) {
 
                         <div className="grid grid-cols-2 gap-4 md:gap-6">
                             <div className="flex flex-col">
-                                <label htmlFor="inquiry-phone" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
+                                <label htmlFor="inquiry-phone" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("mobilePhone")}
                                 </label>
                                 <input
@@ -176,7 +173,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                 <FieldError id="inquiry-phone-error" message={formErrors.clientPhone && t(formErrors.clientPhone)} />
                             </div>
                             <div className="flex flex-col">
-                                <label htmlFor="inquiry-consultation" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium leading-snug">
+                                <label htmlFor="inquiry-consultation" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("consultationCategory")}
                                 </label>
                                 <div className={`relative ${contactRowAlignsBottom ? "mt-auto" : ""}`}>
@@ -199,7 +196,7 @@ export default function InquiryForm({ concierge, t, language }) {
                         </div>
 
                         <div>
-                            <label htmlFor="inquiry-note" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-1.5 font-medium">
+                            <label htmlFor="inquiry-note" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium">
                                 {t("archivalSpecs")}
                             </label>
                             <textarea
@@ -219,10 +216,10 @@ export default function InquiryForm({ concierge, t, language }) {
                         <div className="space-y-4 pt-2">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 items-start">
                                 <div>
-                                    <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-2 font-medium">
+                                    <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-2 font-medium">
                                         {t("appointmentAudienceLabel")}
                                     </label>
-                                    <div data-touch-boost className="flex items-center relative rounded-full bg-toggle-track p-0.5 font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] tracking-widest h-9 w-full">
+                                    <div data-touch-boost className="flex items-center relative rounded-full bg-toggle-track p-0.5 font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] h-9 w-full">
                                         {appointmentModeOptions.map((opt) => (
                                             <button
                                                 key={opt.id}
@@ -243,13 +240,15 @@ export default function InquiryForm({ concierge, t, language }) {
                                             </button>
                                         ))}
                                     </div>
-                                    <p className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted/70 mt-2 tracking-wide">
-                                        {appointmentMode === "audience" ? t("appointmentHintAudience") : t("appointmentHintCall")}
-                                    </p>
+                                    {appointmentMode === "audience" && (
+                                        <p className="text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted/70 mt-2">
+                                            {t("appointmentHintAudience")}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="relative">
-                                    <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-muted uppercase block mb-2 font-medium">
+                                    <label className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-2 font-medium">
                                         {t("appointmentCadenceLabel")}
                                     </label>
                                     <button
@@ -262,7 +261,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                     >
                                         <span className="flex items-center min-w-0">
                                             <Clock className="w-4 h-4 text-accent mr-2 rtl:mr-0 rtl:ml-2 shrink-0" />
-                                            <span className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest uppercase text-ink truncate">
+                                            <span className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono uppercase text-ink truncate">
                                                 {activeSlot ? <>{activeSlot.name} · <span dir="ltr">{activeSlot.time}</span></> : t("appointmentWindowArrangement")}
                                             </span>
                                         </span>
@@ -294,7 +293,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                                                 onClick={handleCadenceOptionClick}
                                                                 className={`cursor-pointer w-full flex items-center justify-between gap-3 px-3 py-2 rounded-xl text-left rtl:text-right transition-colors duration-500 ${active ? "bg-accent/10" : "hover:bg-ink/[0.03]"}`}
                                                             >
-                                                                <span className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-widest uppercase ${active ? "text-accent" : "text-ink"}`}>
+                                                                <span className={`text-[length:calc(11px*var(--zaad-font-scale))] font-mono uppercase ${active ? "text-accent" : "text-ink"}`}>
                                                                     {opt.name}
                                                                 </span>
                                                                 <span className={`text-[length:calc(10px*var(--zaad-font-scale))] font-mono ${active ? "text-accent/80" : "text-muted"}`}>
@@ -346,7 +345,7 @@ export default function InquiryForm({ concierge, t, language }) {
                         <div className="w-12 h-12 rounded-full border border-ink/10 flex items-center justify-center mx-auto mb-6 bg-surface">
                             <Check className="w-5 h-5 text-accent" />
                         </div>
-                        <h4 className="font-serif text-xl font-light text-ink mb-2">
+                        <h4 className="font-serif text-lg font-light text-ink mb-2">
                             {t("committedToArchive")}
                         </h4>
                         <p className="text-xs text-muted leading-relaxed max-w-sm mx-auto mb-6">
@@ -358,7 +357,7 @@ export default function InquiryForm({ concierge, t, language }) {
                                 : t("appointmentRequestedCall").replace("{window}", slotLabel)}
                         </p>
                         <br />
-                        <div className="border-t border-ink/10 pt-4 font-mono text-[length:calc(9px*var(--zaad-font-scale))] text-accent tracking-widest uppercase">
+                        <div className="border-t border-ink/10 pt-4 font-mono text-[length:calc(9px*var(--zaad-font-scale))] text-accent uppercase">
                             {t("sessionRef")}: <span dir="ltr" className="font-latin">SEC-COM-{sessionRef}</span>
                         </div>
                         <MaisonButton

@@ -7,7 +7,7 @@ import AudioToggle from "../shared/AudioToggle";
 import Tooltip from "../shared/Tooltip";
 
 const LANG_LABELS = { en: "EN", fa: "فا" };
-const BRAND_NAME = { en: "ZAAD", fa: "زاد" };
+const BRAND_NAME = { en: "ZAAD", fa: "زااد" };
 const LANG_TOOLTIP_KEYS = { en: "tooltipLangEn", fa: "tooltipLangFa" };
 const THEME_TOOLTIP_KEYS = {
   light: "tooltipThemeLight",
@@ -97,7 +97,7 @@ const MenuControls = memo(function MenuControls({
       transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
       className="md:col-span-12 border-t border-ink/10 mt-5 pt-5 flex flex-col md:flex-row md:rtl:flex-row-reverse items-center justify-between gap-4"
     >
-      <div className="flex items-center gap-x-3 font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] tracking-[0.25em] text-accent/50 uppercase antialiased">
+      <div className="flex items-center gap-x-3 font-mono text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] text-accent/50 uppercase antialiased">
         <span className="cursor-default select-none transition-opacity duration-500 hover:opacity-100">
           <span className="font-serif font-farsi">{BRAND_NAME[language]}</span>{" "}
           {t("editionVersion")}
@@ -120,7 +120,7 @@ const MenuControls = memo(function MenuControls({
           <div className="flex items-center gap-4" suppressHydrationWarning>
             <div
               data-menu-language
-              className="flex items-center relative rounded-md bg-toggle-track p-0.5 font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] tracking-widest h-7 w-20"
+              className="flex items-center relative rounded-md bg-toggle-track p-0.5 font-mono text-[length:max(9px,calc(8px*var(--zaad-font-scale)))] h-7 w-20"
             >
               {LANGUAGES.map((lang) => (
                 <Tooltip
@@ -215,7 +215,7 @@ const MenuControls = memo(function MenuControls({
                   <button
                     onClick={() => handleThemeChange(mode)}
                     data-touch-slop
-                    className={`cursor-pointer px-2 h-full text-[length:max(9px,calc(8.5px*var(--zaad-font-scale)))] rtl:text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-semibold font-mono tracking-widest rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors duration-700 relative z-10 flex items-center justify-center ${themeMode === mode ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted/70 hover:text-headline"}`}
+                    className={`cursor-pointer px-2 h-full text-[length:max(9px,calc(8.5px*var(--zaad-font-scale)))] rtl:text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-semibold font-mono rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors duration-700 relative z-10 flex items-center justify-center ${themeMode === mode ? "text-on-indicator font-bold drop-shadow-sm" : "text-muted/70 hover:text-headline"}`}
                   >
                     {themeMode === mode && (
                       <motion.div

@@ -56,15 +56,17 @@ was deleted in the 2026-09-06 one-footer pass.)
 ## `socialLinks.js` (added 2026-09-04)
 
 Exports `SOCIAL_LINKS` — a frozen 4-entry array (`id`, `href`, `icon` — a `lucide-react`
-component reference, `labelKey`) for Instagram, LinkedIn, Telegram, and WhatsApp. The
-single shared source `shared/SocialLinks.jsx` (see `src/components/README.md`) maps over
-it, so `Footer.jsx` renders the identical row from one
-config. (The former second consumer, `house/HouseFooter.jsx`, was deleted in the
-2026-09-06 one-footer pass.) **`href` values are
-placeholders** (`https://instagram.com/zaad_placeholder`, etc.) — same unresolved-handle
-gap `services/MetadataService.js`'s JSON-LD `sameAs` array already has a `// TODO` for.
-Replace all four with the real handles before this ships; nothing else needs to change
-(`shared/SocialLinks.jsx` and the footer only ever read from this one file). Telegram
+component reference, `labelKey`, and `disabled`) for Instagram, LinkedIn, Telegram, and
+WhatsApp. The single shared source `shared/SocialLinks.jsx` (see
+`src/components/README.md`) maps over it, so `Footer.jsx` renders the identical row from
+one config. (The former second consumer, `house/HouseFooter.jsx`, was deleted in the
+2026-09-06 one-footer pass.) **Instagram's `href` is the real handle** (`zaaddesignofficial`,
+supplied 2026-09-27); the other three are still `*_placeholder` values and carry
+**`disabled: true`** (2026-09-29, owner direction: keep the icons visible but unclickable —
+`shared/SocialLinks.jsx` renders them as dimmed `aria-disabled` spans instead of links
+until real handles exist). Replace those three `href`s and drop the `disabled` flags when
+supplied; nothing else needs to change (`shared/SocialLinks.jsx` and the footer only ever
+read from this one file). Telegram
 has no dedicated `lucide-react` icon, so `Send` (paper airplane) stands in — it happens to
 already resemble Telegram's own logo shape. WhatsApp has no dedicated icon either;
 `MessageCircle` is the closest generic chat-bubble glyph `lucide-react` offers.
@@ -93,7 +95,7 @@ Solution", and the four collection codenames "GÁVV"/"ZIVV"/"RÁKH"/"VAAR") and 
 partners named in `en.js`/`fa.js` appliance/hardware spec text), merged into one combined
 `BRAND_TOKENS` list — and wraps each match in `<span dir="ltr" className="font-serif">`.
 This is a deliberate brand-identity typography rule (these tokens always render in the
-site's Playfair serif, regardless of the surrounding text's font) — not a bidi-safety
+site's FractulAlt serif, regardless of the surrounding text's font) — not a bidi-safety
 mechanism like `wrapLatinRuns` below, though the `dir="ltr"` incidentally provides the
 same isolation. No-op (returns the input unchanged) when nothing matches, so it's safe to
 call unconditionally. See `src/styles/README.md`'s "Brand tokens always render in
@@ -119,16 +121,13 @@ the same "known brand/partner token → `font-serif`" rule applies via exact-tok
 consequence: `wrapBrandNames` matches only the exact token, not adjacent words merged by a
 single space the way Farsi's run-merge does — `"Dorsa Home"` gets `"Dorsa"` wrapped but
 not `"Home"` (harmless; "Home" isn't a brand token) — whereas the equivalent Farsi string
-would have merged both words into one span. This parity holds at every call site below,
-including `Advantages.jsx`'s
-`card.desc` (previously wrongly documented in `src/styles/README.md` as a "deliberately
-left alone" exception — it isn't; that note has been corrected).
+would have merged both words into one span. This parity holds at every call site below.
 
 **Wraps in `.font-serif`, not `.font-latin` (changed 2026-09-02, explicit user request).**
 Every call site here isolates embedded proper nouns inside Farsi prose — our own brand/
 collection names (`ZAAD`, `Dorsa`, `GÁVV`/`ZIVV`/`RÁKH`/`VAAR`) and third-party partner
 brands (`Gaggenau`, `Domus`, `Salice`, `Kesseböhmer`, etc.) — and the site's rule is that
-brand-adjacent proper nouns render in the Playfair `.font-serif` face, not the monospace
+brand-adjacent proper nouns render in the FractulAlt `.font-serif` face, not the monospace
 `.font-latin` face (see `src/styles/README.md`'s "Brand tokens always render in
 `font-serif`" section for the full rationale, and `wrapBrandNames.js` below for the
 sibling mechanism that applies the same face to an *exact* token match rather than any
@@ -158,18 +157,25 @@ between Farsi digits, etc.) outside every span so it inherits ordinary RTL mirro
 a string becomes JSX children (e.g. `{wrapLatinRuns(item.description, isFarsi)}`), never
 on a string that still gets `.replace()`/concatenation/template-literal composition
 afterward (`wrapLatinRuns` returns a React node array, not a string, once it's actually
-wrapped something). Current call sites: `Vision.jsx`, `Advantages.jsx`, `Materials.jsx`,
+wrapped something). Current call sites: `Vision.jsx`, `Materials.jsx`,
 `Footer.jsx`, `concierge/InquiryForm.jsx`,
-`collection/CollectionMeta.jsx`, `collection/LookbookPoetry.jsx`,
+`collection/CollectionMeta.jsx`,
 `collection/TabArchitecture.jsx` (also its `tower.key`/`listSpecs` entries, not
 just `overview`/bullets — anything rendering a dictionary string with embedded Latin
 needs this call, not just the obvious paragraph fields), `collection/TabAppliances.jsx`,
+`collection/StudioGallery.jsx`, `collection/Lightbox.jsx`, `showcase/Lightbox.jsx`,
 `showcase/CollectionPanel.jsx`, `glance/GlancePage.jsx`, `glance/GlanceChapter.jsx` (the
-`/glance` lookbook composite), and `ledger/Ledger.jsx` (admin note fields) — every one of
-these renders dictionary prose (`item.*`
+`/glance` lookbook composite), `app/credits/page.js`, and `ledger/Ledger.jsx` (admin note
+fields) — every one of these renders dictionary prose (`item.*`
 fields, or `t()` strings) that mixes Latin brand names/technical terms into Farsi
 sentences at the data layer; see `src/lib/i18n/README.md` for why the dictionary itself
-isn't restructured to avoid this instead.
+isn't restructured to avoid this instead. The 2026-09-28 mixed-script audit closed the
+remaining 16 Latin-in-Farsi render gaps in one pass and confirmed the en direction is
+gap-free; `wrapBrandNames` (the en path) gained its own call sites in
+`collection/TabHeritage.jsx` and `collection/SpecsTabs.jsx`. **Attributes/keys always take
+the raw string**: `collection/StudioGallery.jsx` keeps a raw `captionTitle` memo for its
+truncated caption's `title` attribute and wraps only the rendered `{captionText}` — the
+pattern for any element needing both.
 
 **`concierge/CuratorChat.jsx` (added 2026-09-02)** is the one call site that isolates
 *runtime* content, not a dictionary string: `hooks/useConcierge.js`'s `chatMessages`

@@ -23,8 +23,8 @@ Locales (see `config.js`): `en` (LTR, default) and `fa` (RTL).
 
 - `en.js` and `fa.js` each export a single top-level object with the **same shape**:
   flat string keys (`t("showcaseTitle")`) plus structured arrays/objects
-  (`advantageCards`, `materialSamples`, `aboutSections`, `brandStory`,
-  `aboutStats`/`sustainabilityStats`/`csrStats`, the
+  (`materialSamples`, `aboutSections`, `brandStory`,
+  `aboutStats`, the
   `collection` array of 4 items by `id`: `gavv`, `zivv`, `rakh`, `vaar`). The fourth
   item's `id`, asset paths (`/image/vaar/*`, `/video/vaar*.mp4`) and URL slug are all
   **"vaar"** — the lookbook's correct spelling, renamed end-to-end in the 2026-09-05
@@ -34,16 +34,16 @@ Locales (see `config.js`): `en` (LTR, default) and `fa` (RTL).
   `resolveCollectionImages` reads `public/image/{id}/` at request time and the 360
   spin is `/video/{id}-360.mp4`, so a partial rename silently breaks the image
   pipeline and the 360 player.) `aboutSections`
-  (5 items by `id`: `about`, `story`, `brandValue`, `sustainability`, `csr`) powers the
-  **three** House routes' editorial blocks, even though there are 5 data entries — `/about`
-  reads only `about` (on the single-column `house/HouseChapterShell.jsx`); `/story` reads
-  `story` + `brandValue` as a paired `left`/`right` diptych; `/sustainability` reads
-  `sustainability` + `csr` the same way (both on the two-column
-  `house/HouseDiptychShell.jsx`). The `### I. ...` headings inside each entry's `content`
+  (4 items by `id`: `about`, `story`, `brandValue`, `sustainability`) powers the
+  **three** House routes' editorial blocks — since the 2026-09-29 owner-directed
+  restructure: `/about` is the one diptych (`house/HouseDiptychShell.jsx`), pairing
+  `story` (left column) with `about` + `aboutStats` (right); `/story` and
+  `/sustainability` are single-column `house/HouseChapterShell.jsx` pages reading only
+  the `brandValue` and `sustainability` entries respectively (the fabricated `csr`
+  entry and the made-up `sustainabilityStats`/`csrStats` grids were deleted at owner
+  direction — don't reintroduce without owner-supplied content). The `### I. ...` headings inside each entry's `content`
   are parsed into styled editorial sub-blocks by the shared `EditorialBlock` piece in
-  `house/ChapterPieces.jsx`. `story` and `brandValue` have no dedicated stats array —
-  `StoryValueChapter` passes `stats={[]}` for both columns, which the stat grid renders as
-  nothing. Keep it parallel in `fa.js` like the others.
+  `house/ChapterPieces.jsx`. Keep `fa.js` parallel like the others.
 - `glance` (added 2026-09-05) is the "ZAAD at a glance" lookbook composite for the
   `/glance` route: hero copy, an `overview` chapter, `sections` labels, and per-collection
   `supplements` (gavv/zivv: `tagline`, `narrative`, `materialTable`, `dimensions`,
@@ -85,7 +85,9 @@ block) is localized via `t(...)`.
 > price/weight/lead-time figures, a mistranslated Farsi "forged" as "جعل" i.e.
 > "counterfeited") that had no basis in the source material and has been removed. Where
 > the lookbook doesn't specify a fact (e.g. per-item price, weight, or lead time), the
-> honest value is "Available upon inquiry" / "بر اساس استعلام", not an invented number.
+> honest value is "Available upon consultation request" / "بر اساس درخواست مشاوره" (renamed from
+> "Available upon inquiry" / "بر اساس استعلام" 2026-09-27, part of the sitewide "Inquiry" →
+> "Consultation Request" rename — display text only), not an invented number.
 
 ## Using it in components
 
@@ -103,8 +105,8 @@ const {t, data, language, setLanguage, dir, isFarsi} = useLanguage();
 Returns a translated string. Falls back to English, then to the raw key.
 
 ```js
-t("showcaseTitle")       // "Curated Showcase" | "مجموعه‌ی منتخب"
-t("submitInquiry")       // "Submit Secure Inquiry" | "ثبت نهایی درخواست"
+t("showcaseTitle")       // "ZAAD Collections" | "مجموعه های زااد"
+t("submitInquiry")       // "Submit Secure Consultation Request" | "ثبت نهایی درخواست"
 ```
 
 ### `data(key)` — structured object or array
@@ -114,7 +116,6 @@ then `null`.
 
 ```js
 data("collection")        // the 4-item array, already in the active language
-data("advantageCards")    // array of advantage card objects
 data("materialSamples")   // array of material sample objects
 data("brandStory")        // { philosophy, tagline, narrative_1, narrative_2 }
 ```
@@ -203,7 +204,8 @@ instead of flinging to the far edge. `fa.js`'s `footerCopyright` carries the RLM
 "Back to Showroom"/"بازگشت به گالری" — borrowing the product page's "showroom/gallery"
 vocabulary for a link that actually returns to the site root from House/`/glance`, neither
 of which is part of the product showroom. Changed to "Return to ZAAD Home"/"بازگشت به
-صفحه‌ی اصلی زاد", matching `ledgerReturnHome`'s already-correct wording for the identical
+صفحه‌ی اصلی زااد" (transliteration updated to `زااد` in the 2026-09-28 copy-replacement pass),
+matching `ledgerReturnHome`'s already-correct wording for the identical
 compact-header pattern on `/ledger`. The product page's own two back-to-showroom CTAs
 (`NavBar.jsx`'s `productReturnShowroom`, `CollectionMeta.jsx`/`AcquisitionCTA.jsx`'s
 `productReturnGrid` — both call the same `onBack` prop, i.e. the same destination) were

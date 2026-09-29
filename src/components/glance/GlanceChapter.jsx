@@ -7,7 +7,7 @@ import wrapLatinRuns from "@/lib/wrapLatinRuns";
 import MaisonReveal from "../shared/MaisonReveal";
 
 const EYEBROW =
-    "text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono tracking-[0.3em] text-accent font-semibold uppercase block mb-3";
+    "text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1";
 
 function SectionLabel({ children, className = "" }) {
     return <p className={`${EYEBROW} ${className}`}>{children}</p>;
@@ -18,12 +18,12 @@ function SpecPart({ part, isFarsi }) {
     return (
         <div>
             {part.title && (
-                <h4 className="font-serif text-base md:text-lg font-light tracking-wide text-ink">
+                <h4 className="font-serif text-lg font-light text-ink">
                     {wrapLatinRuns(part.title, isFarsi)}
                 </h4>
             )}
             {part.reason && (
-                <h4 className="font-serif text-base md:text-lg font-light tracking-wide text-ink">
+                <h4 className="font-serif text-lg font-light text-ink">
                     {wrapLatinRuns(part.reason, isFarsi)}
                 </h4>
             )}
@@ -32,7 +32,7 @@ function SpecPart({ part, isFarsi }) {
                     {part.bullets.map((bullet, index) => (
                         <li key={index} className="flex gap-3 text-sm text-muted font-light leading-relaxed">
                             <span className="mt-[0.55em] h-px w-4 shrink-0 bg-accent/70" />
-                            <span className="rtl:text-justify">{wrapLatinRuns(bullet, isFarsi)}</span>
+                            <span>{wrapLatinRuns(bullet, isFarsi)}</span>
                         </li>
                     ))}
                 </ul>
@@ -46,7 +46,7 @@ function SpecGroup({ spec, isFarsi }) {
     return (
         <div className="space-y-6">
             {spec.overview && (
-                <p className="text-sm md:text-base text-muted font-light leading-relaxed rtl:text-justify">
+                <p className="text-sm md:text-base text-muted font-light leading-relaxed">
                     {wrapLatinRuns(spec.overview, isFarsi)}
                 </p>
             )}
@@ -54,7 +54,7 @@ function SpecGroup({ spec, isFarsi }) {
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {spec.parts.map((part) => (
                         <div key={part.key} className="border border-ink/10 rounded-xl p-4 bg-panel">
-                            <dt className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-accent">
+                            <dt className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-accent">
                                 {wrapLatinRuns(part.key, isFarsi)}
                             </dt>
                             <dd className="mt-2 text-sm text-ink font-light leading-relaxed">
@@ -81,7 +81,7 @@ function SpecGroup({ spec, isFarsi }) {
                     {spec.listSpecs.map((line, index) => (
                         <li key={index} className="flex gap-3 text-sm text-muted font-light leading-relaxed">
                             <span className="mt-[0.55em] h-px w-3 shrink-0 bg-accent/70" />
-                            <span className="rtl:text-justify">{wrapLatinRuns(line, isFarsi)}</span>
+                            <span>{wrapLatinRuns(line, isFarsi)}</span>
                         </li>
                     ))}
                 </ul>
@@ -101,7 +101,7 @@ function SpecTable({ table, isFarsi }) {
                     {headCells.map((headCell, cellIndex) => (
                         <th
                             key={cellIndex}
-                            className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-accent font-semibold border-b border-ink/20 py-3 pe-4"
+                            className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-accent font-semibold border-b border-ink/20 py-3 pe-4"
                         >
                             {headCell}
                         </th>
@@ -138,17 +138,17 @@ function SpecCards({ entries, isFarsi }) {
                     className="relative border border-ink/10 rounded-2xl p-5 md:p-6 bg-panel overflow-hidden text-left rtl:text-right"
                 >
                     {entry.category && (
-                        <p className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-accent">
+                        <p className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-accent">
                             {wrapLatinRuns(entry.category, isFarsi)}
                         </p>
                     )}
-                    <h4 className="mt-1.5 font-serif text-base md:text-lg font-light tracking-wide text-ink">
+                    <h4 className="mt-1.5 font-serif text-lg font-light text-ink">
                         {wrapLatinRuns(entry.name, isFarsi)}
                     </h4>
                     {entry.specs && (
                         <ul className="mt-3 space-y-1.5">
                             {entry.specs.map((spec, specIndex) => (
-                                <li key={specIndex} className="text-sm text-muted font-light leading-relaxed rtl:text-justify">
+                                <li key={specIndex} className="text-sm text-muted font-light leading-relaxed">
                                     {wrapLatinRuns(spec, isFarsi)}
                                 </li>
                             ))}
@@ -173,18 +173,18 @@ function GlanceChapter({ item, supplement, labels, number, numberFormatter }) {
         <section id={`glance-${item.id}`} className="section-y border-t border-ink/10">
             <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
                 <div className="flex items-baseline gap-4">
-                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] text-accent tabular-nums">
+                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-accent tabular-nums">
                         {numberFormatter.format(number)}
                     </span>
-                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.3em] uppercase text-muted">
+                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-muted">
                         <span className="font-serif font-latin">{item.number}</span> · {item.year}
                     </span>
                 </div>
-                <h3 className="mt-3 text-3xl md:text-5xl font-serif font-light tracking-tight text-ink text-left rtl:text-right">
+                <h3 className="mt-3 text-4xl sm:text-5xl font-serif font-light tracking-tight text-ink text-left rtl:text-right">
                     {brandedName}
                 </h3>
                 {supplement?.tagline && (
-                    <p className="mt-2 text-base md:text-lg font-serif font-farsi font-light italic text-muted text-left rtl:text-right">
+                    <p className="mt-2 text-base md:text-lg font-serif font-farsi font-light text-muted text-left rtl:text-right">
                         {wrapLatinRuns(supplement.tagline, isFarsi)}
                     </p>
                 )}
@@ -198,7 +198,7 @@ function GlanceChapter({ item, supplement, labels, number, numberFormatter }) {
                             {supplement.narrative.split("\n").map((paragraph, index) => (
                                 <p
                                     key={index}
-                                    className="text-base md:text-lg font-serif font-farsi font-light leading-relaxed text-ink text-glow-subtle text-left rtl:text-right rtl:text-justify"
+                                    className="text-base md:text-lg font-serif font-farsi font-light leading-relaxed text-ink text-glow-subtle text-left rtl:text-right"
                                 >
                                     {wrapLatinRuns(paragraph, isFarsi)}
                                 </p>
@@ -215,7 +215,7 @@ function GlanceChapter({ item, supplement, labels, number, numberFormatter }) {
                         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
                             {parts.map(([key, value]) => (
                                 <div key={key} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-ink/10 py-3">
-                                    <dt className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] uppercase text-muted">
+                                    <dt className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] uppercase text-muted">
                                         {wrapLatinRuns(key, isFarsi)}
                                     </dt>
                                     <dd className="text-sm text-ink font-light leading-relaxed text-end rtl:text-start">
@@ -307,10 +307,10 @@ function GlanceChapter({ item, supplement, labels, number, numberFormatter }) {
                         <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2.5">
                             {supplement.layouts.map((layout, index) => (
                                 <li key={index} className="flex items-baseline gap-3 border-b border-ink/10 py-3 text-sm text-muted font-light leading-relaxed">
-                                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-[0.2em] text-accent tabular-nums">
+                                    <span className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-accent tabular-nums">
                                         {numberFormatter.format(index + 1)}
                                     </span>
-                                    <span className="rtl:text-justify">{wrapLatinRuns(layout, isFarsi)}</span>
+                                    <span>{wrapLatinRuns(layout, isFarsi)}</span>
                                 </li>
                             ))}
                         </ol>

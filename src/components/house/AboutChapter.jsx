@@ -1,26 +1,20 @@
 "use client";
 
 import React, { memo, useMemo } from "react";
-import HouseChapterShell from "./HouseChapterShell";
+import HouseDiptychShell from "./HouseDiptychShell";
 import { useLanguage } from "@/services/LanguageProvider";
 
-const STATS_KEY = "aboutStats";
-const SECTION_ID = "about";
-const SECTIONS_KEY = "aboutSections";
 const EMPTY_ARRAY = Object.freeze([]);
 const HERO_IMAGE_URL = "/video/house/chapter-vaar.jpg";
 
 function AboutChapter() {
     const { t, data } = useLanguage();
 
-    const editorialContent = useMemo(() => {
-        const sections = data(SECTIONS_KEY);
-        if (!Array.isArray(sections)) return "";
-        return sections.find((s) => s?.id === SECTION_ID)?.content ?? "";
-    }, [data]);
-
-    const stats = useMemo(() => {
-        const raw = data(STATS_KEY);
+    const sections = useMemo(() => data("aboutSections") || EMPTY_ARRAY, [data]);
+    const story = useMemo(() => sections.find((s) => s?.id === "story"), [sections]);
+    const about = useMemo(() => sections.find((s) => s?.id === "about"), [sections]);
+    const aboutStats = useMemo(() => {
+        const raw = data("aboutStats");
         return Array.isArray(raw) ? raw : EMPTY_ARRAY;
     }, [data]);
 
@@ -42,17 +36,35 @@ function AboutChapter() {
         [t]
     );
 
+    const left = useMemo(
+        () => ({
+            eyebrow: story?.category ?? "",
+            title: story?.title ?? "",
+            intro: story?.summary ?? "",
+            content: story?.content ?? "",
+            stats: EMPTY_ARRAY,
+        }),
+        [story]
+    );
+
+    const right = useMemo(
+        () => ({
+            eyebrow: about?.category ?? "",
+            title: about?.title ?? "",
+            intro: about?.summary ?? "",
+            content: about?.content ?? "",
+            stats: aboutStats,
+        }),
+        [about, aboutStats]
+    );
+
     return (
-        <HouseChapterShell
-            heroEyebrow={t("aboutEyebrow")}
+        <HouseDiptychShell
             heroTitle={t("aboutTitle")}
-            heroIntro={t("aboutIntro")}
             heroImage={HERO_IMAGE_URL}
             heroImageAlt={t("aboutHeroAlt")}
-            heroBadge={t("menuHouseOfZAAD")}
-            heroBadgeLabel={t("aboutEyebrow")}
-            editorialContent={editorialContent}
-            stats={stats}
+            left={left}
+            right={right}
             siblings={siblings}
         />
     );

@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from "react";
 import { motion } from "motion/react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { animateScrollToTop } from "@/services/ScrollService";
 import useLocalPreference from "@/hooks/useLocalPreference";
 import NoiseBg from "../shared/NoiseBg";
-import SystemPortals from "./SystemPortals";
-import JourneyIndex from "./JourneyIndex";
+import PrimaryPages from "./PrimaryPages";
 import SpecimenGrid from "./SpecimenGrid";
+import UtilityStrip from "./UtilityStrip";
 import MenuControls from "./MenuControls";
 
 export default function MenuPanel(
@@ -14,7 +15,6 @@ export default function MenuPanel(
         t,
         language,
         setLanguage,
-        activeTab,
         selectedProduct,
         collection,
         themeMode,
@@ -38,24 +38,30 @@ export default function MenuPanel(
         [lastViewedItem, lastViewedFullItem]
     );
 
-    const journeyLinks = useMemo(
+    const pageLinks = useMemo(
         () => [
-            { key: "/about", label: t("menuOriginsPhilosophy"), sub: t("menuChapter1") },
-            { key: "/story", label: t("menuStoryBrandValue"), sub: t("menuChapter2") },
-            { key: "/sustainability", label: t("menuSustainabilityResponsibility"), sub: t("menuChapter3") },
+            { key: "/", label: t("aboutBackToShowroom"), sub: t("menuChapterHome") },
+            { key: "/about", label: t("menuOriginsPhilosophy") },
+            { key: "/story", label: t("menuStoryBrandValue") },
+            { key: "/sustainability", label: t("menuSustainabilityResponsibility") },
         ],
         [t]
     );
 
     const navigateTo = useCallback(
         (href) => {
+            if (href === "/") {
+                setActiveTab("showroom");
+                onSelectProduct(null);
+                onClose();
+                animateScrollToTop(1400);
+                return;
+            }
             onClose();
             router.push(href);
         },
-        [onClose, router]
+        [onClose, router, setActiveTab, onSelectProduct]
     );
-
-    const onHouseOfZaad = useCallback(() => navigateTo("/about"), [navigateTo]);
 
     const onBlueprint = useCallback(() => {
         onSelectProduct(null);
@@ -78,6 +84,12 @@ export default function MenuPanel(
         setTimeout(() => onScrollToSection("collection"), 120);
     }, [setActiveTab, onClose, onScrollToSection]);
 
+    const onNavigateToConcierge = useCallback(() => {
+        setActiveTab("showroom");
+        onClose();
+        setTimeout(() => onScrollToSection("concierge"), 120);
+    }, [setActiveTab, onClose, onScrollToSection]);
+
     const onContinueBrowsing = useCallback(() => {
         const fullItem = collection.find((c) => c.id === lastViewedItem?.id);
         if (!fullItem) return;
@@ -89,12 +101,6 @@ export default function MenuPanel(
     const onClearLastViewed = useCallback(() => {
         setLastViewedItem(null);
     }, [setLastViewedItem]);
-
-    const onNavigateToConcierge = useCallback(() => {
-        setActiveTab("showroom");
-        onClose();
-        setTimeout(() => onScrollToSection("concierge"), 120);
-    }, [setActiveTab, onClose, onScrollToSection]);
 
     return (
         <motion.div
@@ -132,43 +138,46 @@ export default function MenuPanel(
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                    className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5"
+                    className="flex flex-col gap-4 md:gap-5"
                 >
-                    <div className="md:col-span-4">
-                        <SystemPortals
-                            t={t}
-                            activeTab={activeTab}
-                            onHouseOfZaad={onHouseOfZaad}
-                            onBlueprint={onBlueprint}
-                        />
-                    </div>
+                    <PrimaryPages t={t} pageLinks={pageLinks} onNavigate={navigateTo} />
 
-                    <div className="md:col-span-8 md:col-start-5 flex flex-col space-y-2">
-                        <JourneyIndex journeyLinks={journeyLinks} t={t} onNavigate={navigateTo} />
-                        <button
-                            type="button"
-                            onClick={onNavigateToConcierge}
-                            className="group inline-flex items-center gap-1 pb-0 self-start text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-bold uppercase hover:border-[#C5A059] pt-2 hover:text-[#C5A059] text-left rtl:text-right transition-colors duration-500 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                        >
-                            {t("zaadDigitalCurator")}
-                            <ChevronRight className="w-3 h-3 shrink-0 rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                        </button>
-                    </div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent" />
 
-                    <div className="md:col-span-12 h-px bg-gradient-to-r from-transparent via-[#C5A059]/40 to-transparent my-1 sm:my-2" />
+                    <SpecimenGrid
+                        collection={collection}
+                        selectedProduct={selectedProduct}
+                        t={t}
+                        onSelect={onSelect}
+                        onNavigateToCollection={onNavigateToCollection}
+                    />
 
-                    <div className="md:col-span-12">
-                        <SpecimenGrid
-                            collection={collection}
-                            selectedProduct={selectedProduct}
-                            t={t}
-                            onSelect={onSelect}
-                            onNavigateToCollection={onNavigateToCollection}
-                            lastViewedItem={lastViewedDisplay}
-                            onContinueBrowsing={onContinueBrowsing}
-                            onClearLastViewed={onClearLastViewed}
-                        />
-                    </div>
+                    <UtilityStrip
+                        t={t}
+                        onOpenCatalogue={onBlueprint}
+                        onNavigateToConcierge={onNavigateToConcierge}
+                    />
+
+                    {lastViewedDisplay && (
+                        <div className="group/continue inline-flex items-center gap-2 self-start text-left rtl:text-right">
+                            <button
+                                type="button"
+                                onClick={onContinueBrowsing}
+                                className="group inline-flex items-center gap-1 self-start text-[length:calc(10px*var(--zaad-font-scale))] rtl:text-[length:calc(11px*var(--zaad-font-scale))] font-mono tracking-[0.3em] text-accent font-bold uppercase hover:border-[#C5A059] pt-2 hover:text-[#C5A059] text-left rtl:text-right transition-colors duration-500 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                            >
+                                {t("menuContinueBrowsing")} — {lastViewedDisplay.name}
+                                <ChevronRight className="w-3 h-3 shrink-0 rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onClearLastViewed}
+                                aria-label={t("menuDismissContinueBrowsing")}
+                                className="opacity-0 group-hover/continue:opacity-100 focus-visible:opacity-100 text-muted/50 hover:text-accent transition-opacity duration-300 cursor-pointer outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded-sm"
+                            >
+                                <X className="w-3 h-3" />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
 
                 <MenuControls

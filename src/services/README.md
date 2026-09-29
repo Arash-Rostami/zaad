@@ -109,15 +109,17 @@ paint match, then a mount-only `useEffect` populates the real value from
 not a bug. `update(next)` writes through `setPreference` and updates local state in one
 call. A component that only ever *writes* (never reads back reactively) should call
 `setPreference` directly instead of pulling in this hook — see
-`CollectionPage.jsx`'s "last viewed item" effect.
+`pendingInquiryItem`'s writer below. **Live again since 2026-09-29** — the menu's
+`lastViewedItem` "Continue" link was restored at owner direction (it lives in
+`header/MenuPanel.jsx` now, after the third menu row, not inside `SpecimenGrid`).
 
 ### Current preference keys
 
 | Key | Shape | Written by | Read by |
 | :--- | :--- | :--- | :--- |
-| `lastViewedItem` | `{ id, name, number }` | `CollectionPage.jsx` (effect on `item.id`/`name`/`number`) | `header/MenuPanel.jsx` → `header/SpecimenGrid.jsx`'s "Continue Browsing" link (below the four collection cards); `hooks/useConcierge.js`'s welcome-message personalization |
 | `materialSelection` | material `id` string | `Materials.jsx` via `useActiveSelection`'s `persistKey` | same, on next visit |
-| `pendingInquiryItem` | `{ id, name, number }` (same shape as `lastViewedItem` — `useConcierge.js`'s preselect effect only ever reads `.name`/`.number`) | `collection/[slug]/CollectionPageClient.jsx`'s `onInquire` (added 2026-09-07, write-only — direct `setPreference`, not the reactive hook, same convention as `lastViewedItem`'s writer), right before `router.push("/#concierge")` — carries the clicked item across the route boundary since the product page's own React state can't survive a full navigation to `/` | `AppShell.jsx`'s mount effect: reads it once, calls `setPreselectedItem`, then clears it (`setPreference(key, null)`) so it can't re-fire on a later plain visit to `/` |
+| `pendingInquiryItem` | `{ id, name, number }` (`useConcierge.js`'s preselect effect only ever reads `.name`/`.number`) | `collection/[slug]/CollectionPageClient.jsx`'s `onInquire` (added 2026-09-07, write-only — direct `setPreference`, not the reactive hook), right before `router.push("/#concierge")` — carries the clicked item across the route boundary since the product page's own React state can't survive a full navigation to `/` | `AppShell.jsx`'s mount effect: reads it once, calls `setPreselectedItem`, then clears it (`setPreference(key, null)`) so it can't re-fire on a later plain visit to `/` |
+| `lastViewedItem` | `{ id, name, number }` | `CollectionPage.jsx` (effect on `item.id`/`name`/`number`, direct `setPreference`) — removed 2026-09-28 in the copy pass, **restored end-to-end 2026-09-29 at owner direction** ("history to continue") | `header/MenuPanel.jsx`'s reactive `useLocalPreference` → the minimal "Continue — {name}" link rendered after the third menu row (with hover-revealed `×` dismiss), plus `hooks/useConcierge.js`'s welcome personalization (`curatorWelcomeWithItem`) |
 
 ---
 
@@ -126,25 +128,34 @@ call. A component that only ever *writes* (never reads back reactively) should c
 Builds Next.js metadata objects + schema.org JSON-LD. **No network calls**, no env vars.
 
 - **`SITE_CONFIG` (added 2026-09-07, replacing bare `BRAND`/`SITE_URL` constants)** — one
-  object grouping `brand`, `siteUrl`, `logoImage` (`/logo.png`), `defaultOgImage`
-  (`/image/gavv/gavv-06.jpg` — a real, existing landscape product photo, 2200×1556; picked
-  specifically because it's landscape — an earlier candidate, a portrait collection
-  photo, was checked and rejected for this exact reason, see the git history/session
-  notes if curious), `socials` (`instagram`/`linkedin`/`telegram` — all still
-  `*_placeholder` TODOs), `twitter.site` (still TODO), and `contact` (`whatsappUrl` TODO,
-  plus a real `addressLocality`/`addressCountry`: `"Tehran"`/`"IR"` — city/country level
-  only, not a full street address; see CLAUDE.md's Production placeholders). The
-  `socials` set was deliberately aligned to match `lib/socialLinks.js`'s real footer icon
-  row (Instagram/LinkedIn/Telegram) — it used to list Instagram/Telegram/**X** instead,
-  a different platform set than what's actually shown in the footer, for no real reason.
-  `twitter.site` stays separate (it's the Twitter *Card* meta tag, unrelated to `sameAs`).
+  object grouping `brand`, `siteUrl` (**`https://zaaddesign.com` since 2026-09-29 — the real
+  letterhead domain, owner decision, resolving the old `zaad.com` placeholder**; every
+  canonical URL/OG tag/sitemap/robots entry now derives from it), `logoImage` (`/logo.png`),
+  `defaultOgImage` (`/image/gavv/gavv-06.jpg` — a real, existing landscape product photo,
+  2200×1556; picked specifically because it's landscape — an earlier candidate, a portrait
+  collection photo, was checked and rejected for this exact reason, see the git
+  history/session notes if curious), `socials` (`instagram` — the only real handle;
+  `linkedin`/`telegram` commented out 2026-09-29 at owner direction so `sameAs` emits
+  Instagram only — uncomment when real handles are supplied), `twitter.site` (also commented
+  out 2026-09-29 — `buildMeta`'s `site:` becomes `undefined` and Next omits the tag), and
+  `contact` (`whatsappUrl` commented out 2026-09-29 along with `orgSchema.contactPoint`'s
+  `url:` line — the studio number is a landline extension, not confirmed WhatsApp-reachable;
+  plus the full real `PostalAddress` fields: `streetAddress`/`addressLocality`/
+  `addressCountry`/`postalCode`). The `socials` set was deliberately aligned to match
+  `lib/socialLinks.js`'s real footer icon row — it used to list Instagram/Telegram/**X**
+  instead, a different platform set than what's actually shown in the footer, for no real
+  reason. `twitter.site` stays separate (it's the Twitter *Card* meta tag, unrelated to
+  `sameAs`).
 - Imports `getServerLanguage` from `@/lib/i18n/server` to pick the locale, and both
   `en`/`fa` dictionary modules (`forGlance` needs the locale-correct `collection` array).
 - `COPY = { en: {…}, fa: {…} }` — per-route `*Desc` (meta description) fields rewritten
-  2026-09-07 to be more specific and fact-grounded (every concrete claim — 9,000 sqm, 150
-  specialists, 0% quarry refuse, stone sourced under 200km, 22mm timber fronts — traces
-  back to real, already-published stats in `lib/i18n/en.js`'s
-  `aboutStats`/`sustainabilityStats`/`aboutIntro`, not invented copy). The `*Title` fields
+  2026-09-07 to be more specific and fact-grounded (the 9,000 sqm / 150 specialists /
+  8 designers claims trace back to the real, already-published facts in `lib/i18n/en.js`'s
+  `aboutStats` and the `about` `aboutSections` entry's own copy — `aboutIntro` was deleted
+  2026-09-29 as an unused duplicate; note the *fabricated* quarry/stonemason claims that used to
+  live here were purged on 2026-09-29 when the owner confirmed the CSR content was made
+  up; `sustainabilityDesc` now makes only claims from the owner's approved text, and no
+  invented stat key feeds it). The `*Title` fields
   are deliberately kept **shorter than the `*Desc` fields** — they build the literal
   browser-tab `<title>` text (see `buildMeta` below), where a long, multi-clause title
   reads as crowded/truncated in a tab; the fuller descriptive language lives in `*Desc`
@@ -168,8 +179,10 @@ Builds Next.js metadata objects + schema.org JSON-LD. **No network calls**, no e
   home page itself, which deliberately keeps brand-first (`"ZAAD | {homeTitle}"` — the
   one page where leading with the brand name is the correct, standard convention).
 - `export class MetadataService`:
-  - `static get orgSchema` — `Organization` JSON-LD, now including a `PostalAddress`
-    (city/country only) alongside the still-placeholder `sameAs`/`contactPoint`.
+  - `static get orgSchema` — `Organization` JSON-LD, now including the full real
+    `PostalAddress` (street/city/country/postalCode since 2026-09-27), with `sameAs`
+    shipping Instagram only and `contactPoint`'s placeholder deep-link `url` commented
+    out (2026-09-29 — see SITE_CONFIG above).
   - `static async forHome()` → `{meta, schemas}` (`WebSite` only — the dead
     `SearchAction` was removed 2026-09-07, see CLAUDE.md's Known issues).
   - `static async forCollection(item)` → `Product` + a 3-level `BreadcrumbList` (Home →
@@ -203,17 +216,20 @@ Builds Next.js metadata objects + schema.org JSON-LD. **No network calls**, no e
   alternate-language signal (i18n is cookie-only; no locale-prefixed routes). Inert, not
   actively harmful (search engines just ignore a same-URL alternate) — a real fix needs
   locale-prefixed routing, out of scope for a metadata-only pass.
-- **TODO placeholders ship in metadata** (explicit user decision 2026-09-07, revisit when
-  real handles exist): `SITE_CONFIG.twitter.site`, `SITE_CONFIG.socials`
-  (Instagram/LinkedIn/Telegram — aligned to match `lib/socialLinks.js`'s real footer set
-  2026-09-07), `SITE_CONFIG.contact.whatsappUrl`, all feeding into
-  `MetadataService.orgSchema`.
+- **Placeholder handles no longer ship in metadata** (hidden 2026-09-29 at owner direction,
+  reversing the 2026-09-07 ship-them decision): `SITE_CONFIG.twitter.site`,
+  `SITE_CONFIG.socials`'s `linkedin`/`telegram` (Instagram — real — still ships in
+  `sameAs`), and `SITE_CONFIG.contact.whatsappUrl` (plus `orgSchema.contactPoint`'s `url`)
+  are all commented out in source, one keystroke to restore once real handles exist. The
+  matching footer icon row renders the same three disabled (see `lib/socialLinks.js`).
 
 **Fixed 2026-09-07** (were tracked here as known issues; resolved, not just documented):
 every `image:` reference across `buildMeta` call sites (`forHome`, `simplePage` — the
 three House routes, `forGlance`) used to point at `/og/home.jpg`, a file that never
 existed under `public/`; `orgSchema.logo` pointed at `/logo.png`, also missing at the
-time. `public/logo.png` now exists (a 367×161 wordmark PNG) and is used for
+time. `public/logo.png` now exists (originally a placeholder 367×161 wordmark PNG;
+regenerated 2026-09-27 as an 880×217 raster of the real client-provided vector logo,
+`public/logo.svg` — see `src/app/README.md`'s icon/logo notes) and is used for
 `orgSchema.logo`; the OG/Twitter default image is `SITE_CONFIG.defaultOgImage`
 (`/image/gavv/gavv-06.jpg`, a real 2200×1556 landscape product photo — see the
 `SITE_CONFIG` entry above) rather than the wordmark, since a 367×161 logo makes a poor
@@ -338,7 +354,7 @@ automatically.
 ### Lookup functions
 - `t(key)` → string; falls back to English, then to the raw key.
 - `data(key)` → entry or `null`; used for arrays/objects (`collection`,
-  `advantageCards`, …). **`data("collection")` returns the already-localized array**
+  `materialSamples`, …). **`data("collection")` returns the already-localized array**
   (fa.js has its own full `collection` array).
 
 ### Removed / dead

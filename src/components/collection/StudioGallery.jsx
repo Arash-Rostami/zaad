@@ -17,6 +17,7 @@ import {
   RotateCw,
 } from "lucide-react";
 import { useLanguage } from "@/services/LanguageProvider";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
 import MaisonReveal from "../shared/MaisonReveal";
 
 const EASE_CUBIC = Object.freeze([0.16, 1, 0.3, 1]);
@@ -101,7 +102,6 @@ function StudioGallery({ item, lightbox }) {
 
   const itemId = item?.id;
   const images = Array.isArray(item?.images) ? item.images : EMPTY_ARRAY;
-  const imagesCount = images.length;
   const activeImage = images[activeImageIndex];
   const firstImage = images[0];
 
@@ -178,28 +178,23 @@ function StudioGallery({ item, lightbox }) {
     [show360, openLightbox],
   );
 
-  const digitFormatter = useMemo(
-    () => new Intl.NumberFormat(isFarsi ? "fa-IR" : "en-US"),
-    [isFarsi],
-  );
-
-  const captionText = useMemo(() => {
+  const captionTitle = useMemo(() => {
     const itemName = item?.name ?? "";
     if (show360) {
       return `${t("productSpin360Label")}: ${itemName}`;
     }
-    const currentCaption =
-      activeImage?.caption || `${itemName} ${t("productStudioLayoutFallback")}`;
-    return `${t("productStudioViewLabel")} ${digitFormatter.format(activeImageIndex + 1)} ${t("lightboxCounterOf")} ${digitFormatter.format(imagesCount)}: ${currentCaption}`;
+    return activeImage?.caption || `${itemName} ${t("productStudioLayoutFallback")}`;
   }, [
     show360,
     item?.name,
     t,
     activeImage?.caption,
-    activeImageIndex,
-    imagesCount,
-    digitFormatter,
   ]);
+
+  const captionText = useMemo(
+    () => wrapLatinRuns(captionTitle, isFarsi),
+    [captionTitle, isFarsi],
+  );
 
   const spinImageAnimate = useMemo(
     () => ({
@@ -294,7 +289,7 @@ function StudioGallery({ item, lightbox }) {
                 onClick={handlePrevClick}
                 aria-label={prevImageLabel}
                 data-touch-boost
-                className="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
+                className="absolute left-4 top-1/2 -translate-y-1/2 -translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-md bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
               >
                 <ChevronLeft className="w-4 h-4 text-ink stroke-[1]" />
               </button>
@@ -303,7 +298,7 @@ function StudioGallery({ item, lightbox }) {
                 onClick={handleNextClick}
                 aria-label={nextImageLabel}
                 data-touch-boost
-                className="absolute right-4 top-1/2 -translate-y-1/2 translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
+                className="absolute right-4 top-1/2 -translate-y-1/2 translate-x-1.5 flex items-center justify-center w-10 h-10 rounded-md bg-panel-glass backdrop-blur-sm border border-ink/10 cursor-pointer hover:border-accent/40 z-10 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:translate-x-0 focus-visible:opacity-100 focus-visible:translate-x-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [@media(hover:none)]:opacity-100 [@media(hover:none)]:translate-x-0"
               >
                 <ChevronRight className="w-4 h-4 text-ink stroke-[1]" />
               </button>
@@ -331,15 +326,11 @@ function StudioGallery({ item, lightbox }) {
               )}
             </button>
           )}
-
-          <div className="absolute top-4 left-4 bg-panel-frost border border-ink/10 px-3 py-1.5 font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-widest text-ink rounded-md select-none z-10 leading-none">
-            {t("productStudioArchiveIndex")}
-          </div>
         </div>
 
         <p
-          title={captionText}
-          className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-muted tracking-[0.15em] rtl:tracking-normal truncate select-none"
+          title={captionTitle}
+          className="font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-muted truncate select-none"
         >
           {captionText}
         </p>
@@ -381,7 +372,7 @@ function StudioGallery({ item, lightbox }) {
             />
             <div className="absolute inset-0 bg-foundation/70" />
             <RotateCw className="relative w-3.5 h-3.5 text-canvas" />
-            <span className="relative font-mono text-[length:calc(10px*var(--zaad-font-scale))] tracking-widest text-canvas uppercase">
+            <span className="relative font-mono text-[length:calc(10px*var(--zaad-font-scale))] text-canvas uppercase">
               {t("productSpin360Label")}
             </span>
             <span

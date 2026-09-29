@@ -4,21 +4,27 @@ import { fa } from "@/lib/i18n/fa";
 
 const SITE_CONFIG = {
     brand: "ZAAD",
-    siteUrl: "https://zaad.com",
+    siteUrl: "https://zaaddesign.com",
     logoImage: "/logo.png",
     defaultOgImage: "/image/gavv/gavv-06.jpg",
     socials: {
-        instagram: "https://instagram.com/zaad_placeholder", // TODO
-        linkedin:  "https://linkedin.com/company/zaad_placeholder", // TODO
-        telegram:  "https://t.me/zaad_placeholder", // TODO
+        instagram: "https://instagram.com/zaaddesignofficial",
+        // Hidden 2026-09-29 at owner direction until real handles are supplied — uncomment then:
+        // linkedin:  "https://linkedin.com/company/zaad_placeholder",
+        // telegram:  "https://t.me/zaad_placeholder",
     },
     twitter: {
-        site: "@zaad_x_placeholder", // TODO
+        // Hidden 2026-09-29 alongside the other placeholder handles — uncomment when an X handle exists:
+        // site: "@zaad_x_placeholder",
     },
     contact: {
-        whatsappUrl:     "https://wa.me/zaad_placeholder", // TODO
+        // Hidden 2026-09-29 at owner direction — the studio number (+98 21 75982, ext. 157) is a
+        // landline extension, not confirmed WhatsApp-reachable:
+        // whatsappUrl: "https://wa.me/zaad_placeholder",
+        streetAddress:   "Unit 13, 4th Floor, No. 1489, North Shariati St",
         addressLocality: "Tehran",
         addressCountry:  "IR",
+        postalCode:      "1941913415",
     },
 };
 
@@ -31,23 +37,23 @@ const COPY = {
         storyTitle:    "Origins & Philosophy",
         storyDesc:     "Born in the Land of Dorsa, ZAAD designs around quietude, spatial restraint, and structural permanence — harmonizing natural stone, eucalyptus, and functional engineering.",
         sustainabilityTitle: "Sustainability & Responsibility",
-        sustainabilityDesc:  "Sustainable luxury through endurance: 0% quarry refuse, stone sourced under 200km, salaried stonemason apprenticeships, and 22mm solid timber fronts.",
+        sustainabilityDesc:  "Sustainability through endurance: thoughtful design, careful material selection, waste-conscious production, and quality that is built to last.",
         glanceTitle:    "The Kitchen Collection",
-        glanceDesc:     "Architectural lookbook for GÁVV, ZIVV, RÁKH, and VAAR: dual-island layouts, Gaggenau appliance integration, Salice pocket hardware, and Kesseböhmer mechanisms.",
+        glanceDesc:     "Architectural lookbook for GÁVV, ZIVV, RÁKH, and VAAR: island layouts, Gaggenau appliance integration, Salice hardware, and Kesseböhmer mechanisms.",
         collectionsCrumb: "Collections",
         homeCrumb: "Home",
     },
     fa: {
         homeTitle:     "معماری لوکس آشپزخانه",
-        homeDesc:      "آتلیه طراحی و ساخت زاد؛ طراح و مجری آشپزخانه‌های کالبدی، جزیره‌های سنگی مونولیت، کمدهای اختصاصی و معماری داخلی لوکس. ریشه در اقلیم درسا با کارخانه‌ی ۹۰۰۰ مترمربعی.",
+        homeDesc:      "آتلیه طراحی و ساخت زااد؛ طراح و مجری آشپزخانه‌های کالبدی، جزیره‌های سنگی مونولیت، کمدهای اختصاصی و معماری داخلی لوکس. ریشه در سرزمین درسا با کارخانه‌ی ۹۰۰۰ مترمربعی.",
         aboutTitle:    "درباره آتلیه",
-        aboutDesc:     "پشت صحنه زاد: کارخانه ۹۰۰۰ مترمربعی، ۱۵۰ متخصص چیره‌دست و تیم ۸ نفره طراحان و معماران برای خلق آشپزخانه‌ها و فضاهای داخلی پایدار و لوکس.",
+        aboutDesc:     "پشت صحنه زااد: کارخانه ۹۰۰۰ مترمربعی، ۱۵۰ متخصص چیره‌دست و تیم ۸ نفره طراحان و معماران برای خلق آشپزخانه‌ها و فضاهای داخلی پایدار و لوکس.",
         storyTitle:    "خاستگاه و فلسفه",
-        storyDesc:     "رویش در اقلیم درسا؛ زاد زیبایی را در هماهنگی کارایی، جزئیات دست‌ساز، سنگ طبیعی و چوب اکالیپتوس به مقیاس خانه می‌آورد.",
+        storyDesc:     "رویش در سرزمین درسا؛ زااد زیبایی را در هماهنگی کارایی، جزئیات دست‌ساز، سنگ طبیعی و چوب اکالیپتوس به مقیاس خانه می‌آورد.",
         sustainabilityTitle: "پایداری و مسئولیت",
-        sustainabilityDesc:  "پایداری از طریق کیفیت ماندگار: صفر درصد پسماند معدن، تأمین سنگ در شعاع کمتر از ۲۰۰ کیلومتری و کارگاه‌های آموزشی احیای هنر سنگ‌تراشی دستی در تهران.",
+        sustainabilityDesc:  "پایداری از طریق کیفیت ماندگار: طراحی سنجیده، انتخاب دقیق مواد اولیه، کاهش اتلاف در تولید و کیفیتی که برای ماندن ساخته می‌شود.",
         glanceTitle:    "مجموعه آشپزخانه",
-        glanceDesc:     "کاتالوگ جامع مجموعه‌های GÁVV، ZIVV، RÁKH و VAAR: جزئیات جزیره، یراق‌آلات پاکتی Salice، تجهیزات توکار Gaggenau و ساختارهای ذخیره‌سازی Kesseböhmer.",
+        glanceDesc:     "کاتالوگ جامع مجموعه‌های GÁVV، ZIVV، RÁKH و VAAR: جزئیات جزیره، یراق‌آلات Salice، تجهیزات توکار Gaggenau و ساختارهای ذخیره‌سازی Kesseböhmer.",
         collectionsCrumb: "مجموعه‌ها",
         homeCrumb: "خانه",
     },
@@ -150,15 +156,17 @@ export class MetadataService {
             logo:  `${SITE_CONFIG.siteUrl}${SITE_CONFIG.logoImage}`,
             address: {
                 "@type": "PostalAddress",
+                streetAddress:   SITE_CONFIG.contact.streetAddress,
                 addressLocality: SITE_CONFIG.contact.addressLocality,
                 addressCountry:  SITE_CONFIG.contact.addressCountry,
+                postalCode:      SITE_CONFIG.contact.postalCode,
             },
             sameAs: Object.values(SITE_CONFIG.socials),
             contactPoint: {
                 "@type":           "ContactPoint",
                 contactType:       "customer service",
                 availableLanguage: ["English", "Persian"],
-                url:               SITE_CONFIG.contact.whatsappUrl,
+                // url:            SITE_CONFIG.contact.whatsappUrl, // hidden 2026-09-29 — see SITE_CONFIG.contact
             },
         };
     }
@@ -227,7 +235,7 @@ export class MetadataService {
             "@type":     "WebPage",
             name, url: canonical, inLanguage: lang,
             isPartOf:    { "@type": "WebSite", name: SITE_CONFIG.brand, url: SITE_CONFIG.siteUrl },
-            about:       "Environmental stewardship and corporate social responsibility of the ZAAD atelier",
+            about:       "The environmental stewardship and material sustainability of the ZAAD atelier",
         }));
     }
 

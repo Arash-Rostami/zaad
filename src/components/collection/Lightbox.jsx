@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useMemo } from "react";
 import SharedLightbox from "../shared/Lightbox";
+import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
 function Lightbox({ item, lightbox, onInquire, isRtl, t }) {
     const {
@@ -25,21 +26,17 @@ function Lightbox({ item, lightbox, onInquire, isRtl, t }) {
         onInquire?.(item);
     }, [closeLightbox, onInquire, item]);
 
-    const counterLabel = useMemo(() => {
-        if (!item?.images) return "";
-        return `${activeImageIndex + 1} ${t("lightboxCounterOf")} ${item.images.length}`;
-    }, [activeImageIndex, item?.images, t]);
-
     const footerPerspective = useMemo(() => {
         return t("lightboxEnlargedPerspective");
     }, [t]);
 
     const footerSubtitle = useMemo(() => {
-        return (
+        return wrapLatinRuns(
             item?.images?.[activeImageIndex]?.caption ||
-            t("lightboxPerspectiveViewFallback")
+                t("lightboxPerspectiveViewFallback"),
+            isRtl,
         );
-    }, [item?.images, activeImageIndex, t]);
+    }, [item?.images, activeImageIndex, t, isRtl]);
 
     const footerBadge = useMemo(() => {
         return t("lightboxMuseumSpecimenCommission");
@@ -72,7 +69,6 @@ function Lightbox({ item, lightbox, onInquire, isRtl, t }) {
             onNext={goNextWrapped}
             archiveNumber={item.number}
             itemName={item.name}
-            counterLabel={counterLabel}
             footerTitle={item.name}
             footerPerspective={footerPerspective}
             footerSubtitle={footerSubtitle}

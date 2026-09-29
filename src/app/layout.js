@@ -10,41 +10,21 @@ import MotionRoot from "@/components/shared/MotionRoot";
 import { MetadataService } from "@/services/MetadataService";
 import JsonLd from "@/components/shared/JsonLd";
 
-const playfair = localFont({
-  src: "../fonts/PlayfairDisplay-Variable.woff2",
-  weight: "400 900",
-  style: "normal",
-  variable: "--font-playfair",
-  display: "block",
-});
-
-const playfairItalic = localFont({
-  src: "../fonts/PlayfairDisplay-Italic-Variable.woff2",
-  weight: "400 900",
-  style: "italic",
-  variable: "--font-playfair-italic",
-  display: "block",
-});
-
-const inter = localFont({
-  src: "../fonts/Inter-Variable.woff2",
-  weight: "100 900",
-  style: "normal",
-  variable: "--font-inter",
-  display: "block",
-});
-
-const jetbrainsMono = localFont({
-  src: "../fonts/JetBrainsMono-Variable.woff2",
-  weight: "100 800",
-  style: "normal",
-  variable: "--font-jetbrains",
+const fractulAlt = localFont({
+  src: [
+    { path: "../fonts/FractulAlt-Light.woff2", weight: "300", style: "normal" },
+    { path: "../fonts/FractulAlt-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/FractulAlt-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/FractulAlt-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/FractulAlt-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-fractulalt",
   display: "block",
   preload: false,
 });
 
 export const metadata = {
-  metadataBase: new URL("https://zaad.com"),
+  metadataBase: new URL("https://zaaddesign.com"),
   authors: [{ name: "Arash Rostami", url: "https://persolbs.com" }],
 };
 
@@ -62,7 +42,7 @@ export default async function RootLayout({ children }) {
     <html
       lang={initialLanguage}
       dir={initialLanguage === "fa" ? "rtl" : "ltr"}
-      className={`${playfair.variable} ${playfairItalic.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${fractulAlt.variable}`}
       suppressHydrationWarning
     >
       <body
@@ -93,7 +73,7 @@ export default async function RootLayout({ children }) {
             />
             <link
               rel="preload"
-              href="/fonts/Dorsa-Black.otf"
+              href="/fonts/Dorsa-Bold.otf"
               as="font"
               type="font/otf"
               crossOrigin="anonymous"
@@ -101,7 +81,7 @@ export default async function RootLayout({ children }) {
           </>
         )}
         <JsonLd schemas={[MetadataService.orgSchema]} />
-        <InitialLoader />
+        <InitialLoader isFarsi={initialLanguage === "fa"} />
         <CustomCursor />
         <LanguageProvider initialLanguage={initialLanguage}>
           <MotionRoot>{children}</MotionRoot>

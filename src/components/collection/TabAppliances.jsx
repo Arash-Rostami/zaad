@@ -38,7 +38,7 @@ const PartnersSection = memo(function PartnersSection({ partners, t, isFarsi }) 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-panel-glass border border-ink/5 p-6 rounded-2xl shadow-ambient text-xs">
             {partnerRows.map(({ label, value }) => (
                 <div key={label} className="space-y-1">
-                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-muted block uppercase tracking-wider">
+                    <span className="text-[length:calc(11px*var(--zaad-font-scale))] font-mono text-muted block uppercase">
                         {label}
                     </span>
                     <strong className="text-[length:calc(11px*var(--zaad-font-scale))] text-ink uppercase font-mono block">
@@ -77,7 +77,7 @@ const ApplianceCard = memo(function ApplianceCard({ app, index, isFarsi, ratingL
                         {category}
                     </span>
                 </div>
-                <h5 className="font-serif text-sm font-semibold text-ink">
+                <h5 className="font-serif text-lg font-light text-ink">
                     {name}
                 </h5>
                 <ul className="list-disc list-inside space-y-1.5 text-xs text-muted ps-1 font-light leading-relaxed">
@@ -91,7 +91,7 @@ const ApplianceCard = memo(function ApplianceCard({ app, index, isFarsi, ratingL
                     {ratingLabel}
                 </span>
                 <span className="text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-mono font-bold text-accent">
-                    {gaggenauRating}
+                    {wrapLatinRuns(gaggenauRating, isFarsi)}
                 </span>
             </div>
         </div>
@@ -113,7 +113,7 @@ const AccessoryCard = memo(function AccessoryCard({ acc, index, isFarsi }) {
 
     return (
         <div className="space-y-2">
-            <h6 className="font-mono text-[length:calc(11px*var(--zaad-font-scale))] font-bold text-ink uppercase">
+            <h6 className="font-serif text-lg font-light text-ink uppercase">
                 {name}
             </h6>
             <div className="text-[length:calc(11px*var(--zaad-font-scale))] bg-surface-alt/30 p-3 rounded-lg border border-ink/5">
@@ -157,7 +157,7 @@ function TabAppliances({ item, t, isFarsi }) {
 
             {hasAppliances && (
                 <div className="space-y-4">
-                    <span className="text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-mono tracking-[0.2em] text-accent uppercase block">
+                    <span className="text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-mono text-accent uppercase block">
                         {gaggenauSpecificsTitle}
                     </span>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -177,8 +177,8 @@ function TabAppliances({ item, t, isFarsi }) {
 
             {hasAccessories && (
                 <div className="bg-panel-glass p-6 rounded-2xl border border-ink/5 space-y-4 mt-8">
-                    <span className="text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-mono tracking-widest text-accent block uppercase">
-                        {kessebohmerTitle}
+                    <span className="text-[length:max(9px,calc(10px*var(--zaad-font-scale)))] font-mono text-accent block uppercase">
+                        {wrapLatinRuns(kessebohmerTitle, isFarsi)}
                     </span>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {accessoriesDetail.map((acc, aIdx) => (

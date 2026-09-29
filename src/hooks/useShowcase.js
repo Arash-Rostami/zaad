@@ -10,7 +10,7 @@ export default function useShowcase() {
 
   const [selectedItem, setSelectedItem] = useState(() => collection[0]);
   const [viewMode, setViewMode] = useState("360");
-  const [isSpecsExpanded, setIsSpecsExpanded] = useState(false);
+  const [isSpecsExpanded, setIsSpecsExpanded] = useState(true);
   const [zoomCoords, setZoomCoords] = useState({ x: 50, y: 50 });
   const [isZooming, setIsZooming] = useState(false);
   const zoomCoordsRef = useRef({ x: 50, y: 50 });

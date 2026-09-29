@@ -157,7 +157,7 @@ const {
 } = useShowroomNav();
 ```
 
-- `activeTab`: `"showroom"` (the only value ever set since 2026-09-07 — the Catalogue card no longer sets a `"pdf"` tab, it calls `MenuPanel.jsx`'s `onBlueprint` which opens `/showcase/index.html` directly; see the note further down)
+- `activeTab`: `"showroom"` (the only value ever set since 2026-09-07 — the Catalogue card no longer sets a `"pdf"` tab, it calls `MenuPanel.jsx`'s `onBlueprint` which opens `/showcase/index.html` directly; see the note further down). **No live reader since 2026-09-28** — the Header→MenuPanel `activeTab` pass-through was removed with the menu's JourneyIndex row, and AppShell stopped destructuring it; the state itself stays because `setActiveTab`'s and `handleScrollToSection`'s internal `setActiveTabRaw("showroom")` + product-clear side effects still matter
 - `selectedProduct`: a full collection item object or `null`
 - `handleScrollToSection(sectionId)`: smooth-scrolls within the showroom tab
 - `handleInquireItem(item)`: pre-fills the concierge form with the selected item and scrolls to the concierge section
@@ -174,7 +174,7 @@ const {
   selectedItem, selectItem,
   handleNextImage, handlePrevImage,
   viewMode, setViewMode,
-  isSpecsExpanded, toggleSpecs,
+  isSpecsExpanded, toggleSpecs,   // expanded by default (2026-09-28, user direction)
   zoomCoords, isZooming, setIsZooming,
   handleMacroMouseMove, handleMacroTouchMove,
   // …all useLightbox fields spread in
@@ -292,7 +292,9 @@ live in `src/services/README.md`'s `PreferenceService.js` section — read that 
 const [value, update] = useLocalPreference(key, fallback);
 ```
 
-- **Used by:** `header/MenuPanel.jsx` (`lastViewedItem`, for the "Continue Browsing" link)
+- **Used by:** `header/MenuPanel.jsx` (`lastViewedItem` — the menu's "Continue" link,
+  restored 2026-09-29 at owner direction after the 2026-09-28 copy-pass removal; the link
+  itself now lives in `MenuPanel.jsx` after the third row, not inside `SpecimenGrid`).
 
 ---
 
@@ -423,26 +425,25 @@ const {
   the latter two are real dependencies, harmless to add since the effect's own
   `handledPreselectRef.current === preselectedItem` guard bails out on any re-fire where
   `preselectedItem` itself hasn't actually changed.
-- **Welcome message is personalized when relevant (added 2026-09-06).** `buildWelcomeContent`
-  (a `useCallback` keyed on `[t]`) reads `preselectedItemRef.current` (updated every
-  render, deliberately not a dependency) and, if there is **no** preselected item and
-  `PreferenceService.getPreference("lastViewedItem")` returns something, returns
-  `t("curatorWelcomeWithItem")` (`{name}` replaced) instead of the plain
-  `t("curatorWelcome")`. The welcome-reset effect's dependency array is `[language,
+- **Welcome message (personalization restored 2026-09-29).** `buildWelcomeContent`
+  (a `useCallback` keyed on `[t]`) personalizes from
+  `PreferenceService.getPreference("lastViewedItem")`
+  (`t("curatorWelcomeWithItem")`, `{name}` replaced) when no item is preselected, else
+  returns `t("curatorWelcome")` — the same `lastViewedItem` chain the menu's Continue
+  link uses (removed 2026-09-28 in the copy pass, restored end-to-end 2026-09-29 at
+  owner direction; see `src/services/README.md`'s PreferenceService table). The
+  welcome-reset effect's dependency array stays `[language,
   buildWelcomeContent]` (not `[language, buildWelcomeContent, preselectedItem]`) —
   depending on `preselectedItem` would re-run this effect and **wipe the in-progress
   chat history** every time "Inquire" is clicked on a second item mid-session, which is
   the opposite of the separate `preselectedItem` effect above's job (append to history,
-  not reset it). `buildWelcomeContent` reading the ref instead of `preselectedItem`
-  directly is exactly what keeps `preselectedItem` correctly out of this effect's deps
-  without an eslint-disable comment. **The same reset also skips while a request is
+  not reset it). **The same reset also skips while a request is
   in flight (`requestInFlightRef.current`, added 2026-09-07)** — a language switch
   mid-conversation used to wipe `chatMessages` down to a single fresh welcome message
   unconditionally; if a reply was still in flight when that happened, it would land
   moments later and get appended onto that now-orphaned fresh chat — a non-sequitur
-  reply with the visitor's actual question gone. The mount-time fire (never in flight
-  yet) still runs and applies `lastViewedItem` personalization exactly as before; only a
-  genuine mid-flight language change is now deferred (silently skipped, not queued —
+  reply with the visitor's actual question gone. Only a
+  genuine mid-flight language change is deferred (silently skipped, not queued —
   the conversation the visitor is already in just isn't reset out from under them).
 - **Used by:** `Concierge.jsx`
 
@@ -516,8 +517,9 @@ useLenisScroll();
   wired directly in `MenuPanel.jsx`'s `onBlueprint` — `window.open("/showcase/index.html")`
   after closing the menu — so the hook no longer special-cases `"pdf"`; callers only ever
   pass `"showroom"` to `setActiveTab` again (the hook itself does no validation — it just
-  stores the value and clears the selection) and `header/SystemPortals.jsx`'s Catalogue card renders
-  `isActive={false}` since the catalogue is an external page, never an active tab.)
+  stores the value and clears the selection). The Catalogue card itself moved from
+  `header/SystemPortals.jsx` to `header/UtilityStrip.jsx` in the 2026-09-27 menu-panel
+  restructure (see `src/components/README.md`) — the click wiring is unchanged, just relocated.)
 - `useShowcase.selectItem` resets `activeImageIndex` to 0 and forces `viewMode = "360"`
   (the default view — see `showcase/ImageViewer.jsx` in `src/components/README.md`), same
   as the hook's own initial state.

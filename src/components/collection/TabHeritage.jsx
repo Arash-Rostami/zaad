@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from "react";
 import { ShieldCheck, Sparkles } from "lucide-react";
+import wrapBrandNames from "@/lib/wrapBrandNames";
 
 const DEFAULT_TRANSLATE = (key) => key;
 
@@ -17,11 +18,11 @@ const HERITAGE_PILLARS = Object.freeze([
 const PillarCard = memo(function PillarCard({ title, description }) {
     return (
         <div className="space-y-1.5 p-5 bg-surface-alt/20 rounded-xl">
-            <h5 className="font-mono text-[length:calc(11px*var(--zaad-font-scale))] font-bold text-accent uppercase">
+            <h5 className="font-serif text-lg font-light text-ink uppercase">
                 {title}
             </h5>
-            <p className="text-muted leading-relaxed font-light rtl:text-justify">
-                {description}
+            <p className="text-muted leading-relaxed font-light">
+                {wrapBrandNames(description)}
             </p>
         </div>
     );
@@ -54,15 +55,15 @@ function TabHeritage({ t }) {
             <div className="max-w-3xl">
                 <div className="flex items-center space-x-2 mb-4">
                     <Sparkles className="w-4 h-4 text-accent" />
-                    <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono tracking-widest text-accent uppercase font-semibold">
+                    <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono text-accent uppercase font-semibold">
                         {craftSeal}
                     </span>
                 </div>
-                <h4 className="font-serif text-2xl font-light text-headline leading-snug mb-4">
+                <h4 className="font-serif text-lg font-light text-ink leading-snug mb-4">
                     {architecturalHonesty}
                 </h4>
-                <p className="text-xs sm:text-sm text-muted leading-relaxed font-light mb-6 rtl:text-justify">
-                    {heritageIntro}
+                <p className="text-xs sm:text-sm text-muted leading-relaxed font-light mb-6">
+                    {wrapBrandNames(heritageIntro)}
                 </p>
             </div>
 
@@ -76,7 +77,7 @@ function TabHeritage({ t }) {
                 ))}
             </div>
 
-            <div className="flex items-center space-x-3 text-[length:calc(11px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono tracking-widest text-accent justify-center pt-6">
+            <div className="flex items-center space-x-3 text-[length:calc(11px*var(--zaad-font-scale))] rtl:text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-accent justify-center pt-6">
                 <ShieldCheck className="w-4 h-4" />
                 <span>{certificateOfProvenance}</span>
             </div>
