@@ -356,11 +356,6 @@ function Vision({ utensilImages = [] }) {
 
                     <div className="lg:col-span-7 lg:col-start-6 flex flex-col justify-center text-left rtl:text-right">
                         <div ref={textColRef}>
-                            <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-                                <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
-                                    {t("manifestoBadge")}
-                                </span>
-                            </MaisonReveal>
                             <MaisonReveal variant="lines" delay={0.3} threshold={0.01}>
                                 <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle">
                                     {t("storyTitle")}

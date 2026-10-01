@@ -191,12 +191,7 @@ export function CrossLinks({ siblings }) {
   return (
     <section className="relative px-6 sm:px-12 section-y border-t border-ink/10">
       <div className="max-w-7xl mx-auto">
-        <MaisonReveal variant="unveil" delay={0.1} threshold={0.01}>
-          <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1 text-center">
-            {t("crossLinkHeading")}
-          </span>
-        </MaisonReveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-12 md:mt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {siblings.map((s, i) => (
             <MaisonReveal
               key={s.href}
@@ -398,7 +393,7 @@ export function ChapterHero({
             initial={{ opacity: 0, y: 36 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-serif tracking-tight leading-[1.12] text-ink font-light max-w-xl text-glow-subtle"
+            className="text-3xl sm:text-4xl md:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light max-w-xl text-glow-subtle"
           >
             {heroTitle}{" "}
             {heroTitleAccent && (

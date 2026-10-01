@@ -39,7 +39,6 @@ function SustainabilityResponsibilityChapter() {
     return (
         <HouseChapterShell
             heroTitle={t("sustainabilityResponsibilityHeroTitle")}
-            heroIntro={t("sustainabilityResponsibilityHeroIntro")}
             heroImage={HERO_IMAGE_URL}
             heroImageAlt={t("sustainabilityResponsibilityHeroAlt")}
             editorialContent={editorialContent}

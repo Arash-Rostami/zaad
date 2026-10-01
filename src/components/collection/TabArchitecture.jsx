@@ -88,7 +88,7 @@ const SpecCard = memo(function SpecCard({
                                 className="flex items-center space-x-1.5 p-2 bg-panel/60 dark:bg-panel/5 rounded border border-ink/5"
                             >
                                 <span className="text-accent">▪</span>
-                                <span title={raw} className="truncate">
+                                <span title={raw} className="leading-relaxed">
                                     {wrapped}
                                 </span>
                             </div>
@@ -181,7 +181,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                                     <span className="text-accent font-bold text-[length:max(9px,calc(9px*var(--zaad-font-scale)))] shrink-0 uppercase">
                                         {wrappedKey}
                                     </span>
-                                    <span title={name} className="text-muted truncate text-end">
+                                    <span title={name} className="text-muted text-end leading-relaxed">
                                         {wrappedName}
                                     </span>
                                 </div>
@@ -226,7 +226,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
                                 className="flex items-center space-x-1.5 p-2 bg-panel/60 dark:bg-panel/5 rounded border border-ink/5"
                             >
                                 <span className="text-accent">▪</span>
-                                <span title={s} className="truncate">
+                                <span title={s} className="leading-relaxed">
                                     {wrapLatinRuns(s, isFarsi)}
                                 </span>
                             </div>

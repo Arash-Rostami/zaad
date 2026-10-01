@@ -86,14 +86,6 @@ function Footer({ onScrollToSection, setActiveTab, onSelectProduct }) {
                 </li>
                 <li>
                   <button
-                    onClick={() => handleSection("vision")}
-                    className="hover:text-canvas transition-colors duration-700 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-canvas cursor-pointer text-left rtl:text-right"
-                  >
-                    {t("manifestoBadge")}
-                  </button>
-                </li>
-                <li>
-                  <button
                     onClick={() => handleSection("collection")}
                     className="hover:text-canvas transition-colors duration-700 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-canvas cursor-pointer text-left rtl:text-right"
                   >

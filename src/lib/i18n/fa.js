@@ -43,17 +43,14 @@ export const fa = {
     { value: "۱۵۰", label: "نیروی متخصص" },
     { value: "۸", label: "طراح و معمار" },
   ],
-  crossLinkHeading: "ادامه در خانه‌ی زااد",
-  crossLinkAbout: "آتلیه، تیم و رویکردی که هر پروژه‌ی زااد را شکل می‌دهد.",
-  crossLinkStoryValue: "نگاه و ارزش‌هایی که در پسِ هر فضای زااد نهفته‌اند.",
-  crossLinkSustainabilityResponsibility: "تعهد زااد در قبال متریال و انسان‌هایی که آن را خلق می‌کنند.",
+  crossLinkAbout: "آتلیه، تیم و رویکرد.",
+  crossLinkStoryValue: "نگاه و ارزش‌ها.",
+  crossLinkSustainabilityResponsibility: "تعهد به متریال و انسان.",
   crossLinkReadMore: "مطالعه بیشتر",
   aboutHeroAlt: "آتلیه‌ی طراحی زااد — معماری داخلی سنجیده",
   storyValueHeroTitle: "ارزش های زااد",
   storyValueHeroAlt: "معماری داخلی زااد — روایت و ارزش در یک قاب",
   sustainabilityResponsibilityHeroTitle: "پایداری مواد و محصول در چرخه عمر انسان",
-  sustainabilityResponsibilityHeroIntro:
-      "زااد برندی در حوزه‌ی طراحی و ساخت فضاهای داخلی لوکس است؛ برندی که با تکیه بر تخصص در طراحی آشپزخانه، کمد و فضاهای داخلی، نگاه درسا به کیفیت و ظرافت را وارد مقیاس خانه می‌کند. پشت هر پروژه در زااد، کارخانه‌ای مجهز با ۹۰۰۰ مترمربع فضای تولید، ۱۵۰ نیروی متخصص، تیمی ۸ نفره از طراحان و معماران داخلی و شبکه‌ای از شرکای تخصصی قرار دارد که ایده را از طراحی تا ساخت و اجرا همراهی می‌کنند. این ساختار به زااد امکان می‌دهد میان زیبایی، عملکرد، دقت اجرایی و کیفیت نهایی، پیوندی واقعی برقرار کند.",
   sustainabilityResponsibilityHeroAlt: "آتلیه‌ی زااد — متریال و دست‌هایی که آن‌ها را شکل می‌دهند",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────
@@ -67,7 +64,6 @@ export const fa = {
   heroPlayVideo: "پخش ویدیو",
 
   // ─── STORY / MANIFESTO ─────────────────────────────────────────────────────
-  manifestoBadge: "نگاه ما",
   storyUtensilAlt: "تجهیزات دقیق و یکپارچه‌ی مجموعه های زااد",
   storyFrameLabel: "نمایش قاب {index} از {total}",
   storySpecialistsCount: "۱۵۰",
@@ -102,7 +98,7 @@ export const fa = {
   showcaseFinishDetails: "جزئیات پرداخت سطح",
   showcaseZAADWeight: "وزن خالص ZAAD",
   showcaseCuratedDelivery: "تخمین زمان تحویل ویژه",
-  showcasePrimaryMaterials: "متریال‌های پایه‌ی تشکیل‌دهنده",
+  showcasePrimaryMaterials: "متریال‌های پایه",
   showcaseCatalogueText:
       "توصیفات فنی کامل و جزئیات تجهیزات Gaggenau در کاتالوگ دیجیتال ما در دسترس است.",
   showcaseRevealDossier: "مشاهده در کاتالوگ دیجیتال",

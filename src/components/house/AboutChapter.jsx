@@ -40,7 +40,6 @@ function AboutChapter() {
         () => ({
             eyebrow: story?.category ?? "",
             title: story?.title ?? "",
-            intro: story?.summary ?? "",
             content: story?.content ?? "",
             stats: EMPTY_ARRAY,
         }),

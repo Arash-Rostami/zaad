@@ -201,7 +201,7 @@ function CollectionPanel({
                                         href={catalogueHref}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 transition-all duration-300 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer hover:shadow-md"
+                                        className="font-mono text-[length:calc(10.5px*var(--zaad-font-scale))] bg-accent text-on-indicator hover:bg-ink dark:hover:bg-panel dark:hover:text-ink py-2.5 px-5 rounded-md uppercase font-medium flex items-center space-x-2 shrink-0 whitespace-nowrap transition-all duration-300 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer hover:shadow-md"
                                     >
                                         <span>{t("showcaseRevealDossier")}</span>
                                         <ArrowUpRight className="w-3.5 h-3.5 stroke-[1.8] rtl:-scale-x-100"/>

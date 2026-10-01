@@ -43,17 +43,14 @@ export const en = {
     { value: "150", label: "Skilled Specialists" },
     { value: "8", label: "Designers & Architects" },
   ],
-  crossLinkHeading: "Continue Through the House",
-  crossLinkAbout: "The atelier, the team and the process behind every ZAAD interior.",
-  crossLinkStoryValue: "The perspective and values behind every ZAAD interior.",
-  crossLinkSustainabilityResponsibility: "How ZAAD treats its materials — and the people behind them.",
+  crossLinkAbout: "The atelier, team and approach.",
+  crossLinkStoryValue: "Perspective and values.",
+  crossLinkSustainabilityResponsibility: "A commitment to materials and people.",
   crossLinkReadMore: "Read More",
   aboutHeroAlt: "ZAAD design atelier — considered interior architecture",
   storyValueHeroTitle: "ZAAD Values",
   storyValueHeroAlt: "ZAAD interior architecture — narrative and values in one frame",
   sustainabilityResponsibilityHeroTitle: "Material & Product Sustainability Across the Human Lifespan",
-  sustainabilityResponsibilityHeroIntro:
-      "ZAAD is a brand in the design and construction of luxury interior spaces. Drawing on its expertise in kitchens, wardrobes and interiors, it brings Dorsa's outlook on quality and elegance to the scale of the home. Behind every ZAAD project stands a fully equipped 9,000 sqm production facility, 150 specialist staff, an 8-person team of interior designers and architects, and a network of specialist partners who accompany an idea from design through to construction and installation. This structure allows ZAAD to forge a genuine bond between beauty, function, precision of execution and final quality.",
   sustainabilityResponsibilityHeroAlt: "ZAAD atelier — materials and the hands that shape them",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────
@@ -67,7 +64,6 @@ export const en = {
   heroPlayVideo: "Play film",
 
   // ─── STORY / MANIFESTO ─────────────────────────────────────────────────────
-  manifestoBadge: "Our Vision",
   storyUtensilAlt: "ZAAD kitchen collection fixtures — precision culinary hardware",
   storyFrameLabel: "View gallery frame {index} of {total}",
   storySpecialistsCount: "150",
@@ -102,7 +98,7 @@ export const en = {
   showcaseFinishDetails: "Finish Details",
   showcaseZAADWeight: "ZAAD Net Weight",
   showcaseCuratedDelivery: "Est. Delivery Time",
-  showcasePrimaryMaterials: "Primary Composition Materials",
+  showcasePrimaryMaterials: "Primary Materials",
   showcaseCatalogueText:
       "Complete technical descriptions and Gaggenau appliance details exist in our dedicated digital catalogue.",
   showcaseRevealDossier: "VIEW IN DIGITAL CATALOGUE",

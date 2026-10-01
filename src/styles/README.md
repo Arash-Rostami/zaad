@@ -1094,8 +1094,9 @@ string render (not markdown-parsed) and not one of the exceptions above, wrapped
 `collection/TabAppliances.jsx`'s `gaggenauIntegrationSpecifics` eyebrow, and
 `house/ChapterPieces.jsx`'s `CrossLinks` `{s.teaser}` (the
 single shared render site for `crossLinkAbout`/`crossLinkStoryValue`/
-`crossLinkSustainabilityResponsibility`, each a one-sentence cross-link teaser used across all
-three House pages). (`Footer.jsx`'s former `footerHouseDir` column heading was on this list;
+`crossLinkSustainabilityResponsibility`, each a cross-link teaser used across all
+three House pages — shortened 2026-10-01 from one sentence to a few words per owner direction, so
+both cards' copy reads as one line). (`Footer.jsx`'s former `footerHouseDir` column heading was on this list;
 the key is deleted from both dictionaries, and the heading that briefly replaced it
 (`menuJourneyIndex`) was itself deleted with the whole heading block in the 2026-09-28
 copy-replacement pass — the column's list survives without any heading.)
