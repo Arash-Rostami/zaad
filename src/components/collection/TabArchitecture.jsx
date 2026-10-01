@@ -41,7 +41,7 @@ const SpecCard = memo(function SpecCard({
     const hasSpecs = specs.length > 0;
 
     return (
-        <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col justify-between">
+        <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col md:grid md:grid-rows-subgrid md:row-span-2 md:gap-8">
             <div>
                 <div className="flex items-center space-x-2 mb-4">
                     <span className="w-1.5 h-1.5 bg-accent rounded-full" />
@@ -77,7 +77,7 @@ const SpecCard = memo(function SpecCard({
             </div>
 
             {hasSpecs && (
-                <div className="mt-8 border-t border-ink/10 pt-6">
+                <div className="mt-8 md:mt-0 border-t border-ink/10 pt-6">
                     <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono text-muted block uppercase mb-3">
                         {listLabel}
                     </span>
@@ -152,7 +152,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
     const hasSpecs = specs.length > 0;
 
     return (
-        <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col justify-between">
+        <div className="bg-panel-glass p-6 sm:p-8 rounded-2xl border border-ink/5 flex flex-col md:grid md:grid-rows-subgrid md:row-span-2 md:gap-8">
             <div>
                 <div className="flex items-center space-x-2 mb-4">
                     <span className="w-1.5 h-1.5 bg-accent rounded-full" />
@@ -215,7 +215,7 @@ const TallUnitsCard = memo(function TallUnitsCard({ tallUnits, t, isFarsi }) {
             </div>
 
             {hasSpecs && (
-                <div className="mt-8 border-t border-ink/10 pt-6">
+                <div className="mt-8 md:mt-0 border-t border-ink/10 pt-6">
                     <span className="text-[length:max(9px,calc(9.5px*var(--zaad-font-scale)))] font-mono text-muted block uppercase mb-3">
                         {t("housingStructuralComponents")}
                     </span>
@@ -245,7 +245,7 @@ function TabArchitecture({ item, t, isFarsi }) {
     const tallUnits = item.tallUnits;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-[auto_1fr] gap-8 items-stretch">
             {islandSpecs && (
                 <SpecCard
                     title={t("coreIslandGeometries")}

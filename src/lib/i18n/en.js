@@ -50,7 +50,7 @@ export const en = {
   aboutHeroAlt: "ZAAD design atelier — considered interior architecture",
   storyValueHeroTitle: "ZAAD Values",
   storyValueHeroAlt: "ZAAD interior architecture — narrative and values in one frame",
-  sustainabilityResponsibilityHeroTitle: "Material & Product Sustainability Across the Human Lifespan",
+  sustainabilityResponsibilityHeroTitle: "Material & Product Sustainability",
   sustainabilityResponsibilityHeroAlt: "ZAAD atelier — materials and the hands that shape them",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────

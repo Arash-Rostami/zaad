@@ -50,7 +50,7 @@ export const fa = {
   aboutHeroAlt: "آتلیه‌ی طراحی زااد — معماری داخلی سنجیده",
   storyValueHeroTitle: "ارزش های زااد",
   storyValueHeroAlt: "معماری داخلی زااد — روایت و ارزش در یک قاب",
-  sustainabilityResponsibilityHeroTitle: "پایداری مواد و محصول در چرخه عمر انسان",
+  sustainabilityResponsibilityHeroTitle: "پایداری مواد و محصول",
   sustainabilityResponsibilityHeroAlt: "آتلیه‌ی زااد — متریال و دست‌هایی که آن‌ها را شکل می‌دهند",
 
   // ─── HERO ──────────────────────────────────────────────────────────────────

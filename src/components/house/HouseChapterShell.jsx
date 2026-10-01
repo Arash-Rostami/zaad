@@ -1,5 +1,4 @@
 import React from "react";
-import MaisonReveal from "../shared/MaisonReveal";
 import { ChapterHero, EditorialBlock, StatGrid, CrossLinks, CallStrip } from "./ChapterPieces";
 
 function HouseChapterShell({
@@ -29,11 +28,6 @@ function HouseChapterShell({
                 <div className="absolute left-1/3 top-1/10 w-[700px] h-[700px] pattern-diamond-grid opacity-[0.22] dark:opacity-[0.08] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 <div className="absolute -right-1/4 bottom-1/10 w-[600px] h-[600px] pattern-diamond-grid opacity-[0.16] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <MaisonReveal variant="unveil" delay={0.1} threshold={0.01} className="max-w-3xl mx-auto mb-12 md:mb-16 text-center">
-                        <h2 className="text-2xl md:text-3xl font-serif text-ink tracking-tight font-light text-glow-subtle">
-                            {heroTitle}
-                        </h2>
-                    </MaisonReveal>
                     <EditorialBlock content={editorialContent} align="center" />
                 </div>
             </section>
