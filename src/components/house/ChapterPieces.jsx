@@ -40,48 +40,35 @@ const AMBIENT = (
   </div>
 );
 
-function parseEditorialBlocks(content) {
-  return content
-    .replace(/^\s*###\s+/, "")
-    .split(/\n###\s+/)
-    .filter(Boolean)
-    .map((b) => {
-      const nl = b.indexOf("\n");
-      const heading = (nl === -1 ? b : b.slice(0, nl)).trim();
-      const body = nl === -1 ? "" : b.slice(nl + 1).trim();
-      return { heading, body };
-    });
-}
-
 export function EditorialBlock({ content, align = "start" }) {
   const centered = align === "center";
-  const blocks = useMemo(() => parseEditorialBlocks(content), [content]);
+  const paragraphs = useMemo(
+    () =>
+      content
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean),
+    [content]
+  );
 
   return (
     <div
-      className={`space-y-12 md:space-y-16 max-w-3xl ${centered ? "mx-auto" : ""}`}
+      className={`space-y-10 md:space-y-12 max-w-3xl ${centered ? "mx-auto" : ""}`}
     >
-      {blocks.map((blk, i) => (
+      {paragraphs.map((paragraph, i) => (
         <MaisonReveal
           key={i}
           variant="slide-up-royal"
           delay={0.15 + i * 0.15}
           threshold={0.1}
         >
-          <article
-            className={centered ? "text-center" : "text-left rtl:text-right"}
+          <p
+            className={`text-base md:text-lg text-muted font-light leading-relaxed ${
+              centered ? "text-left rtl:text-right max-w-2xl mx-auto" : ""
+            }`}
           >
-            <span className="text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block mb-1">
-              {blk.heading}
-            </span>
-            <p
-              className={`text-base md:text-lg text-muted font-light leading-relaxed whitespace-pre-line ${
-                centered ? "text-left rtl:text-right max-w-2xl mx-auto" : ""
-              }`}
-            >
-              {blk.body}
-            </p>
-          </article>
+            {paragraph}
+          </p>
         </MaisonReveal>
       ))}
     </div>
@@ -370,13 +357,20 @@ export function ChapterHero({
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[88vh] pt-24 md:pt-32 pb-16 px-6 sm:px-12 flex flex-col justify-center overflow-hidden"
+      className="relative min-h-[88vh] lg:min-h-screen pt-24 md:pt-36 pb-16 flex flex-col justify-center overflow-hidden"
     >
       {AMBIENT}
-      <div className="relative max-w-7xl mx-auto w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      <div className="absolute inset-x-0 top-0 h-full pointer-events-none hidden lg:grid grid-cols-4 max-w-7xl mx-auto px-6 sm:px-12">
+        <div className="border-l border-ink/10 h-full w-[1px]"></div>
+        <div className="border-l border-ink/10 h-full w-[1px]"></div>
+        <div className="border-l border-ink/10 h-full w-[1px]"></div>
+        <div className="border-l border-ink/10 h-full w-[1px] border-r"></div>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto w-full z-10 grid grid-cols-1 lg:grid-cols-2 lg:items-stretch">
         <div
           ref={textColRef}
-          className="lg:col-span-6 flex flex-col items-start text-left rtl:text-right z-20"
+          className="order-2 lg:order-1 flex flex-col justify-center px-6 sm:px-12 lg:ps-12 lg:pe-10 xl:ps-20 z-20"
         >
           {heroEyebrow && (
             <motion.span
@@ -393,7 +387,7 @@ export function ChapterHero({
             initial={{ opacity: 0, y: 36 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light max-w-xl text-glow-subtle"
+            className="text-3xl sm:text-4xl md:text-5xl font-serif tracking-tight leading-[1.12] text-ink font-light max-w-xl text-glow-subtle text-left rtl:text-right"
           >
             {heroTitle}{" "}
             {heroTitleAccent && (
@@ -408,7 +402,7 @@ export function ChapterHero({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-              className="mt-8 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg rtl:max-w-xl leading-relaxed"
+              className="mt-8 text-sm sm:text-base md:text-lg text-muted font-light max-w-lg rtl:max-w-xl leading-relaxed text-left rtl:text-right"
             >
               {heroIntro}
             </motion.p>
@@ -418,7 +412,7 @@ export function ChapterHero({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-            className="mt-12"
+            className="mt-12 flex justify-start"
           >
             <MaisonButton
               variant="outline"
@@ -430,15 +424,12 @@ export function ChapterHero({
           </motion.div>
         </div>
 
-        <div
-          ref={mediaColRef}
-          className="lg:col-span-6 relative mt-12 lg:mt-0 z-10 w-full"
-        >
+        <div ref={mediaColRef} className="order-1 lg:order-2 lg:min-h-[72vh]">
           <motion.div
             initial={{ scale: 1.05, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
-            className="relative aspect-[4/5] w-full max-w-[520px] mx-auto overflow-hidden bg-surface-alt shadow-ambient border border-ink/10 lux-vignette rounded-md"
+            className="relative aspect-[4/5] w-full lg:aspect-auto lg:h-full overflow-hidden bg-surface-alt lux-vignette rounded-md mb-10 lg:mb-0"
           >
             {activeVideo ? (
               <motion.video
@@ -463,18 +454,19 @@ export function ChapterHero({
                 alt={heroImageAlt}
                 fill
                 priority
-                sizes="(min-width: 1024px) 520px, 90vw"
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover lux-ken-burns"
                 referrerPolicy="no-referrer"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foundation/70 via-foundation/15 to-transparent pointer-events-none" />
             {activeVideo && (
               <button
                 type="button"
                 onClick={togglePlaying}
                 aria-label={t(isPlaying ? "heroPauseVideo" : "heroPlayVideo")}
-                className="absolute top-6 end-6 z-10 flex items-center justify-center w-8 h-8 rounded-md bg-foundation/40 backdrop-blur-sm border border-canvas/30 text-canvas hover:border-canvas/60 hover:text-accent transition-colors duration-500 focus:outline-none focus-visible:border-accent cursor-pointer"
+                className="absolute bottom-6 start-6 flex items-center justify-center w-8 h-8 rounded-md border border-canvas/30 text-canvas hover:border-canvas/60 hover:text-accent transition-colors duration-500 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer"
+                data-touch-boost
               >
                 {isPlaying ? (
                   <Pause className="w-3 h-3" />

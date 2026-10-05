@@ -3,10 +3,10 @@ import { mutateInquiries } from "@/lib/inquiriesStore";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^[+\d][\d\s().-]{6,19}$/;
-const CONSULTATION_VALUES = new Set(["acquisition", "consultation", "visit"]);
 const APPOINTMENT_MODE_VALUES = new Set(["call", "audience"]);
 const APPOINTMENT_WINDOW_VALUES = new Set(["", "morning-1", "morning-2", "midday", "evening-1", "evening-2"]);
 const MAX_NAME_LENGTH = 100;
+const MAX_CONSULTATION_LENGTH = 100;
 const MAX_NOTE_LENGTH = 2000;
 
 function validateInquiry(body) {
@@ -18,7 +18,7 @@ function validateInquiry(body) {
     const email = typeof body.clientEmail === "string" ? body.clientEmail.trim() : "";
     const phone = typeof body.clientPhone === "string" ? body.clientPhone.trim() : "";
     const note = typeof body.additionalNote === "string" ? body.additionalNote.trim() : "";
-    const consultation = body.desiredConsultation;
+    const consultation = typeof body.desiredConsultation === "string" ? body.desiredConsultation.trim() : "";
     const appointmentMode = body.appointmentMode;
     const appointmentWindow = typeof body.appointmentWindow === "string" ? body.appointmentWindow : "";
 
@@ -47,7 +47,7 @@ function validateInquiry(body) {
     // src/app/README.md's /api/inquiry section) — name + phone are the only
     // hard requirements there; the manual form's stricter rules are unchanged.
     if (!fromChat) {
-        if (!CONSULTATION_VALUES.has(consultation)) {
+        if (!consultation || consultation.length > MAX_CONSULTATION_LENGTH) {
             errors.desiredConsultation = "formErrorConsultationInvalid";
             hasErrors = true;
         }
@@ -76,7 +76,7 @@ function validateInquiry(body) {
         errors,
         clean: {
             name, email, phone, note,
-            consultation: fromChat ? (CONSULTATION_VALUES.has(consultation) ? consultation : "consultation") : consultation,
+            consultation: fromChat ? "consultation" : consultation,
             appointmentMode: fromChat ? null : appointmentMode,
             appointmentWindow: fromChat ? "" : appointmentWindow,
         },

@@ -34,16 +34,19 @@ Locales (see `config.js`): `en` (LTR, default) and `fa` (RTL).
   `resolveCollectionImages` reads `public/image/{id}/` at request time and the 360
   spin is `/video/{id}-360.mp4`, so a partial rename silently breaks the image
   pipeline and the 360 player.) `aboutSections`
-  (4 items by `id`: `about`, `story`, `brandValue`, `sustainability`) powers the
-  **three** House routes' editorial blocks — since the 2026-09-29 owner-directed
-  restructure: `/about` is the one diptych (`house/HouseDiptychShell.jsx`), pairing
-  `story` (left column) with `about` + `aboutStats` (right); `/story` and
-  `/sustainability` are single-column `house/HouseChapterShell.jsx` pages reading only
-  the `brandValue` and `sustainability` entries respectively (the fabricated `csr`
-  entry and the made-up `sustainabilityStats`/`csrStats` grids were deleted at owner
-  direction — don't reintroduce without owner-supplied content). The `### I. ...` headings inside each entry's `content`
-  are parsed into styled editorial sub-blocks by the shared `EditorialBlock` piece in
-  `house/ChapterPieces.jsx`. Keep `fa.js` parallel like the others.
+  (3 items by `id`: `about`, `brandValue`, `sustainability`) powers the
+  **three** House routes' editorial blocks — since the 2026-10-05 owner-directed
+  restructure all three routes are single-column `house/HouseChapterShell.jsx` pages:
+  `/about` reads `about` + `aboutStats`, `/story` and `/sustainability` read only
+  the `brandValue` and `sustainability` entries respectively (the former `story`
+  entry and the two-column diptych were deleted the same day — the story narrative
+  now lives once, as the homepage `heroDesc`; the fabricated `csr`
+  entry and the made-up `sustainabilityStats`/`csrStats` grids were deleted earlier
+  at owner direction — don't reintroduce without owner-supplied content). Each entry's
+  `content` is plain blank-line-separated paragraphs — the `### I. ...`/«یک.» numbered
+  sub-headings were stripped 2026-10-05 at owner direction, and the shared
+  `EditorialBlock` piece in `house/ChapterPieces.jsx` renders one `<p>` per paragraph
+  (no heading parsing remains). Keep `fa.js` parallel like the others.
 - `glance` (added 2026-09-05) is the "ZAAD at a glance" lookbook composite for the
   `/glance` route: hero copy, an `overview` chapter, `sections` labels, and per-collection
   `supplements` (gavv/zivv: `tagline`, `narrative`, `materialTable`, `dimensions`,
@@ -200,11 +203,12 @@ instead of flinging to the far edge. `fa.js`'s `footerCopyright` carries the RLM
 
 ## Return-to-home link wording (fixed 2026-09-07)
 
-`aboutBackToShowroom` (`house/HouseChrome.jsx`, `glance/GlanceHeader.jsx`) used to read
+`aboutBackToShowroom` (`house/HouseChrome.jsx`, `glance/GlanceHeader.jsx`, `credits/page.js`'s top bar) used to read
 "Back to Showroom"/"بازگشت به گالری" — borrowing the product page's "showroom/gallery"
 vocabulary for a link that actually returns to the site root from House/`/glance`, neither
 of which is part of the product showroom. Changed to "Return to ZAAD Home"/"بازگشت به
-صفحه‌ی اصلی زااد" (transliteration updated to `زااد` in the 2026-09-28 copy-replacement pass),
+خانه زااد" (Farsi home wording renamed from "صفحه‌ی اصلی زااد" to "خانه زااد" sitewide,
+2026-10-05; transliteration updated to `زااد` in the 2026-09-28 copy-replacement pass),
 matching `ledgerReturnHome`'s already-correct wording for the identical
 compact-header pattern on `/ledger`. The product page's own two back-to-showroom CTAs
 (`NavBar.jsx`'s `productReturnShowroom`, `CollectionMeta.jsx`/`AcquisitionCTA.jsx`'s
@@ -213,6 +217,12 @@ unified to the identical "RETURN TO SHOWROOM"/"بازگشت به گالری" wor
 different phrases for one action; `productReturnShowroom`'s English value also had a typo
 ("RETURN TO COLLAGE SHOWROOM") fixed in the same pass. `showroom`/"Showroom" vocabulary is
 still correct and kept as-is everywhere it actually refers to the product showroom/grid.
+
+Since 2026-10-01 the menu's Home card (`MenuPanel.jsx`'s `pageLinks[0]`) and the footer's home
+button (`Footer.jsx`) use the destination-style `menuHomeEntry` ("ZAAD Home"/"خانه زااد")
+instead — a menu card inside the homepage's own menu can't "return" to the page it's already on.
+`aboutBackToShowroom` ("Return to ZAAD Home") survives only on the genuine cross-page back
+buttons: `house/HouseChrome.jsx`, `glance/GlanceHeader.jsx`, and `credits/page.js`'s top bar.
 
 ## Do not
 

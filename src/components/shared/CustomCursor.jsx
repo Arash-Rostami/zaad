@@ -99,7 +99,7 @@ function CustomCursor() {
             style={{ opacity }}
         >
             <motion.span
-                className="absolute top-0 left-0 rounded-full border"
+                className="absolute top-0 left-0"
                 style={{
                     x: ringX,
                     y: ringY,
@@ -109,8 +109,6 @@ function CustomCursor() {
                 animate={{
                     width: isPressed ? 18 : hover ? 26 : 22,
                     height: isPressed ? 18 : hover ? 26 : 22,
-                    borderColor: hover ? "var(--text-bronze, #b4783c)" : "var(--border-color-15, rgba(20, 19, 16, 0.15))",
-                    backgroundColor: hover ? "color-mix(in srgb, var(--text-bronze) 8%, transparent)" : "transparent",
                     scale: isPressed ? 0.9 : 1,
                 }}
                 transition={
@@ -118,7 +116,25 @@ function CustomCursor() {
                         ? { duration: 0 }
                         : { duration: 0.2, ease: [0.16, 1, 0.3, 1] }
                 }
-            />
+            >
+                <svg viewBox="0 0 24 24" fill="none" className="block w-full h-full" aria-hidden="true">
+                    <motion.path
+                        d="M12 3.215 L24 24 L0 24 Z"
+                        strokeLinejoin="round"
+                        strokeWidth="1.25"
+                        animate={{
+                            stroke: hover ? "var(--text-bronze, #b4783c)" : "var(--border-color-15, rgba(20, 19, 16, 0.15))",
+                            strokeOpacity: hover ? 1 : 0.8,
+                            fill: hover ? "color-mix(in srgb, var(--text-bronze) 8%, transparent)" : "transparent",
+                        }}
+                        transition={
+                            reducedMotion
+                                ? { duration: 0 }
+                                : { duration: 0.2, ease: [0.16, 1, 0.3, 1] }
+                        }
+                    />
+                </svg>
+            </motion.span>
 
             <motion.svg
                 width="18"

@@ -155,25 +155,57 @@ machinery from other projects.
   `activeAboutTabLine` rail indicator, and later `activeHouseNavLine`, were both removed for the
   same reason: the underline stopped being meaningful once there was nothing to differentiate.)
 - **The House routes are a route group, not showroom tabs** — `src/app/(house)/`
-  holds `about`, `story`, `sustainability` (3 routes, not 5). The `aboutSections` data
-  has 4 entries (`about`, `story`, `brandValue`, `sustainability`) — since 2026-09-29
-  (owner-directed restructure, and the fabricated `csr` entry + made-up stat grids were
-  removed outright — "made up and false"; don't reintroduce CSR copy without
-  owner-supplied content): `/about` is the one two-column page — a `HouseDiptychShell`
-  diptych pairing `story` (left) with `about` + `aboutStats` (right); `/story` and
-  `/sustainability` are single-column `HouseChapterShell` pages reading only the
-  `brandValue` and `sustainability` entries respectively, with no stat grids and no
-  closing signature (the `EditorialSignature` Z-medallion piece was deleted entirely —
-  nothing renders it anymore). A shared server `layout.js`
+  holds `about`, `story`, `sustainability` (3 routes, not 5). Since 2026-10-05 (owner
+  direction) **all three House pages are single-column `HouseChapterShell` pages**:
+  `/about` reads the `about` entry + `aboutStats` (the only stat grid), `/story` and
+  `/sustainability` read the `brandValue` and `sustainability` entries respectively.
+  The former two-column `HouseDiptychShell.jsx` diptych and the `aboutSections` `story`
+  entry were deleted outright the same day — the story narrative now lives once, as the
+  homepage `heroDesc` (owner: "bring it to homepage hero… not entirely erasing it"), so
+  don't reintroduce a story chapter or a diptych shell without direct instruction.
+  The `aboutSections` data has 3 entries (`about`, `brandValue`, `sustainability`),
+  each with plain blank-line-separated paragraphs — the `### I.`/«یک.» numbered
+  sub-headings were stripped 2026-10-05 at owner direction, and `ChapterPieces`'
+  `EditorialBlock` now splits on blank lines and renders one `<p>` per paragraph (no
+  heading parsing; `whitespace-pre-line` is gone). `HouseChapterShell`'s editorial
+  section also lost its two `.pattern-diamond-grid` ambient blobs the same day (owner
+  direction — no bg pattern on the House pages; only `Materials.jsx` still carries the
+  pattern since the Hero band's pattern strip was removed 2026-10-05 at owner
+  direction). The same pass removed every House hero paragraph —
+  `brandValueHeroIntro` (like `sustainabilityResponsibilityHeroIntro` before it) and the
+  `about` hero intro are gone from both dictionaries; no House page passes `heroIntro`
+  (owner: "no text in those heroes") — and the same pass merged the hero and the
+  editorial section outright (owner: "merge hero and paragraphs… two sections are
+  total waste"): the three House pages no longer render `ChapterHero` at all.
+  `HouseChapterShell` is now one merged section — small serif h1 title in the
+  homepage section-header idiom — **one title only**: the page's `t(heroTitle)`
+  (e.g. `aboutTitle`, `storyValueHeroTitle`, `sustainabilityResponsibilityHeroTitle`)
+  rendered as a small gold mono uppercase h1 (`MaisonReveal` `unveil` —
+  **not** `variant="lines"`: this page hit the same `LinesReveal` mask-hides-title
+  gotcha as the credits page h1, see `src/components/README.md` — no accent rule
+  under it), then `EditorialBlock` paragraphs and the chapter image side by side in a
+  two-column grid (image first on mobile, text left / image right on desktop;
+  **no "Read More" MaisonButton and no scroll-down arrow**; the image is the
+  permanent `lux-ken-burns` still — the randomized chapter videos no longer play
+  anywhere). `ChapterHero` itself survives — redesigned 2026-10-05 to mirror the
+  homepage `Hero.jsx`'s grammar (full-height media column, hairline grid, foundation
+  scrim, bottom-start control — see `src/components/README.md`) — and is now
+  **`/glance`-only**
+  (its `heroIntro` + `withVideo={false}` + `scrollTargetId="glance-body"` passes are
+  unchanged; its default `scrollTargetId="house-editorial"` is inert — no House
+  page mounts it or carries that id anymore). No closing signature anywhere (the `EditorialSignature`
+  Z-medallion piece was deleted entirely — nothing renders it anymore). A shared server `layout.js`
   renders `components/house/HouseChrome.jsx` (slim header: back-to-showroom, ZAAD
   wordmark, the current page's name as a static underlined label, compact language/theme
   control) and the shared `components/Footer.jsx` (since 2026-09-06, all routes share the
-  homepage footer by user direction). `about/page.js` renders
-  `house/AboutChapter.jsx` on the two-column `house/HouseDiptychShell.jsx`;
+  homepage footer by user direction). `about/page.js`,
   `story/page.js` and `sustainability/page.js` render
-  `house/StoryValueChapter.jsx` and `house/SustainabilityResponsibilityChapter.jsx` on
-  the single-column `house/HouseChapterShell.jsx` (cinematic hero + editorial block(s) +
-  optional stat grid + cross-link cards + call strip). Do **not** reuse the showroom
+  `house/AboutChapter.jsx`, `house/StoryValueChapter.jsx` and
+  `house/SustainabilityResponsibilityChapter.jsx` on
+  the single-column `house/HouseChapterShell.jsx` (merged title + paragraphs/image
+  section + optional stat grid + cross-link cards + call strip; only `/about` passes
+  stats).
+  Do **not** reuse the showroom
   `Header`/`MenuControls` on the house routes — they are wired to
   `useShowroomNav` (in-app `setActiveTab` + scroll + the 120ms pre-scroll contracts) and
   to the global `activeLanguageBlobInNavbar`/`activeThemeBlobInNavbar` layoutId groups;
@@ -194,7 +226,14 @@ machinery from other projects.
   has a mount effect that reads any incoming `location.hash`, waits the same 120ms
   lead-time as every other pre-scroll call site, then re-runs the correct, Lenis-aware
   `animateScrollTo` and strips the hash — the one place that actually lands the scroll
-  correctly regardless of which route it was launched from. See `src/services/README.md`'s
+  correctly regardless of which route it was launched from (since 2026-10-01 it calls
+  `animateScrollToSettled` instead — the one-shot measurement landed short whenever the
+  homepage's deferred media/lazy images settled during the 1450ms glide, e.g. the
+  product-page consult CTA ending on a section above `#concierge`; the settled variant
+  polls for drift for ~3s and issues short 600ms corrective glides, cancels on the first
+  user wheel/touchmove/keydown/pointerdown or any newer programmatic `animate*` call, and
+  its stopper is cleaned up on unmount — see
+  `src/services/README.md`'s ScrollService section). See `src/services/README.md`'s
   ScrollService section for the full mechanism, and `src/components/README.md`'s Header
   section for `handleInquiryClick`'s matching fix. **`Footer.jsx`'s "Main Page" button needed
   the same fix (found in review, fixed 2026-09-07)** — `handleMainPage` used to assume

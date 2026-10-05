@@ -120,3 +120,50 @@ export function animateScrollToBottom(duration = 1300) {
 
     runRafScroll(runId, startY, maxY - startY, duration);
 }
+
+const SETTLE_DRIFT_THRESHOLD = 20;
+
+export function animateScrollToSettled(elementId, duration = 1450, extraOffset = 0) {
+    animateScrollTo(elementId, duration, extraOffset);
+    let runId = scrollRunId;
+    let correctionUntil = 0;
+
+    let startId = null;
+    let pollId = null;
+    let attempts = 0;
+
+    const stop = () => {
+        window.removeEventListener("wheel", stop);
+        window.removeEventListener("touchmove", stop);
+        window.removeEventListener("keydown", stop);
+        window.removeEventListener("pointerdown", stop);
+        if (startId !== null) window.clearTimeout(startId);
+        if (pollId !== null) window.clearInterval(pollId);
+    };
+
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchmove", stop, { passive: true });
+    window.addEventListener("keydown", stop);
+    window.addEventListener("pointerdown", stop);
+
+    startId = window.setTimeout(() => {
+        pollId = window.setInterval(() => {
+            attempts += 1;
+            if (attempts > 7 || scrollRunId !== runId) {
+                stop();
+                return;
+            }
+            if (performance.now() < correctionUntil) return;
+            const target = document.getElementById(elementId);
+            if (!target) return;
+            const drift = target.getBoundingClientRect().top - (getHeaderOffset() + extraOffset);
+            if (Math.abs(drift) > SETTLE_DRIFT_THRESHOLD) {
+                animateScrollTo(elementId, 600, extraOffset);
+                runId = scrollRunId;
+                correctionUntil = performance.now() + 600;
+            }
+        }, 450);
+    }, duration + 300);
+
+    return stop;
+}

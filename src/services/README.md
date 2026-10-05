@@ -16,7 +16,7 @@ Vite+Express+TS-migration leftover has been deleted). Do not link new code to
 A self-contained, stateless, imperative smooth-scroll utility. **Not** a scroll-progress
 subscription system — there is no global state, no subscriber registry, no cleanup API.
 
-Exports (three):
+Exports:
 
 - `animateScrollTo(elementId, duration = 1450, extraOffset = 0)` — resolves `document.getElementById`,
   bails silently if missing, runs a `requestAnimationFrame` loop with `easeInOutQuint`.
@@ -29,6 +29,22 @@ Exports (three):
   `document.documentElement.scrollHeight - window.innerHeight`; bails if already at/past
   that point. Added for `shared/ScrollButton.jsx`'s "smart" direction toggle (see
   `src/components/README.md` and `src/hooks/README.md`'s `useScrollButton.js` entry).
+- `animateScrollToSettled(elementId, duration = 1450, extraOffset = 0)` (added 2026-10-01) —
+  cross-route section landing. Runs the normal `animateScrollTo`, then keeps watching for
+  ~3s: 450ms-interval polls (max 7, starting `duration + 300`ms after the call, i.e. after
+  the main glide ends) re-measure the target's drift past the live header offset and issue
+  a short 600ms corrective glide whenever drift exceeds 20px — because the homepage's
+  deferred media (`useDeferredMedia`'s +1500ms idle videos, lazy images) settles layout
+  *during and after* the first glide, and a one-shot measurement reliably lands short
+  (the product-page consult CTA's `/#concierge` arrival ending on an earlier section).
+  The first user `wheel`/`touchmove`/`keydown`/`pointerdown` cancels the settle outright
+  (never fights the user; an in-flight correction glide is allowed to finish), and so
+  does any newer programmatic scroll — the poll snapshots the module run-id after its
+  own calls and stops the moment a foreign `animate*` call superseded the landing.
+  Returns a `stop()` function that
+  clears both listeners and both timers — `AppShell.jsx`'s hash effect holds it for
+  unmount cleanup. Currently the only consumer is that one call site; in-page scroll
+  calls keep the one-shot `animateScrollTo` (their layout is already settled).
 - `registerSmoothScroll(instance)` / `unregisterSmoothScroll(instance)` — set/clear the
   Lenis instance (registered by whichever `useLenisScroll` consumer is mounted —
   `AppShell.jsx`, `house/HouseSmoothScroll.jsx`, `collection/[slug]/CollectionPageClient.jsx`,
@@ -65,9 +81,12 @@ Exports (three):
   landing in the wrong place. Next.js's own built-in hash scroll fires once, in the
   layout phase, before Lenis registers or any image/video-driven layout settles — so it
   reliably lands short of or past the real target. The mount effect waits the same
-  120ms lead-time every other pre-scroll call site uses, then calls `animateScrollTo`
-  (live header offset, Lenis-aware, retries if the target isn't mounted yet) and strips
-  the hash via `history.replaceState` so it can't re-trigger. See CLAUDE.md's Load-bearing
+  120ms lead-time every other pre-scroll call site uses, then calls
+  `animateScrollToSettled` (since 2026-10-01 — the one-shot `animateScrollTo` still
+  measured the target once before the homepage's media settled, so the glide ended
+  short; see the export above) (live header offset, Lenis-aware, retries if the target
+  isn't mounted yet) and strips the hash via `history.replaceState` so it can't
+  re-trigger. See CLAUDE.md's Load-bearing
   contracts (the Footer cross-route note) and `src/components/README.md`'s Header section
   for the call sites this replaced.
 

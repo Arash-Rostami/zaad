@@ -474,7 +474,7 @@ which component happens to use it first.
 | Asset class | Path convention | Consumer(s) |
 | :--- | :--- | :--- |
 | Hero rotation | `public/video/hero/hero-0N.{mp4,jpg}` (N = 01–04) | `Hero.jsx` |
-| House chapter hero | `public/video/house/chapter-{gavv,zivv,rakh,vaar}.{mp4,jpg}` | `house/ChapterPieces.jsx` (`ChapterHero`'s `CHAPTER_HERO_VIDEOS`) |
+| House chapter hero | `public/video/house/chapter-{gavv,zivv,rakh,vaar}.{mp4,jpg}` | `house/ChapterPieces.jsx` (`ChapterHero`'s `CHAPTER_HERO_VIDEOS`) — **parked, not deleted**: since the 2026-10-05 House merge no page passes `withVideo` unset (`/glance`, `ChapterHero`'s only remaining consumer, passes `false`), so the clips currently render nowhere; the pool stays intact for a future re-enable |
 | 360° spin | `public/video/spin/spin-{id}-360.{mp4,jpg}` (`id` = collection codename) | `showcase/ImageViewer.jsx`, `collection/StudioGallery.jsx` |
 | Story gallery | `public/video/story/story-{hood,oven,cupboard,pan,inbuilt,light}.{mp4,jpg}` | `Vision.jsx` |
 | Material preview | `public/video/material/{eucalyptus,stone,leather}.{mp4,jpg}` — the earlier **portrait** cuts are parked (not deleted) in `public/video/material/fallback/` for future use | `Materials.jsx` |
@@ -584,15 +584,19 @@ hook, since it's a single self-contained media-player concern with no cross-comp
 contract as the timeline.)
 
 **Ribbon watermark band (added 2026-09-27, replaces the old bottom content row).** The section's
-closing `border-t border-ink/10 pt-8 mt-16` transitional divider used to hold three text pieces: a
+closing `border-t border-ink/10 pt-4 mt-10` transitional divider (tightened 2026-10-05 at owner
+direction, together with the section root's `pb-16`→`pb-8` — the band is now just a compact
+space for the scrolling logo) used to hold three text pieces: a
 "Comprehensive Catalogue" link (`monograph`), the brand quote (`heroQuote`), and the `estFlorence`
 tagline. The catalogue link was redundant — it called the same `onScrollToCollection` handler the
 hero's own primary CTA (`exploreCollection` button) already calls — and the quote/tagline were pure
 decorative text with no other role. All three were removed; `onScrollToCollection` itself is
 untouched (still wired to the primary CTA, its only remaining call site). The divider row now holds
-two stacked full-width atmospheric strips (split from a single overlaid band 2026-09-28, user
-direction — the wordmark used to glide over the diamond pattern; they now read one after another,
-counter-moving). **First strip:** the horizontally-scrolling repeat of the yellow ribbon
+**one** full-width atmospheric strip — the ribbon wordmark alone (since 2026-10-05, owner
+direction: "not logo just pattern" — the second `.pattern-diamond-grid` strip below it was
+removed outright and the band tightened to only the scrolling logo, `RibbonScroll` now passed
+`height="h-10 sm:h-12"`; from 2026-09-28 until then it held two stacked strips, the wordmark and
+the diamond pattern reading one after another, counter-moving). **The strip:** the horizontally-scrolling repeat of the yellow ribbon
 wordmark (`public/logo-ribbon.svg`, `opacity-[0.18]`) — rendered by `shared/RibbonScroll.jsx`
 (extracted 2026-09-29 from this band once `Footer.jsx` added a second call site). The doubled-track
 technique: two identical `flex` groups of `copies` (default 6) logo instances in one `w-max` row,
@@ -605,30 +609,26 @@ under the negative translate, which left the band blank through most of its cycl
 counter-moving in both languages (left/right in English, mirrored in Farsi). The loop is seamless
 for viewports up to one group width (~2137px at `sm` sizing with 6 copies) — wider full-bleed call
 sites must raise `copies` (the footer band passes 9).
-**Second strip:** the `.pattern-diamond-grid` texture (`opacity-[0.35] dark:opacity-[0.45]` —
-raised from `0.12`/`0.2` on 2026-09-29 at owner direction "much stronger"; every ambient blob
-elsewhere renders the quiet `0.22`/`0.16` light pair after the owner walked back the brief
-site-wide `0.35`/`0.45` standardization as too strong next to text — this strip is the one
-strong instance; see `src/styles/README.md`'s `pattern-diamond-grid` row), absolutely
-positioned) alone, drifting **rightward** via `.pattern-diamond-drift` — a
-`background-position: 0 0 → 200px 0` keyframe (`diamondGridDrift`, 32s linear infinite) that
-advances exactly one tile width (`.pattern-diamond-grid`'s 200px) per iteration, so the loop is
-seamless. Both strips are `aria-hidden="true"` (pure decoration, `alt=""` on every `<img>`).
-Under `prefers-reduced-motion` (detected via RibbonScroll's own mount-effect
-`matchMedia("(prefers-reduced-motion: reduce)")` check — the same pattern the video reel uses) the
-wordmark's doubled/animated track is never rendered at all — a single static, non-tiled `<img>`
-renders centered instead — and the pattern strip simply renders without the drift class (Hero
-keeps its own `prefersReducedMotion` state for that conditional and the video).
+**Former second strip (removed 2026-10-05):** the `.pattern-diamond-grid` texture
+(`opacity-[0.35] dark:opacity-[0.45]`, the one deliberately-strong instance since 2026-09-29)
+drifting rightward via `.pattern-diamond-drift` — removed outright at owner direction along with
+the band tightening; `.pattern-diamond-drift` and its `diamondGridDrift` keyframe now have **zero
+call sites** (dormant in `globals.css`, not deleted). The remaining strip is `aria-hidden="true"`
+(pure decoration, `alt=""` on every `<img>`). Under `prefers-reduced-motion` (detected via
+RibbonScroll's own mount-effect `matchMedia("(prefers-reduced-motion: reduce)")` check — the same
+pattern the video reel uses) the wordmark's doubled/animated track is never rendered at all — a
+single static, non-tiled `<img>` renders centered instead (Hero keeps its own
+`prefersReducedMotion` state for the video only now).
 
 ### `house/ChapterPieces.jsx` — `ChapterHero`'s randomized video overlay
 
-`ChapterHero` (used by both `HouseChapterShell` and `HouseDiptychShell`, so by all three House
-pages — `/about`, `/story`, `/sustainability`) layers a looping collection video over its static
-`heroImage` poster. The pool, `CHAPTER_HERO_VIDEOS` (`chapter-gavv.mp4`/`chapter-zivv.mp4`/`chapter-rakh.mp4`/`chapter-vaar.mp4`,
-the four collection codenames — see `src/lib/i18n/README.md`), is a single shared constant at the
-top of the file — the three page components (`AboutChapter`, `StoryValueChapter`,
-`SustainabilityResponsibilityChapter`) pass no video prop and need no changes; the randomization
-lives entirely in `ChapterHero`.
+`ChapterHero` — **`/glance`-only since 2026-10-05** (the House merge removed it from
+all three House pages; see the `HouseChapterShell` row below) — layers a looping collection video over its static
+`heroImage` poster when `withVideo` is unset. `/glance` passes `withVideo={false}`, so the
+overlay is currently parked: the pool, `CHAPTER_HERO_VIDEOS` (`chapter-gavv.mp4`/`chapter-zivv.mp4`/`chapter-rakh.mp4`/`chapter-vaar.mp4`,
+the four collection codenames — see `src/lib/i18n/README.md`), stays a single shared constant at the
+top of the file and the randomization lives entirely in `ChapterHero` — a future call site
+passing `heroImage` (and leaving `withVideo` unset) re-enables the reel with no other change.
 
 **Hydration-safe randomness:** these House routes are server-rendered (`force-dynamic` since
 2026-09-07 — see the project's Load-bearing Contracts; this constraint applies regardless of
@@ -647,9 +647,8 @@ poster stays static, matching `Hero.jsx`'s reduced-motion behavior.
 (default `true`) prop; `false` skips the video-pick effect entirely so the `priority`
 poster `<Image>` is the permanent hero media — zero clip bytes, no play/pause chip.
 `/glance` passes it (user request: the lookbook's one clip wasn't worth ~2.4MB on a
-text-led page); the three House routes don't and keep their video. The house page
-components pass no video prop and need no changes; the randomization lives in
-`ChapterHero`, gated by `withVideo`.
+text-led page) and, since the 2026-10-05 House merge, is the component's only consumer —
+so the video path is currently dormant by configuration, not deleted.
 
 **Poster → video handoff:** once `activeVideo` is picked, the `<img>` is swapped for a single
 `<video preload="metadata" poster={activeVideo.replace(".mp4", ".jpg")}>` — the clip's own exact
@@ -663,10 +662,12 @@ did gate on `onCanPlay` + a 1400ms fade; that double-delay was reported live as 
 still the placeholder image" and was removed). The entrance dissolve — `motion.video`'s
 `initial`/`animate` opacity+scale+blur, the same `lens-focus` recipe as `Hero.jsx`'s crossfade (see
 above) — now fires on **mount**, not on load-completion, so it never adds to perceived load time. A
-play/pause chip sits `top-6 end-6` (originally to clear a bottom-anchored `heroBadge` caption card,
-which was removed 2026-09-27 per the client's no-text-over-media policy — see below; the chip's
-position was left as-is, not moved back to `bottom-start`) using the same static
-`bg-foundation/40`/`text-canvas` token pair as `Hero`'s controls, for the same reason: legible over
+play/pause chip sits `bottom-6 start-6` (aligned to `Hero.jsx`'s control position by the
+2026-10-05 ChapterHero redesign; originally `top-6 end-6` to clear a bottom-anchored
+`heroBadge` caption card, which was removed 2026-09-27 per the client's no-text-over-media
+policy — see below) as a border-only chip (`border-canvas/30` + `text-canvas`, no
+`bg-foundation/40` backdrop anymore — the redesign matched `Hero`'s border-style control),
+for the same reason: legible over
 arbitrary photo/video content regardless of active theme. Reuses `Hero.jsx`'s
 `heroPauseVideo`/`heroPlayVideo` i18n keys — no new translation strings.
 
@@ -674,7 +675,7 @@ arbitrary photo/video content regardless of active theme. Reuses `Hero.jsx`'s
 removed 2026-09-27**, per explicit client direction: no descriptive text may float directly over
 media, only technical/viewer-state chrome (play/pause, zoom, spin, counters). `ChapterHero` no
 longer accepts `heroBadge`/`heroBadgeLabel` props at all; every call site (`HouseChapterShell.jsx`,
-`HouseDiptychShell.jsx`, `AboutChapter.jsx`, `StoryValueChapter.jsx`,
+the since-deleted `HouseDiptychShell.jsx`, `AboutChapter.jsx`, `StoryValueChapter.jsx`,
 `SustainabilityResponsibilityChapter.jsx`, and `glance/GlancePage.jsx`) had the props stripped in
 the same change. `glance`'s `heroBadge`/`heroBadgeLabel` i18n keys were deleted (no other
 consumer). On 2026-09-28 the three `heroEyebrow` labels (`aboutEyebrow`/`storyValueHeroEyebrow`/
@@ -833,7 +834,7 @@ animates.
 | File | Role |
 |------|------|
 | `header/MenuPanel.jsx` | Animated slide-out overlay; composes all menu sub-sections. Since 2026-09-27 the content is a single vertical stack of full-width rows (`flex flex-col gap-4 md:gap-5`, replacing the earlier 12-col column grid): `PrimaryPages` (row 1), a hairline rule, `SpecimenGrid` (row 2), `UtilityStrip` (row 3) — then, since 2026-09-29, a conditional minimal "Continue — {name}" link (the restored `lastViewedItem` feature, owner direction: it "must sit after the third row as a minimal" link — not boxes, not inside the grid row) with its hover-revealed `×` dismiss, then `MenuControls`. Also owns the `useLocalPreference("lastViewedItem")` wiring: the displayed name resolves against the current-language `collection` prop (never stale after a language switch) and a stale/deleted id no-ops silently |
-| `header/PrimaryPages.jsx` | Row 1 of the panel's 4×2 uniform card grid (`memo`, `grid-cols-2 md:grid-cols-4`, each cell `min-h-[140px]` — byte-matched to `SpecimenGrid`'s own box height so all 8 cells across both rows read as one uniform grid). 4 cards: Home (`t("aboutBackToShowroom")`/`menuChapterHome`, wired to `MenuPanel.jsx`'s `navigateTo("/")` special case — the same `setActiveTab`+`onSelectProduct(null)`+`animateScrollToTop` recipe `Header.jsx`'s `handleBrandClick` already used) followed by the three House chapter cards (`menuOriginsPhilosophy`/`menuStoryBrandValue`/`menuSustainabilityResponsibility`). 2026-09-27 client-directed restructure: replaces both `header/SystemPortals.jsx` (deleted — its "House of ZAAD" portal card, which actually just cleared the selected product and returned to the showroom, is now an honestly-labeled Home card here instead; its Digital Catalogue card moved to `UtilityStrip.jsx` below) and `header/JourneyIndex.jsx` (deleted, its 3 chapter cards folded into this row unchanged) |
+| `header/PrimaryPages.jsx` | Row 1 of the panel's 4×2 uniform card grid (`memo`, `grid-cols-2 md:grid-cols-4`, each cell `min-h-[140px]` — byte-matched to `SpecimenGrid`'s own box height so all 8 cells across both rows read as one uniform grid). 4 cards: Home (`t("menuHomeEntry")`/`menuChapterHome` — a destination-style label like its three siblings, since 2026-10-01 at owner direction: "Return to ZAAD Home" read wrong inside the homepage's own menu, where nothing is being returned from; was `t("aboutBackToShowroom")`, which stays on the genuine back buttons only, wired to `MenuPanel.jsx`'s `navigateTo("/")` special case — the same `setActiveTab`+`onSelectProduct(null)`+`animateScrollToTop` recipe `Header.jsx`'s `handleBrandClick` already used) followed by the three House chapter cards (`menuOriginsPhilosophy`/`menuStoryBrandValue`/`menuSustainabilityResponsibility`). 2026-09-27 client-directed restructure: replaces both `header/SystemPortals.jsx` (deleted — its "House of ZAAD" portal card, which actually just cleared the selected product and returned to the showroom, is now an honestly-labeled Home card here instead; its Digital Catalogue card moved to `UtilityStrip.jsx` below) and `header/JourneyIndex.jsx` (deleted, its 3 chapter cards folded into this row unchanged) |
 | `header/SpecimenGrid.jsx` | Row 2 of the 4×2 grid — the 4 collection item cards (`memo`), same card grammar as before. 2026-09-27: grid breakpoint changed from `grid-cols-1 sm:grid-cols-2 md:grid-cols-4` to `grid-cols-2 md:grid-cols-4` so its cells switch column count at the same breakpoint as `PrimaryPages`' row above, keeping all 8 cells' widths in lockstep. Its section-label badge is a clickable nav button (`onNavigateToCollection`, threaded down from `Header.jsx` via `MenuPanel.jsx`) that closes the menu and scrolls to the showroom's `id="collection"` section. The cards' archive-number span was removed 2026-09-28; the cards' collection names are deliberately **not bold** (2026-09-29, owner request — `font-semibold` dropped from both the name span and the active card's class). The whole conditional "Continue Browsing" link was removed 2026-09-28 in the client's copy-replacement pass, then **restored 2026-09-29 at owner direction** — but it now lives in `MenuPanel.jsx` after the third menu row, not inside this grid row (see the `MenuPanel` row above) |
 | `header/UtilityStrip.jsx` | New (2026-09-27) secondary-tier strip below the 4×2 grid — Digital Catalogue + AI Curator, deliberately **not** two more uniform cells: a single slim `bg-surface-alt/40` bar (no `NoiseBg`, no gradient-wash card grammar) split into two icon-led buttons, so it reads as a lighter, secondary tier of navigation rather than a 9th/10th grid box. Digital Catalogue (`BookOpen` icon, `t("menuZAADCatalogue")` — its `menuZAADCatalogueSub`
 caption span was removed 2026-09-28 with the key deleted, so the button is label-only now) calls `MenuPanel.jsx`'s `onBlueprint` — unchanged logic carried over from the retired `SystemPortals.jsx` Catalogue card (`onSelectProduct(null)` + close + `window.open("/showcase/index.html", "_blank", "noopener,noreferrer")`). Curator (`Sparkles` icon, `t("zaadDigitalCurator")`) calls `onNavigateToConcierge` — the same closure `MenuPanel.jsx` used to wire directly to a standalone eyebrow-link button beneath the retired `JourneyIndex.jsx`'s column (originally added 2026-09-05); that inline button is gone, its behavior lives here now |
@@ -955,13 +956,16 @@ reintroduce it. See `src/lib/i18n/README.md`.)
 | File | Role |
 |------|------|
 | `concierge/SectionHeader.jsx` | Start-aligned intro block (de-centered 2026-09-05 — reading-start `text-left rtl:text-right`, matching the other four home eyebrows) — per-element `MaisonReveal` stagger (eyebrow → `lines`-variant h2 → subtitle → click-to-call pill) (`memo`) |
-| `concierge/InquiryForm.jsx` | Bespoke acquisition form + appointment (Audience/Cadence) + inline server-validation errors + animated success confirmation state. Its one native `<select>` (consultation category) is `appearance-none` with an absolutely-positioned `ChevronDown` (`end-3`, `pointer-events-none`) inside a `relative` wrapper and `pe-10` on the select — the browser's default arrow hugs the border and padding can't move it (2026-09-06, user request); `ps-4`/`pe-10` split instead of `px-4` so text never runs under the chevron. RTL lands free via `end-3`/`pe-*` logical properties. The Cadence button's own `ChevronDown` (custom dropdown, not a native select) already sits `px-3` inside its pill — no change needed there. Since 2026-09-06 the name/email and phone/category rows pair at all viewport sizes (`grid-cols-2 gap-4 md:gap-6`, was `grid-cols-1 md:grid-cols-2`): each column is `flex flex-col` with a **conditional** `mt-auto` on the input (`identityRowAlignsBottom`/`contactRowAlignsBottom` — true only while the pair is error-free, so a wrapped label bottom-aligns its input with its pair; dropped when either column shows a `FieldError`, since the error-free column's `mt-auto` would otherwise push its input ~20px below the errored one) and `leading-snug` on the label. The Audience/Cadence row deliberately keeps `grid-cols-1 sm:grid-cols-2` — the long Farsi toggle labels (the call pill reads "تماس اختصاصی" since its 2026-09-29 trim, previously "دریافت تماس اختصاصی") cannot fit half-width pills below `sm`. The email label renders as `t("contactEmail")` + a one-step-smaller `t("optionalMarker")` suffix span ("Secure" dropped, per user request); `ledger/Ledger.jsx`'s email and phone `DetailRow`s reuse `contactEmail`/`mobilePhone` without the marker. Submit button's `Send` icon: see the `MaisonButton` `iconClassName` bullet |
+| `concierge/InquiryForm.jsx` | Bespoke acquisition form + appointment (Audience/Cadence) + inline server-validation errors + animated success confirmation state. The consultation category has been a **free-text `<input>` since 2026-10-05** (owner direction: the customer's own wording, not a predefined option — `required`, `maxLength={100}`, its own `FieldError`, no placeholder; state starts empty). It replaced the form's one native `<select>` (3 options, `appearance-none` + absolutely-positioned `ChevronDown`, 2026-09-06→2026-10-05) — the Cadence button's own `ChevronDown` (custom dropdown, not a native select) already sits `px-3` inside its pill, so that usage survived the select's removal. Since 2026-09-06 the name/email and phone/category rows pair at all viewport sizes (`grid-cols-2 gap-4 md:gap-6`, was `grid-cols-1 md:grid-cols-2`): each column is `flex flex-col` with a **conditional** `mt-auto` on the input (`identityRowAlignsBottom`/`contactRowAlignsBottom` — true only while the pair is error-free, so a wrapped label bottom-aligns its input with its pair; dropped when either column shows a `FieldError`, since the error-free column's `mt-auto` would otherwise push its input ~20px below the errored one) and `leading-snug` on the label. The Audience/Cadence row deliberately keeps `grid-cols-1 sm:grid-cols-2` — the long Farsi toggle labels (the call pill reads "تماس اختصاصی" since its 2026-09-29 trim, previously "دریافت تماس اختصاصی") cannot fit half-width pills below `sm`. The email label renders as `t("contactEmail")` + a one-step-smaller `t("optionalMarker")` suffix span ("Secure" dropped, per user request); `ledger/Ledger.jsx`'s email and phone `DetailRow`s reuse `contactEmail`/`mobilePhone` without the marker. Submit button's `Send` icon: see the `MaisonButton` `iconClassName` bullet |
 | `concierge/CuratorChat.jsx` | AI chat panel — message list, loading indicator, send form, download-transcript button. Its send chip's `Send` icon: see the `MaisonButton` `iconClassName` bullet (kept in sync with the form's) |
 
 **`InquiryForm.jsx`'s validation is server-side, not client-side** (2026-09-03) — see
 `src/hooks/README.md`'s `useConcierge.js` entry and `src/app/README.md`'s `/api/inquiry`
 section. A local `FieldError` component renders `t(errorKey)` under `clientName`,
-`clientEmail`, `clientPhone`, and `additionalNote` when `formErrors` has that key, in the
+`clientEmail`, `clientPhone`, `desiredConsultation` (added 2026-10-05 with the free-text
+category field — the error key `formErrorConsultationInvalid`'s wording moved from
+"select" to "enter" in both dictionaries), `appointmentWindow` (the Cadence dropdown's
+`inquiry-cadence-error`), and `additionalNote` when `formErrors` has that key, in the
 new `text-danger` token (see `src/styles/README.md`) with a small `AlertCircle` icon; the
 matching input's border swaps to `border-danger` at the same time. A generic
 `formErrors.form` banner (same `text-danger` treatment) covers network/server failures.
@@ -1059,20 +1063,21 @@ scrolling div, i.e. the sentinel stays a direct child of the abspos scroller.
 ### House-of-ZAAD routes — `house/` (shared by `/about`, `/story`, `/sustainability`)
 
 The three House routes share a slim chrome (rendered once by the route-group layout,
-`src/app/(house)/layout.js`) and two chapter composers. `about` is a single-topic
-chapter; `story` is a two-column "diptych" chapter pairing two of the four `aboutSections`
-data entries (`story`+`brandValue`). Since 2026-09-29 `sustainability` is also a
-single-column chapter: the fabricated `csr` entry and the made-up
-`sustainabilityStats`/`csrStats` grids were deleted at owner direction ("made up and
-false") — don't reintroduce CSR copy or invented stat figures without owner-supplied
-content.
+`src/app/(house)/layout.js`) and one chapter composer. Since 2026-10-05 (owner direction)
+**all three are single-column `HouseChapterShell` chapters**, each reading one
+`aboutSections` entry: `/about` → `about` (+ `aboutStats`), `/story` → `brandValue`,
+`/sustainability` → `sustainability`. The two-column `HouseDiptychShell` diptych and the
+`story` entry were deleted outright the same day — the story narrative lives once, on the
+homepage `heroDesc`; don't reintroduce either without direct instruction. (The fabricated
+`csr` entry and the made-up `sustainabilityStats`/`csrStats` grids were deleted earlier,
+2026-09-29 — don't reintroduce CSR copy or invented stat figures without owner-supplied
+content.)
 
 | File | Role |
 |------|------|
 | `house/HouseChrome.jsx` | Shared slim header: back-to-showroom, ZAAD wordmark, the **current** House page's name as a static underlined label (`NAV.find((item) => item.href === pathname)` — current-page-only, no `layoutId`), compact language/theme control (`memo`). Its own font-scale Minus/Plus buttons carry the same treatment as `header/MenuControls.jsx`'s copy — `hover:bg-indicator hover:text-on-indicator` off-bound, and since 2026-09-03 the selected-chip look (`bg-indicator text-on-indicator`) when their bound is reached — kept in sync deliberately even though the two controls don't share code (see the House-routes contract in the root CLAUDE.md) |
-| `house/HouseChapterShell.jsx` | Single-column chapter composer (used by `/story` and `/sustainability` since the 2026-09-29 restructure): ambient bg + cinematic hero (eyebrow/title/intro + image, randomized collection-video overlay — see `ChapterHero` below) + centered editorial block (`EditorialBlock` called with `align="center"` — parses the `### I. …` headings from `aboutSections[].content`; the former centered `<h2>` repeating `heroTitle` above the prose was removed 2026-10-01 at owner direction — redundant with the hero's own title and its "Read More" scroll target; the shell still passes `heroTitle` through to `ChapterHero` only) + optional stat grid (the whole section renders only when `stats` is non-empty — no current page passes one) + sibling cross-link cards + `tel:` call strip (`memo`). Its editorial section carries the two large `.pattern-diamond-grid` blobs relocated verbatim from the former hero `AMBIENT` (same pair on the diptych shell; since 2026-09-29 both shells render them `mix-blend-multiply dark:mix-blend-screen` with raised light-mode opacities — the old screen-only blend made the gold `#ffc600` stroke mathematically invisible on light backgrounds). The former `EditorialSignature` Z-medallion divider was deleted outright 2026-09-29 (owner: "meaningless now") — no page renders a closing signature |
-| `house/HouseDiptychShell.jsx` | Two-column chapter composer (used by `/about` since the 2026-09-29 restructure): cinematic hero (same `ChapterHero`, so the same randomized video overlay) + a `left`/`right` pair of editorial columns (each with its own eyebrow/title/intro/content via the internal `ColumnHeader`, `EditorialBlock` called at its default `align="start"`), joined by a centered `&` divider — its hairline draws downward via Motion `whileInView` on entry (`scaleY`, `origin-top`, 1.6s; the whole spine is `hidden lg:block`, so desktop-only) with the medallion blooming 0.9s in as the line passes center — + sibling cross-link cards + call strip (`memo`). Its `TwinChapter` section carries the same two relocated hero `.pattern-diamond-grid` blobs as `HouseChapterShell`'s editorial section (the pattern left the House heroes 2026-09-29 — `ChapterPieces`' `AMBIENT` keeps only the sunbeam strip; the light-mode blend fix is noted on the `HouseChapterShell` row). Stats since 2026-09-29: the two columns' `stats` arrays are concatenated into ONE centered strip **below both columns** (`max-w-2xl mx-auto`, `StatGrid align="center"`, owner direction after two rejected placements — in-column put it under the right prose, in-grid auto-placement landed a lone right-column grid in the first column's slot, both read wrong; the strip is the final state). Only `/about` passes stats today (`aboutStats` on the right column) |
-| `house/ChapterPieces.jsx` | Shared pieces (`ChapterHero`, `EditorialBlock`, `StatGrid`, `CrossLinks`, `CallStrip`) consumed by both shells. `EditorialBlock` takes an optional `align` prop (`"start"` default — `text-left rtl:text-right`, used by `HouseDiptychShell`'s columns; `"center"` — heading/eyebrow centered, prose `<p>` re-asserts `text-left rtl:text-right max-w-2xl mx-auto` so long-form body copy never centers, only the heading/label above it — used only by `HouseChapterShell`). The former `EditorialSignature` horizontal Z-seal divider was deleted outright 2026-09-29 (owner: "meaningless now") — nothing renders it. `StatGrid` values count up on entry (`StatValue`: 2.6s eased 0→target, `fa-IR`/`en-US` digits, raw-string fallback, no count under reduced motion). `StatGrid` is always `grid-cols-3` (2026-09-06, user request: three stats in one line on mobile — the old `grid-cols-2` left the third stat alone on a second row) with `gap-4 md:gap-8`; its container's `border-t border-ink/10` applies only when `align="start"` (the diptych columns' prose/stats separator — the centered variant never carries it), and the per-cell alignment centers below `md` (`text-center md:text-left rtl:md:text-right` when `align="start"`; `align="center"` stays centered at all sizes). A `StatGrid` with more than three stats would wrap to a second row; all current pages pass exactly 3 (only `/about`) or none. `ChapterHero`'s `h1` stepped down one size 2026-10-01 (`text-3xl sm:text-4xl md:text-5xl`,
+| `house/HouseChapterShell.jsx` | Single-column chapter composer (used by all three House pages since the 2026-10-05 restructure). **Since the 2026-10-05 merge pass (owner: "merge hero and paragraphs… two sections are total waste") the former `ChapterHero` and the editorial section are one merged section** — `ChapterHero` is no longer rendered on any House page: the shell opens with **one title only**: the page's `t(heroTitle)` rendered in the standardized gold-eyebrow idiom (`text-[length:calc(11px*var(--zaad-font-scale))] sm:text-xs font-mono text-accent font-semibold uppercase block`) as the h1 — owner direction 2026-10-05, after a two-line eyebrow+serif combo briefly existed: the owner collapsed it to the gold line alone (the serif `text-2xl md:text-3xl` title and the menu-name eyebrow keys were both removed; each page's descriptive title — e.g. "The ZAAD Brand / Growth in the Land of Dorsa" — IS the gold title). Revealed via `MaisonReveal` `unveil`, **not** `variant="lines"`: this title hit the same `LinesReveal` mask-hides-text gotcha as the credits page's `<h1>` (see the gotcha bullet below — the House mount context never fires the mask's `whileInView`, leaving the title invisible under its mask), so the credits-page fix applies here too. Then a `lg:grid-cols-2 items-center` row of `EditorialBlock(content)` (start-aligned paragraphs, staggered `slide-up-royal`) and a `aspect-[4/5]` image panel (`lux-vignette` + `lux-ken-burns` + `shadow-ambient` + foundation bottom scrim; `priority` Image; image first on mobile via `order-first lg:order-none`). **No "Read More" MaisonButton and no scroll-down arrow** (both removed at owner direction in the same pass); the randomized chapter video overlay is gone with `ChapterHero` — the still image is the permanent media. Then an optional stat grid (the whole section renders only when `stats` is non-empty — only `/about` passes one, `aboutStats`), sibling cross-link cards, and the `tel:` call strip (`memo`). No House page renders a bg pattern anymore (only `Materials.jsx` still carries it — one bottom-start blob since 2026-10-05; see `src/styles/README.md`). The former `EditorialSignature` Z-medallion divider was deleted outright 2026-09-29 (owner: "meaningless now") — no page renders a closing signature |
+| `house/ChapterPieces.jsx` | Shared pieces (`ChapterHero`, `EditorialBlock`, `StatGrid`, `CrossLinks`, `CallStrip`) consumed by `HouseChapterShell` (plus `glance/GlancePage.jsx` reusing `ChapterHero` directly — `ChapterHero`'s only remaining call site since the 2026-10-05 House merge). `EditorialBlock` takes an optional `align` prop (`"start"` default — renders no alignment classes of its own; the alignment comes from the wrapper (`HouseChapterShell`'s merged side-by-side row carries `text-left rtl:text-right`); `"center"` — prose `<p>` re-asserts `text-left rtl:text-right max-w-2xl mx-auto` so long-form body copy never centers — now unused since the 2026-10-05 merge, kept for future call sites). Since 2026-10-05 `EditorialBlock` has no heading grammar: it splits `content` on blank lines and renders one `<p>` per paragraph in a `MaisonReveal` (`slide-up-royal`, staggered 0.15s) — the numbered `### I.`/«یک.» sub-headings and their mono-accent span were removed at owner direction, together with the whole `parseEditorialBlocks` parser (the former `whitespace-pre-line` class went with it — single-`\n` line breaks never occur inside a paragraph). The former `EditorialSignature` horizontal Z-seal divider was deleted outright 2026-09-29 (owner: "meaningless now") — nothing renders it. `StatGrid` values count up on entry (`StatValue`: 2.6s eased 0→target, `fa-IR`/`en-US` digits, raw-string fallback, no count under reduced motion). `StatGrid` is always `grid-cols-3` (2026-09-06, user request: three stats in one line on mobile — the old `grid-cols-2` left the third stat alone on a second row) with `gap-4 md:gap-8`; its container's `border-t border-ink/10` applies only when `align="start"` (the former diptych columns' prose/stats separator — the centered variant never carries it), and the per-cell alignment centers below `md` (`text-center md:text-left rtl:md:text-right` when `align="start"`; `align="center"` stays centered at all sizes). A `StatGrid` with more than three stats would wrap to a second row; all current pages pass exactly 3 (only `/about`) or none. `ChapterHero`'s `h1` stepped down one size 2026-10-01 (`text-3xl sm:text-4xl md:text-5xl`,
   from `text-4xl sm:text-5xl md:text-6xl`) — the owner reported the long `/sustainability`
   title rendering one word per line; one shared-source change, so all four `ChapterHero` pages
   (`/about`, `/story`, `/sustainability`, `/glance`) share the smaller scale. `CrossLinks` renders
@@ -1080,9 +1085,9 @@ content.
   card grid starts directly under the section's `section-y` top padding) and its three
   `crossLink*` teasers were shortened to a few words the same day (owner: "page name and a word
   or so" — one card's teaser wrapping to two lines while its sibling stayed at one read uneven);
-  the card grammar itself (NoiseBg/gradient/underline) is untouched. `ChapterHero`'s media frame carries `lux-vignette` and its fallback still `lux-ken-burns` (see `src/styles/README.md` cinematic utilities); its `heroIntro` paragraph is guarded (`{heroIntro && …}`, 2026-09-29) so a page passing no intro renders no empty `<p>`. `CallStrip` (2026-09-06) shows a live open/closed dot next to "Call the Atelier" — `[isOpen, setIsOpen] = useState(null)` populated in a mount-only effect from `lib/studioHours.js`'s `isStudioOpenNow()` (`Intl.DateTimeFormat` against `Asia/Tehran`, matching the real Sat–Thu 09:00–18:00 hours already stated in `callStudioSub`'s copy — Friday is the only closed day); `null` renders nothing extra, so SSR and first paint match. Dot color is `bg-accent`/`bg-muted/50`, not a new hardcoded hex |
-| `house/AboutChapter.jsx` | `/about` chapter — since 2026-09-29 a two-column `HouseDiptychShell` diptych: left column = the `story` `aboutSections` entry (its `category`/`title` feed the `ColumnHeader` eyebrow/title — the `summary` no longer feeds an intro, removed 2026-10-01: it duplicated the first paragraph of the column's own «یک. یک نگاه» block word-for-word; `ColumnHeader`'s `{intro && …}` guard renders nothing), right column = the `about` entry + `aboutStats` (rendered by the shell's below-columns centered strip), hero title `t("aboutTitle")`, hero image `chapter-vaar.jpg`, **no heroIntro passed** (it duplicated the right column's content — why `ChapterHero`'s intro is now guarded), cross-links to Story and Sustainability (`memo`) |
-| `house/StoryValueChapter.jsx` | `/story` chapter — since 2026-09-29 single-column `HouseChapterShell` reading only the `brandValue` entry's content (hero `t("storyValueHeroTitle")` + intro `t("brandValueHeroIntro")`, image `chapter-gavv.jpg`, no stats), cross-links to About and Sustainability (`memo`) |
+  the card grammar itself (NoiseBg/gradient/underline) is untouched. **`ChapterHero` was redesigned 2026-10-05 at owner direction** (after the House pages' hero paragraphs were removed, leaving the old small-panel layout with wasted space): it now mirrors the homepage `Hero.jsx`'s grammar verbatim instead of inventing a new one — a full-height full-bleed media column (`lg:h-full`/`lg:aspect-auto`, `lg:min-h-[72vh]`, mobile keeps `aspect-[4/5]` full-bleed; no `border`/`shadow-ambient` on the panel anymore), the home hero's 4-hairline `border-l border-ink/10` grid overlay (desktop-only, `pointer-events-none`), the home hero's foundation-token bottom scrim (`from-foundation/70 via-foundation/15`) + bottom-start play/pause control (was: top-end + a `black/30` scrim), and the home hero's text-column padding rhythm (`px-6 sm:px-12 lg:ps-12 lg:pe-10 xl:ps-20`, media `order-1 lg:order-2` / text `order-2 lg:order-1`); section `min-h-[88vh] lg:min-h-screen`, `pt-24 md:pt-36` (see `src/styles/README.md`'s revert map), Image `sizes="(min-width: 1024px) 50vw, 100vw"`. The GSAP media/text parallax refs, the randomized video overlay, `withVideo`, `scrollTargetId`, the bottom-center scroll indicator and the guarded `heroIntro` all carry over unchanged — no House page passes an intro anymore (all three hero-intro keys are gone; owner: no hero text on the House pages), and since the 2026-10-05 merge no House page mounts `ChapterHero` at all — but `/glance` still passes its own `heroIntro` + `withVideo={false}`, so the prop support stays. `ChapterHero`'s media frame carries `lux-vignette` and its fallback still `lux-ken-burns` (see `src/styles/README.md` cinematic utilities). `CallStrip` (2026-09-06) shows a live open/closed dot next to "Call the Atelier" — `[isOpen, setIsOpen] = useState(null)` populated in a mount-only effect from `lib/studioHours.js`'s `isStudioOpenNow()` (`Intl.DateTimeFormat` against `Asia/Tehran`, matching the real Sat–Thu 09:00–18:00 hours already stated in `callStudioSub`'s copy — Friday is the only closed day); `null` renders nothing extra, so SSR and first paint match. Dot color is `bg-accent`/`bg-muted/50`, not a new hardcoded hex |
+| `house/AboutChapter.jsx` | `/about` chapter — since 2026-10-05 a single-column `HouseChapterShell` page mirroring `StoryValueChapter.jsx`'s idiom byte-for-byte: hero `t("aboutTitle")`, hero image `chapter-vaar.jpg`, editorial content = the `about` entry's paragraphs, `stats` = `aboutStats` (the only stat-passing page), **no heroIntro passed** (the story narrative lives once, on the homepage `heroDesc` — passing one here would duplicate it; the merged shell doesn't accept `heroIntro` at all), cross-links to Story and Sustainability (`memo`) |
+| `house/StoryValueChapter.jsx` | `/story` chapter — since 2026-09-29 single-column `HouseChapterShell` reading only the `brandValue` entry's content (hero `t("storyValueHeroTitle")` only — `brandValueHeroIntro` deleted 2026-10-05 at owner direction, no House hero carries text; image `chapter-gavv.jpg`, no stats), cross-links to About and Sustainability (`memo`) |
 | `house/SustainabilityResponsibilityChapter.jsx` | `/sustainability` chapter — since 2026-09-29 a single-column `HouseChapterShell`: hero + the `sustainability` entry's editorial content, no stats, and since 2026-10-01 no heroIntro (`sustainabilityResponsibilityHeroIntro` duplicated the About page's «یک. آتلیه» first block word-for-word — prop and key removed from both dictionaries) (the fabricated `csr` entry and `sustainabilityStats`/`csrStats` grids were deleted), cross-links to About and Story (`memo`). No closing signature — `EditorialSignature` was deleted entirely the same day, so no page renders one |
 | `glance/GlanceHeader.jsx` | `/glance` slim fixed header — the `LedgerHeader` idiom (back-to-showroom `Link`, centered ZAAD wordmark, accent-underlined page label) reusing `HouseControls` from `house/HouseChrome` — the compact control has no `layoutId`, so it's safe outside the house routes (`memo`) |
 | `glance/GlancePage.jsx` | `/glance` client orchestrator — `useLenisScroll` (called here, Ledger precedent: standalone route, not the `(house)` group), IntersectionObserver scroll-spy (`rootMargin: "-25% 0px -65% 0px"`) driving the two chapter rails (desktop rail items are link cards with `p-5` padding and `space-y-4` gap — per user direction 2026-09-05 — with the glance hover stack kept on top of that sizing: `NoiseBg` reveal + accent gradient wash + underline fill + warmed border, active `bg-panel` + `border-accent/50` + `shadow-card-sm` + full underline draw; the list enters via a `MaisonReveal` `unveil` wrapped **inside** the sticky nav so the sticky geometry is untouched), `animateScrollTo(\`glance-${id}\`)` navigation, `ChapterHero` (reused from `house/ChapterPieces.jsx` — its GSAP scrub is one of the three authorized spots, reused not extended) with `scrollTargetId="glance-body"` and `withVideo={false}` (2026-09-06, user request — the lookbook runs poster-only, zero clip bytes; see the `withVideo` note in the ChapterHero section), the overview chapter, the master matrix table, `CallStrip` close. Sticky-rail gotcha: the desktop rail is a grid child of the single-row 12-col grid (stretches tall → sticky works); the mobile chip rail must stay **outside** the grid container (a sticky grid child is trapped in its own short row) — `scrollbar-none`, not `no-scrollbar`. The rail carries `id="glance-rail-mobile"` and `handleNavigate` passes its live `offsetHeight` as `animateScrollTo`'s `extraOffset` (0 on `lg:`, where the rail is `display:none`), so chapter targets clear both the header and the rail (see `src/services/README.md`'s ScrollService section). The overview collection cards reuse the `CrossLinks` card grammar verbatim (`NoiseBg` revealOnHover + accent gradient wash + underline draw + mono eyebrow `item.number` + `wrapBrandNames` serif title + `crossLinkReadMore` footer with RTL-flipped `ArrowUpRight`) — click scrolls to that chapter. Rail/chip label spans and the statement blockquote carry `font-farsi` (translated serif text); labels drop tracking on Farsi (see `src/styles/README.md`). The page also closes with the shared `Footer` (mounted prop-less, the 2026-09-06 one-footer-site-wide pass — same footer as every other route) and the self-contained `shared/ScrollButton` (`memo`) |
@@ -1218,7 +1223,10 @@ the entry vanishes from the list without a manual reload); the open card carries
 `SEC-COM-{sessionRef}` (the same code format `InquiryForm`'s success state shows the
 visitor), consultation/appointment labels resolve through the existing concierge
 dictionary keys (`privateArchiveAcquisition`/`residentialConsultation`/`florenceViewing`,
-`appointmentMode*`, `appointmentSlot*`, `appointmentWindowArrangement`) — the ledger adds
+`appointmentMode*`, `appointmentSlot*`, `appointmentWindowArrangement`) — but since
+2026-10-05 (the free-text category field) only pre-change and chat records hold those
+semantic ids; free-text entries display raw at both the detail row and the search
+filter (`CONSULTATION_KEYS` map + raw-text fallback). The ledger adds
 only `ledger*` chrome strings, no new data vocabulary. The unfold is the
 `showcase/CollectionPanel.jsx` accordion clip-path idiom (0.8s `[0.16,1,0.3,1]` animate /
 0.6s `[0.7,0,0.84,0]` exit) — inside the interactive 300–800ms range, deliberately not
@@ -1235,7 +1243,7 @@ notes go through `wrapLatinRuns`.
 ### `React.memo`
 Applied to components whose output is fully determined by stable props or no props. Prevents re-renders when parent state (e.g., `activeTab`, `menuOpen`, `formSubmitted`) changes but the component's own inputs have not.
 
-**Memoised sub-components / shared:** `NavBar`, `CollectionMeta`, `TabHeritage`, `AcquisitionCTA`, `SectionHeader`, `PrimaryPages`, `SpecimenGrid`, `UtilityStrip`, `MenuControls`, `NoiseBg`. The top-level shells (`Hero`, `Vision`, `Materials`, `HouseChrome`, `HouseChapterShell`, `HouseDiptychShell`, `AboutChapter`, `StoryValueChapter`, `SustainabilityResponsibilityChapter`, `MaisonButton`, `MaisonReveal`, `InitialLoader`, `Footer`) are also `memo`-wrapped.
+**Memoised sub-components / shared:** `NavBar`, `CollectionMeta`, `TabHeritage`, `AcquisitionCTA`, `SectionHeader`, `PrimaryPages`, `SpecimenGrid`, `UtilityStrip`, `MenuControls`, `NoiseBg`. The top-level shells (`Hero`, `Vision`, `Materials`, `HouseChrome`, `HouseChapterShell`, `AboutChapter`, `StoryValueChapter`, `SustainabilityResponsibilityChapter`, `MaisonButton`, `MaisonReveal`, `InitialLoader`, `Footer`) are also `memo`-wrapped.
 
 ### `memo` for tab content
 `SpecsTabs` renders the active tab panel through `MemoizedTabContent` (`memo(TabContent)`) inside its `AnimatePresence` switch. Tab panels like `TabHeritage` are static JSX — memoizing the component avoids re-rendering their element trees on every parent render.
@@ -1297,8 +1305,9 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   keep new sections on it byte-identical (they had drifted 10/11/12px before). Alignment is
   reading-start (`text-left rtl:text-right`), never centered — Concierge's
   `SectionHeader` was de-centered 2026-09-05 so all four land on the same edge. The same
-  class set extends past the home page (2026-09-05 standardization pass): `house/HouseDiptychShell.jsx`'s
-  `ColumnHeader` eyebrow and `ledger/Ledger.jsx`'s two `ledgerEyebrow` spans use it. Vision's
+  class set extends past the home page (2026-09-05 standardization pass):
+  `ledger/Ledger.jsx`'s two `ledgerEyebrow` spans use it (the former `house/HouseDiptychShell.jsx`
+  `ColumnHeader` eyebrow left this set when the shell was deleted, 2026-10-05). Vision's
   `manifestoBadge` eyebrow left this set 2026-10-01 at owner direction — removed outright (see the
   Vision rename bullet below), not replaced. The one deliberate exception used to be
   `house/ChapterPieces.jsx`'s `CrossLinks` eyebrow (`text-center`) — it went with the whole
@@ -1307,7 +1316,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
 - **Section `h2` titles share one byte-identical class set (2026-09-29 normalization, owner
   direction "uniformly consistent in color font and design").** Every section title site-wide —
   Showcase (`showcase/CollectionTabs.jsx`), Materials, Vision, Concierge's `SectionHeader`,
-  `glance/GlancePage.jsx` ×2, `house/HouseChapterShell.jsx`, `house/HouseDiptychShell.jsx`,
+  `glance/GlancePage.jsx` ×2,
   `/credits` ×2 — renders `text-2xl md:text-3xl font-serif text-ink tracking-tight font-light
   text-glow-subtle` (plus only layout extras where needed: Glance's `text-left rtl:text-right`,
   credits' `text-balance`, per-site `mb-*`). The normalization dropped Vision's `leading-[1.15]`
@@ -1339,7 +1348,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   `overflow-x-auto` fallback since it only affects layout while content fits, and stops mattering
   automatically the moment the sample count grows enough to overflow). Row 2 is a `max-w-3xl
   mx-auto` accordion — but only the **detail text** (philosophical note, geographical origin,
-  density, historical provenance, core surface qualities, the ZAAD-certified footer) is gated
+  density, historical provenance, core surface qualities) is gated
   behind `isExpanded` (fixed 2026-09-27, second client fix — the video and its label used to be
   inside the same gate, hiding the whole preview whenever the accordion was collapsed). The
   toggle-bar header (active material's category/name/specimen-number) **and** the video/macro
@@ -1710,7 +1719,7 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
 - **Footer link consolidation + dead Advantages link removed (2026-09-27).** The two lists this
   file used to describe as separate "Main Page"/"Other Pages" columns are now one merged "primary
   pages" column and one "on this page" column, in that order: column 1 (its `menuJourneyIndex`
-  heading was removed 2026-09-28 — blanked in the client's copy list, key deleted) now leads with a `t("aboutBackToShowroom")` button (2026-09-29, owner direction: the footer's home entry must read exactly like the menu's Home card — was `t("menuMainPage")`, key deleted)
+  heading was removed 2026-09-28 — blanked in the client's copy list, key deleted) now leads with a `t("menuHomeEntry")` button (2026-09-29, owner direction: the footer's home entry must read exactly like the menu's Home card — was `t("menuMainPage")`, key deleted; re-pointed with the menu card to `menuHomeEntry` 2026-10-01 when the menu's Home card dropped its "return" wording)
   (`handleMainPage`, unchanged dual-context recipe) before `zaadAtAGlance` → `/glance`,
   `menuOriginsPhilosophy` → `/about`, `menuStoryBrandValue` → `/story`,
   `menuSustainabilityResponsibility` → `/sustainability` — one flat list of real page
@@ -1746,7 +1755,8 @@ The `shared/Lightbox.jsx` eliminates the duplicate zoom controller, image transi
   …) keep their names — they're content, not navigation (`storyQuote`, the section's original
   quote key, sat dead with no caller until the 2026-09-29 dead-key sweep deleted it). **The House `/story` route is a
   different destination ("Story & Brand Value") and was deliberately NOT renamed** — its
-  `aboutSections` data id `"story"` and `menuStoryBrandValue` are the House chapter, untouched.
+  `menuStoryBrandValue` is the House chapter, untouched (the `aboutSections` data id `"story"`
+  was deleted 2026-10-05 together with the About diptych).
   GSAP spot #2 moved with the file: it's `Vision.jsx`'s pinned image column now (CLAUDE.md and
   the styles/app/hooks/lib READMEs were all swept in the same pass).
 - **"Digital Catalogue" is the single name for the static lookbook (2026-09-07, user decision).**

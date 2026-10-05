@@ -40,7 +40,7 @@ export default function MenuPanel(
 
     const pageLinks = useMemo(
         () => [
-            { key: "/", label: t("aboutBackToShowroom"), sub: t("menuChapterHome") },
+            { key: "/", label: t("menuHomeEntry"), sub: t("menuChapterHome") },
             { key: "/about", label: t("menuOriginsPhilosophy") },
             { key: "/story", label: t("menuStoryBrandValue") },
             { key: "/sustainability", label: t("menuSustainabilityResponsibility") },

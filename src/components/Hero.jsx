@@ -190,7 +190,7 @@ function Hero({ onScrollToCollection }) {
   return (
       <section
           ref={sectionRef}
-          className="relative min-h-screen pt-[61px] sm:pt-[73px] lg:pt-32 pb-16 flex flex-col justify-between overflow-hidden bg-surface"
+          className="relative min-h-screen pt-[61px] sm:pt-[73px] lg:pt-32 pb-8 flex flex-col justify-between overflow-hidden bg-surface"
       >
         <div className="absolute inset-x-0 top-0 h-full pointer-events-none grid grid-cols-4 max-w-7xl mx-auto px-6 sm:px-12">
           <div className="border-l border-ink/10 h-full w-[1px]"></div>
@@ -322,15 +322,8 @@ function Hero({ onScrollToCollection }) {
           </div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 sm:px-12 border-t border-ink/10 pt-8 mt-16">
-          <RibbonScroll />
-          <div aria-hidden="true" className="relative h-12 sm:h-14 overflow-hidden">
-            <div
-                className={`pattern-diamond-grid absolute inset-0 z-0 opacity-[0.35] dark:opacity-[0.45] pointer-events-none${
-                  prefersReducedMotion ? "" : " pattern-diamond-drift"
-                }`}
-            />
-          </div>
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 sm:px-12 border-t border-ink/10 pt-4 mt-10">
+          <RibbonScroll height="h-10 sm:h-12" />
         </div>
       </section>
   );

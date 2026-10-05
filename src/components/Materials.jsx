@@ -8,7 +8,6 @@ import NoiseBg from "./shared/NoiseBg";
 import {useLanguage} from "@/services/LanguageProvider";
 import useActiveSelection from "../hooks/useActiveSelection";
 import useDeferredMedia from "../hooks/useDeferredMedia";
-import wrapBrandNames from "@/lib/wrapBrandNames";
 import wrapLatinRuns from "@/lib/wrapLatinRuns";
 
 const MATERIAL_VIDEOS = {
@@ -65,8 +64,6 @@ function Materials() {
         [samples, active]
     );
 
-    const certifiedLabel = useMemo(() => wrapBrandNames(t("ZAADCertified")), [t]);
-
     const handleVideoLoadedData = useCallback(() => {
         if (reduceMotion) return;
         videoRef.current?.play().catch(() => {});
@@ -91,7 +88,6 @@ function Materials() {
 
     return (
         <section id="materials" className="section-y bg-surface-overlay px-6 sm:px-12 border-b border-ink/10 relative overflow-hidden text-left rtl:text-right">
-            <div className="absolute -top-10 -right-10 w-96 h-96 pattern-diamond-grid opacity-[0.22] dark:opacity-[0.08] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-72 h-72 pattern-diamond-grid opacity-[0.16] dark:opacity-[0.06] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative z-10">
@@ -151,7 +147,7 @@ function Materials() {
 
                 {active && (
                     <MaisonReveal variant="scale-down-unveil" delay={0.65} threshold={0.01} className="max-w-3xl mx-auto mt-12 w-full">
-                        <div className="border-t border-b border-ink/10 overflow-hidden">
+                        <div className="border-t border-ink/10 overflow-hidden">
                             <button
                                 type="button"
                                 onClick={toggleExpanded}
@@ -248,12 +244,6 @@ function Materials() {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-2 mt-6 pt-4 border-t border-ink/10">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-                                                    <span className="text-[length:calc(10px*var(--zaad-font-scale))] font-mono text-muted uppercase">
-                                                        {certifiedLabel}
-                                                    </span>
-                                                </div>
                                             </motion.div>
                                         </AnimatePresence>
                                     </motion.div>

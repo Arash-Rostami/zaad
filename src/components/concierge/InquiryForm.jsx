@@ -84,7 +84,7 @@ export default function InquiryForm({ concierge, t, language }) {
     const closeCadence = useCallback(() => setCadenceOpen(false), []);
 
     const identityRowAlignsBottom = !(formErrors.clientName || formErrors.clientEmail);
-    const contactRowAlignsBottom = !formErrors.clientPhone;
+    const contactRowAlignsBottom = !(formErrors.clientPhone || formErrors.desiredConsultation);
 
     const handleInquireAnother = useCallback(() => {
         setFormSubmitted(false);
@@ -176,22 +176,18 @@ export default function InquiryForm({ concierge, t, language }) {
                                 <label htmlFor="inquiry-consultation" className="text-[length:calc(12px*var(--zaad-font-scale))] font-mono text-muted uppercase block mb-1.5 font-medium leading-snug">
                                     {t("consultationCategory")}
                                 </label>
-                                <div className={`relative ${contactRowAlignsBottom ? "mt-auto" : ""}`}>
-                                    <select
-                                        id="inquiry-consultation"
-                                        value={desiredConsultation}
-                                        onChange={(e) => setDesiredConsultation(e.target.value)}
-                                        className="w-full bg-panel border border-ink/15 ps-4 pe-10 py-3 text-base sm:text-sm focus:border-ink focus:outline-none transition-colors rounded-xl block font-sans appearance-none cursor-pointer"
-                                    >
-                                        <option value="acquisition">{t("privateArchiveAcquisition")}</option>
-                                        <option value="consultation">{t("residentialConsultation")}</option>
-                                        <option value="visit">{t("florenceViewing")}</option>
-                                    </select>
-                                    <ChevronDown
-                                        aria-hidden="true"
-                                        className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/70"
-                                    />
-                                </div>
+                                <input
+                                    id="inquiry-consultation"
+                                    type="text"
+                                    required
+                                    maxLength={100}
+                                    value={desiredConsultation}
+                                    onChange={(e) => setDesiredConsultation(e.target.value)}
+                                    aria-invalid={!!formErrors.desiredConsultation}
+                                    aria-describedby={formErrors.desiredConsultation ? "inquiry-consultation-error" : undefined}
+                                    className={`${contactRowAlignsBottom ? "mt-auto" : ""} w-full bg-panel border px-4 py-3 text-base sm:text-sm focus:outline-none placeholder-dim-faint transition-colors rounded-xl font-sans ${formErrors.desiredConsultation ? "border-danger focus:border-danger" : "border-ink/15 focus:border-ink"}`}
+                                />
+                                <FieldError id="inquiry-consultation-error" message={formErrors.desiredConsultation && t(formErrors.desiredConsultation)} />
                             </div>
                         </div>
 

@@ -11,7 +11,7 @@ import Concierge from "../components/Concierge";
 import Footer from "../components/Footer";
 import CollectionPage from "./CollectionPage";
 import ScrollButton from "../components/shared/ScrollButton";
-import { animateScrollTo } from "@/services/ScrollService";
+import { animateScrollTo, animateScrollToSettled } from "@/services/ScrollService";
 import { getPreference, setPreference } from "@/services/PreferenceService";
 import useShowroomNav from "../hooks/useShowroomNav";
 import useLenisScroll from "@/hooks/useLenisScroll";
@@ -32,11 +32,15 @@ export default function AppShell({ utensilImages }) {
     useEffect(() => {
         const hash = window.location.hash.slice(1);
         if (!hash) return;
+        let stopSettle = null;
         const id = window.setTimeout(() => {
-            animateScrollTo(hash, 1450);
+            stopSettle = animateScrollToSettled(hash, 1450);
             window.history.replaceState(null, "", window.location.pathname + window.location.search);
         }, 120);
-        return () => window.clearTimeout(id);
+        return () => {
+            window.clearTimeout(id);
+            stopSettle?.();
+        };
     }, []);
 
     useEffect(() => {

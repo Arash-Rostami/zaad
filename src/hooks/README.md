@@ -415,14 +415,18 @@ const {
   visitor sees they typed is always what the model actually receives; before this, a huge
   paste would render/download in full locally while the server silently truncated it for
   the model's context, a real mismatch between shown and answered.
-- When `preselectedItem` changes, pre-fills `additionalNote` with an acquisition note
+- When `preselectedItem` changes, pre-fills the free-text category field with
+  `t("privateArchiveAcquisition")` (since 2026-10-05 the category is the customer's own
+  wording, so the preselect fills the translated label — the exact words the select used
+  to show selected; state starts `""`, not `"acquisition"`) and `additionalNote` with an
+  acquisition note
   (FA/EN branches), pushes a user inquiry, triggers a curator response, then calls
   `onClearPreselected()`. This effect reads the running chat history via a
   `chatMessagesRef` (mirrored every render, same idiom as `preselectedItemRef`) instead
   of closing over `chatMessages` state directly, so `chatMessages` itself never needs to
   sit in the dependency array (it would re-run this effect on every message sent); the
-  array is `[preselectedItem, language, onClearPreselected, triggerCuratorResponse]` —
-  the latter two are real dependencies, harmless to add since the effect's own
+  array is `[preselectedItem, language, onClearPreselected, triggerCuratorResponse, t]` —
+  the latter three are real dependencies, harmless to add since the effect's own
   `handledPreselectRef.current === preselectedItem` guard bails out on any re-fire where
   `preselectedItem` itself hasn't actually changed.
 - **Welcome message (personalization restored 2026-09-29).** `buildWelcomeContent`

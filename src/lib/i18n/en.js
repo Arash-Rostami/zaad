@@ -7,6 +7,7 @@ export const en = {
   menuSystemDirectories: "MAIN PAGES",
   menuZAADCatalogue: "Digital Catalogue",
   menuChapterHome: "THE DIGITAL SHOWROOM",
+  menuHomeEntry: "ZAAD Home",
   menuOriginsPhilosophy: "About ZAAD",
   menuStoryBrandValue: "ZAAD Values",
   menuSustainabilityResponsibility: "Social Responsibility at ZAAD",
@@ -36,8 +37,6 @@ export const en = {
   studioPhoneTel: "+982175982;ext=157",
 
   // ── House-of-ZAAD chapters: hero + stats + cross-links ──────────────────────
-  brandValueHeroIntro:
-      "Luxury is not exaggeration or display. It is precision, restraint, and a harmony between form and function that holds its value over time.",
   aboutStats: [
     { value: "9,000 m²", label: "Production Facility" },
     { value: "150", label: "Skilled Specialists" },
@@ -57,7 +56,7 @@ export const en = {
   heroTitle_1: "Beauty found in",
   heroTitle_italic: "authenticity, elegance,",
   heroTitle_2: "and the quality.",
-  heroDesc: "The ZAAD Digital Showroom. Rooted in the land of Dorsa, our four distinct collections seamlessly blend the boldness of modern design with authentic architectural heritage. We craft luxury interior spaces that bring enduring quality, material stewardship, and quiet sophistication to the scale of home.",
+  heroDesc: "ZAAD was formed in the Land of Dorsa, from a way of seeing that finds beauty in authenticity, elegance and the quality of living. ZAAD carries this perspective from the world of objects into the realm of space — into homes that hold tranquility, order and quiet magnificence not through display, but through proportion, detail and the quality of their presence. ZAAD was formed on expertise in designing and constructing kitchens, wardrobes and interior spaces — spaces made not simply to be seen, but to be lived in, touched, and remembered. In the world of ZAAD, details are the language of silence, and the space — calm and unassuming — narrates the quality of life.",
   exploreCollection: "ZAAD Collections",
   heroExhibition: "Four Distinct Collections",
   heroPauseVideo: "Pause film",
@@ -107,7 +106,6 @@ export const en = {
   showcaseAirfreight: "Delivery and installation arranged upon consultation request.",
 
   // ─── MATERIALS SECTION ─────────────────────────────────────────────────────
-  ZAADCertified: "ZAAD CERTIFIED",
   materialsBadge: "Materials",
   materialArchaeology: "Materials",
   materialStudy: "A Study in Physical Realism",
@@ -172,7 +170,7 @@ export const en = {
   formErrorEmailInvalid: "Please enter a valid email address.",
   formErrorPhoneRequired: "Please enter your phone number.",
   formErrorPhoneInvalid: "Please enter a valid phone number.",
-  formErrorConsultationInvalid: "Please select a consultation category.",
+  formErrorConsultationInvalid: "Please enter a request category.",
   formErrorAppointmentWindowRequired: "Please select a preferred time.",
   formErrorNoteTooLong: "Notes must be under 2,000 characters.",
   formErrorGeneric: "Something went wrong. Please try again, or contact us directly.",
@@ -374,7 +372,7 @@ export const en = {
   creditsPageCollectionTitle: "Product Pages",
   creditsPageCollectionDesc: "A dedicated page for each of the four kitchen collections — GÁVV, ZIVV, RÁKH, VAAR — with full photography, a 360° spin view, complete specifications, and a direct consultation request.",
   creditsPageAboutTitle: "About ZAAD",
-  creditsPageAboutDesc: "A two-column portrait — the brand story beside the atelier and its people — with the atelier's three figures in a single strip beneath both columns.",
+  creditsPageAboutDesc: "A single-column portrait of the atelier and its people, with the atelier's three figures in a strip beneath.",
   creditsPageStoryTitle: "Story",
   creditsPageStoryDesc: "A single-column page presenting the values behind the work.",
   creditsPageSustainabilityTitle: "Sustainability",
@@ -471,31 +469,12 @@ export const en = {
       title: "About ZAAD",
       summary:
           "A design-and-build atelier bringing considered quality and elegance to the scale of the home, from a 9,000 sqm production facility staffed by 150 specialists.",
-      content: `### I. THE ATELIER
-ZAAD is a brand in the design and construction of luxury interior spaces. Drawing on its expertise in kitchens, wardrobes and interiors, it brings Dorsa's outlook on quality and elegance to the scale of the home. Behind every ZAAD project stands a fully equipped 9,000 sqm production facility, 150 specialist staff, an 8-person team of interior designers and architects, and a network of specialist partners who accompany an idea from design through to construction and installation. This structure allows ZAAD to forge a genuine bond between beauty, function, precision of execution and final quality.
+      content: `ZAAD is a brand in the design and construction of luxury interior spaces. Drawing on its expertise in kitchens, wardrobes and interiors, it brings Dorsa's outlook on quality and elegance to the scale of the home. Behind every ZAAD project stands a fully equipped 9,000 sqm production facility, 150 specialist staff, an 8-person team of interior designers and architects, and a network of specialist partners who accompany an idea from design through to construction and installation. This structure allows ZAAD to forge a genuine bond between beauty, function, precision of execution and final quality.
 
-### II. THE PROCESS
 At ZAAD, every project begins with understanding the way a family lives — their needs and their taste. The ZAAD design and architecture team strives to create spaces that are not only beautiful but work properly: spaces with precise proportions, considered details, quality raw materials and solutions that make daily life more organised, calmer and more pleasant.
 
-### III. THE PARTNERSHIP
 Alongside design and construction, ZAAD draws on specialist partnerships, collaborations with selected brands and Dorsa Home furniture to provide access to a range of accessories, hardware, furniture and luxury details — elements that complete a space's final quality and give each project a more personal, more lasting identity.`,
       tags: ["Interior Architecture", "150 Specialists", "Design & Build"],
-    },
-    {
-      id: "story",
-      category: "Brand Story",
-      title: "The Story of ZAAD",
-      summary:
-          "ZAAD was formed in the Land of Dorsa from a way of seeing that finds beauty in authenticity, elegance, and the quality of living.",
-      content: `### I. A PERSPECTIVE
-ZAAD was formed in the Land of Dorsa, from a way of seeing that finds beauty in authenticity, elegance and the quality of living. ZAAD carries this perspective from the world of objects into the realm of space — into homes that hold tranquility, order and quiet magnificence not through display, but through proportion, detail and the quality of their presence.
-
-### II. A CRAFT
-ZAAD was formed on expertise in designing and constructing kitchens, wardrobes and interior spaces — spaces made not simply to be seen, but to be lived in, touched, and remembered.
-
-### III. A NARRATIVE
-In the world of ZAAD, details are the language of silence, and the space — calm and unassuming — narrates the quality of life.`,
-      tags: ["Land of Dorsa", "Authenticity", "Quiet Living"],
     },
     {
       id: "brandValue",
@@ -503,13 +482,10 @@ In the world of ZAAD, details are the language of silence, and the space — cal
       title: "What ZAAD Values",
       summary:
           "Beauty is meaningful only when it is accompanied by function — precision, restraint, and a home that holds its value over time.",
-      content: `### I. PRECISION OVER DISPLAY
-ZAAD's values come from precision in design, a genuine understanding of space, and attention to how a home is actually lived in. ZAAD never sees an interior as merely a combination of beautiful parts; what matters to us is how a space is used, how it creates calm, how it hosts the daily life and personal moments of the people who live there.
+      content: `ZAAD's values come from precision in design, a genuine understanding of space, and attention to how a home is actually lived in. ZAAD never sees an interior as merely a combination of beautiful parts; what matters to us is how a space is used, how it creates calm, how it hosts the daily life and personal moments of the people who live there.
 
-### II. BEAUTY WITH FUNCTION
 In ZAAD's view, beauty is meaningful only when it is accompanied by function. Proportion, circulation, storage, light, material, durability and details that may not be noticed at first glance all shape the quality of life within a space.
 
-### III. LUXURY WITHOUT DISPLAY
 Luxury, for ZAAD, is not exaggeration or display. We see it in thoughtful design, precise execution, a harmony between form and use, and a space that remains right, calm and valuable over time. ZAAD was formed to build spaces with character that never show off — spaces where life becomes simpler, more organised and more pleasant.`,
       tags: ["Precision", "Function", "Restraint"],
     },
@@ -519,13 +495,10 @@ Luxury, for ZAAD, is not exaggeration or display. We see it in thoughtful design
       title: "Sustainability",
       summary:
           "Sustainability begins in thoughtful design and continues through the quality of manufacture — a considered, deliberate use of resources at every step.",
-      content: `### I. CONSIDERED MATERIALS
-At ZAAD, sustainability begins with thoughtful design and continues through the quality of construction. Careful selection of raw materials, principled measurement and waste reduction across production and execution are part of our conscious use of resources.
+      content: `At ZAAD, sustainability begins with thoughtful design and continues through the quality of construction. Careful selection of raw materials, principled measurement and waste reduction across production and execution are part of our conscious use of resources.
 
-### II. BUILT TO LAST
 We build spaces and products that hold their quality and function over time — because the better something is made, the longer it lasts, and the less it will need to be altered or replaced. For ZAAD, sustainability means the responsible consumption of resources and a quality that keeps its value across time.
 
-### III. A RESPONSIBLE FUTURE
 Attention to durability, enduring solutions and energy-efficient equipment continue this same approach — a responsible bridge between the quality of today's needs and the assets of tomorrow.`,
       tags: ["Considered Materials", "Built to Last", "Responsible Resources"],
     },

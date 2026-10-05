@@ -39,7 +39,6 @@ function StoryValueChapter() {
     return (
         <HouseChapterShell
             heroTitle={t("storyValueHeroTitle")}
-            heroIntro={t("brandValueHeroIntro")}
             heroImage={HERO_IMAGE_URL}
             heroImageAlt={t("storyValueHeroAlt")}
             editorialContent={editorialContent}

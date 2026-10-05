@@ -49,7 +49,7 @@ function Footer({ onScrollToSection, setActiveTab, onSelectProduct }) {
                     onClick={handleMainPage}
                     className="hover:text-canvas transition-colors duration-700 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-canvas cursor-pointer text-left rtl:text-right block w-full"
                   >
-                    {t("aboutBackToShowroom")}
+                    {t("menuHomeEntry")}
                   </button>
                 </li>
                 <li>

@@ -7,7 +7,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
-  const [desiredConsultation, setDesiredConsultation] = useState("acquisition");
+  const [desiredConsultation, setDesiredConsultation] = useState("");
   const [additionalNote, setAdditionalNote] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -175,7 +175,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
     }
     if (handledPreselectRef.current === preselectedItem) return;
     handledPreselectRef.current = preselectedItem;
-    setDesiredConsultation("acquisition");
+    setDesiredConsultation(t("privateArchiveAcquisition"));
     const name = preselectedItem.name;
     const number = preselectedItem.number;
     setAdditionalNote(
@@ -196,12 +196,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
     setChatMessages(updatedHistory);
     triggerCuratorResponse(updatedHistory);
     onClearPreselected();
-  }, [preselectedItem, language, onClearPreselected, triggerCuratorResponse]);
-
-  useEffect(() => {
-    if (userTouchedMode.current) return;
-    setAppointmentMode(desiredConsultation === "visit" ? "audience" : "call");
-  }, [desiredConsultation]);
+  }, [preselectedItem, language, onClearPreselected, triggerCuratorResponse, t]);
 
   useEffect(() => {
     const container = scrollRef.current?.parentElement;
@@ -230,8 +225,8 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
   const resetAppointment = useCallback(() => {
     userTouchedMode.current = false;
     setAppointmentWindow("");
-    setAppointmentMode(desiredConsultation === "visit" ? "audience" : "call");
-  }, [desiredConsultation]);
+    setAppointmentMode("call");
+  }, []);
 
   const handleInquirySubmit = useCallback(
       async (e) => {
@@ -259,7 +254,7 @@ export default function useConcierge({ language, preselectedItem, onClearPresele
           const data = await res.json();
 
           if (!res.ok || !data.ok) {
-            const FIELDS_WITH_UI = new Set(["clientName", "clientEmail", "clientPhone", "additionalNote", "appointmentWindow"]);
+            const FIELDS_WITH_UI = new Set(["clientName", "clientEmail", "clientPhone", "desiredConsultation", "additionalNote", "appointmentWindow"]);
             const hasVisibleError = data.errors && Object.keys(data.errors).some((key) => FIELDS_WITH_UI.has(key));
             if (hasVisibleError) setFormErrors(data.errors);
             else setFormErrors({ form: data.error || "formErrorGeneric" });
